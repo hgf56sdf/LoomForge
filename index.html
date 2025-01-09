@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My iOS Store</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+           /* Resetting defaults */
+           * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: #fff;
+            padding: 20px;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Container styles */
+        .container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            animation: slideIn 0.5s ease forwards;
+            display: none;
+            max-width: 90%; /* Limit the width for better readability on smaller screens */
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -100%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Heading styles */
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Paragraph styles */
+        p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        /* Install instructions styles */
+        .install-instructions {
+            margin-bottom: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* Share icon styles */
+        .share-icon {
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            max-width: 80%; /* Limit the width for better readability on smaller screens */
+        }
+
+        /* Add to home screen icon styles */
+        .add-to-home-icon {
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            max-width: 80%; /* Limit the width for better readability on smaller screens */
+        }
+
+        /* Button container styles */
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Distribute buttons evenly */
+            margin-bottom: 20px; /* Add space at the bottom */
+        }
+
+        /* Button styles */
+        button {
+            flex: 1; /* Each button takes equal space */
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px; /* Add space between buttons */
+            transition: background-color 0.3s ease;
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Application list styles */
+        .app-list {
+            margin-top: 20px;
+        }
+
+        /* Individual application styles */
+        .app {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        /* Application image styles */
+        .app img {
+            width: 60px; /* Reduce image size for better fit on smaller screens */
+            height: 60px; /* Reduce image size for better fit on smaller screens */
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            object-fit: cover;
+            margin-right: 10px; /* Reduce margin for better fit on smaller screens */
+        }
+
+        /* Application content styles */
+        .app-content {
+            padding: 10px;
+            background-color: #444;
+        }
+
+        /* Application title styles */
+        .app-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        /* Application description styles */
+        .app-description {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Enter button styles */
+        .enter-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Enter button hover effect */
+        .enter-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Close button styles */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        /* Never show again checkbox styles */
+        .never-show-again {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="appMenu" style="display: none;">
+        <div class="button-container">
+            <button id="featuredButton">Featured</button> <!-- Featured button -->
+            <button id="appsButton">Apps</button> <!-- Apps button -->
+            <button id="gamesButton">Games</button> <!-- Games button -->
+        </div>
+
+        <div class="app-list" id="appList">
+            <!-- Featured apps initially displayed -->
+            <div class="app" id="flappyBirdApp" style="display: none;">
+                <img src="flappy-bird.jpg" alt="App 1">
+                <div class="app-content">
+                    <div class="app-title">Modified Flappy Bird</div>
+                    <div class="app-description">Modified Flappy Bird is a fun game based on the original Flappy Bird, but with added twists and features.</div>
+                    <a href="ios-games/flappy-bird.html" class="enter-button">Enter</a>
+                </div>   
+            </div>
+            <div class="app" id="youtubeApp" style="display: none;">
+                <img src="youtube.png" alt="App 2">
+                <div class="app-content">
+                    <div class="app-title">Youtube</div>
+                    <div class="app-description">This Version of Youtube is without Ads!</div>
+                    <a href="ios-apps/yt.html" class="enter-button">Enter</a>
+                </div>
+            </div>
+            <!-- New app section -->
+            <div class="app" id="whenvaction" style="display: none;">
+                <img src="whenvaction.png" alt="App 3">
+                <div class="app-content">
+                    <div class="app-title">متى اجازة؟</div>
+                    <div class="app-description">تطبيق لمعرفة وقت الاجازات الدراسية في المملكة العربية السعودية</div>
+                    <a href="ios-apps/whenisvaction.html" class="enter-button">Enter</a>
+                </div>
+            </div>
+            <div class="app" id="jawaboraskt" style="display: none;">
+                <img src="b56d42fb528ee5fd.png" alt="App 4">
+                <div class="app-content">
+                    <div class="app-title">لعبة جاوب او سكت</div>
+                    <div class="app-description">"جاوب أو اسكت" هي لعبة بين فريقين، حيث يجيب كل فريق على الأسئلة ويكسب نقاطًا للإجابات الصحيحة.
+                    </div>
+                    <a href="ios-games/test.html" class="enter-button">Enter</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display featured apps initially
+            document.getElementById('appMenu').style.display = 'block';
+            document.getElementById('flappyBirdApp').style.display = 'block';
+            document.getElementById('youtubeApp').style.display = 'block';
+            document.getElementById('whenvaction').style.display = 'block';
+            document.getElementById('jawaboraskt').style.display = 'none';
+        });
+
+        // Feature button event listener
+        document.getElementById('featuredButton').addEventListener('click', function() {
+            // Show the featured apps
+            document.getElementById('flappyBirdApp').style.display = 'block';
+            document.getElementById('youtubeApp').style.display = 'block';
+            document.getElementById('whenvaction').style.display = 'block'; // Hide new app
+            document.getElementById('jawaboraskt').style.display = 'none'; // Hide new app
+        });
+
+        // Apps button event listener
+        document.getElementById('appsButton').addEventListener('click', function() {
+            // Hide games and show apps
+            document.getElementById('flappyBirdApp').style.display = 'none';
+            document.getElementById('youtubeApp').style.display = 'block';
+            document.getElementById('whenvaction').style.display = 'block'; // Show new app
+            document.getElementById('jawaboraskt').style.display = 'none'; 
+        });
+
+        // Games button event listener
+        document.getElementById('gamesButton').addEventListener('click', function() {
+            // Hide apps and show games
+            document.getElementById('flappyBirdApp').style.display = 'block';
+            document.getElementById('jawaboraskt').style.display = 'block'; 
+            document.getElementById('youtubeApp').style.display = 'none';
+            document.getElementById('whenvaction').style.display = 'none'; // Hide new app
+        });
+    </script>
+</body>
+</html>

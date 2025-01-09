@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PX Flappy Bird</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="main-menu" id="mainMenu">
+    <h1>PX Flappy Bird</h1>
+    <button onclick="startGame()">Play</button>
+    <button id="settingsButton">Settings</button>
+    <a href="../modified.html" class="button">Return to Home</a>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
+  <div class="settings-menu" id="settingsMenu">
+    <h2>Settings</h2>
+    <label for="birdImage">Choose Bird Image:</label>
+    <input type="file" id="birdImage" accept="image/*">
+    <br>
+    <label for="wallImage">Choose Wall Image:</label>
+    <input type="file" id="wallImage" accept="image/*">
+    <br>
+    <button onclick="applySettings()">Apply</button>
+    <button onclick="closeSettings()">Close</button>
+  </div>
+  
+
+  <div id="gameOverScreen" class="game-over">
+    <h2>Game Over</h2>
+    <p>Your Score: <span id="finalScore">0</span></p>
+    <button onclick="goToMainMenu()">Main Menu</button>
+    <button onclick="playAgain()">Play Again</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
