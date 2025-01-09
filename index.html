@@ -3,294 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My iOS Store</title>
+    <title>iOS Store</title>
     <link rel="manifest" href="manifest.json">
     <style>
-           /* Resetting defaults */
-           * {
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --background-dark: #1C1C1E;
+            --card-background: #2C2C2E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E8E93;
+            --success-color: #34C759;
+            --danger-color: #FF3B30;
+        }
+
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Body styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #222;
-            color: #fff;
-            padding: 20px;
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
         }
 
-        /* Container styles */
         .container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #333;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            animation: slideIn 0.5s ease forwards;
-            display: none;
-            max-width: 90%; /* Limit the width for better readability on smaller screens */
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -100%);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
+        .header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background-color: var(--background-dark);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Heading styles */
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        /* Paragraph styles */
-        p {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        /* Install instructions styles */
-        .install-instructions {
-            margin-bottom: 20px;
-            font-size: 16px;
-            text-align: center;
-        }
-
-        /* Share icon styles */
-        .share-icon {
-            display: block;
-            margin: 0 auto;
-            margin-bottom: 10px;
-            max-width: 80%; /* Limit the width for better readability on smaller screens */
-        }
-
-        /* Add to home screen icon styles */
-        .add-to-home-icon {
-            display: block;
-            margin: 0 auto;
-            margin-bottom: 10px;
-            max-width: 80%; /* Limit the width for better readability on smaller screens */
-        }
-
-        /* Button container styles */
-        .button-container {
+        .nav-buttons {
             display: flex;
-            justify-content: space-between; /* Distribute buttons evenly */
-            margin-bottom: 20px; /* Add space at the bottom */
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Button styles */
-        button {
-            flex: 1; /* Each button takes equal space */
-            padding: 10px;
+        .nav-button {
+            background-color: var(--card-background);
+            color: var(--text-primary);
             border: none;
-            background-color: #007bff;
-            color: #ffffff;
-            font-size: 16px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            margin-right: 10px; /* Add space between buttons */
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 100px;
         }
 
-        /* Button hover effect */
-        button:hover {
-            background-color: #0056b3;
+        .nav-button.active {
+            background-color: var(--primary-color);
         }
 
-        /* Application list styles */
-        .app-list {
-            margin-top: 20px;
+        .nav-button:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* Individual application styles */
-        .app {
-            width: 100%;
-            margin-bottom: 20px;
-            border-radius: 10px;
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .app-card {
+            background-color: var(--card-background);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            display: none;
-        }
-
-        /* Application image styles */
-        .app img {
-            width: 60px; /* Reduce image size for better fit on smaller screens */
-            height: 60px; /* Reduce image size for better fit on smaller screens */
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-            object-fit: cover;
-            margin-right: 10px; /* Reduce margin for better fit on smaller screens */
-        }
-
-        /* Application content styles */
-        .app-content {
-            padding: 10px;
-            background-color: #444;
-        }
-
-        /* Application title styles */
-        .app-title {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        /* Application description styles */
-        .app-description {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        /* Enter button styles */
-        .enter-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background-color: #007bff;
-            color: #ffffff;
-            font-size: 16px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Enter button hover effect */
-        .enter-button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Close button styles */
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            color: #fff;
-            font-size: 20px;
-        }
-
-        /* Never show again checkbox styles */
-        .never-show-again {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        /* Fade-in animation */
-        .fade-in {
+            transition: transform 0.3s ease;
             animation: fadeIn 0.5s ease forwards;
         }
 
+        .app-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .app-info {
+            flex: 1;
+        }
+
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .app-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .app-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .enter-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .enter-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            background-color: var(--card-background);
+            color: var(--text-primary);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar:focus {
+            outline: 2px solid var(--primary-color);
+        }
+
         @keyframes fadeIn {
-            from {
-                opacity: 0;
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
             }
-            to {
-                opacity: 1;
+
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                padding-bottom: 4px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="appMenu" style="display: none;">
-        <div class="button-container">
-            <button id="featuredButton">Featured</button> <!-- Featured button -->
-            <button id="appsButton">Apps</button> <!-- Apps button -->
-            <button id="gamesButton">Games</button> <!-- Games button -->
-        </div>
-
-        <div class="app-list" id="appList">
-            <!-- Featured apps initially displayed -->
-            <div class="app" id="flappyBirdApp" style="display: none;">
-                <img src="flappy-bird.jpg" alt="App 1">
-                <div class="app-content">
-                    <div class="app-title">Modified Flappy Bird</div>
-                    <div class="app-description">Modified Flappy Bird is a fun game based on the original Flappy Bird, but with added twists and features.</div>
-                    <a href="ios-games/flappy-bird.html" class="enter-button">Enter</a>
-                </div>   
-            </div>
-            <div class="app" id="youtubeApp" style="display: none;">
-                <img src="youtube.png" alt="App 2">
-                <div class="app-content">
-                    <div class="app-title">Youtube</div>
-                    <div class="app-description">This Version of Youtube is without Ads!</div>
-                    <a href="ios-apps/yt.html" class="enter-button">Enter</a>
-                </div>
-            </div>
-            <!-- New app section -->
-            <div class="app" id="whenvaction" style="display: none;">
-                <img src="whenvaction.png" alt="App 3">
-                <div class="app-content">
-                    <div class="app-title">متى اجازة؟</div>
-                    <div class="app-description">تطبيق لمعرفة وقت الاجازات الدراسية في المملكة العربية السعودية</div>
-                    <a href="ios-apps/whenisvaction.html" class="enter-button">Enter</a>
-                </div>
-            </div>
-            <div class="app" id="jawaboraskt" style="display: none;">
-                <img src="b56d42fb528ee5fd.png" alt="App 4">
-                <div class="app-content">
-                    <div class="app-title">لعبة جاوب او سكت</div>
-                    <div class="app-description">"جاوب أو اسكت" هي لعبة بين فريقين، حيث يجيب كل فريق على الأسئلة ويكسب نقاطًا للإجابات الصحيحة.
-                    </div>
-                    <a href="ios-games/test.html" class="enter-button">Enter</a>
-                </div>
+    <div class="header">
+        <div class="container">
+            <input type="search" class="search-bar" placeholder="Search apps and games..." id="searchInput">
+            <div class="nav-buttons">
+                <button class="nav-button active" data-category="featured">Featured</button>
+                <button class="nav-button" data-category="apps">Apps</button>
+                <button class="nav-button" data-category="games">Games</button>
             </div>
         </div>
     </div>
 
+    <main class="container">
+        <div class="app-grid" id="appGrid">
+            <!-- Apps will be dynamically inserted here -->
+        </div>
+    </main>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Display featured apps initially
-            document.getElementById('appMenu').style.display = 'block';
-            document.getElementById('flappyBirdApp').style.display = 'block';
-            document.getElementById('youtubeApp').style.display = 'block';
-            document.getElementById('whenvaction').style.display = 'block';
-            document.getElementById('jawaboraskt').style.display = 'none';
+        const apps = [
+            {
+                id: 'flappyBird',
+                title: 'Modified Flappy Bird',
+                description: 'Modified Flappy Bird is a fun game based on the original Flappy Bird, but with added twists and features.',
+                image: 'flappy-bird.jpg',
+                url: 'ios-games/flappy-bird.html',
+                category: ['featured', 'games']
+            },
+            {
+                id: 'youtube',
+                title: 'Youtube',
+                description: 'This Version of Youtube is without Ads!',
+                image: 'youtube.png',
+                url: 'ios-apps/yt.html',
+                category: ['featured', 'apps']
+            },
+            {
+                id: 'whenvaction',
+                title: 'متى اجازة؟',
+                description: 'تطبيق لمعرفة وقت الاجازات الدراسية في المملكة العربية السعودية',
+                image: 'whenvaction.png',
+                url: 'ios-apps/whenisvaction.html',
+                category: ['featured', 'apps']
+            },
+            {
+                id: 'jawaboraskt',
+                title: 'لعبة جاوب او سكت',
+                description: '"جاوب أو اسكت" هي لعبة بين فريقين، حيث يجيب كل فريق على الأسئلة ويكسب نقاطًا للإجابات الصحيحة.',
+                image: 'b56d42fb528ee5fd.png',
+                url: 'ios-games/test.html',
+                category: ['games']
+            }
+        ];
+
+        function createAppCard(app) {
+            return `
+                <div class="app-card" data-id="${app.id}">
+                    <div class="app-header">
+                        <img src="${app.image}" alt="${app.title}" class="app-icon">
+                        <div class="app-info">
+                            <h2 class="app-title">${app.title}</h2>
+                            <p class="app-description">${app.description}</p>
+                        </div>
+                    </div>
+                    <div class="app-footer">
+                        <a href="${app.url}" class="enter-button">Open</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterApps(category, searchQuery = '') {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = '';
+
+            const filteredApps = apps.filter(app => {
+                const matchesCategory = category === 'featured' ? true : app.category.includes(category);
+                const matchesSearch = searchQuery === '' || 
+                    app.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                    app.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            filteredApps.forEach(app => {
+                appGrid.innerHTML += createAppCard(app);
+            });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.nav-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterApps(button.dataset.category, document.getElementById('searchInput').value);
+            });
         });
 
-        // Feature button event listener
-        document.getElementById('featuredButton').addEventListener('click', function() {
-            // Show the featured apps
-            document.getElementById('flappyBirdApp').style.display = 'block';
-            document.getElementById('youtubeApp').style.display = 'block';
-            document.getElementById('whenvaction').style.display = 'block'; // Hide new app
-            document.getElementById('jawaboraskt').style.display = 'none'; // Hide new app
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const activeCategory = document.querySelector('.nav-button.active').dataset.category;
+            filterApps(activeCategory, e.target.value);
         });
 
-        // Apps button event listener
-        document.getElementById('appsButton').addEventListener('click', function() {
-            // Hide games and show apps
-            document.getElementById('flappyBirdApp').style.display = 'none';
-            document.getElementById('youtubeApp').style.display = 'block';
-            document.getElementById('whenvaction').style.display = 'block'; // Show new app
-            document.getElementById('jawaboraskt').style.display = 'none'; 
-        });
-
-        // Games button event listener
-        document.getElementById('gamesButton').addEventListener('click', function() {
-            // Hide apps and show games
-            document.getElementById('flappyBirdApp').style.display = 'block';
-            document.getElementById('jawaboraskt').style.display = 'block'; 
-            document.getElementById('youtubeApp').style.display = 'none';
-            document.getElementById('whenvaction').style.display = 'none'; // Hide new app
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            filterApps('featured');
         });
     </script>
 </body>
