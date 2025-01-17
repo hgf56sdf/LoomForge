@@ -30,7 +30,7 @@
             <key>Precomposed</key>
             <true/>
             <key>URL</key>
-            <string>https://loomforge.netlify.app/modified.html/</string>
+            <string>https://loomforge.netlify.app/IOS/modified.html/</string>
         </dict>
     </array>
     <key>PayloadDescription</key>
@@ -40,7 +40,7 @@
     <key>PayloadIdentifier</key>
     <string>com.loomforge.loomforgeapp</string>
     <key>PayloadOrganization</key>
-    <string>Your Company Name</string>
+    <string>LoomForge</string>
     <key>PayloadRemovalDisallowed</key>
     <false/>
     <key>PayloadType</key>
