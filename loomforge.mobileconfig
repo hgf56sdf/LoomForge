@@ -20,7 +20,7 @@
             <key>PayloadDisplayName</key>
             <string>Web Clip</string>
             <key>PayloadIdentifier</key>
-            <string>com.mycompany.myapp.webclip</string>
+            <string>com.loomforge.loomforgeapp.webclip</string>
             <key>PayloadType</key>
             <string>com.apple.webClip.managed</string>
             <key>PayloadUUID</key>
@@ -30,15 +30,15 @@
             <key>Precomposed</key>
             <true/>
             <key>URL</key>
-            <string>https://loomforge.netlify.app/</string>
+            <string>https://loomforge.netlify.app/modified.html/</string>
         </dict>
     </array>
     <key>PayloadDescription</key>
-    <string>Profile that adds a shortcut to your website on the home screen</string>
+    <string>Profile to download LoomForge in your IOS Device.</string>
     <key>PayloadDisplayName</key>
     <string>LoomForge</string>
     <key>PayloadIdentifier</key>
-    <string>com.mycompany.myapp</string>
+    <string>com.loomforge.loomforgeapp</string>
     <key>PayloadOrganization</key>
     <string>Your Company Name</string>
     <key>PayloadRemovalDisallowed</key>
