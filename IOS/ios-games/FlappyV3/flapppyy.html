@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Hopper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+    <div id="mainMenu" class="screen">
+        <h1>Sky Hopper</h1>
+        <button onclick="showDifficultyScreen()">Play</button>
+        <button onclick="showSettings()">Settings</button>
+    </div>
+
+    <div id="difficultyScreen" class="screen">
+        <h2>Select Difficulty</h2>
+        <button onclick="startGame('easy')">Easy</button>
+        <button onclick="startGame('medium')">Medium</button>
+        <button onclick="startGame('hard')">Hard</button>
+        <button onclick="showMainMenu()">Back</button>
+    </div>
+
+    <div id="settingsMenu" class="screen">
+        <h2>Settings</h2>
+        <select id="birdColor">
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="rainbow">Rainbow</option>
+        </select>
+        <select id="birdSize">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select>
+        <select id="pipeStyle">
+            <option value="normal">Normal</option>
+            <option value="neon">Neon</option>
+        </select>
+        <select id="backgroundTheme">
+            <option value="day">Day</option>
+            <option value="night">Night</option>
+            <option value="space">Space</option>
+        </select>
+        <h3>Advanced Settings</h3>
+        <input type="file" id="customBird" accept="image/*">
+        <input type="file" id="customPipe" accept="image/*">
+        <input type="file" id="customBackground" accept="image/*">
+        <button onclick="saveSettings()">Save</button>
+        <button onclick="showMainMenu()">Back</button>
+    </div>
+
+    <div id="gameOverScreen" class="screen">
+        <h2>Game Over</h2>
+        <p>Score: <span id="finalScore"></span></p>
+        <button onclick="restartGame()">Play Again</button>
+        <button onclick="showMainMenu()">Main Menu</button>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
+

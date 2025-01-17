@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>العطل في المملكة العربية السعودية ٢٠٢٥</title>
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --header-bg: #1e293b;
+            --filter-btn-bg: #ffffff;
+            --filter-btn-border: #e2e8f0;
+            --filter-btn-active: #3b82f6;
+            --badge-past: #94a3b8;
+            --badge-current: #22c55e;
+            --badge-future: #3b82f6;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --header-bg: #0f172a;
+            --filter-btn-bg: #1e293b;
+            --filter-btn-border: #334155;
+            --filter-btn-active: #3b82f6;
+            --badge-past: #64748b;
+            --badge-current: #22c55e;
+            --badge-future: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        header {
+            background-color: var(--header-bg);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            background: var(--filter-btn-bg);
+            border: 1px solid var(--filter-btn-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            border-color: var(--accent);
+        }
+        
+        .filters {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-btn {
+            background: var(--filter-btn-bg);
+            border: 1px solid var(--filter-btn-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--accent);
+        }
+        
+        .filter-btn.active {
+            background: var(--filter-btn-active);
+            color: white;
+            border-color: var(--accent);
+        }
+        
+        .holiday-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .holiday-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .holiday-title {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .holiday-info {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .note {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+            border-top: 1px solid var(--card-border);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            margin-top: 1rem;
+        }
+        
+        .status-past { background-color: var(--badge-past); }
+        .status-current { background-color: var(--badge-current); }
+        .status-future { background-color: var(--badge-future); }
+        
+        .hidden { display: none; }
+
+        /* Disclaimer Styles */
+        .disclaimer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .disclaimer-popup {
+            background-color: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .disclaimer-title {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .disclaimer-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .disclaimer-button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .disclaimer-button:hover {
+            background-color: var(--accent-hover);
+        }
+        
+        @media (max-width: 640px) {
+            .container { padding: 1rem; }
+            .filters { padding: 0.75rem; }
+            .filter-btn { padding: 0.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Disclaimer Popup -->
+    <div id="disclaimerPopup" class="disclaimer-overlay">
+        <div class="disclaimer-popup">
+            <h2 class="disclaimer-title">تنويه هام</h2>
+            <p class="disclaimer-text">
+                هذا الموقع غير مرتبط بأي جهة حكومية أو رسمية. المعلومات المعروضة هنا هي لأغراض إرشادية فقط وقد تتغير. يرجى الرجوع إلى المصادر الرسمية للتأكد من مواعيد العطل.
+            </p>
+            <button class="disclaimer-button" onclick="closeDisclaimer()">فهمت</button>
+        </div>
+    </div>
+
+    <header>
+        <div class="container header-content">
+            <h1 style="color: white;">العطل الرسمية ٢٠٢٥</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                تغيير المظهر
+            </button>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">جميع العطل</button>
+            <button class="filter-btn" data-filter="past">العطل السابقة</button>
+            <button class="filter-btn" data-filter="current">العطل الحالية</button>
+            <button class="filter-btn" data-filter="future">العطل القادمة</button>
+        </div>
+        
+        <div id="holidays-container"></div>
+    </main>
+
+    <script>
+        const holidays = [
+            {
+                name: "يوم التأسيس",
+                startDate: "2025-02-22",
+                duration: 1,
+                note: "السبت"
+            },
+            {
+                name: "عيد الفطر",
+                startDate: "2025-03-30",
+                duration: 4,
+                note: "يبدأ من يوم الأحد (متوقع حسب رؤية الهلال)"
+            },
+            {
+                name: "يوم عرفة",
+                startDate: "2025-06-06",
+                duration: 1,
+                note: "الجمعة"
+            },
+            {
+                name: "عيد الأضحى",
+                startDate: "2025-06-07",
+                duration: 4,
+                note: "يبدأ من يوم السبت (متوقع حسب رؤية الهلال)"
+            },
+            {
+                name: "اليوم الوطني السعودي",
+                startDate: "2025-09-23",
+                duration: 1,
+                note: "الثلاثاء"
+            }
+        ];
+
+            // Disclaimer functions
+            function closeDisclaimer() {
+            document.getElementById('disclaimerPopup').style.display = 'none';
+            localStorage.setItem('disclaimerAccepted', 'true');
+        }
+
+        // Check disclaimer on load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('disclaimerAccepted')) {
+                document.getElementById('disclaimerPopup').style.display = 'flex';
+            } else {
+                document.getElementById('disclaimerPopup').style.display = 'none';
+            }
+        });
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Initialize theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        function getHolidayStatus(startDate, duration) {
+            const today = new Date();
+            const holidayStart = new Date(startDate);
+            const holidayEnd = new Date(holidayStart);
+            holidayEnd.setDate(holidayEnd.getDate() + duration);
+            
+            if (today < holidayStart) return 'future';
+            if (today > holidayEnd) return 'past';
+            return 'current';
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('ar-SA', options);
+        }
+
+        function getDaysRemaining(dateString) {
+            const today = new Date();
+            const holidayDate = new Date(dateString);
+            const diffTime = holidayDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function createHolidayCard(holiday) {
+            const status = getHolidayStatus(holiday.startDate, holiday.duration);
+            const daysRemaining = getDaysRemaining(holiday.startDate);
+            
+            const statusText = {
+                past: 'انتهت',
+                current: 'جارية حالياً',
+                future: `متبقي ${daysRemaining} يوم`
+            };
+
+            return `
+                <div class="holiday-card" data-status="${status}">
+                    <h2 class="holiday-title">${holiday.name}</h2>
+                    <p class="holiday-info">التاريخ: ${formatDate(holiday.startDate)}</p>
+                    <p class="holiday-info">عدد أيام العطلة: ${holiday.duration} ${holiday.duration > 1 ? 'أيام' : 'يوم'}</p>
+                    <p class="note">${holiday.note}</p>
+                    <div class="status-badge status-${status}">${statusText[status]}</div>
+                </div>
+            `;
+        }
+
+        function renderHolidays(filter = 'all') {
+            const container = document.getElementById('holidays-container');
+            container.innerHTML = holidays
+                .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+                .map(holiday => createHolidayCard(holiday))
+                .join('');
+
+            if (filter !== 'all') {
+                document.querySelectorAll('.holiday-card').forEach(card => {
+                    if (card.dataset.status !== filter) {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+        }
+
+        // Event listeners for filters
+        document.querySelectorAll('.filter-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                renderHolidays(e.target.dataset.filter);
+            });
+        });
+
+        // Initial render
+        renderHolidays();
+
+        // Update every minute to keep status current
+        setInterval(() => renderHolidays(), 60000);
+    </script>
+</body>
+</html>

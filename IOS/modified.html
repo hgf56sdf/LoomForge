@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoomForge</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --background-dark: #1C1C1E;
+            --card-background: #2C2C2E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E8E93;
+            --success-color: #34C759;
+            --danger-color: #FF3B30;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            background-color: var(--background-dark);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-button {
+            background-color: var(--card-background);
+            color: var(--text-primary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 100px;
+        }
+
+        .nav-button.active {
+            background-color: var(--primary-color);
+        }
+
+        .nav-button:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .app-card {
+            background-color: var(--card-background);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .app-info {
+            flex: 1;
+        }
+
+        .app-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .app-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .app-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .enter-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .enter-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            background-color: var(--card-background);
+            color: var(--text-primary);
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar:focus {
+            outline: 2px solid var(--primary-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                padding-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <input type="search" class="search-bar" placeholder="Search apps and games..." id="searchInput">
+            <div class="nav-buttons">
+                <button class="nav-button active" data-category="featured">Featured</button>
+                <button class="nav-button" data-category="apps">Apps</button>
+                <button class="nav-button" data-category="games">Games</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="app-grid" id="appGrid">
+            <!-- Apps will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <script>
+        const apps = [
+            {
+                id: 'skyhooper',
+                title: 'Sky Hooper',
+                description: 'Sky Hooper is a fun game based on the original Flappy Bird, but with added twists and features.',
+                image: 'Images/Skyhooper.png',
+                url: 'ios-games/FlappyV3/flapppyy.html',
+                category: ['featured', 'games']
+            },
+            {
+                id: 'watchport',
+                title: 'WatchPort',
+                description: 'Watch Videos without ads!',
+                image: 'Images/yt.png',
+                url: 'ios-apps/yt.html',
+                category: ['featured', 'apps']
+            },
+            {
+                id: 'whenvaction',
+                title: 'متى اجازة؟',
+                description: 'تطبيق لمعرفة وقت الاجازات الدراسية في المملكة العربية السعودية',
+                image: 'Images/whenvaction.png',
+                url: 'ios-apps/whenisvaction.html',
+                category: ['featured', 'apps']
+            },
+            {
+                id: 'jawaboraskt',
+                title: 'لعبة جاوب او سكت',
+                description: '"جاوب أو اسكت" هي لعبة بين فريقين، حيث يجيب كل فريق على الأسئلة ويكسب نقاطًا للإجابات الصحيحة.',
+                image: 'Images/AnswerOrSilence.png',
+                url: 'ios-games/test.html',
+                category: ['games']
+            }
+        ];
+
+        function createAppCard(app) {
+            return `
+                <div class="app-card" data-id="${app.id}">
+                    <div class="app-header">
+                        <img src="${app.image}" alt="${app.title}" class="app-icon">
+                        <div class="app-info">
+                            <h2 class="app-title">${app.title}</h2>
+                            <p class="app-description">${app.description}</p>
+                        </div>
+                    </div>
+                    <div class="app-footer">
+                        <a href="${app.url}" class="enter-button">Open</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterApps(category, searchQuery = '') {
+            const appGrid = document.getElementById('appGrid');
+            appGrid.innerHTML = '';
+
+            const filteredApps = apps.filter(app => {
+                const matchesCategory = category === 'featured' ? true : app.category.includes(category);
+                const matchesSearch = searchQuery === '' || 
+                    app.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                    app.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            filteredApps.forEach(app => {
+                appGrid.innerHTML += createAppCard(app);
+            });
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.nav-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                filterApps(button.dataset.category, document.getElementById('searchInput').value);
+            });
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const activeCategory = document.querySelector('.nav-button.active').dataset.category;
+            filterApps(activeCategory, e.target.value);
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            filterApps('featured');
+        });
+    </script>
+</body>
+</html>
