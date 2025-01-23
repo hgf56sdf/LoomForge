@@ -2,7 +2,7 @@
   "name": "LoomForge",
   "short_name": "LoomForge",
   "description": "A collection of apps and games",
-  "start_url": "/modified.html",
+  "start_url": "/IOS/modified.html",
   "display": "standalone",
   "background_color": "#1C1C1E",
   "theme_color": "#007AFF",
