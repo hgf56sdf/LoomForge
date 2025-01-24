@@ -1,7 +1,7 @@
 {
   "name": "LoomForge",
   "short_name": "LoomForge",
-  "start_url": "./ios/modified.html",
+  "start_url": "./modified.html?homescreen=true",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
