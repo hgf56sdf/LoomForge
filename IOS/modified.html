@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <meta name="apple-mobile-web-app-title" content="LoomForge">
-        <link rel="apple-touch-icon" href="LOOMFORGE(LOGO).png"> <!-- Replace with your icon file -->
-        <link rel="manifest" href="manifest.json">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LoomForge">
+    <link rel="apple-touch-icon" href="LOOMFORGE(LOGO).png">
+    <link rel="manifest" href="manifest.json">
     <title>LoomForge</title>
     <style>
         :root {
@@ -29,11 +29,22 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        body {
+        html, body {
+            height: 100%;
+            overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: var(--background-dark);
             color: var(--text-primary);
+            -webkit-touch-callout: none; /* Disable callout menu */
+            -webkit-user-select: none; /* Disable text selection */
+            user-select: none;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
+            margin: 0;
         }
 
         .container {
@@ -207,9 +218,7 @@
     </div>
 
     <main class="container">
-        <div class="app-grid" id="appGrid">
-            <!-- Apps will be dynamically inserted here -->
-        </div>
+        <div class="app-grid" id="appGrid"></div>
     </main>
 
     <script>
