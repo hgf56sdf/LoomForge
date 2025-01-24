@@ -310,5 +310,14 @@
             filterApps('featured');
         });
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ensure app reloads in full-screen mode if not already
+        if (window.navigator.standalone === false || !window.matchMedia('(display-mode: standalone)').matches) {
+            window.location.href = './ios/modified.html?homescreen=true';
+        }
+    });
+</script>
 </body>
 </html>
