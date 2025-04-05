@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QuickFit - Login</title>
+    <style>
+        :root {
+            /* Light mode colors */
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --accent-primary: #7b2cbf;
+            --accent-secondary: #9d4edd;
+            --accent-light: #e0c3fc;
+            --border-color: #dee2e6;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+
+            /* Sizing and spacing */
+            --border-radius: 12px;
+            --input-height: 48px;
+            --button-height: 48px;
+            --container-padding: 24px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            /* Typography */
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            --font-size-sm: 14px;
+            --font-size-md: 16px;
+            --font-size-lg: 20px;
+            --font-size-xl: 24px;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Dark mode colors */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #121212;
+                --bg-secondary: #1e1e1e;
+                --text-primary: #f8f9fa;
+                --text-secondary: #adb5bd;
+                --border-color: #2d2d2d;
+                --accent-light: #5a189a;
+            }
+        }
+
+        /* Dark mode class override (for manual toggle) */
+        html.dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --text-primary: #f8f9fa;
+            --text-secondary: #adb5bd;
+            --border-color: #2d2d2d;
+            --accent-light: #5a189a;
+        }
+
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            font-size: var(--font-size-md);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: var(--spacing-md);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: var(--container-padding);
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            margin: 0 auto;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* iOS-specific adjustments */
+        .ios-device .container {
+            padding-top: var(--spacing-lg);
+            padding-bottom: env(safe-area-inset-bottom, var(--spacing-lg));
+        }
+
+        /* Header styles */
+        .header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .logo-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  margin: 0 auto var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+
+        h1 {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: var(--font-size-md);
+        }
+
+        /* Tab styles */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: var(--spacing-md);
+            cursor: pointer;
+            color: var(--text-secondary);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-primary);
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+        }
+
+        input {
+            width: 100%;
+            height: var(--input-height);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: var(--bg-primary);
+            padding: 0 var(--spacing-md);
+            font-size: var(--font-size-md);
+            color: var(--text-primary);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-appearance: none;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: var(--font-size-md);
+        }
+
+        /* Button styles */
+        .btn {
+            width: 100%;
+            height: var(--button-height);
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--accent-primary);
+            color: white;
+            font-size: var(--font-size-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-secondary);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(123, 44, 191, 0.1);
+        }
+
+        .social-buttons {
+            margin-top: var(--spacing-xl);
+        }
+
+        .social-btn {
+            margin-bottom: var(--spacing-md);
+            position: relative;
+            padding-left: 48px;
+        }
+
+        .social-btn i {
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+        }
+
+        /* Helper classes */
+        .hidden {
+            display: none;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-lg {
+            margin-top: var(--spacing-lg);
+        }
+
+        .mb-sm {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .text-divider {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .text-divider::before,
+        .text-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .text-divider span {
+            padding: 0 var(--spacing-md);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Toggle switch for dark/light mode */
+        .theme-switch {
+            position: absolute;
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .theme-switch-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        /* Error message */
+        .error-message {
+            color: var(--error-color);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-sm);
+            display: none;
+        }
+
+        /* Icon styles */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 0;
+            stroke: currentColor;
+            fill: currentColor;
+            vertical-align: -0.125em;
+        }
+
+        /* Loader/spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: var(--spacing-sm);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading .spinner {
+            display: inline-block;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .container {
+                box-shadow: none;
+                padding: var(--spacing-md);
+            }
+            
+            body {
+                padding: var(--spacing-sm);
+            }
+        }
+
+        /* Safari iOS adjustments */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                padding-top: env(safe-area-inset-top, 0);
+                padding-bottom: env(safe-area-inset-bottom, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Theme switch toggle -->
+        <div class="theme-switch" id="themeSwitch" role="button" aria-label="Toggle dark/light mode" tabindex="0">
+            <div class="theme-switch-icon">
+                <!-- Sun icon for dark mode (to switch to light) -->
+                <svg id="lightIcon" class="icon hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 17q-2.075 0-3.537-1.463Q7 14.075 7 12t1.463-3.537Q9.925 7 12 7t3.538 1.463Q17 9.925 17 12q0 2.075-1.462 3.537Q14.075 17 12 17ZM2 13q-.425 0-.712-.288Q1 12.425 1 12t.288-.713Q1.575 11 2 11h2q.425 0 .713.287Q5 11.575 5 12t-.287.712Q4.425 13 4 13Zm18 0q-.425 0-.712-.288Q19 12.425 19 12t.288-.713Q19.575 11 20 11h2q.425 0 .712.287.288.288.288.713t-.288.712Q22.425 13 22 13ZM11 5q0-.425.288-.713Q11.575 4 12 4t.713.287Q13 4.575 13 5v2q0 .425-.287.712Q12.425 8 12 8t-.712-.288Q11 7.425 11 7Zm0 14q0-.425.288-.712Q11.575 18 12 18t.713.288Q13 18.575 13 19v2q0 .425-.287.712Q12.425 22 12 22t-.712-.288Q11 21.425 11 21ZM5.65 7.05 4.575 6q-.3-.275-.288-.7.013-.425.288-.725.3-.3.725-.3t.7.3L7.05 5.65q.275.3.275.7 0 .4-.275.7-.275.3-.687.287-.413-.012-.713-.287Zm12.7 12.725L17.3 18.75q-.275-.3-.275-.7 0-.4.275-.7.275-.3.688-.287.412.012.712.287l1.075 1.05q.3.275.288.7-.013.425-.288.725-.3.3-.725.3t-.7-.3ZM18.35 7.05q-.275-.3-.275-.7 0-.4.275-.7.3-.3.7-.288.4.013.7.288L20.8 6.7q.3.3.3.725t-.3.7q-.275.3-.7.288-.425-.013-.725-.288ZM5.65 19.775q-.3-.3-.3-.725t.3-.7L6.7 17.3q.3-.275.725-.275t.7.275q.3.3.287.7-.012.4-.287.7l-1.05 1.075q-.3.3-.725.287-.425-.012-.7-.287Z"/>
+                </svg>
+                <!-- Moon icon for light mode (to switch to dark) -->
+                <svg id="darkIcon" class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 21q-3.75 0-6.375-2.625T3 12q0-3.75 2.625-6.375T12 3q.35 0 .688.025.337.025.662.075-1.025.725-1.637 1.887Q11.1 6.15 11.1 7.5q0 2.25 1.575 3.825Q14.25 12.9 16.5 12.9q1.375 0 2.525-.613 1.15-.612 1.875-1.637.05.325.075.662Q21 11.65 21 12q0 3.75-2.625 6.375T12 21Z"/>
+                </svg>
+            </div>
+        </div>
+
+<!-- Header with logo image -->
+<div class="header">
+    <div class="logo-wrapper">
+        <img src="images/quickfit-logo.png" alt="QuickFit Logo" class="logo-image" />
+    </div>
+    <h1>QuickFit</h1>
+    <p class="tagline">Your fitness journey starts here</p>
+  </div>
+  
+
+        <!-- Tab navigation -->
+        <div class="tabs">
+            <div class="tab active" id="loginTab">Login</div>
+            <div class="tab" id="signupTab">Sign Up</div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" name="email" placeholder="yourname@example.com" required>
+                <div class="error-message" id="loginEmailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="loginPassword" name="password" placeholder="············" required>
+                    <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 8a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="error-message" id="loginPasswordError"></div>
+            </div>
+            <button type="submit" class="btn" id="loginButton">
+                <span class="spinner"></span>
+                <span>Login</span>
+            </button>
+            <p class="text-center mt-lg">
+                <a href="#" style="color: var(--accent-primary); text-decoration: none;">Forgot your password?</a>
+            </p>
+
+            <div class="text-divider">
+                <span>OR CONTINUE WITH</span>
+            </div>
+
+            <!-- Social login buttons -->
+            <div class="social-buttons">
+                <button type="button" class="btn btn-outline social-btn" id="googleLogin">
+                    <i>
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                            <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/>
+                        </svg>
+                    </i>
+                    <span>Sign in with Google</span>
+                </button>
+                <button type="button" class="btn btn-outline social-btn" id="appleLogin">
+                    <i>
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+                        </svg>
+                    </i>
+                    <span>Sign in with Apple</span>
+                </button>
+            </div>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" class="hidden">
+            <div class="form-group">
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" name="email" placeholder="yourname@example.com" required>
+                <div class="error-message" id="signupEmailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="signupPassword" name="password" placeholder="············" required>
+                    <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 8a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="error-message" id="signupPasswordError"></div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="············" required>
+                    <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 8a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+            <button type="submit" class="btn" id="signupButton">
+                <span class="spinner"></span>
+                <span>Create Account</span>
+            </button>
+
+            <div class="text-divider">
+                <span>OR SIGN UP WITH</span>
+            </div>
+
+            <!-- Social signup buttons -->
+            <div class="social-buttons">
+                <button type="button" class="btn btn-outline social-btn" id="googleSignup">
+                    <i>
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                            <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/>
+                        </svg>
+                    </i>
+                    <span>Sign up with Google</span>
+                </button>
+                <button type="button" class="btn btn-outline social-btn" id="appleSignup">
+                    <i>
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                            <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+                        </svg>
+                    </i>
+                    <span>Sign up with Apple</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        /**
+         * QuickFit Login & Signup JavaScript
+         * Handles form switching, validation, theme switching, and iOS detection
+         */
+
+        // DOM Elements
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const themeSwitch = document.getElementById('themeSwitch');
+        const lightIcon = document.getElementById('lightIcon');
+        const darkIcon = document.getElementById('darkIcon');
+        const container = document.querySelector('.container');
+        const passwordToggleButtons = document.querySelectorAll('.toggle-password');
+        
+        // Login form elements
+        const loginButton = document.getElementById('loginButton');
+        const loginEmail = document.getElementById('loginEmail');
+        const loginPassword = document.getElementById('loginPassword');
+        const loginEmailError = document.getElementById('loginEmailError');
+        const loginPasswordError = document.getElementById('loginPasswordError');
+        
+        // Signup form elements
+        const signupButton = document.getElementById('signupButton');
+        const signupEmail = document.getElementById('signupEmail');
+        const signupPassword = document.getElementById('signupPassword');
+        const confirmPassword = document.getElementById('confirmPassword');
+        const signupEmailError = document.getElementById('signupEmailError');
+        const signupPasswordError = document.getElementById('signupPasswordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+        // Social login buttons
+        const googleLogin = document.getElementById('googleLogin');
+        const appleLogin = document.getElementById('appleLogin');
+        const googleSignup = document.getElementById('googleSignup');
+        const appleSignup = document.getElementById('appleSignup');
+
+        /**
+         * Device detection
+         * Check if the user is on an iOS device and add appropriate class
+         */
+        function detectIOSDevice() {
+            const userAgent = navigator.userAgent;
+            const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            
+            if (isIOS) {
+                document.body.classList.add('ios-device');
+                // Add iOS specific meta tags for better appearance
+                const viewportMeta = document.querySelector('meta[name=viewport]');
+                viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover';
+                
+                // Add status bar meta for iOS
+                const metaStatusBar = document.createElement('meta');
+                metaStatusBar.name = 'apple-mobile-web-app-status-bar-style';
+                metaStatusBar.content = 'black-translucent';
+                document.head.appendChild(metaStatusBar);
+            }
+        }
+
+        /**
+         * Theme Switcher
+         * Handle dark mode detection and switching
+         */
+        function initThemeSwitcher() {
+            // Check for system preference
+            const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // Set initial theme based on system preference
+            if (prefersDarkMode) {
+                document.documentElement.classList.add('dark-mode');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            }
+            
+            // Theme toggle functionality
+            themeSwitch.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark-mode');
+                lightIcon.classList.toggle('hidden');
+                darkIcon.classList.toggle('hidden');
+            });
+            
+            // Also toggle on keyboard press for accessibility
+            themeSwitch.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    themeSwitch.click();
+                }
+            });
+        }
+
+        /**
+         * Form Tab Switching
+         * Switch between login and signup forms
+         */
+        function initFormTabs() {
+            loginTab.addEventListener('click', () => {
+                loginTab.classList.add('active');
+                signupTab.classList.remove('active');
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                // Reset the forms when switching tabs
+                loginForm.reset();
+                resetFormErrors(loginForm);
+            });
+            
+            signupTab.addEventListener('click', () => {
+                signupTab.classList.add('active');
+                loginTab.classList.remove('active');
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                // Reset the forms when switching tabs
+                signupForm.reset();
+                resetFormErrors(signupForm);
+            });
+        }
+
+        /**
+         * Password Toggle Visibility
+         * Show/hide password text
+         */
+        function initPasswordToggles() {
+            passwordToggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const input = button.previousElementSibling;
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    
+                    // Update the icon based on visibility
+                    if (type === 'text') {
+                        button.innerHTML = `
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                            </svg>
+                        `;
+                    } else {
+                        button.innerHTML = `
+                            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 8a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5z"/>
+                            </svg>
+                        `;
+                    }
+                });
+            });
+        }
+
+        /**
+         * Form Validation
+         * Validate login and signup forms
+         */
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function validatePassword(password) {
+            // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            return passwordRegex.test(password);
+        }
+
+        function showError(input, errorElement, message) {
+            input.classList.add('error');
+            errorElement.style.display = 'block';
+            errorElement.textContent = message;
+        }
+
+        function hideError(input, errorElement) {
+            input.classList.remove('error');
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+        }
+
+        function resetFormErrors(form) {
+            const inputs = form.querySelectorAll('input');
+            const errorElements = form.querySelectorAll('.error-message');
+            
+            inputs.forEach(input => input.classList.remove('error'));
+            errorElements.forEach(error => {
+                error.style.display = 'none';
+                error.textContent = '';
+            });
+        }
+
+        function initFormValidation() {
+            // Login form validation
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Validate email
+                if (!validateEmail(loginEmail.value)) {
+                    showError(loginEmail, loginEmailError, 'Please enter a valid email address');
+                    isValid = false;
+                } else {
+                    hideError(loginEmail, loginEmailError);
+                }
+                
+                // Validate password
+                if (loginPassword.value.length < 8) {
+                    showError(loginPassword, loginPasswordError, 'Password must be at least 8 characters');
+                    isValid = false;
+                } else {
+                    hideError(loginPassword, loginPasswordError);
+                }
+                
+                if (isValid) {
+                    // Show loading state
+                    loginButton.classList.add('loading');
+                    loginButton.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        // Process login here (would connect to backend in production)
+                        console.log('Login submitted:', {
+                            email: loginEmail.value,
+                            password: loginPassword.value
+                        });
+                        
+                        // Reset form and loading state
+                        loginButton.classList.remove('loading');
+                        loginButton.disabled = false;
+                        
+                        // Show success (for demo)
+                        alert('Login successful! Redirecting...');
+                    }, 1500);
+                }
+            });
+            
+            // Signup form validation
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Validate email
+                if (!validateEmail(signupEmail.value)) {
+                    showError(signupEmail, signupEmailError, 'Please enter a valid email address');
+                    isValid = false;
+                } else {
+                    hideError(signupEmail, signupEmailError);
+                }
+                
+                // Validate password
+                if (!validatePassword(signupPassword.value)) {
+                    showError(signupPassword, signupPasswordError, 
+                        'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number');
+                    isValid = false;
+                } else {
+                    hideError(signupPassword, signupPasswordError);
+                }
+                
+                // Validate password confirmation
+                if (signupPassword.value !== confirmPassword.value) {
+                    showError(confirmPassword, confirmPasswordError, 'Passwords do not match');
+                    isValid = false;
+                } else if (confirmPassword.value) {
+                    hideError(confirmPassword, confirmPasswordError);
+                }
+                
+                if (isValid) {
+                    // Show loading state
+                    signupButton.classList.add('loading');
+                    signupButton.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        // Process signup here (would connect to backend in production)
+                        console.log('Signup submitted:', {
+                            email: signupEmail.value,
+                            password: signupPassword.value
+                        });
+                        
+                        // Reset form and loading state
+                        signupButton.classList.remove('loading');
+                        signupButton.disabled = false;
+                        
+                        // Show success (for demo)
+                        alert('Account created successfully! Redirecting...');
+                    }, 1500);
+                }
+            });
+        }
+
+        /**
+         * Social Login & Signup Buttons
+         * Initialize social login/signup functionality
+         */
+        function initSocialButtons() {
+            // Google login
+            googleLogin.addEventListener('click', () => {
+                console.log('Google login clicked');
+                googleLogin.classList.add('loading');
+                
+                // Simulate OAuth redirect
+                setTimeout(() => {
+                    alert('Redirecting to Google authentication...');
+                    googleLogin.classList.remove('loading');
+                }, 800);
+            });
+            
+            // Apple login
+            appleLogin.addEventListener('click', () => {
+                console.log('Apple login clicked');
+                appleLogin.classList.add('loading');
+                
+                // Simulate OAuth redirect
+                setTimeout(() => {
+                    alert('Redirecting to Apple authentication...');
+                    appleLogin.classList.remove('loading');
+                }, 800);
+            });
+            
+            // Google signup
+            googleSignup.addEventListener('click', () => {
+                console.log('Google signup clicked');
+                googleSignup.classList.add('loading');
+                
+                // Simulate OAuth redirect
+                setTimeout(() => {
+                    alert('Redirecting to Google authentication...');
+                    googleSignup.classList.remove('loading');
+                }, 800);
+            });
+            
+            // Apple signup
+            appleSignup.addEventListener('click', () => {
+                console.log('Apple signup clicked');
+                appleSignup.classList.add('loading');
+                
+                // Simulate OAuth redirect
+                setTimeout(() => {
+                    alert('Redirecting to Apple authentication...');
+                    appleSignup.classList.remove('loading');
+                }, 800);
+            });
+        }
+
+        /**
+         * Input focus/blur effects
+         * Add subtle animation when focusing inputs
+         */
+        function initInputEffects() {
+            const inputs = document.querySelectorAll('input');
+            
+            inputs.forEach(input => {
+                // Focus effect
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('focused');
+                });
+                
+                // Blur effect
+                input.addEventListener('blur', () => {
+                    input.parentElement.classList.remove('focused');
+                });
+                
+                // Real-time validation for email fields
+                if (input.type === 'email') {
+                    input.addEventListener('input', () => {
+                        const errorElement = document.getElementById(`${input.id}Error`);
+                        if (input.value && !validateEmail(input.value)) {
+                            showError(input, errorElement, 'Please enter a valid email address');
+                        } else {
+                            hideError(input, errorElement);
+                        }
+                    });
+                }
+                
+                // Real-time validation for password confirmation
+                if (input.id === 'confirmPassword') {
+                    input.addEventListener('input', () => {
+                        if (input.value && input.value !== signupPassword.value) {
+                            showError(input, confirmPasswordError, 'Passwords do not match');
+                        } else {
+                            hideError(input, confirmPasswordError);
+                        }
+                    });
+                }
+                
+                // Real-time validation for password strength on signup
+                if (input.id === 'signupPassword') {
+                    input.addEventListener('input', () => {
+                        if (input.value && !validatePassword(input.value)) {
+                            showError(input, signupPasswordError, 
+                                'Password must be at least 8 characters with 1 uppercase, 1 lowercase, and 1 number');
+                        } else {
+                            hideError(input, signupPasswordError);
+                        }
+                        
+                        // Also update confirm password validation
+                        if (confirmPassword.value && confirmPassword.value !== input.value) {
+                            showError(confirmPassword, confirmPasswordError, 'Passwords do not match');
+                        } else if (confirmPassword.value) {
+                            hideError(confirmPassword, confirmPasswordError);
+                        }
+                    });
+                }
+            });
+        }
+
+        /**
+         * App initialization
+         * Call all init functions when DOM is ready
+         */
+        function initApp() {
+            detectIOSDevice();
+            initThemeSwitcher();
+            initFormTabs();
+            initPasswordToggles();
+            initFormValidation();
+            initSocialButtons();
+            initInputEffects();
+            
+            // Add some animation to the container
+            setTimeout(() => {
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    container.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    container.style.opacity = '1';
+                    container.style.transform = 'translateY(0)';
+                }, 50);
+            }, 0);
+        }
+
+        // Initialize the app when DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
