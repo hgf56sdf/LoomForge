@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App-Codes</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --input-bg: #fff;
+            --card-bg: #fff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --border: #ddd;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --text-color: #f5f5f5;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --input-bg: #2c2c2c;
+            --card-bg: #2c2c2c;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --border: #444;
+            --success: #27ae60;
+            --danger: #c0392b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .mode-toggle {
+            width: 60px;
+            height: 30px;
+            background-color: var(--input-bg);
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 2px 5px var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .toggle-thumb {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            top: 1px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .dark-mode .toggle-thumb {
+            transform: translateX(30px);
+        }
+
+        .mode-icon {
+            font-size: 20px;
+            margin: 0 10px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .input-section {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 16px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+
+        .history-section {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .clear-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .clear-btn:hover {
+            background-color: var(--danger);
+            opacity: 0.9;
+        }
+
+        .history-list {
+            list-style: none;
+        }
+
+        .history-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .code-text {
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        .timestamp {
+            color: var(--primary-color);
+            font-size: 12px;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        /* iPad Layout - for screens larger than 768px */
+        @media (min-width: 768px) {
+            body {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .app-layout {
+                display: flex;
+                gap: 20px;
+            }
+
+            .input-section, .history-section {
+                flex: 1;
+                margin-bottom: 0;
+            }
+
+            .input-section {
+                height: fit-content;
+            }
+        }
+
+        /* iPhone Layout - for screens smaller than 768px */
+        @media (max-width: 767px) {
+            .app-layout {
+                display: block;
+            }
+
+            .input-section, .history-section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>App-Codes</h1>
+            <div class="toggle-container">
+                <span class="mode-icon">☀️</span>
+                <div class="mode-toggle" id="modeToggle">
+                    <div class="toggle-thumb"></div>
+                </div>
+                <span class="mode-icon">🌙</span>
+            </div>
+        </header>
+
+        <div class="app-layout">
+            <div class="input-section">
+                <label for="codeInput" class="input-label">Enter Code:</label>
+                <input type="text" id="codeInput" class="input-field" placeholder="Enter code numbers only..." inputmode="numeric">
+            </div>
+
+            <div class="history-section">
+                <div class="history-header">
+                    <h2 class="history-title">Code History</h2>
+                    <button id="clearHistory" class="clear-btn">Clear All</button>
+                </div>
+                <div id="historyContainer">
+                    <p class="empty-history">No codes entered yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const modeToggle = document.getElementById('modeToggle');
+        const codeInput = document.getElementById('codeInput');
+        const clearHistoryBtn = document.getElementById('clearHistory');
+        const historyContainer = document.getElementById('historyContainer');
+        
+        // Secret code and redirect URL
+        const SECRET_CODE = '097861222';
+        const REDIRECT_URL = 'https://example.com/secret';
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved theme preference
+            loadThemePreference();
+            
+            // Load code history
+            displayCodeHistory();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        /**
+         * Set up all event listeners for the app
+         */
+        function setupEventListeners() {
+            // Theme toggle event
+            modeToggle.addEventListener('click', toggleTheme);
+            
+            // Input validation and code processing
+            codeInput.addEventListener('input', enforceNumericInput);
+            codeInput.addEventListener('keyup', handleCodeInput);
+            
+            // Clear history button
+            clearHistoryBtn.addEventListener('click', clearHistory);
+        }
+        
+        /**
+         * Load user's theme preference from localStorage
+         */
+        function loadThemePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        }
+        
+        /**
+         * Toggle between light and dark theme
+         */
+        function toggleTheme() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+        
+        /**
+         * Ensures the input field only accepts numeric values
+         */
+        function enforceNumericInput() {
+            // Replace any non-numeric character with empty string
+            codeInput.value = codeInput.value.replace(/\D/g, '');
+        }
+        
+        /**
+         * Process code input and check for secret code
+         */
+        function handleCodeInput(event) {
+            const code = codeInput.value.trim();
+            
+            // Check if Enter key was pressed or if code matches secret
+            if (code === SECRET_CODE || (event.key === 'Enter' && code !== '')) {
+                if (code === SECRET_CODE) {
+                    // Redirect to secret URL if code matches
+                    saveCode(code);
+                    window.location.href = REDIRECT_URL;
+                } else if (event.key === 'Enter') {
+                    // Save the entered code to history
+                    saveCode(code);
+                    codeInput.value = '';
+                }
+            }
+        }
+        
+        /**
+         * Save a code to localStorage history
+         * @param {string} code - The code to save
+         */
+        function saveCode(code) {
+            // Get existing codes or initialize empty array
+            const codes = JSON.parse(localStorage.getItem('appCodes') || '[]');
+            
+            // Add new code with timestamp
+            codes.push({
+                code: code,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Save back to localStorage
+            localStorage.setItem('appCodes', JSON.stringify(codes));
+            
+            // Update the display
+            displayCodeHistory();
+        }
+        
+        /**
+         * Display the code history from localStorage
+         */
+        function displayCodeHistory() {
+            // Get codes from localStorage
+            const codes = JSON.parse(localStorage.getItem('appCodes') || '[]');
+            
+            // Clear the container
+            historyContainer.innerHTML = '';
+            
+            // Show message if no codes exist
+            if (codes.length === 0) {
+                historyContainer.innerHTML = '<p class="empty-history">No codes entered yet.</p>';
+                return;
+            }
+            
+            // Create history list
+            const historyList = document.createElement('ul');
+            historyList.className = 'history-list';
+            
+            // Add each code as a list item (most recent first)
+            codes.slice().reverse().forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.className = 'history-item';
+                
+                const dateObj = new Date(item.timestamp);
+                const formattedDate = dateObj.toLocaleString();
+                
+                listItem.innerHTML = `
+                    <span class="code-text">${item.code}</span>
+                    <span class="timestamp">${formattedDate}</span>
+                `;
+                
+                historyList.appendChild(listItem);
+            });
+            
+            historyContainer.appendChild(historyList);
+        }
+        
+        /**
+         * Clear all code history
+         */
+        function clearHistory() {
+            localStorage.removeItem('appCodes');
+            displayCodeHistory();
+        }
+    </script>
+</body>
+</html>
