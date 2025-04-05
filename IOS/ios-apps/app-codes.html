@@ -16,6 +16,10 @@
             --border: #ddd;
             --success: #2ecc71;
             --danger: #e74c3c;
+            --notification-bg: rgba(255, 255, 255, 0.95);
+            --notification-text: #333;
+            --notification-shadow: rgba(0, 0, 0, 0.2);
+            --button-hover: #f0f0f0;
         }
 
         .dark-mode {
@@ -29,6 +33,10 @@
             --border: #444;
             --success: #27ae60;
             --danger: #c0392b;
+            --notification-bg: rgba(42, 42, 42, 0.95);
+            --notification-text: #f5f5f5;
+            --notification-shadow: rgba(0, 0, 0, 0.4);
+            --button-hover: #333;
         }
 
         * {
@@ -116,21 +124,42 @@
             font-weight: 500;
         }
 
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
         .input-field {
-            width: 100%;
+            flex: 1;
             padding: 15px;
             border-radius: 8px;
             border: 1px solid var(--border);
             font-size: 16px;
             background-color: var(--input-bg);
             color: var(--text-color);
-            margin-bottom: 15px;
         }
 
         .input-field:focus {
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+        }
+
+        .enter-btn {
+            padding: 0 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .enter-btn:hover {
+            background-color: var(--secondary-color);
         }
 
         .history-section {
@@ -203,6 +232,47 @@
             opacity: 0.7;
         }
 
+        /* Notification popup */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background-color: var(--notification-bg);
+            color: var(--notification-text);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--notification-shadow);
+            z-index: 100;
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 90%;
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .notification-icon {
+            font-size: 20px;
+        }
+
+        .notification-message {
+            font-size: 15px;
+        }
+
         /* iPad Layout - for screens larger than 768px */
         @media (min-width: 768px) {
             body {
@@ -237,6 +307,29 @@
             .input-section, .history-section {
                 width: 100%;
             }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .enter-btn {
+                padding: 12px;
+            }
+        }
+
+        /* Fix for very small screens */
+        @media (max-width: 375px) {
+            body {
+                padding: 15px;
+            }
+
+            .input-field {
+                padding: 12px;
+            }
+
+            .enter-btn {
+                padding: 10px;
+            }
         }
     </style>
 </head>
@@ -256,7 +349,10 @@
         <div class="app-layout">
             <div class="input-section">
                 <label for="codeInput" class="input-label">Enter Code:</label>
-                <input type="text" id="codeInput" class="input-field" placeholder="Enter code numbers only..." inputmode="numeric">
+                <div class="input-group">
+                    <input type="text" id="codeInput" class="input-field" placeholder="Enter code numbers only..." inputmode="numeric">
+                    <button id="enterBtn" class="enter-btn">Enter</button>
+                </div>
             </div>
 
             <div class="history-section">
@@ -271,16 +367,28 @@
         </div>
     </div>
 
+    <!-- Notification template (initially hidden) -->
+    <div id="notification" class="notification">
+        <span class="notification-icon"></span>
+        <span id="notificationMessage" class="notification-message"></span>
+    </div>
+
     <script>
         // DOM Elements
         const modeToggle = document.getElementById('modeToggle');
         const codeInput = document.getElementById('codeInput');
+        const enterBtn = document.getElementById('enterBtn');
         const clearHistoryBtn = document.getElementById('clearHistory');
         const historyContainer = document.getElementById('historyContainer');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notificationMessage');
         
         // Secret code and redirect URL
-        const SECRET_CODE = '097861222';
-        const REDIRECT_URL = 'https://example.com/secret';
+        const SECRET_CODE = '110011';
+        const REDIRECT_URL = 'https://loomforge.netlify.app/ios/random/quick-fit/sign-up';
+        
+        // Notification timeout variable
+        let notificationTimeout;
         
         // Initialize app
         document.addEventListener('DOMContentLoaded', () => {
@@ -301,9 +409,16 @@
             // Theme toggle event
             modeToggle.addEventListener('click', toggleTheme);
             
-            // Input validation and code processing
+            // Input validation
             codeInput.addEventListener('input', enforceNumericInput);
-            codeInput.addEventListener('keyup', handleCodeInput);
+            
+            // Enter button and keypress
+            enterBtn.addEventListener('click', processCode);
+            codeInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    processCode();
+                }
+            });
             
             // Clear history button
             clearHistoryBtn.addEventListener('click', clearHistory);
@@ -336,23 +451,70 @@
         }
         
         /**
-         * Process code input and check for secret code
+         * Process the entered code
          */
-        function handleCodeInput(event) {
+        function processCode() {
             const code = codeInput.value.trim();
             
-            // Check if Enter key was pressed or if code matches secret
-            if (code === SECRET_CODE || (event.key === 'Enter' && code !== '')) {
-                if (code === SECRET_CODE) {
-                    // Redirect to secret URL if code matches
-                    saveCode(code);
-                    window.location.href = REDIRECT_URL;
-                } else if (event.key === 'Enter') {
-                    // Save the entered code to history
-                    saveCode(code);
-                    codeInput.value = '';
-                }
+            if (code === '') {
+                showNotification('Please enter a code.', 'error');
+                return;
             }
+            
+            // Check if code matches secret
+            if (code === SECRET_CODE) {
+                // Save code to history
+                saveCode(code);
+                
+                // Show success notification
+                showNotification('Code verified, redirecting...', 'success');
+                
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = REDIRECT_URL;
+                }, 1000);
+            } else {
+                // Save the entered code to history
+                saveCode(code);
+                
+                // Show error notification
+                showNotification('Invalid code. Please try again.', 'error');
+                
+                // Clear the input field
+                codeInput.value = '';
+                codeInput.focus();
+            }
+        }
+        
+        /**
+         * Show a notification popup
+         * @param {string} message - The message to display
+         * @param {string} type - The type of notification (error or success)
+         */
+        function showNotification(message, type = 'error') {
+            // Clear any existing timeout
+            if (notificationTimeout) {
+                clearTimeout(notificationTimeout);
+            }
+            
+            // Set notification message and type
+            notificationMessage.textContent = message;
+            notification.className = 'notification';
+            notification.classList.add(type);
+            
+            // Set icon based on notification type
+            const icon = notification.querySelector('.notification-icon');
+            icon.textContent = type === 'error' ? '❌' : '✅';
+            
+            // Show notification with animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Hide notification after a delay
+            notificationTimeout = setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
         
         /**
@@ -421,6 +583,7 @@
         function clearHistory() {
             localStorage.removeItem('appCodes');
             displayCodeHistory();
+            showNotification('History cleared successfully.', 'success');
         }
     </script>
 </body>
