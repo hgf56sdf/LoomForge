@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickFit - Your Fitness Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<!-- Video Modal -->
+<div id="video-modal" class="video-modal hidden">
+    <div class="video-modal-content">
+        <span id="close-video" class="close-btn">&times;</span>
+        <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+        <div class="login-container">
+            <div class="logo-container">
+                <img src="/Images/quickfit-logo.png" alt="QuickFitPrompt Logo" class="logo">
+            </div>
+            <h1>Welcome to QuickFit</h1>
+            <p>Your personal fitness assistant</p>
+            <div class="login-form">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button id="login-btn" class="primary-btn">Log In</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Flow -->
+    <div id="onboarding-screen" class="screen hidden">
+        <div class="onboarding-container">
+            <h2>Let's get started, <span id="user-greeting">there</span>!</h2>
+            
+            <div id="goal-selection" class="onboarding-step">
+                <h3>What's your goal?</h3>
+                <div class="goal-buttons">
+                    <button class="goal-btn" data-goal="lose-weight">
+                        <i class="fas fa-weight-scale"></i>
+                        Lose Weight
+                    </button>
+                    <button class="goal-btn" data-goal="build-muscle">
+                        <i class="fas fa-dumbbell"></i>
+                        Build Muscle
+                    </button>
+                </div>
+            </div>
+            
+            <div id="weight-input" class="onboarding-step hidden">
+                <h3>What's your current weight?</h3>
+                <div class="weight-input-container">
+                    <input type="number" id="current-weight" min="1" max="500" placeholder="Enter weight">
+                    <select id="weight-unit">
+                        <option value="kg">kg</option>
+                        <option value="lbs">lbs</option>
+                    </select>
+                </div>
+                <button id="weight-submit" class="primary-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard-screen" class="screen hidden">
+        <header>
+            <div class="header-left">
+                <img src="/Images/quickfit-logo.png" alt="QuickFitPrompt Logo" class="logo">
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" class="icon-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-profile">
+                    <span id="profile-name">User</span>
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="main-content">
+                <div class="dashboard-welcome">
+                    <h1>Welcome back, <span id="user-name">Fitness Fan</span>!</h1>
+                    <p class="motivational-quote">Ready for another day of progress?</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Progress Card -->
+                    <div class="dashboard-card progress-card">
+                        <div class="card-header">
+                            <h2>Your Progress</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="progress-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Current Weight</span>
+                                    <span class="stat-value" id="display-weight">0</span>
+                                    <span class="stat-unit" id="display-unit">kg</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Goal</span>
+                                    <span class="stat-value" id="display-goal">-</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Streak</span>
+                                    <span class="stat-value"><span id="streak-count">0</span> Days</span>
+                                </div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-label">Weekly Goal Progress</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="weekly-progress" style="width: 45%;"></div>
+                                </div>
+                                <div class="progress-percentage">45%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Workout Card -->
+                    <div class="dashboard-card workout-of-day">
+                        <div class="card-header">
+                            <h2>Workout of the Day</h2>
+                            <span class="refresh-btn" id="refresh-workout"><i class="fas fa-sync-alt"></i></span>
+                        </div>
+                        <div class="card-content">
+                            <div class="workout-video">
+                                <img src="/api/placeholder/400/225" alt="Workout thumbnail" class="video-placeholder">
+                                <div class="play-button">
+                                    <i class="fas fa-play"></i>
+                                </div>
+                            </div>
+                            <h3 id="daily-workout-title">Full Body HIIT</h3>
+                            <p id="daily-workout-desc">20-minute high intensity interval training to boost your metabolism and burn calories.</p>
+                            <button class="primary-btn" id="complete-workout">Mark as Complete</button>
+                        </div>
+                    </div>
+
+                    <!-- Achievements Card -->
+                    <div class="dashboard-card achievements-card">
+                        <div class="card-header">
+                            <h2>Achievements</h2>
+                        </div>
+                        <div class="card-content">
+                            <div class="badges-container">
+                                <div class="badge" id="quickstarter-badge">
+                                    <div class="badge-icon locked">
+                                        <i class="fas fa-award"></i>
+                                    </div>
+                                    <div class="badge-info">
+                                        <h4>QuickStarter</h4>
+                                        <p>Complete your first workout</p>
+                                    </div>
+                                </div>
+                                <div class="badge locked">
+                                    <div class="badge-icon locked">
+                                        <i class="fas fa-fire"></i>
+                                    </div>
+                                    <div class="badge-info">
+                                        <h4>On Fire</h4>
+                                        <p>Complete 5 workouts in a row</p>
+                                    </div>
+                                </div>
+                                <div class="badge locked">
+                                    <div class="badge-icon locked">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div class="badge-info">
+                                        <h4>Power User</h4>
+                                        <p>Log in for 10 consecutive days</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workout Library Section -->
+                <section class="workout-library">
+                    <div class="section-header">
+                        <h2>Workout Library</h2>
+                        <div class="section-filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="beginner">Beginner</button>
+                            <button class="filter-btn" data-filter="intermediate">Intermediate</button>
+                            <button class="filter-btn" data-filter="advanced">Advanced</button>
+                        </div>
+                    </div>
+                    <div class="workout-grid" id="workout-grid">
+                        <!-- Workouts will be added by JavaScript -->
+                    </div>
+                </section>
+            </section>
+
+            <aside class="sidebar">
+                <div class="sidebar-card upcoming-workouts">
+                    <h3>Upcoming Schedule</h3>
+                    <ul class="schedule-list">
+                        <li class="schedule-item">
+                            <div class="schedule-day">Today</div>
+                            <div class="schedule-workout">Cardio Blast</div>
+                        </li>
+                        <li class="schedule-item">
+                            <div class="schedule-day">Tomorrow</div>
+                            <div class="schedule-workout">Core Strength</div>
+                        </li>
+                        <li class="schedule-item">
+                            <div class="schedule-day">Friday</div>
+                            <div class="schedule-workout">Rest Day</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-card tips">
+                    <h3>Quick Tips</h3>
+                    <div class="tip-container">
+                        <div class="tip">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Stay hydrated! Aim to drink at least 8 glasses of water daily.</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <footer>
+            <div class="footer-container">
+                <p>&copy; 2025 QuickFit. All rights reserved.</p>
+                <nav class="footer-nav">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Us</a>
+                </nav>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Badge Animation Overlay -->
+    <div id="badge-overlay" class="hidden">
+        <div class="badge-popup">
+            <div class="badge-icon large">
+                <i class="fas fa-award"></i>
+            </div>
+            <h3>Achievement Unlocked!</h3>
+            <h2 id="badge-name">QuickStarter</h2>
+            <p id="badge-description">You completed your first workout!</p>
+            <button id="close-badge" class="primary-btn">Awesome!</button>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
