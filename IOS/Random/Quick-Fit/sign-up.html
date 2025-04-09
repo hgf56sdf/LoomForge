@@ -731,48 +731,56 @@
 
         function initFormValidation() {
             // Login form validation
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                let isValid = true;
+// Modify the existing login form validation
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let isValid = true;
+    
+    // Reset any previous error messages
+    hideError(loginEmail, loginEmailError);
+    hideError(loginPassword, loginPasswordError);
+    
+    // Validate email format
+    if (!validateEmail(loginEmail.value)) {
+        showError(loginEmail, loginEmailError, 'Please enter a valid email address');
+        isValid = false;
+    }
+    
+    // Validate password length
+    if (loginPassword.value.length < 8) {
+        showError(loginPassword, loginPasswordError, 'Password must be at least 8 characters');
+        isValid = false;
+    }
+    
+    if (isValid) {
+        // Show loading state
+        loginButton.classList.add('loading');
+        loginButton.disabled = true;
+        
+        // Check hardcoded credentials
+        if (loginEmail.value === 'admin@quickfit.lol' && loginPassword.value === 'Quickfit655') {
+            // Successful login
+            
+            // Add this line to set the login status in localStorage
+            localStorage.setItem("isLoggedIn", "true");
+            
+            setTimeout(() => {
+                // Redirect to dashboard/home page
+                window.location.href = 'dashboard/dashboard.html';
+            }, 1000);
+        } else {
+            // Failed login
+            setTimeout(() => {
+                // Reset loading state
+                loginButton.classList.remove('loading');
+                loginButton.disabled = false;
                 
-                // Validate email
-                if (!validateEmail(loginEmail.value)) {
-                    showError(loginEmail, loginEmailError, 'Please enter a valid email address');
-                    isValid = false;
-                } else {
-                    hideError(loginEmail, loginEmailError);
-                }
-                
-                // Validate password
-                if (loginPassword.value.length < 8) {
-                    showError(loginPassword, loginPasswordError, 'Password must be at least 8 characters');
-                    isValid = false;
-                } else {
-                    hideError(loginPassword, loginPasswordError);
-                }
-                
-                if (isValid) {
-                    // Show loading state
-                    loginButton.classList.add('loading');
-                    loginButton.disabled = true;
-                    
-                    // Simulate API call
-                    setTimeout(() => {
-                        // Process login here (would connect to backend in production)
-                        console.log('Login submitted:', {
-                            email: loginEmail.value,
-                            password: loginPassword.value
-                        });
-                        
-                        // Reset form and loading state
-                        loginButton.classList.remove('loading');
-                        loginButton.disabled = false;
-                        
-                        // Show success (for demo)
-                        alert('Login successful! Redirecting...');
-                    }, 1500);
-                }
-            });
+                // Show error message
+                showError(loginEmail, loginEmailError, 'Invalid email or password');
+            }, 1000);
+        }
+    }
+});
             
             // Signup form validation
             signupForm.addEventListener('submit', (e) => {
