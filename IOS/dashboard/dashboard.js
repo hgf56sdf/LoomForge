@@ -432,9 +432,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Login button event
     document.getElementById('login-btn').addEventListener('click', () => {
         const username = sanitizeInput(document.getElementById('username').value.trim());
-        const password = document.getElementById('password').value;
-        
-        if (username && password) {
+
+        if (username) {
             // In a real app, you would validate credentials server-side
             // For this demo, we'll just accept any input
             
