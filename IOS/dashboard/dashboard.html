@@ -7,19 +7,21 @@
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<!-- Video Modal -->
-<div id="video-modal" class="video-modal hidden">
-    <div class="video-modal-content">
-        <span id="close-video" class="close-btn">&times;</span>
-        <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
-    </div>
-</div>
 <body>
+    <!-- Video Modal -->
+    <div id="video-modal" class="video-modal hidden">
+        <div class="video-modal-content">
+            <span id="close-video" class="close-btn">&times;</span>
+            <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
     <!-- Login Screen -->
     <div id="login-screen" class="screen">
         <div class="login-container">
             <div class="logo-container">
-                <img src="/Images/quickfit-logo.png" alt="QuickFitPrompt Logo" class="logo">
+                <img src="/Images/quickfit-logo.png" alt="QuickFit Logo" class="logo">
             </div>
             <h1>Welcome to QuickFit</h1>
             <p>Your personal fitness assistant</p>
@@ -29,7 +31,6 @@
             </div>
         </div>
     </div>
-
     <!-- Onboarding Flow -->
     <div id="onboarding-screen" class="screen hidden">
         <div class="onboarding-container">
@@ -60,6 +61,16 @@
                 </div>
                 <button id="weight-submit" class="primary-btn">Continue</button>
             </div>
+            
+            <div id="calorie-goal-input" class="onboarding-step hidden">
+                <h3>What's your daily calorie goal?</h3>
+                <p class="input-description">Based on your weight and goal, we recommend around <span id="recommended-calories">2000</span> calories per day.</p>
+                <div class="calorie-input-container">
+                    <input type="number" id="calorie-goal" min="1000" max="5000" placeholder="Enter calories">
+                    <span class="input-suffix">calories</span>
+                </div>
+                <button id="calorie-goal-submit" class="primary-btn">Complete Setup</button>
+            </div>
         </div>
     </div>
 
@@ -67,7 +78,7 @@
     <div id="dashboard-screen" class="screen hidden">
         <header>
             <div class="header-left">
-                <img src="/Images/quickfit-logo.png" alt="QuickFitPrompt Logo" class="logo">
+                <img src="/Images/quickfit-logo.png" alt="QuickFit Logo" class="logo">
             </div>
             <div class="header-right">
                 <button id="theme-toggle" class="icon-btn">
@@ -82,10 +93,39 @@
             </div>
         </header>
 
+        <!-- Navigation Tabs -->
+        <nav class="main-nav">
+            <div class="nav-tab active" data-section="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-tab" data-section="calories">
+                <i class="fas fa-utensils"></i>
+                <span>Calories</span>
+            </div>
+            <div class="nav-tab" data-section="calendar">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendar</span>
+            </div>
+            <div class="nav-tab" data-section="diet">
+                <i class="fas fa-apple-alt"></i>
+                <span>Diet</span>
+            </div>
+            <div class="nav-tab" data-section="workout-detection">
+                <i class="fas fa-running"></i>
+                <span>Detection</span>
+            </div>
+            <div class="nav-tab" data-section="workout-library">
+                <i class="fas fa-dumbbell"></i>
+                <span>Workouts</span>
+            </div>
+        </nav>
+
         <main>
-            <section class="main-content">
+            <!-- HOME SECTION -->
+            <section id="home-section" class="dashboard-section">
                 <div class="dashboard-welcome">
-                    <h1>Welcome back, <span id="user-name">Fitness Fan</span>!</h1>
+                    <h1>Welcome back, <span id="user-name" class="user-name-display">Fitness Fan</span>!</h1>
                     <p class="motivational-quote">Ready for another day of progress?</p>
                 </div>
 
@@ -156,7 +196,7 @@
                                         <p>Complete your first workout</p>
                                     </div>
                                 </div>
-                                <div class="badge locked">
+                                <div class="badge locked" id="on-fire-badge">
                                     <div class="badge-icon locked">
                                         <i class="fas fa-fire"></i>
                                     </div>
@@ -165,7 +205,7 @@
                                         <p>Complete 5 workouts in a row</p>
                                     </div>
                                 </div>
-                                <div class="badge locked">
+                                <div class="badge locked" id="power-user-badge">
                                     <div class="badge-icon locked">
                                         <i class="fas fa-bolt"></i>
                                     </div>
@@ -179,23 +219,256 @@
                     </div>
                 </div>
 
-                <!-- Workout Library Section -->
-                <section class="workout-library">
-                    <div class="section-header">
-                        <h2>Workout Library</h2>
-                        <div class="section-filters">
-                            <button class="filter-btn active" data-filter="all">All</button>
-                            <button class="filter-btn" data-filter="beginner">Beginner</button>
-                            <button class="filter-btn" data-filter="intermediate">Intermediate</button>
-                            <button class="filter-btn" data-filter="advanced">Advanced</button>
+                <!-- Upcoming & Quick Tips Sidebar (Mobile: Below Cards) -->
+                <div class="sidebar-mobile">
+                    <div class="sidebar-card upcoming-workouts">
+                        <h3>Upcoming Schedule</h3>
+                        <ul class="schedule-list">
+                            <li class="schedule-item">
+                                <div class="schedule-day">Today</div>
+                                <div class="schedule-workout">Cardio Blast</div>
+                            </li>
+                            <li class="schedule-item">
+                                <div class="schedule-day">Tomorrow</div>
+                                <div class="schedule-workout">Core Strength</div>
+                            </li>
+                            <li class="schedule-item">
+                                <div class="schedule-day">Friday</div>
+                                <div class="schedule-workout">Rest Day</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-card tips">
+                        <h3>Quick Tips</h3>
+                        <div class="tip-container">
+                            <div class="tip">
+                                <i class="fas fa-lightbulb"></i>
+                                <p>Stay hydrated! Aim to drink at least 8 glasses of water daily.</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="workout-grid" id="workout-grid">
-                        <!-- Workouts will be added by JavaScript -->
-                    </div>
-                </section>
+                </div>
             </section>
 
+            <!-- CALORIE TRACKER SECTION -->
+            <section id="calories-section" class="dashboard-section hidden">
+                <div class="section-header">
+                    <h2>Calorie Tracker</h2>
+                    <div class="tracker-actions">
+                        <button id="add-meal-btn" class="action-btn">
+                            <i class="fas fa-utensils"></i> Add Meal
+                        </button>
+                        <button id="add-workout-calories-btn" class="action-btn">
+                            <i class="fas fa-running"></i> Add Workout
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="calorie-overview">
+                    <div class="calorie-metric">
+                        <div class="calorie-circle consumed">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+                                <circle class="circle-progress" id="consumed-circle" cx="50" cy="50" r="40" stroke-dasharray="0 1000"></circle>
+                            </svg>
+                            <div class="calorie-text">
+                                <span class="calorie-value" id="calories-consumed">0</span>
+                                <span class="calorie-label">Consumed</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calorie-metric">
+                        <div class="calorie-circle burned">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+                                <circle class="circle-progress" id="burned-circle" cx="50" cy="50" r="40" stroke-dasharray="0 1000"></circle>
+                            </svg>
+                            <div class="calorie-text">
+                                <span class="calorie-value" id="calories-burned">0</span>
+                                <span class="calorie-label">Burned</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calorie-metric">
+                        <div class="calorie-circle remaining">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+                                <circle class="circle-progress" id="remaining-circle" cx="50" cy="50" r="40" stroke-dasharray="0 1000"></circle>
+                            </svg>
+                            <div class="calorie-text">
+                                <span class="calorie-value" id="calories-remaining">0</span>
+                                <span class="calorie-label">Remaining</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="meal-log-container" id="calorie-card">
+                    <h3>Today's Food Log</h3>
+                    <div class="meal-log" id="meal-log">
+                        <!-- Meal entries will be added by JavaScript -->
+                        <div class="empty-state">No meals logged today. Add your first meal!</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CALENDAR SECTION -->
+            <section id="calendar-section" class="dashboard-section hidden">
+                <div class="section-header">
+                    <h2>Workout & Meal Calendar</h2>
+                    <button id="add-event-btn" class="action-btn">
+                        <i class="fas fa-plus"></i> Add Event
+                    </button>
+                </div>
+                
+                <div id="calendar-container" class="calendar-container">
+                    <div class="calendar-header">
+                        <button id="prev-month" class="calendar-nav-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h3 id="month-year">April 2025</h3>
+                        <button id="next-month" class="calendar-nav-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="calendar-weekdays">
+                            <div>Sun</div>
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                        </div>
+                        <div class="calendar-days" id="calendar-days">
+                            <!-- Calendar days will be added by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event Sidebar -->
+                <div id="event-sidebar" class="event-sidebar hidden">
+                    <div class="event-sidebar-header">
+                        <h3 id="selected-date">April 15, 2025</h3>
+                        <button id="close-event-sidebar" class="close-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="event-list" class="event-list">
+                        <!-- Events will be added by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIET SECTION -->
+            <section id="diet-section" class="dashboard-section hidden">
+                <div class="section-header">
+                    <h2>Nutrition & Diet Plans</h2>
+                </div>
+                
+                <div class="diet-tabs">
+                    <button class="diet-tab" data-diet="keto">
+                        <i class="fas fa-bacon"></i> Keto
+                    </button>
+                    <button class="diet-tab" data-diet="mediterranean">
+                        <i class="fas fa-fish"></i> Mediterranean
+                    </button>
+                    <button class="diet-tab" data-diet="vegan">
+                        <i class="fas fa-leaf"></i> Vegan
+                    </button>
+                </div>
+                
+                <div class="recipe-container" id="recipe-container">
+                    <!-- Recipe cards will be added by JavaScript -->
+                </div>
+            </section>
+            
+            <!-- WORKOUT DETECTION SECTION -->
+            <section id="workout-detection-section" class="dashboard-section hidden">
+                <div class="section-header">
+                    <h2>Workout Movement Detector</h2>
+                </div>
+                
+                <div class="detection-info">
+                    <p id="motion-support">Checking device compatibility...</p>
+                </div>
+                
+                <div id="workout-detection" class="workout-detection-container">
+                    <div class="detection-controls">
+                        <div class="detection-status">
+                            <span>Status: </span>
+                            <span id="detection-status" class="status-inactive">Inactive</span>
+                        </div>
+                        
+                        <div class="detection-metrics">
+                            <div class="detection-metric">
+                                <span class="metric-label">Movements:</span>
+                                <span class="metric-value" id="movement-count">0</span>
+                            </div>
+                            <div class="detection-metric">
+                                <span class="metric-label">Duration:</span>
+                                <span class="metric-value" id="duration">0:00</span>
+                            </div>
+                        </div>
+                        
+                        <div class="detection-buttons">
+                            <button id="start-detection" class="primary-btn">Start Detection</button>
+                            <button id="stop-detection" class="primary-btn hidden">Stop Detection</button>
+                        </div>
+                    </div>
+                    
+                    <div class="detection-animation-container">
+                        <div id="detection-animation" class="detection-animation">
+                            <i class="fas fa-running"></i>
+                            <div class="animation-waves"></div>
+                        </div>
+                        <div id="detection-feedback" class="detection-feedback">
+                            <!-- Detection feedback will be added by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div id="workout-summary" class="workout-summary hidden">
+                        <h3>Workout Complete!</h3>
+                        <div class="summary-metrics">
+                            <div class="summary-metric">
+                                <span class="metric-label">Duration:</span>
+                                <span class="metric-value" id="summary-duration">0 minutes</span>
+                            </div>
+                            <div class="summary-metric">
+                                <span class="metric-label">Movements:</span>
+                                <span class="metric-value" id="summary-movements">0</span>
+                            </div>
+                            <div class="summary-metric">
+                                <span class="metric-label">Calories Burned:</span>
+                                <span class="metric-value" id="summary-calories">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WORKOUT LIBRARY SECTION -->
+            <section id="workout-library-section" class="dashboard-section hidden">
+                <div class="section-header">
+                    <h2>Workout Library</h2>
+                    <div class="section-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="beginner">Beginner</button>
+                        <button class="filter-btn" data-filter="intermediate">Intermediate</button>
+                        <button class="filter-btn" data-filter="advanced">Advanced</button>
+                    </div>
+                </div>
+                <div class="workout-grid" id="workout-grid">
+                    <!-- Workouts will be added by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Desktop Sidebar -->
             <aside class="sidebar">
                 <div class="sidebar-card upcoming-workouts">
                     <h3>Upcoming Schedule</h3>
@@ -249,6 +522,109 @@
             <h2 id="badge-name">QuickStarter</h2>
             <p id="badge-description">You completed your first workout!</p>
             <button id="close-badge" class="primary-btn">Awesome!</button>
+        </div>
+    </div>
+    
+    <!-- Meal Form Modal -->
+    <div id="meal-form-container" class="modal-container hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Meal</h3>
+                <button id="close-meal-form" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="meal-form" class="form">
+                <div class="form-group">
+                    <label for="food-search">Search for food:</label>
+                    <input type="text" id="food-search" placeholder="Type to search for common foods">
+                    <div id="food-suggestions" class="food-suggestions"></div>
+                </div>
+                <div class="form-group">
+                    <label for="meal-name">Meal name:</label>
+                    <input type="text" id="meal-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="meal-calories">Calories:</label>
+                    <input type="number" id="meal-calories" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="meal-serving">Serving size:</label>
+                    <input type="text" id="meal-serving" placeholder="e.g., 1 cup, 100g">
+                </div>
+                <div class="form-group">
+                    <label for="meal-time">Meal time:</label>
+                    <select id="meal-time" required>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                    </select>
+                </div>
+                <button type="submit" class="primary-btn full-width">Add Meal</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Workout Calories Form Modal -->
+    <div id="workout-calories-form-container" class="modal-container hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Workout Calories</h3>
+                <button id="close-workout-calories-form" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="workout-calories-form" class="form">
+                <div class="form-group">
+                    <label for="workout-name">Workout name:</label>
+                    <input type="text" id="workout-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="calories-burned-input">Calories burned:</label>
+                    <input type="number" id="calories-burned-input" min="1" required>
+                </div>
+                <button type="submit" class="primary-btn full-width">Add Workout</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Event Form Modal -->
+    <div id="event-form-container" class="modal-container hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Event</h3>
+                <button id="close-event-form" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="event-form" class="form">
+                <div class="form-group">
+                    <label for="event-date">Date:</label>
+                    <input type="date" id="event-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-title">Title:</label>
+                    <input type="text" id="event-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="event-type">Event type:</label>
+                    <select id="event-type" required>
+                        <option value="workout">Workout</option>
+                        <option value="cheat">Cheat Meal</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="event-calories">Calories (optional):</label>
+                    <input type="number" id="event-calories" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="event-notes">Notes (optional):</label>
+                    <textarea id="event-notes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="primary-btn full-width">Add Event</button>
+            </form>
         </div>
     </div>
 
