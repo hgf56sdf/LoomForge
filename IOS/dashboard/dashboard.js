@@ -115,11 +115,10 @@ const commonFoods = [
 const recipes = {
     keto: [
         {
-            title: "Keto Bacon Avocado Eggs",
+            title: "Keto Avocado Eggs",
             ingredients: [
                 "2 eggs",
                 "1/2 avocado, sliced",
-                "2 slices bacon, cooked",
                 "Salt and pepper to taste"
             ],
             instructions: "1. Fry eggs to desired doneness.\n2. Plate with sliced avocado and bacon.\n3. Season with salt and pepper.",
