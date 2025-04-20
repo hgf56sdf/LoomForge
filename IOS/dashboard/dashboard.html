@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>QuickFit - Your Fitness Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -12,11 +12,14 @@
     <div id="video-modal" class="video-modal hidden">
         <div class="video-modal-content">
             <span id="close-video" class="close-btn">&times;</span>
-            <iframe id="video-frame" src="" frameborder="0" allowfullscreen></iframe>
+            <iframe id="video-frame" src="" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+            <div id="workout-details-container" class="hidden"></div>
         </div>
     </div>
+    
     <!-- Notification Container -->
     <div id="notification-container" class="notification-container"></div>
+    
     <!-- Login Screen -->
     <div id="login-screen" class="screen">
         <div class="login-container">
@@ -31,6 +34,7 @@
             </div>
         </div>
     </div>
+    
     <!-- Onboarding Flow -->
     <div id="onboarding-screen" class="screen hidden">
         <div class="onboarding-container">
@@ -62,9 +66,22 @@
                 <button id="weight-submit" class="primary-btn">Continue</button>
             </div>
             
+            <div id="height-input" class="onboarding-step hidden">
+                <h3>What's your height?</h3>
+                <p class="input-description">We use this to calculate your BMI and make personalized recommendations.</p>
+                <div class="height-input-container">
+                    <input type="number" id="current-height" min="1" max="300" placeholder="Enter height">
+                    <select id="height-unit">
+                        <option value="cm">cm</option>
+                        <option value="in">in</option>
+                    </select>
+                </div>
+                <button id="height-submit" class="primary-btn">Continue</button>
+            </div>
+            
             <div id="calorie-goal-input" class="onboarding-step hidden">
                 <h3>What's your daily calorie goal?</h3>
-                <p class="input-description">Based on your weight and goal, we recommend around <span id="recommended-calories">2000</span> calories per day.</p>
+                <p class="input-description">Based on your stats and goal, we recommend around <span id="recommended-calories">2000</span> calories per day.</p>
                 <div class="calorie-input-container">
                     <input type="number" id="calorie-goal" min="1000" max="5000" placeholder="Enter calories">
                     <span class="input-suffix">calories</span>
@@ -81,7 +98,7 @@
                 <img src="https://loomforge.netlify.app/IOS/Random/Quick-Fit/Images/quickfit-logo.png" alt="QuickFit Logo" class="logo">
             </div>
             <div class="header-right">
-                <button id="theme-toggle" class="icon-btn">
+                <button id="theme-toggle" class="icon-btn" aria-label="Toggle dark mode">
                     <i class="fas fa-moon"></i>
                 </button>
                 <div class="user-profile">
@@ -95,29 +112,37 @@
 
         <!-- Navigation Tabs -->
         <nav class="main-nav">
-            <div class="nav-tab active" data-section="home">
+            <div class="nav-tab active" data-section="home" role="button" tabindex="0" aria-label="Home tab">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </div>
-            <div class="nav-tab" data-section="calories">
+            <div class="nav-tab" data-section="calories" role="button" tabindex="0" aria-label="Calories tab">
                 <i class="fas fa-utensils"></i>
                 <span>Calories</span>
             </div>
-            <div class="nav-tab" data-section="calendar">
+            <div class="nav-tab" data-section="meal-plan" role="button" tabindex="0" aria-label="Meal Plan tab">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Meal Plan</span>
+            </div>
+            <div class="nav-tab" data-section="calendar" role="button" tabindex="0" aria-label="Calendar tab">
                 <i class="fas fa-calendar-alt"></i>
                 <span>Calendar</span>
             </div>
-            <div class="nav-tab" data-section="diet">
+            <div class="nav-tab" data-section="diet" role="button" tabindex="0" aria-label="Diet tab">
                 <i class="fas fa-apple-alt"></i>
                 <span>Diet</span>
             </div>
-            <div class="nav-tab" data-section="workout-detection">
+            <div class="nav-tab" data-section="workout-detection" role="button" tabindex="0" aria-label="Detection tab">
                 <i class="fas fa-running"></i>
                 <span>Detection</span>
             </div>
-            <div class="nav-tab" data-section="workout-library">
+            <div class="nav-tab" data-section="workout-library" role="button" tabindex="0" aria-label="Workouts tab">
                 <i class="fas fa-dumbbell"></i>
                 <span>Workouts</span>
+            </div>
+            <div class="nav-tab" data-section="stats" role="button" tabindex="0" aria-label="Stats tab">
+                <i class="fas fa-chart-line"></i>
+                <span>Stats</span>
             </div>
         </nav>
 
@@ -126,7 +151,8 @@
             <section id="home-section" class="dashboard-section">
                 <div class="dashboard-welcome">
                     <h1>Welcome back, <span id="user-name" class="user-name-display">Fitness Fan</span>!</h1>
-                    <p class="motivational-quote">Ready for another day of progress?</p>
+                    <div class="motivational-quote">Ready for another day of progress? <span id="streak-display">Day <span id="streak-count">0</span> <span id="streak-fire" class="streak-fire hidden"><i class="fas fa-fire"></i></span></span>
+                    </div>
                 </div>
 
                 <div class="dashboard-grid">
@@ -134,6 +160,9 @@
                     <div class="dashboard-card progress-card">
                         <div class="card-header">
                             <h2>Your Progress</h2>
+                            <button id="share-streak-btn" class="icon-btn" aria-label="Share streak" data-tooltip="Share your streak">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
                         </div>
                         <div class="card-content">
                             <div class="progress-stats">
@@ -147,16 +176,18 @@
                                     <span class="stat-value" id="display-goal">-</span>
                                 </div>
                                 <div class="stat">
-                                    <span class="stat-label">Streak</span>
-                                    <span class="stat-value"><span id="streak-count">0</span> Days</span>
+                                    <span class="stat-label">BMI</span>
+                                    <span class="stat-value" id="display-bmi">-</span>
                                 </div>
                             </div>
                             <div class="progress-bar-container">
-                                <div class="progress-label">Weekly Goal Progress</div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" id="weekly-progress" style="width: 45%;"></div>
+                                <div class="progress-label">
+                                    <span>Weekly Goal Progress</span>
+                                    <span class="progress-percentage">0%</span>
                                 </div>
-                                <div class="progress-percentage">45%</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="weekly-progress" style="width: 0%;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -165,7 +196,7 @@
                     <div class="dashboard-card workout-of-day">
                         <div class="card-header">
                             <h2>Workout of the Day</h2>
-                            <span class="refresh-btn" id="refresh-workout"><i class="fas fa-sync-alt"></i></span>
+                            <span class="refresh-btn" id="refresh-workout" data-tooltip="Get a new workout"><i class="fas fa-sync-alt"></i></span>
                         </div>
                         <div class="card-content">
                             <div class="workout-video">
@@ -176,6 +207,12 @@
                             </div>
                             <h3 id="daily-workout-title">Full Body HIIT</h3>
                             <p id="daily-workout-desc">20-minute high intensity interval training to boost your metabolism and burn calories.</p>
+                            
+                            <div id="workout-instructions-container" class="workout-instructions-container hidden">
+                                <h4><i class="fas fa-list-check"></i> Exercises</h4>
+                                <ul id="workout-instructions" class="workout-instructions"></ul>
+                            </div>
+                            
                             <button class="primary-btn" id="complete-workout">Mark as Complete</button>
                         </div>
                     </div>
@@ -187,7 +224,7 @@
                         </div>
                         <div class="card-content">
                             <div class="badges-container">
-                                <div class="badge" id="quickstarter-badge">
+                                <div class="badge locked" id="quickstarter-badge">
                                     <div class="badge-icon locked">
                                         <i class="fas fa-award"></i>
                                     </div>
@@ -306,11 +343,77 @@
                     </div>
                 </div>
                 
+                <div class="macro-overview">
+                    <h3>Daily Macros</h3>
+                    <div class="macro-progress">
+                        <div class="macro-row">
+                            <div class="macro-label">Protein</div>
+                            <div class="macro-bar">
+                                <div class="macro-fill protein" id="protein-fill" style="width: 0%"></div>
+                            </div>
+                            <div class="macro-value"><span id="protein-current">0</span>/<span id="protein-goal">0</span>g</div>
+                        </div>
+                        <div class="macro-row">
+                            <div class="macro-label">Carbs</div>
+                            <div class="macro-bar">
+                                <div class="macro-fill carbs" id="carbs-fill" style="width: 0%"></div>
+                            </div>
+                            <div class="macro-value"><span id="carbs-current">0</span>/<span id="carbs-goal">0</span>g</div>
+                        </div>
+                        <div class="macro-row">
+                            <div class="macro-label">Fat</div>
+                            <div class="macro-bar">
+                                <div class="macro-fill fat" id="fat-fill" style="width: 0%"></div>
+                            </div>
+                            <div class="macro-value"><span id="fat-current">0</span>/<span id="fat-goal">0</span>g</div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="meal-log-container" id="calorie-card">
                     <h3>Today's Food Log</h3>
                     <div class="meal-log" id="meal-log">
                         <!-- Meal entries will be added by JavaScript -->
-                        <div class="empty-state">No meals logged today. Add your first meal!</div>
+                        <div class="empty-state">
+                            <i class="fas fa-utensils"></i>
+                            <p>No meals logged today. Add your first meal!</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- DAILY MEAL PLAN SECTION -->
+            <section id="meal-plan-section" class="dashboard-section hidden">
+                <div class="section-header">
+                    <h2>Daily Meal Plan</h2>
+                    <button id="customize-meal-plan" class="action-btn">
+                        <i class="fas fa-cog"></i> Customize
+                    </button>
+                </div>
+                
+                <div class="meal-plan-container" id="meal-plan-container">
+                    <div class="meal-plan-header">
+                        <h3>Your Personal Meal Plan</h3>
+                        <div id="meal-plan-calories"><span id="daily-calories">0</span> Calories</div>
+                    </div>
+                    
+                    <div class="meal-plan-stats">
+                        <div class="plan-stat">
+                            <span class="plan-stat-value" id="macro-breakdown">0% / 0% / 0%</span>
+                            <span class="plan-stat-label">Protein / Carbs / Fat</span>
+                        </div>
+                        <div class="plan-stat">
+                            <span class="plan-stat-value" id="daily-macro-breakdown">0% / 0% / 0%</span>
+                            <span class="plan-stat-label">Today's Actual Macros</span>
+                        </div>
+                    </div>
+                    
+                    <div id="daily-meals-list" class="daily-meals-list">
+                        <!-- Meal sections will be added by JavaScript -->
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>Loading your personalized meal plan...</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -326,11 +429,11 @@
                 
                 <div id="calendar-container" class="calendar-container">
                     <div class="calendar-header">
-                        <button id="prev-month" class="calendar-nav-btn">
+                        <button id="prev-month" class="calendar-nav-btn" aria-label="Previous month">
                             <i class="fas fa-chevron-left"></i>
                         </button>
                         <h3 id="month-year">April 2025</h3>
-                        <button id="next-month" class="calendar-nav-btn">
+                        <button id="next-month" class="calendar-nav-btn" aria-label="Next month">
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
@@ -355,7 +458,7 @@
                 <div id="event-sidebar" class="event-sidebar hidden">
                     <div class="event-sidebar-header">
                         <h3 id="selected-date">April 15, 2025</h3>
-                        <button id="close-event-sidebar" class="close-btn">
+                        <button id="close-event-sidebar" class="close-btn" aria-label="Close sidebar">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -381,6 +484,7 @@
                     <button class="diet-tab" data-diet="vegan">
                         <i class="fas fa-leaf"></i> Vegan
                     </button>
+                    <!-- New diet tabs will be added by JavaScript -->
                 </div>
                 
                 <div class="recipe-container" id="recipe-container">
@@ -461,173 +565,384 @@
                         <button class="filter-btn" data-filter="beginner">Beginner</button>
                         <button class="filter-btn" data-filter="intermediate">Intermediate</button>
                         <button class="filter-btn" data-filter="advanced">Advanced</button>
+                        <!-- Goal filters will be added by JavaScript -->
                     </div>
                 </div>
                 <div class="workout-grid" id="workout-grid">
                     <!-- Workouts will be added by JavaScript -->
                 </div>
             </section>
-
-            <!-- Desktop Sidebar -->
-            <aside class="sidebar">
-                <div class="sidebar-card upcoming-workouts">
-                    <h3>Upcoming Schedule</h3>
-                    <ul class="schedule-list">
-                        <li class="schedule-item">
-                            <div class="schedule-day">Today</div>
-                            <div class="schedule-workout">Cardio Blast</div>
-                        </li>
-                        <li class="schedule-item">
-                            <div class="schedule-day">Tomorrow</div>
-                            <div class="schedule-workout">Core Strength</div>
-                        </li>
-                        <li class="schedule-item">
-                            <div class="schedule-day">Friday</div>
-                            <div class="schedule-workout">Rest Day</div>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="sidebar-card tips">
-                    <h3>Quick Tips</h3>
-                    <div class="tip-container">
-                        <div class="tip">
-                            <i class="fas fa-lightbulb"></i>
-                            <p>Stay hydrated! Aim to drink at least 8 glasses of water daily.</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </main>
-
-        <footer>
-            <div class="footer-container">
-                <p>&copy; 2025 QuickFit. All rights reserved.</p>
-                <nav class="footer-nav">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Contact Us</a>
-                </nav>
-            </div>
-        </footer>
-    </div>
-
-    <!-- Badge Animation Overlay -->
-    <div id="badge-overlay" class="hidden">
-        <div class="badge-popup">
-            <div class="badge-icon large">
-                <i class="fas fa-award"></i>
-            </div>
-            <h3>Achievement Unlocked!</h3>
-            <h2 id="badge-name">QuickStarter</h2>
-            <p id="badge-description">You completed your first workout!</p>
-            <button id="close-badge" class="primary-btn">Awesome!</button>
-        </div>
+            
+<!-- STATS SECTION -->
+<section id="stats-section" class="dashboard-section hidden">
+    <div class="section-header">
+        <h2>Health Statistics</h2>
     </div>
     
-    <!-- Meal Form Modal -->
-    <div id="meal-form-container" class="modal-container hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Meal</h3>
-                <button id="close-meal-form" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
+    <!-- BMI Calculator Card -->
+    <div class="bmi-calculator" id="bmi-calculator-container">
+        <h3>BMI Calculator</h3>
+        <div class="bmi-result" id="bmi-result">
+            <div class="bmi-value-container">
+                <div class="bmi-value" id="bmi-value">--</div>
+                <div>Your BMI</div>
             </div>
-            <form id="meal-form" class="form">
-                <div class="form-group">
-                    <label for="food-search">Search for food:</label>
-                    <input type="text" id="food-search" placeholder="Type to search for common foods">
-                    <div id="food-suggestions" class="food-suggestions"></div>
-                </div>
-                <div class="form-group">
-                    <label for="meal-name">Meal name:</label>
-                    <input type="text" id="meal-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="meal-calories">Calories:</label>
-                    <input type="number" id="meal-calories" min="1" required>
-                </div>
-                <div class="form-group">
-                    <label for="meal-serving">Serving size:</label>
-                    <input type="text" id="meal-serving" placeholder="e.g., 1 cup, 100g">
-                </div>
-                <div class="form-group">
-                    <label for="meal-time">Meal time:</label>
-                    <select id="meal-time" required>
-                        <option value="breakfast">Breakfast</option>
-                        <option value="lunch">Lunch</option>
-                        <option value="dinner">Dinner</option>
-                        <option value="snack">Snack</option>
-                    </select>
-                </div>
-                <button type="submit" class="primary-btn full-width">Add Meal</button>
-            </form>
+            <div class="bmi-category" id="bmi-category">--</div>
         </div>
+        
+        <div class="bmi-recommendations">
+            <h4><i class="fas fa-info-circle"></i> Health Recommendations</h4>
+            <ul id="bmi-recommendations">
+                <!-- Recommendations will be added by JavaScript -->
+                <li>Enter your height and weight to calculate your BMI</li>
+            </ul>
+        </div>
+        
+        <button id="calculate-bmi-btn" class="primary-btn">Update BMI</button>
     </div>
     
-    <!-- Workout Calories Form Modal -->
-    <div id="workout-calories-form-container" class="modal-container hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Workout Calories</h3>
-                <button id="close-workout-calories-form" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
+    <!-- Weight Prediction Card -->
+    <div class="weight-prediction-container" id="weight-prediction-container">
+        <h3>Weight Goal Prediction</h3>
+        
+        <div class="prediction-result">
+            <div class="days-to-goal-container">
+                <div class="days-to-goal" id="days-to-goal">--</div>
+                <div>Days to Goal</div>
             </div>
-            <form id="workout-calories-form" class="form">
-                <div class="form-group">
-                    <label for="workout-name">Workout name:</label>
-                    <input type="text" id="workout-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="calories-burned-input">Calories burned:</label>
-                    <input type="number" id="calories-burned-input" min="1" required>
-                </div>
-                <button type="submit" class="primary-btn full-width">Add Workout</button>
-            </form>
+            
+            <div class="target-date" id="target-date">
+                Keep tracking your weight to get a prediction
+            </div>
+            
+            <div class="weight-trend" id="weight-trend">
+                Not enough data to calculate trend
+            </div>
         </div>
+        
+        <button id="recalculate-prediction-btn" class="primary-btn">Recalculate</button>
     </div>
     
-    <!-- Event Form Modal -->
-    <div id="event-form-container" class="modal-container hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Event</h3>
-                <button id="close-event-form" class="close-btn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form id="event-form" class="form">
-                <div class="form-group">
-                    <label for="event-date">Date:</label>
-                    <input type="date" id="event-date" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-title">Title:</label>
-                    <input type="text" id="event-title" required>
-                </div>
-                <div class="form-group">
-                    <label for="event-type">Event type:</label>
-                    <select id="event-type" required>
-                        <option value="workout">Workout</option>
-                        <option value="cheat">Cheat Meal</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="event-calories">Calories (optional):</label>
-                    <input type="number" id="event-calories" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="event-notes">Notes (optional):</label>
-                    <textarea id="event-notes" rows="3"></textarea>
-                </div>
-                <button type="submit" class="primary-btn full-width">Add Event</button>
-            </form>
+    <!-- Weight History Card -->
+    <div class="weight-history-container" id="weight-history-container">
+        <h3>Weight History</h3>
+        <div class="weight-chart-container">
+            <canvas id="weight-chart"></canvas>
+        </div>
+        <div class="weight-entries" id="weight-entries">
+            <!-- Weight entries will be added by JavaScript -->
         </div>
     </div>
+</section>
 
-    <script src="dashboard.js"></script>
+<!-- Desktop Sidebar -->
+<aside class="sidebar">
+    <div class="sidebar-card upcoming-workouts">
+        <h3>Upcoming Schedule</h3>
+        <ul class="schedule-list">
+            <li class="schedule-item">
+                <div class="schedule-day">Today</div>
+                <div class="schedule-workout">Cardio Blast</div>
+            </li>
+            <li class="schedule-item">
+                <div class="schedule-day">Tomorrow</div>
+                <div class="schedule-workout">Core Strength</div>
+            </li>
+            <li class="schedule-item">
+                <div class="schedule-day">Friday</div>
+                <div class="schedule-workout">Rest Day</div>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="sidebar-card tips">
+        <h3>Quick Tips</h3>
+        <div class="tip-container">
+            <div class="tip">
+                <i class="fas fa-lightbulb"></i>
+                <p>Stay hydrated! Aim to drink at least 8 glasses of water daily.</p>
+            </div>
+        </div>
+    </div>
+</aside>
+</main>
+</div>
+
+<!-- Badge Animation Overlay -->
+<div id="badge-overlay" class="hidden">
+<div class="badge-popup">
+<div class="badge-icon large">
+    <i class="fas fa-award"></i>
+</div>
+<h3>Achievement Unlocked!</h3>
+<h2 id="badge-name">QuickStarter</h2>
+<p id="badge-description">You completed your first workout!</p>
+<button id="close-badge" class="primary-btn">Awesome!</button>
+</div>
+</div>
+
+<!-- Meal Form Modal -->
+<div id="meal-form-container" class="modal-container hidden">
+<div class="modal-content">
+<div class="modal-header">
+    <h3>Add Meal</h3>
+    <button id="close-meal-form" class="close-btn" aria-label="Close form">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<form id="meal-form" class="form">
+    <div class="form-group">
+        <label for="food-search">Search for food:</label>
+        <input type="text" id="food-search" placeholder="Type to search for common foods">
+        <div id="food-suggestions" class="food-suggestions"></div>
+    </div>
+    <div class="form-group">
+        <label for="meal-name">Meal name:</label>
+        <input type="text" id="meal-name" required>
+    </div>
+    <div class="form-group">
+        <label for="meal-calories">Calories:</label>
+        <input type="number" id="meal-calories" min="1" required>
+    </div>
+    <div class="form-group">
+        <label for="meal-serving">Serving size:</label>
+        <input type="text" id="meal-serving" placeholder="e.g., 1 cup, 100g">
+    </div>
+    <!-- New macro fields -->
+    <div class="form-group">
+        <label for="meal-protein">Protein (g):</label>
+        <input type="number" id="meal-protein" min="0" step="0.1" placeholder="0">
+    </div>
+    <div class="form-group">
+        <label for="meal-carbs">Carbs (g):</label>
+        <input type="number" id="meal-carbs" min="0" step="0.1" placeholder="0">
+    </div>
+    <div class="form-group">
+        <label for="meal-fat">Fat (g):</label>
+        <input type="number" id="meal-fat" min="0" step="0.1" placeholder="0">
+    </div>
+    <div class="form-group">
+        <label for="meal-time">Meal time:</label>
+        <select id="meal-time" required>
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+        </select>
+    </div>
+    <button type="submit" class="primary-btn full-width">Add Meal</button>
+</form>
+</div>
+</div>
+
+<!-- Workout Calories Form Modal -->
+<div id="workout-calories-form-container" class="modal-container hidden">
+<div class="modal-content">
+<div class="modal-header">
+    <h3>Add Workout Calories</h3>
+    <button id="close-workout-calories-form" class="close-btn" aria-label="Close form">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<form id="workout-calories-form" class="form">
+    <div class="form-group">
+        <label for="workout-name">Workout name:</label>
+        <input type="text" id="workout-name" required>
+    </div>
+    <div class="form-group">
+        <label for="calories-burned-input">Calories burned:</label>
+        <input type="number" id="calories-burned-input" min="1" required>
+    </div>
+    <button type="submit" class="primary-btn full-width">Add Workout</button>
+</form>
+</div>
+</div>
+
+<!-- Event Form Modal -->
+<div id="event-form-container" class="modal-container hidden">
+<div class="modal-content">
+<div class="modal-header">
+    <h3>Add Event</h3>
+    <button id="close-event-form" class="close-btn" aria-label="Close form">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<form id="event-form" class="form">
+    <div class="form-group">
+        <label for="event-date">Date:</label>
+        <input type="date" id="event-date" required>
+    </div>
+    <div class="form-group">
+        <label for="event-title">Title:</label>
+        <input type="text" id="event-title" required>
+    </div>
+    <div class="form-group">
+        <label for="event-type">Event type:</label>
+        <select id="event-type" required>
+            <option value="workout">Workout</option>
+            <option value="cheat">Cheat Meal</option>
+            <option value="custom">Custom</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="event-calories">Calories (optional):</label>
+        <input type="number" id="event-calories" min="0">
+    </div>
+    <div class="form-group">
+        <label for="event-notes">Notes (optional):</label>
+        <textarea id="event-notes" rows="3"></textarea>
+    </div>
+    <button type="submit" class="primary-btn full-width">Add Event</button>
+</form>
+</div>
+</div>
+
+<!-- BMI Calculator Modal -->
+<div id="bmi-calculator-modal" class="modal-container hidden">
+<div class="modal-content">
+<div class="modal-header">
+    <h3>BMI Calculator</h3>
+    <button id="close-bmi-calculator" class="close-btn" aria-label="Close calculator">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<form id="bmi-calculator-form" class="form">
+    <div class="form-group">
+        <label for="bmi-weight">Weight:</label>
+        <div class="input-with-unit">
+            <input type="number" id="bmi-weight" min="1" step="0.1" required>
+            <select id="bmi-weight-unit">
+                <option value="kg">kg</option>
+                <option value="lbs">lbs</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="bmi-height">Height:</label>
+        <div class="input-with-unit">
+            <input type="number" id="bmi-height" min="1" step="0.1" required>
+            <select id="bmi-height-unit">
+                <option value="cm">cm</option>
+                <option value="in">in</option>
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="primary-btn full-width">Calculate BMI</button>
+</form>
+</div>
+</div>
+
+<!-- Share Streak Modal -->
+<div id="share-streak-modal" class="modal-container hidden">
+<div class="modal-content share-modal-content">
+<div class="modal-header">
+    <h3>Share Your Streak</h3>
+    <button id="close-share-modal" class="close-btn" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<div id="share-streak-container" class="share-streak-container">
+    <!-- Share content will be generated here -->
+</div>
+</div>
+</div>
+
+<!-- Customize Meal Plan Modal -->
+<div id="customize-meal-plan-modal" class="modal-container hidden">
+<div class="modal-content">
+<div class="modal-header">
+    <h3>Customize Meal Plan</h3>
+    <button id="close-customize-plan" class="close-btn" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<form id="customize-plan-form" class="form">
+    <div class="form-group">
+        <label for="custom-calories">Daily Calories:</label>
+        <input type="number" id="custom-calories" min="1200" max="4000" value="2000" required>
+    </div>
+    <div class="form-group">
+        <label>Macro Breakdown:</label>
+        <div class="macro-sliders">
+            <div class="macro-slider">
+                <label for="protein-percent">Protein: <span id="protein-percent-display">30%</span></label>
+                <input type="range" id="protein-percent" min="10" max="60" value="30" class="slider">
+            </div>
+            <div class="macro-slider">
+                <label for="carbs-percent">Carbs: <span id="carbs-percent-display">40%</span></label>
+                <input type="range" id="carbs-percent" min="10" max="60" value="40" class="slider">
+            </div>
+            <div class="macro-slider">
+                <label for="fat-percent">Fat: <span id="fat-percent-display">30%</span></label>
+                <input type="range" id="fat-percent" min="10" max="60" value="30" class="slider">
+            </div>
+        </div>
+        <div id="macro-validation-message" class="validation-message"></div>
+    </div>
+    <button type="submit" class="primary-btn full-width">Update Meal Plan</button>
+</form>
+</div>
+</div>
+
+<!-- Add to Meal Plan Modal - New -->
+<div id="add-to-meal-plan-modal" class="modal-container hidden">
+<div class="modal-content">
+<div class="modal-header">
+    <h3>Add to Meal Plan</h3>
+    <button id="close-add-to-meal-plan" class="close-btn" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<div class="modal-body">
+    <h4 id="recipe-title-modal"></h4>
+    <p id="recipe-calories-modal"></p>
+    <p>Select meal time:</p>
+    <div class="meal-time-options">
+        <button class="meal-time-option" data-meal-time="breakfast">Breakfast</button>
+        <button class="meal-time-option" data-meal-time="lunch">Lunch</button>
+        <button class="meal-time-option" data-meal-time="dinner">Dinner</button>
+        <button class="meal-time-option" data-meal-time="snack">Snack</button>
+    </div>
+    <div class="modal-actions">
+        <button id="add-to-meal-plan-confirm" class="primary-btn">Add to Meal Plan</button>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- Share Workout Modal - New -->
+<div id="share-workout-modal" class="modal-container hidden">
+<div class="modal-content share-modal-content">
+<div class="modal-header">
+    <h3>Share This Workout</h3>
+    <button id="close-share-workout-modal" class="close-btn" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+<div class="share-content">
+    <p class="share-workout-text"></p>
+    <div class="share-options">
+        <button class="share-option copy-option">
+            <i class="fas fa-copy"></i>
+            Copy Text
+        </button>
+        <a class="share-option twitter-option" target="_blank">
+            <i class="fab fa-twitter"></i>
+            Twitter
+        </a>
+        <a class="share-option facebook-option" target="_blank">
+            <i class="fab fa-facebook"></i>
+            Facebook
+        </a>
+        <a class="share-option email-option">
+            <i class="fas fa-envelope"></i>
+            Email
+        </a>
+    </div>
+</div>
+</div>
+</div>
+
+<script src="dashboard.js"></script>
 </body>
 </html>
