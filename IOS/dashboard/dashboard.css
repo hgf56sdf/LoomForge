@@ -1730,50 +1730,86 @@ footer {
     font-style: italic;
 }
 
-/* Video Modal */
+/* Video Modal Responsive Improvements */
 .video-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1001;
     backdrop-filter: blur(5px);
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .video-modal-content {
     position: relative;
-    width: 90%;
-    max-width: 800px;
+    width: 70%;
+    max-width: 70vw;
     background: var(--card-color);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .video-modal-content iframe {
     width: 100%;
-    height: 450px;
+    height: 40vh;
+    max-height: 60vh;
     border: none;
 }
 
-.video-modal .close-btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .video-modal-content {
+        width: 85%;
+        max-width: 85vw;
+    }
+
+    .video-modal-content iframe {
+        height: 35vh;
+        max-height: 50vh;
+    }
+}
+
+/* iPhone-specific optimization */
+@media (max-width: 430px) {
+    .video-modal-content {
+        width: 90%;
+        max-width: 90vw;
+    }
+
+    body.device-iphone .video-modal-content iframe {
+        height: 24vh;
+        max-height: 40vh;
+    }
+}
+
+/* iPad-specific optimization */
+@media (min-width: 768px) and (max-width: 1024px) {
+    body.device-ipad .video-modal-content {
+        width: 75%;
+        max-width: 75vw;
+    }
+
+    body.device-ipad .video-modal-content iframe {
+        height: 38vh;
+        max-height: 50vh;
+    }
+
+    /* Special case for landscape orientation */
+    body.device-ipad.orientation-landscape .video-modal-content {
+        width: 65%;
+        max-width: 65vw;
+    }
 }
 
 /* Animations */
@@ -2042,6 +2078,783 @@ footer {
     }
 }
 
+/* New Feature Styles - Adding to existing CSS */
+
+/* 1. Disable Zoom, Copy, and Select on UI */
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Enable text selection only in input fields */
+input, textarea {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* 2. Streak Fire Logo Styles */
+.streak-fire {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: var(--spacing-sm);
+    color: #ff9f1c;
+    font-size: var(--font-size-lg);
+    text-shadow: 0 0 5px rgba(255, 159, 28, 0.5);
+    transition: all var(--transition-speed);
+    position: relative;
+}
+
+.streak-fire i {
+    animation: flicker 3s infinite alternate;
+}
+
+.streak-fire.active {
+    color: #ff9f1c;
+}
+
+.streak-fire.hot {
+    color: #ff7b1c;
+    font-size: calc(var(--font-size-lg) * 1.1);
+}
+
+.streak-fire.blazing {
+    color: #ff571c;
+    font-size: calc(var(--font-size-lg) * 1.2);
+}
+
+.streak-fire.inferno {
+    color: #ff3d1c;
+    font-size: calc(var(--font-size-lg) * 1.3);
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; }
+    25% { opacity: 0.95; }
+    50% { opacity: 0.97; }
+    75% { opacity: 0.94; }
+}
+
+.streak-fire::before,
+.streak-fire::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+    border-radius: 50%;
+    opacity: 0;
+    animation: pulse 2s infinite;
+}
+
+.streak-fire::after {
+    animation-delay: 0.5s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.3; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* 3. BMI Calculator Styles */
+.bmi-calculator {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.bmi-result {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-md);
+}
+
+.bmi-value-container {
+    text-align: center;
+}
+
+.bmi-value {
+    font-size: var(--font-size-xxl);
+    font-weight: bold;
+}
+
+.bmi-category {
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: var(--border-radius-sm);
+}
+
+.category-underweight {
+    background-color: var(--underweight-color);
+    color: white;
+}
+
+.category-normal {
+    background-color: var(--normal-color);
+    color: white;
+}
+
+.category-overweight {
+    background-color: var(--overweight-color);
+    color: white;
+}
+
+.category-obese {
+    background-color: var(--obese-color);
+    color: white;
+}
+
+.bmi-recommendations {
+    margin-top: var(--spacing-md);
+}
+
+.bmi-recommendations h4 {
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+}
+
+.bmi-recommendations h4 i {
+    margin-right: var(--spacing-sm);
+    color: var(--primary-color);
+}
+
+.bmi-recommendations ul {
+    padding-left: var(--spacing-lg);
+    list-style-type: disc;
+}
+
+.bmi-recommendations li {
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+}
+
+/* 4. Goal Prediction System Styles */
+.weight-prediction-container {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.prediction-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+}
+
+.days-to-goal-container {
+    margin-bottom: var(--spacing-md);
+}
+
+.days-to-goal {
+    font-size: var(--font-size-xxl);
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.target-date {
+    font-weight: 500;
+}
+
+.weight-trend {
+    margin-top: var(--spacing-md);
+    font-style: italic;
+    color: var(--text-color-light);
+}
+
+.weight-trend.healthy {
+    color: var(--success-color);
+}
+
+.weight-trend.caution {
+    color: var(--warning-color);
+}
+
+/* 5. Daily Diet System - Meal Plan Styles */
+.meal-plan-container {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.meal-plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.meal-plan-stats {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-md);
+}
+
+.plan-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.plan-stat-value {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+}
+
+.plan-stat-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-color-light);
+}
+
+.daily-meals-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.meal-section {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+
+.meal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--background-color);
+}
+
+.meal-macros {
+    display: flex;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-color-light);
+}
+
+.meal-option {
+    padding: var(--spacing-md);
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.meal-option:last-child {
+    border-bottom: none;
+}
+
+.meal-option-name {
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+}
+
+.meal-option-desc {
+    font-size: var(--font-size-sm);
+    color: var(--text-color-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+.meal-option-macros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-color-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+.meal-option-btn {
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.meal-option-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.meal-time-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.meal-time-option {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.meal-time-option:hover {
+    background-color: var(--primary-color-light);
+    color: white;
+    border-color: var(--primary-color-light);
+}
+
+.meal-time-option.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* 6. Enhanced Meal Entry Styles */
+.meal-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.meal-entry-details {
+    flex: 1;
+}
+
+.meal-entry-name {
+    font-weight: 500;
+}
+
+.meal-entry-serving {
+    font-size: var(--font-size-xs);
+    color: var(--text-color-light);
+}
+
+.meal-entry-macros {
+    display: flex;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-color-light);
+    margin-top: var(--spacing-xs);
+}
+
+.meal-entry-calories {
+    font-weight: bold;
+    color: var(--consumed-color);
+    margin: 0 var(--spacing-md);
+}
+
+/* 7. Smart Workout Plan - Goal-specific badges */
+.workout-goal-badge {
+    position: absolute;
+    bottom: var(--spacing-sm);
+    left: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: bold;
+}
+
+.workout-goal-badge.weight-loss {
+    background-color: var(--consumed-color);
+    color: white;
+}
+
+.workout-goal-badge.muscle-gain {
+    background-color: var(--burned-color);
+    color: white;
+}
+
+.workout-goal-badge.general {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* 8. Recipe Macros */
+.recipe-macros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    color: var(--text-color-light);
+    margin-bottom: var(--spacing-md);
+}
+
+.recipe-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+/* 9. Workout Instruction Styles */
+.workout-instructions-container {
+    margin-top: var(--spacing-md);
+    border-top: 1px dashed var(--border-color);
+    padding-top: var(--spacing-md);
+}
+
+.workout-instructions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.instruction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px dotted var(--border-color);
+}
+
+.instruction-item:last-child {
+    border-bottom: none;
+}
+
+.instruction-exercise {
+    font-weight: 500;
+}
+
+.instruction-details {
+    display: flex;
+    gap: var(--spacing-md);
+    color: var(--text-color-light);
+    font-size: var(--font-size-sm);
+}
+
+/* 10. Share Workout and Streak Features */
+.share-streak-container {
+    padding: var(--spacing-md);
+}
+
+.share-preview {
+    width: 100%;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    text-align: center;
+    padding: var(--spacing-lg);
+}
+
+.share-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.share-logo {
+    height: 40px;
+}
+
+.share-body {
+    padding: var(--spacing-md) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.share-streak-count {
+    font-size: var(--font-size-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.share-streak-count .count {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.share-streak-count .label {
+    font-size: var(--font-size-lg);
+    color: var(--text-color-light);
+}
+
+.share-streak-fire {
+    font-size: 2.5rem;
+    margin: var(--spacing-md) 0;
+    color: #ff9f1c;
+}
+
+.share-streak-fire.hot {
+    color: #ff7b1c;
+}
+
+.share-streak-fire.blazing {
+    color: #ff571c;
+}
+
+.share-streak-fire.inferno {
+    color: #ff3d1c;
+}
+
+.share-message {
+    font-size: var(--font-size-md);
+    margin-bottom: var(--spacing-sm);
+    line-height: 1.5;
+}
+
+.share-username {
+    font-style: italic;
+    color: var(--text-color-light);
+}
+
+.share-footer {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-md);
+    border-top: 1px dashed var(--border-color);
+    font-size: var(--font-size-sm);
+    color: var(--text-color-light);
+}
+
+.share-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    justify-content: center;
+}
+
+.share-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+
+.share-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-md);
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.share-option:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.share-option i {
+    font-size: var(--font-size-lg);
+}
+
+/* 11. Modal Workout Details */
+.modal-workout-details {
+    padding: var(--spacing-lg);
+    background-color: var(--card-color);
+    border-radius: var(--border-radius-md);
+}
+
+.workout-details-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-color-light);
+}
+
+.workout-exercises {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.workout-exercises h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    color: var(--primary-color);
+}
+
+.workout-exercise-list {
+    list-style: none;
+    padding: 0;
+}
+
+.workout-exercise-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm) 0;
+    border-bottom: 1px dotted var(--border-color);
+}
+
+.workout-exercise-item:last-child {
+    border-bottom: none;
+}
+
+.exercise-name {
+    font-weight: 500;
+}
+
+.exercise-details {
+    color: var(--text-color-light);
+}
+
+.secondary-btn {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.secondary-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* 12. Customize Meal Plan - Macro Sliders */
+.macro-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.macro-slider {
+    display: flex;
+    flex-direction: column;
+}
+
+.macro-slider label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: var(--border-color);
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+}
+
+.validation-message {
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.validation-message.error {
+    color: var(--danger-color);
+}
+
+/* 13. iPhone/iPad Optimizations */
+@media (max-width: 430px) {
+    body.device-iphone {
+        font-size: 14px;
+    }
+
+    .dashboard-card {
+        margin-bottom: var(--spacing-md);
+    }
+    
+    body.device-iphone .nav-tab span {
+        font-size: 11px;
+    }
+
+    .calorie-circle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .detection-animation {
+        width: 60px;
+        height: 60px;
+    }
+
+    .calendar-day {
+        padding: 2px;
+    }
+
+    .day-number {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+    
+    /* Enhanced meal section for small screens */
+    .meal-option {
+        padding: var(--spacing-sm);
+    }
+    
+    .meal-option-macros {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .share-streak-count .count {
+        font-size: 2.5rem;
+    }
+}
+
 /* iPadOS-specific optimizations */
 @media (min-width: 768px) and (max-width: 1024px) {
     body.device-ipad {
@@ -2054,6 +2867,61 @@ footer {
     
     body.device-ipad .dashboard-card:hover {
         transform: translateY(-3px);
+    }
+    
+    /* Adjusted meal plan for iPad */
+    body.device-ipad .daily-meals-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+}
+
+/* Goal Filters */
+.goal-filters {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-left: auto;
+}
+
+.goal-filter-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    background-color: transparent;
+    color: var(--text-color);
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-speed);
+}
+
+.goal-filter-btn:hover, .goal-filter-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Media Grid Improvements */
+@media (max-width: 768px) {
+    .goal-filters {
+        margin-left: 0;
+        margin-top: var(--spacing-sm);
+        overflow-x: auto;
+        padding-bottom: var(--spacing-xs);
+        width: 100%;
+    }
+    
+    .goal-filter-btn {
+        flex-shrink: 0;
+    }
+    
+    .share-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .meal-plan-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-sm);
     }
 }
 
