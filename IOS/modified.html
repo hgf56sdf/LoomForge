@@ -10,225 +10,1729 @@
     <link rel="manifest" href="manifest.json">
     <title>LoomForge</title>
     <style>
+        /* -----------------------------------------
+        * Base Variables
+        * ----------------------------------------- */
         :root {
-            --primary-color: #007AFF;
-            --secondary-color: #5856D6;
-            --background-dark: #1C1C1E;
-            --card-background: #2C2C2E;
-            --text-primary: #FFFFFF;
-            --text-secondary: #8E8E93;
-            --success-color: #34C759;
-            --danger-color: #FF3B30;
+            /* Theme detection - applied via JS */
+            color-scheme: light dark;
+            
+            /* Core spacing units */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            
+            /* Typography scale */
+            --text-xs: 0.75rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            
+            /* Core layout values */
+            --header-height: 3.5rem;
+            --footer-height: 4rem;
+            --card-radius: 12px;
+            --button-radius: 10px;
+            --sidebar-width: 18rem;
+            
+            /* Safe area insets for notched devices (dynamic values) */
+            --safe-area-inset-top: env(safe-area-inset-top, 0px);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-inset-left: env(safe-area-inset-left, 0px);
+            --safe-area-inset-right: env(safe-area-inset-right, 0px);
+            
+            /* Z-index layers */
+            --z-header: 100;
+            --z-modal: 1000;
+            --z-toast: 2000;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            /* Animation timings */
+            --transition-fast: 150ms;
+            --transition-normal: 250ms;
+            --transition-slow: 350ms;
         }
 
+        /* -----------------------------------------
+        * Theme: System Default (Light)
+        * ----------------------------------------- */
+        :root,
+        :root[data-theme="system"][data-system-theme="light"],
+        :root[data-theme="light"] {
+            /* Color palette - Light theme */
+            --primary-color: #007AFF;
+            --primary-hover: #0062cc;
+            --secondary-color: #5856D6;
+            --accent-color: var(--primary-color);
+            
+            --background: #F2F2F7;
+            --surface-1: #FFFFFF;
+            --surface-2: #F9F9F9;
+            --surface-3: #EFEFF4;
+            
+            --text-primary: #000000;
+            --text-secondary: #6E6E73;
+            --text-tertiary: #8E8E93;
+            --text-placeholder: #C7C7CC;
+            
+            --border-color: rgba(0, 0, 0, 0.1);
+            --divider-color: rgba(0, 0, 0, 0.1);
+            
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --danger-color: #FF3B30;
+            --info-color: #5AC8FA;
+            
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            
+            /* iOS system colors */
+            --ios-red: #FF3B30;
+            --ios-orange: #FF9500;
+            --ios-yellow: #FFCC00;
+            --ios-green: #34C759;
+            --ios-teal: #5AC8FA;
+            --ios-blue: #007AFF;
+            --ios-indigo: #5856D6;
+            --ios-purple: #AF52DE;
+            --ios-pink: #FF2D55;
+        }
+
+        /* -----------------------------------------
+        * Theme: System Default (Dark)
+        * ----------------------------------------- */
+        @media (prefers-color-scheme: dark) {
+            :root[data-theme="system"],
+            :root[data-theme="system"][data-system-theme="dark"] {
+                --primary-color: #0A84FF;
+                --primary-hover: #409CFF;
+                --secondary-color: #5E5CE6;
+                --accent-color: var(--primary-color);
+                
+                --background: #1C1C1E;
+                --surface-1: #2C2C2E;
+                --surface-2: #3A3A3C;
+                --surface-3: #48484A;
+                
+                --text-primary: #FFFFFF;
+                --text-secondary: #AEAEB2;
+                --text-tertiary: #8E8E93;
+                --text-placeholder: #636366;
+                
+                --border-color: rgba(255, 255, 255, 0.15);
+                --divider-color: rgba(255, 255, 255, 0.1);
+                
+                --success-color: #30D158;
+                --warning-color: #FF9F0A;
+                --danger-color: #FF453A;
+                --info-color: #64D2FF;
+                
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                
+                /* iOS system colors - dark mode */
+                --ios-red: #FF453A;
+                --ios-orange: #FF9F0A;
+                --ios-yellow: #FFD60A;
+                --ios-green: #30D158;
+                --ios-teal: #64D2FF;
+                --ios-blue: #0A84FF;
+                --ios-indigo: #5E5CE6;
+                --ios-purple: #BF5AF2;
+                --ios-pink: #FF375F;
+            }
+        }
+
+        /* -----------------------------------------
+        * Theme: Dark (Manual Override)
+        * ----------------------------------------- */
+        :root[data-theme="dark"] {
+            --primary-color: #0A84FF;
+            --primary-hover: #409CFF;
+            --secondary-color: #5E5CE6;
+            --accent-color: var(--primary-color);
+            
+            --background: #1C1C1E;
+            --surface-1: #2C2C2E;
+            --surface-2: #3A3A3C;
+            --surface-3: #48484A;
+            
+            --text-primary: #FFFFFF;
+            --text-secondary: #AEAEB2;
+            --text-tertiary: #8E8E93;
+            --text-placeholder: #636366;
+            
+            --border-color: rgba(255, 255, 255, 0.15);
+            --divider-color: rgba(255, 255, 255, 0.1);
+            
+            --success-color: #30D158;
+            --warning-color: #FF9F0A;
+            --danger-color: #FF453A;
+            --info-color: #64D2FF;
+            
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            
+            /* iOS system colors - dark mode */
+            --ios-red: #FF453A;
+            --ios-orange: #FF9F0A;
+            --ios-yellow: #FFD60A;
+            --ios-green: #30D158;
+            --ios-teal: #64D2FF;
+            --ios-blue: #0A84FF;
+            --ios-indigo: #5E5CE6;
+            --ios-purple: #BF5AF2;
+            --ios-pink: #FF375F;
+        }
+
+        /* -----------------------------------------
+        * Theme: Frutiger Aero (Glossy)
+        * ----------------------------------------- */
+        :root[data-theme="frutiger"] {
+            /* Base colors - Frutiger Aero uses a lot of glassy blues */
+            --primary-color: #4BA3E3;
+            --primary-hover: #6FB5E9;
+            --secondary-color: #7D6DF0;
+            --accent-color: var(--primary-color);
+            
+            --background: linear-gradient(to bottom, #BEE4F7, #D9F0FD);
+            --surface-1: rgba(255, 255, 255, 0.7);
+            --surface-2: rgba(255, 255, 255, 0.5);
+            --surface-3: rgba(255, 255, 255, 0.3);
+            
+            --text-primary: #1A1A1A;
+            --text-secondary: #444444;
+            --text-tertiary: #555555;
+            --text-placeholder: #999999;
+            
+            --border-color: rgba(255, 255, 255, 0.5);
+            --divider-color: rgba(255, 255, 255, 0.5);
+            
+            --success-color: #5AD427;
+            --warning-color: #FFA319;
+            --danger-color: #FF5C38;
+            --info-color: #57C6FF;
+            
+            --shadow-color: rgba(0, 0, 120, 0.15);
+            
+            /* Animation adjustments for more "bouncy" feeling */
+            --transition-normal: 300ms;
+            
+            /* Shadow specifics for glass effect */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 100, 0.1), 0 1px 2px rgba(255, 255, 255, 0.2);
+            --shadow-md: 0 4px 6px rgba(0, 0, 100, 0.1), 0 2px 4px rgba(255, 255, 255, 0.3);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 100, 0.1), 0 4px 8px rgba(255, 255, 255, 0.3);
+            
+            /* Frutiger specific values */
+            --glass-highlight: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --reflection-gradient: linear-gradient(180deg, var(--glass-highlight) 0%, transparent 40%);
+        }
+
+        /* -----------------------------------------
+        * Theme: Simple (Flat & Minimal)
+        * ----------------------------------------- */
+        :root[data-theme="simple"] {
+            /* Monochromatic, flat design */
+            --primary-color: #555555;
+            --primary-hover: #666666;
+            --secondary-color: #888888;
+            --accent-color: var(--primary-color);
+            
+            --background: #FFFFFF;
+            --surface-1: #FAFAFA;
+            --surface-2: #F5F5F5;
+            --surface-3: #EEEEEE;
+            
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --text-placeholder: #CCCCCC;
+            
+            --border-color: #EEEEEE;
+            --divider-color: #EEEEEE;
+            
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #F44336;
+            --info-color: #2196F3;
+            
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            
+            /* Simplified shadows */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 3px 6px rgba(0, 0, 0, 0.05);
+            
+            /* Simplified geometry */
+            --card-radius: 8px;
+            --button-radius: 4px;
+            
+            /* Simple theme-specific values */
+            --space-factor: 1.2; /* More generous spacing */
+        }
+
+        /* -----------------------------------------
+        * Accent Colors
+        * ----------------------------------------- */
+        [data-accent="blue"] { --accent-color: var(--ios-blue); }
+        [data-accent="red"] { --accent-color: var(--ios-red); }
+        [data-accent="green"] { --accent-color: var(--ios-green); }
+        [data-accent="purple"] { --accent-color: var(--ios-purple); }
+        [data-accent="pink"] { --accent-color: var(--ios-pink); }
+        [data-accent="orange"] { --accent-color: var(--ios-orange); }
+        [data-accent="yellow"] { --accent-color: var(--ios-yellow); }
+        [data-accent="teal"] { --accent-color: var(--ios-teal); }
+        [data-accent="indigo"] { --accent-color: var(--ios-indigo); }
+
+        /* -----------------------------------------
+        * Core Layout & Reset
+        * ----------------------------------------- */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            /* Improved touch response on iOS */
+            -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
+        html {
+            font-size: 16px;
             height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: var(--background-dark);
-            color: var(--text-primary);
-            -webkit-touch-callout: none; /* Disable callout menu */
-            -webkit-user-select: none; /* Disable text selection */
-            user-select: none;
+            /* Prevent font zooming on iOS Safari */
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            height: 100%;
+            background: var(--background);
+            color: var(--text-primary);
+            
+            /* Disable text selection & callout */
+            -webkit-touch-callout: none;
+            user-select: none;
+            
+            /* Smooth theme transitions */
+            transition: background var(--transition-normal) ease,
+                        color var(--transition-normal) ease;
+            
+            /* For notched devices */
+            padding-top: var(--safe-area-inset-top);
+            padding-bottom: var(--safe-area-inset-bottom);
+            padding-left: var(--safe-area-inset-left);
+            padding-right: var(--safe-area-inset-right);
+            
+            /* iOS momentum scrolling */
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
+            
+            /* Prevent overscroll bounce effect */
+            overscroll-behavior: none;
+        }
+
+        /* In Frutiger Aero theme, apply background properly */
+        :root[data-theme="frutiger"] body {
+            background-image: var(--background);
+            background-attachment: fixed;
         }
 
         .container {
             max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
-            padding: 20px;
+            padding-left: calc(var(--space-4) + var(--safe-area-inset-left));
+            padding-right: calc(var(--space-4) + var(--safe-area-inset-right));
         }
 
+        /* Reduced motion preference handling */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        body.reduced-motion * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+
+        /* -----------------------------------------
+        * Typography
+        * ----------------------------------------- */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+
+        h1 { font-size: var(--text-2xl); }
+        h2 { font-size: var(--text-xl); }
+        h3 { font-size: var(--text-lg); }
+        
+        p {
+            margin-bottom: var(--space-4);
+            line-height: 1.5;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: opacity var(--transition-fast) ease;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        /* -----------------------------------------
+        * Header & Navigation
+        * ----------------------------------------- */
         .header {
-            padding: 20px 0;
             position: sticky;
             top: 0;
-            background-color: var(--background-dark);
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .nav-button {
-            background-color: var(--card-background);
-            color: var(--text-primary);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            min-width: 100px;
-        }
-
-        .nav-button.active {
-            background-color: var(--primary-color);
-        }
-
-        .nav-button:hover:not(.active) {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .app-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
-        }
-
-        .app-card {
-            background-color: var(--card-background);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        .app-card:hover {
-            transform: translateY(-4px);
-        }
-
-        .app-header {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            gap: 16px;
-        }
-
-        .app-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
-
-        .app-info {
-            flex: 1;
-        }
-
-        .app-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .app-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .app-footer {
-            padding: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .enter-button {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--text-primary);
-            padding: 10px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: background-color 0.3s ease;
-            text-align: center;
+            padding-top: calc(var(--space-4) + var(--safe-area-inset-top));
+            padding-bottom: var(--space-4);
+            background-color: var(--background);
+            z-index: var(--z-header);
+            transition: background-color var(--transition-normal) ease;
+            border-bottom: 1px solid var(--divider-color);
             width: 100%;
         }
 
-        .enter-button:hover {
-            background-color: var(--secondary-color);
+        /* Frutiger specific header styles with glass effect */
+        :root[data-theme="frutiger"] .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 1px 10px rgba(0, 0, 100, 0.1);
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .app-title {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        /* -----------------------------------------
+        * Search & Filters
+        * ----------------------------------------- */
+        .search-filters-container {
+            margin-bottom: var(--space-4);
         }
 
         .search-bar {
             width: 100%;
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: none;
-            background-color: var(--card-background);
+            height: 44px; /* iOS standard touch target */
+            padding: 0 var(--space-4);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-1);
             color: var(--text-primary);
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: var(--text-base);
+            margin-bottom: var(--space-4);
+            transition: background-color var(--transition-normal), 
+                        color var(--transition-normal),
+                        border-color var(--transition-fast);
+            -webkit-appearance: none; /* Remove iOS default styling */
         }
 
         .search-bar:focus {
-            outline: 2px solid var(--primary-color);
+            outline: none;
+            border-color: var(--accent-color);
         }
+
+        /* Search bar in Frutiger theme */
+        :root[data-theme="frutiger"] .search-bar {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .search-bar::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        .filter-select {
+            height: 44px; /* iOS standard touch target */
+            background-color: var(--surface-1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--button-radius);
+            padding: 0 var(--space-6) 0 var(--space-3);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            min-width: 130px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            transition: background-color var(--transition-normal), 
+                        color var(--transition-normal),
+                        border-color var(--transition-fast);
+        }
+
+        /* Frutiger style filters */
+        :root[data-theme="frutiger"] .filter-select {
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236E6E73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .filters-row {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-4);
+        }
+
+        /* -----------------------------------------
+        * Navigation
+        * ----------------------------------------- */
+        .nav-buttons {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-5);
+            overflow-x: auto;
+            padding-bottom: var(--space-2);
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+            /* Momentum scroll for iOS */
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .nav-buttons::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-button {
+            background-color: var(--surface-1);
+            color: var(--text-secondary);
+            border: none;
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--button-radius);
+            font-size: var(--text-base);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-normal) ease;
+            white-space: nowrap;
+            min-width: 100px;
+            /* Prevent text selection */
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+        }
+
+        .nav-button.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .nav-button:not(.active):hover {
+            background-color: var(--surface-2);
+        }
+
+        /* Frutiger Aero style nav buttons */
+        :root[data-theme="frutiger"] .nav-button {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(240,240,255,0.5));
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        :root[data-theme="frutiger"] .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: var(--reflection-gradient);
+            pointer-events: none;
+        }
+
+        :root[data-theme="frutiger"] .nav-button.active {
+            background: linear-gradient(to bottom, #7db9e8, #207cca);
+            border: 1px solid #6baddf;
+        }
+
+        /* Simple theme nav buttons */
+        :root[data-theme="simple"] .nav-button {
+            background-color: var(--surface-1);
+            box-shadow: none;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        :root[data-theme="simple"] .nav-button.active {
+            background-color: var(--text-primary);
+            color: var(--background);
+            border-color: var(--text-primary);
+        }
+
+        /* -----------------------------------------
+        * View Options
+        * ----------------------------------------- */
+        .view-options {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .segmented-control {
+            display: flex;
+            background-color: var(--surface-1);
+            border-radius: var(--button-radius);
+            padding: 2px;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Frutiger Aero style segmented control */
+        :root[data-theme="frutiger"] .segmented-control {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .segmented-option {
+            padding: var(--space-2) var(--space-4);
+            border-radius: calc(var(--button-radius) - 2px);
+            cursor: pointer;
+            z-index: 1;
+            transition: color var(--transition-fast);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            min-width: 70px;
+            text-align: center;
+            position: relative;
+        }
+
+        .segmented-option.active {
+            color: white;
+        }
+
+        .segmented-highlight {
+            position: absolute;
+            height: calc(100% - 4px);
+            border-radius: calc(var(--button-radius) - 2px);
+            top: 2px;
+            left: 2px;
+            background-color: var(--accent-color);
+            transition: transform var(--transition-normal), width var(--transition-normal);
+            z-index: 0;
+        }
+
+        /* Frutiger highlight has gradient */
+        :root[data-theme="frutiger"] .segmented-highlight {
+            background: linear-gradient(to bottom, #7db9e8, #207cca);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* -----------------------------------------
+        * Main content layout
+        * ----------------------------------------- */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-5);
+            padding: var(--space-4) 0;
+        }
+
+        .app-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            padding: var(--space-4) 0;
+        }
+
+        /* -----------------------------------------
+        * App Card Styles
+        * ----------------------------------------- */
+        .app-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+    justify-content: space-between;
+}
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { 
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .app-card:active {
+            transform: translateY(0);
+            transition: transform 0.1s;
+        }
+
+        /* Frutiger Aero cards */
+        :root[data-theme="frutiger"] .app-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        :root[data-theme="frutiger"] .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: var(--reflection-gradient);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .app-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    flex: 1;
+}
+
+        .app-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: calc(var(--card-radius) / 1.5);
+            object-fit: cover;
+            /* Nice shadow for the icon */
+            box-shadow: var(--shadow-sm);
+            /* High quality image rendering */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+
+        .app-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+        .app-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+            color: var(--text-primary);
+            /* Prevent long titles from overflowing */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .app-description {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: var(--space-2);
+}
+
+        .app-metadata {
+    margin-top: var(--space-2);
+}
+
+        .user-count, .app-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+        }
+
+        .app-badge {
+            display: inline-block;
+            padding: 2px var(--space-2);
+            border-radius: 12px;
+            font-size: var(--text-xs);
+            font-weight: 600;
+        }
+
+        .app-badge.free {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .app-badge.paid {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .app-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-4);
+    border-top: 1px solid var(--divider-color);
+}
+
+        .enter-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: var(--space-2) var(--space-5);
+            border-radius: var(--button-radius);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: var(--text-sm);
+            transition: background-color var(--transition-fast) ease,
+                        transform var(--transition-fast) ease;
+            text-align: center;
+            min-width: 100px;
+            /* iOS native button feel */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .enter-button:hover {
+            opacity: 0.9;
+        }
+
+        .enter-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Frutiger style buttons */
+        :root[data-theme="frutiger"] .enter-button {
+            background: linear-gradient(to bottom, #7db9e8, #207cca);
+            border: 1px solid #6baddf;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Simple theme buttons */
+        :root[data-theme="simple"] .enter-button {
+            background-color: var(--text-primary);
+            color: var(--background);
+            box-shadow: none;
+            border-radius: 4px;
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            font-size: var(--text-xl);
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: color var(--transition-fast);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            /* iOS tap highlight */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .action-button:hover {
+            color: var(--text-secondary);
+            background-color: var(--surface-2);
+        }
+
+        .favorite-button {
+            color: var(--text-tertiary);
+        }
+
+        .favorite-button.active {
+            color: var(--ios-red);
+        }
+
+        /* Developer info section */
+        .developer-info {
+            background-color: var(--surface-2);
+            padding: var(--space-3);
+            margin-top: var(--space-2);
+            border-radius: calc(var(--card-radius) / 2);
+            font-size: var(--text-xs);
+            display: none;
+        }
+
+        .developer-info.visible {
+            display: block;
+        }
+
+        .developer-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-1);
+        }
+
+        .developer-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .developer-label {
+            color: var(--text-tertiary);
+        }
+
+        .developer-value {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* List view styles */
+        .app-list .app-card {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .app-list .app-header {
+            flex: 1;
+            border-right: 1px solid var(--divider-color);
+            border-top: none;
+        }
+
+        .app-list .app-footer {
+            padding: var(--space-4);
+            border-top: none;
+            width: 150px;
+            flex-shrink: 0;
+            justify-content: center;
+        }
+
+        /* Compact view */
+        .app-grid.compact .app-header {
+            padding: var(--space-3);
+        }
+
+        .app-grid.compact .app-icon {
+            width: 48px;
+            height: 48px;
+        }
+
+        .app-grid.compact .app-description,
+        .app-grid.compact .app-metadata {
+            display: none;
+        }
+
+        /* Settings button */
+        .settings-button {
+            background-color: var(--surface-1);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: var(--text-lg);
+            transition: background-color var(--transition-fast);
+            /* iOS tap highlight */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .settings-button:hover {
+            background-color: var(--surface-2);
+        }
+
+        /* Frutiger style settings button */
+        :root[data-theme="frutiger"] .settings-button {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* -----------------------------------------
+        * Settings Modal
+        * ----------------------------------------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-normal);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            padding: 0 var(--space-4);
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background-color: var(--surface-1);
+            border-radius: var(--card-radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform var(--transition-normal);
+            
+            /* iOS momentum scrolling */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Frutiger style modal */
+        :root[data-theme="frutiger"] .modal-content {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-5);
+            border-bottom: 1px solid var(--divider-color);
+            position: sticky;
+            top: 0;
+            background: var(--surface-1);
+            z-index: 10;
+        }
+
+        :root[data-theme="frutiger"] .modal-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .modal-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--text-2xl);
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color var(--transition-fast);
+            /* iOS tap highlight */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .modal-close:hover {
+            background-color: var(--surface-2);
+        }
+
+        .modal-body {
+            padding: var(--space-5);
+        }
+
+        /* Settings sections */
+        .settings-section {
+            margin-bottom: var(--space-8);
+        }
+
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+            color: var(--text-primary);
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .settings-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-label {
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .settings-description {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-top: var(--space-1);
+        }
+
+        /* Toggle switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 51px; /* iOS standard size */
+            height: 31px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--surface-3);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Frutiger style toggle */
+        :root[data-theme="frutiger"] .toggle-slider {
+            background-color: #d8d8d8;
+            border: 1px solid #ccc;
+        }
+
+        :root[data-theme="frutiger"] input:checked + .toggle-slider {
+            background: linear-gradient(to right, #7db9e8, #207cca);
+            border: 1px solid #6baddf;
+        }
+
+        /* Simple theme toggle */
+        :root[data-theme="simple"] .toggle-slider {
+            background-color: #ddd;
+        }
+
+        :root[data-theme="simple"] input:checked + .toggle-slider {
+            background-color: var(--text-primary);
+        }
+
+        /* Color picker */
+        .color-options {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color var(--transition-fast),
+                        transform var(--transition-fast);
+            /* iOS tap highlight */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .color-option.active {
+            border-color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        .color-option:active {
+            transform: scale(0.95);
+        }
+
+        .color-blue { background-color: var(--ios-blue); }
+        .color-red { background-color: var(--ios-red); }
+        .color-green { background-color: var(--ios-green); }
+        .color-purple { background-color: var(--ios-purple); }
+        .color-pink { background-color: var(--ios-pink); }
+        .color-orange { background-color: var(--ios-orange); }
+        .color-teal { background-color: var(--ios-teal); }
+        .color-indigo { background-color: var(--ios-indigo); }
+        .color-yellow { background-color: var(--ios-yellow); }
+
+        /* Genre badges */
+        .genre-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+        }
+
+        .genre-badge {
+            background-color: var(--surface-2);
+            border: 1px solid var(--border-color);
+            padding: var(--space-1) var(--space-3);
+            border-radius: 20px;
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: background-color var(--transition-fast), 
+                        color var(--transition-fast),
+                        border-color var(--transition-fast);
+            /* iOS tap highlight */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .genre-badge.selected {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Frutiger style genre badges */
+        :root[data-theme="frutiger"] .genre-badge {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+        }
+
+        :root[data-theme="frutiger"] .genre-badge.selected {
+            background: linear-gradient(to bottom, #7db9e8, #207cca);
+            border: 1px solid #6baddf;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: calc(var(--space-6) + var(--safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--surface-3);
+            color: var(--text-primary);
+            padding: var(--space-3) var(--space-5);
+            border-radius: var(--card-radius);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            z-index: var(--z-toast);
+            opacity: 0;
+            transition: transform var(--transition-normal),
+                        opacity var(--transition-normal);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Loading indicator */
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--surface-3);
+            border-top-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: var(--space-8) auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: var(--space-10);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Swipe action styles */
+        .swipe-container {
+            position: relative;
+            overflow: hidden;
+            touch-action: pan-y;
+        }
+
+        .swipe-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            display: flex;
+            transform: translateX(100%);
+            transition: transform var(--transition-normal);
+        }
+
+        .swipe-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .swipe-action.favorite {
+            background-color: var(--ios-orange);
+        }
+
+        .swipe-action.delete {
+            background-color: var(--ios-red);
+        }
+
+        /* -----------------------------------------
+        * Responsive Adjustments
+        * ----------------------------------------- */
         @media (max-width: 768px) {
             .container {
-                padding: 12px;
+                padding-left: calc(var(--space-3) + var(--safe-area-inset-left));
+                padding-right: calc(var(--space-3) + var(--safe-area-inset-right));
             }
-
+            
             .app-grid {
                 grid-template-columns: 1fr;
+                gap: var(--space-4);
             }
+            
+            .filters-row {
+                gap: var(--space-2);
+            }
+            
+            .filter-select {
+                min-width: auto;
+                flex: 1;
+                font-size: var(--text-xs);
+                padding-left: var(--space-2);
+                padding-right: var(--space-6);
+                background-position: right 8px center;
+            }
+            
+            .app-list .app-card {
+                flex-direction: column;
+            }
+            
+            .app-list .app-header {
+                border-right: none;
+                border-bottom: 1px solid var(--divider-color);
+                width: 100%;
+            }
+            
+            .app-list .app-footer {
+                width: 100%;
+            }
+            
+            .settings-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-2);
+            }
+            
+            .color-options {
+                margin-top: var(--space-2);
+            }
+        }
 
-            .nav-buttons {
-                padding-bottom: 4px;
+        @media (min-width: 769px) {
+            .app-list .app-card {
+                flex-direction: row;
             }
+            
+            .app-list .app-header {
+                flex: 1;
+                border-right: 1px solid var(--divider-color);
+                border-bottom: none;
+            }
+            
+            .app-list .app-footer {
+                width: 150px;
+            }
+        }
+
+        /* -----------------------------------------
+        * Utilities
+        * ----------------------------------------- */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus visible */
+        :focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        /* Invisible elements */
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
-<body>
-    <div class="header">
+<body data-theme="system" data-accent="blue" data-view="grid" data-display="detailed">
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Header -->
+    <header class="header">
         <div class="container">
-            <input type="search" class="search-bar" placeholder="Search apps and games..." id="searchInput">
-            <div class="nav-buttons">
-                <button class="nav-button active" data-category="featured">Featured</button>
-                <button class="nav-button" data-category="apps">Apps</button>
-                <button class="nav-button" data-category="games">Games</button>
+            <div class="header-row">
+                <h1 class="app-title">LoomForge</h1>
+                <div class="header-actions">
+                    <button id="toggleView" class="settings-button" aria-label="Toggle view">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    </button>
+                    <button id="openSettings" class="settings-button" aria-label="Open settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="search-filters-container">
+                <input type="search" class="search-bar" placeholder="Search apps and games..." id="searchInput" aria-label="Search apps and games">
+                
+                <div class="filters-row">
+                    <select class="filter-select" id="sortFilter" aria-label="Sort by">
+                        <option value="popular">Sort: Popular</option>
+                        <option value="recent">Sort: Updated</option>
+                        <option value="name">Sort: Name</option>
+                    </select>
+                    
+                    <select class="filter-select" id="categoryFilter" aria-label="Filter by category">
+                        <option value="all">Category: All</option>
+                        <option value="games">Games</option>
+                        <option value="productivity">Productivity</option>
+                        <option value="education">Education</option>
+                        <option value="utilities">Utilities</option>
+                    </select>
+                    
+                    <select class="filter-select" id="languageFilter" aria-label="Filter by language">
+                        <option value="all">Lang: All</option>
+                        <option value="en">English</option>
+                        <option value="ar">Arabic</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                    </select>
+                    
+                    <select class="filter-select" id="priceFilter" aria-label="Filter by price">
+                        <option value="all">Price: All</option>
+                        <option value="free">Free</option>
+                        <option value="paid">Paid</option>
+                    </select>
+                </div>
+            </div>
+            
+            <nav>
+                <div class="nav-buttons" role="tablist">
+                    <button class="nav-button active" data-category="featured" role="tab" aria-selected="true">Featured</button>
+                    <button class="nav-button" data-category="for-you" role="tab" aria-selected="false">For You</button>
+                    <button class="nav-button" data-category="favorites" role="tab" aria-selected="false">Favorites</button>
+                    <button class="nav-button" data-category="apps" role="tab" aria-selected="false">Apps</button>
+                    <button class="nav-button" data-category="games" role="tab" aria-selected="false">Games</button>
+                </div>
+            </nav>
+            
+            <div class="view-options">
+                <div class="segmented-control" aria-label="Display style">
+                    <div class="segmented-highlight"></div>
+                    <button class="segmented-option active" data-view="grid" aria-pressed="true">Grid</button>
+                    <button class="segmented-option" data-view="list" aria-pressed="false">List</button>
+                </div>
+                
+                <div class="segmented-control" aria-label="Display detail level">
+                    <div class="segmented-highlight"></div>
+                    <button class="segmented-option active" data-display="detailed" aria-pressed="true">Detailed</button>
+                    <button class="segmented-option" data-display="compact" aria-pressed="false">Compact</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="app-grid" id="appGrid" role="region" aria-live="polite"></div>
+    </main>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="settingsModalTitle">
+            <div class="modal-header">
+                <h2 class="modal-title" id="settingsModalTitle">Settings & Preferences</h2>
+                <button class="modal-close" id="closeSettings" aria-label="Close settings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3 class="settings-title">Theme</h3>
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">Display Theme</div>
+                            <div class="settings-description">Choose your preferred visual style</div>
+                        </div>
+                        <div class="segmented-control" id="themeToggle">
+                            <div class="segmented-highlight"></div>
+                            <button class="segmented-option active" data-theme="system">System</button>
+                            <button class="segmented-option" data-theme="light">Light</button>
+                            <button class="segmented-option" data-theme="dark">Dark</button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">Visual Style</div>
+                            <div class="settings-description">Pick a visual style for the interface</div>
+                        </div>
+                        <div class="segmented-control" id="visualStyleToggle">
+                            <div class="segmented-highlight"></div>
+                            <button class="segmented-option active" data-style="default">Default</button>
+                            <button class="segmented-option" data-style="frutiger">Frutiger</button>
+                            <button class="segmented-option" data-style="simple">Simple</button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">Accent Color</div>
+                            <div class="settings-description">Choose your preferred accent color</div>
+                        </div>
+                        <div class="color-options">
+                            <button class="color-option color-blue active" data-color="blue" aria-label="Blue accent color"></button>
+                            <button class="color-option color-red" data-color="red" aria-label="Red accent color"></button>
+                            <button class="color-option color-green" data-color="green" aria-label="Green accent color"></button>
+                            <button class="color-option color-purple" data-color="purple" aria-label="Purple accent color"></button>
+                            <button class="color-option color-pink" data-color="pink" aria-label="Pink accent color"></button>
+                            <button class="color-option color-orange" data-color="orange" aria-label="Orange accent color"></button>
+                            <button class="color-option color-teal" data-color="teal" aria-label="Teal accent color"></button>
+                            <button class="color-option color-indigo" data-color="indigo" aria-label="Indigo accent color"></button>
+                            <button class="color-option color-yellow" data-color="yellow" aria-label="Yellow accent color"></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">Preferences</h3>
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">Display Language</div>
+                            <div class="settings-description">Choose your preferred interface language</div>
+                        </div>
+                        <select class="filter-select" id="interfaceLanguage" aria-label="Interface language">
+                            <option value="en">English</option>
+                            <option value="ar">العربية</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                        </select>
+                    </div>
+                    
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">Developer Mode</div>
+                            <div class="settings-description">Show technical details and developer information</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="developerModeToggle" aria-label="Enable developer mode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">Reduced Motion</div>
+                            <div class="settings-description">Minimize animations throughout the interface</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="reducedMotionToggle" aria-label="Enable reduced motion">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">Notifications</h3>
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">New Apps</div>
+                            <div class="settings-description">Get notified when new apps are added in your favorite categories</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="newAppsNotification" aria-label="Enable new apps notifications">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="settings-row">
+                        <div>
+                            <div class="settings-label">App Updates</div>
+                            <div class="settings-description">Get notified when your favorite apps are updated</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="appUpdatesNotification" aria-label="Enable app update notifications">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3 class="settings-title">Interests</h3>
+                    <div class="settings-label">Select your favorite genres to improve recommendations</div>
+                    <div class="genre-badges">
+                        <button class="genre-badge" data-genre="action" aria-pressed="false">Action</button>
+                        <button class="genre-badge" data-genre="adventure" aria-pressed="false">Adventure</button>
+                        <button class="genre-badge" data-genre="arcade" aria-pressed="false">Arcade</button>
+                        <button class="genre-badge" data-genre="card" aria-pressed="false">Card Games</button>
+                        <button class="genre-badge" data-genre="creativity" aria-pressed="false">Creativity</button>
+                        <button class="genre-badge" data-genre="education" aria-pressed="false">Education</button>
+                        <button class="genre-badge" data-genre="productivity" aria-pressed="false">Productivity</button>
+                        <button class="genre-badge" data-genre="utilities" aria-pressed="false">Utilities</button>
+                        <button class="genre-badge" data-genre="social" aria-pressed="false">Social</button>
+                        <button class="genre-badge" data-genre="music" aria-pressed="false">Music</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <main class="container">
-        <div class="app-grid" id="appGrid"></div>
-    </main>
-
     <script>
-        const apps = [
+        /**
+         * LoomForge App Directory - Enhanced & Optimized Version
+         * 
+         * A mobile-first, iOS-optimized app directory with:
+         * - Dynamic category filtering and sorting
+         * - Grid and list views with compact/detailed options
+         * - Full theme customization with Light/Dark/Frutiger/Simple themes
+         * - Persistent settings via localStorage
+         * - Personalized recommendations based on user interests
+         * - Full accessibility and iOS touch optimizations
+         */
+        
+        // -------------- APP DATA --------------
+        // Sample app data for initial rendering
+        const APPS_DATA = [
             {
                 id: 'skyhooper',
                 title: 'Sky Hooper',
                 description: 'Sky Hooper is a fun game based on the original Flappy Bird, but with added twists and features.',
                 image: 'Images/Skyhooper.png',
                 url: 'ios-games/FlappyV3/flapppyy.html',
-                category: ['featured', 'games']
+                category: ['featured', 'games'],
+                price: 'free',
+                language: ['en'],
+                ageRating: '4+',
+                lastUpdated: '2024-05-22',
+                developer: 'LoomForge',
+                developerContact: 'No Info',
+                version: '1.0.0',
+                genres: ['arcade', 'action'],
+                permissions: ['Camera']
             },
             {
                 id: 'watchport',
@@ -236,7 +1740,16 @@
                 description: 'Watch Videos without ads!',
                 image: 'Images/yt.png',
                 url: 'ios-apps/yt.html',
-                category: ['featured', 'apps']
+                category: ['featured', 'apps'],
+                price: 'free',
+                language: ['en', 'es', 'fr'],
+                ageRating: '12+',
+                lastUpdated: '2025-05-22',
+                developer: 'LoomForge',
+                developerContact: 'No Info',
+                version: '1.0.0',
+                genres: ['entertainment', 'media'],
+                permissions: ['No Info']
             },
             {
                 id: 'whenvaction',
@@ -244,7 +1757,16 @@
                 description: 'تطبيق لمعرفة وقت الاجازات الدراسية في المملكة العربية السعودية',
                 image: 'Images/whenvaction.png',
                 url: 'ios-apps/whenisvaction.html',
-                category: ['featured', 'apps']
+                category: ['featured', 'apps'],
+                price: 'free',
+                language: ['ar'],
+                ageRating: 'All',
+                lastUpdated: '2024-04-22',
+                developer: 'LoomForge',
+                developerContact: 'No Info',
+                version: '1.0.0',
+                genres: ['education', 'utilities'],
+                permissions: ['No Info']
             },
             {
                 id: 'jawaboraskt',
@@ -252,82 +1774,879 @@
                 description: '"جاوب أو اسكت" هي لعبة بين فريقين، حيث يجيب كل فريق على الأسئلة ويكسب نقاطًا للإجابات الصحيحة.',
                 image: 'Images/AnswerOrSilence.png',
                 url: 'ios-games/test.html',
-                category: ['games']
+                category: ['games'],
+                price: 'free',
+                language: ['ar'],
+                ageRating: '9+',
+                lastUpdated: '2025-04-22',
+                developer: 'LoomForge',
+                developerContact: 'No Info',
+                version: '1.0.0',
+                genres: ['trivia', 'education', 'multiplayer'],
+                permissions: ['No Info']
             },
-        {
+            {
                 id: 'appcodes',
                 title: 'App Codes',
                 description: 'App-Codes is a lightweight developer tool that lets you enter secret numeric codes to unlock hidden features or access internal tools in built-in apps.',
+                image: 'Images/appcodes.png',
                 url: 'ios-apps/app-codes.html',
-                category: ['featured', 'apps']
+                category: ['featured', 'apps'],
+                price: 'paid',
+                priceTier: '$1.99',
+                language: ['en', 'fr', 'de'],
+                ageRating: '9+',
+                lastUpdated: '2025-04-22',
+                developer: 'LoomForge',
+                developerContact: 'No Info',
+                version: '1.0.0',
+                genres: ['utilities', 'developer'],
+                permissions: ['Full Device Access']
             }
         ];
 
-        function createAppCard(app) {
-            return `
-                <div class="app-card" data-id="${app.id}">
-                    <div class="app-header">
-                        <img src="${app.image}" alt="${app.title}" class="app-icon">
-                        <div class="app-info">
-                            <h2 class="app-title">${app.title}</h2>
-                            <p class="app-description">${app.description}</p>
-                        </div>
-                    </div>
-                    <div class="app-footer">
-                        <a href="${app.url}" class="enter-button">Open</a>
-                    </div>
-                </div>
-            `;
+        // -------------- DOM ELEMENTS --------------
+        // Core UI elements
+        const appGrid = document.getElementById('appGrid');
+        const searchInput = document.getElementById('searchInput');
+        const sortFilter = document.getElementById('sortFilter');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const languageFilter = document.getElementById('languageFilter');
+        const priceFilter = document.getElementById('priceFilter');
+        const navButtons = document.querySelectorAll('.nav-button');
+        const viewOptions = document.querySelectorAll('.segmented-option[data-view]');
+        const displayOptions = document.querySelectorAll('.segmented-option[data-display]');
+        const toast = document.getElementById('toast');
+        
+        // Settings elements
+        const settingsButton = document.getElementById('openSettings');
+        const closeSettingsButton = document.getElementById('closeSettings');
+        const settingsModal = document.getElementById('settingsModal');
+        const themeToggle = document.querySelector('#themeToggle');
+        const themeOptions = document.querySelectorAll('#themeToggle .segmented-option');
+        const visualStyleToggle = document.querySelector('#visualStyleToggle');
+        const styleOptions = document.querySelectorAll('#visualStyleToggle .segmented-option');
+        const colorOptions = document.querySelectorAll('.color-option');
+        const developerModeToggle = document.getElementById('developerModeToggle');
+        const reducedMotionToggle = document.getElementById('reducedMotionToggle');
+        const interfaceLanguage = document.getElementById('interfaceLanguage');
+        const genreBadges = document.querySelectorAll('.genre-badge');
+        const toggleViewButton = document.getElementById('toggleView');
+        const newAppsNotificationToggle = document.getElementById('newAppsNotification');
+        const appUpdatesNotificationToggle = document.getElementById('appUpdatesNotification');
+        
+        // -------------- APP STATE --------------
+        // Central state object to track UI configuration and user preferences
+        let state = {
+            currentCategory: 'featured',
+            currentView: 'grid',
+            currentDisplay: 'detailed',
+            developerMode: false,
+            reducedMotion: false,
+            selectedGenres: [],
+            favorites: [],
+            notificationsEnabled: {
+                newApps: false,
+                appUpdates: false
+            },
+            searchQuery: '',
+            filters: {
+                sort: 'popular',
+                category: 'all',
+                language: 'all',
+                price: 'all'
+            },
+            theme: {
+                base: 'system', // system, light, dark
+                style: 'default', // default, frutiger, simple
+                accent: 'blue' // blue, red, green, etc.
+            },
+            systemPrefersDark: false
+        };
+
+        // -------------- UTILITY FUNCTIONS --------------
+
+        /**
+         * Show a toast notification
+         * @param {string} message - The message to display
+         * @param {number} duration - Duration in milliseconds
+         */
+        function showToast(message, duration = 3000) {
+            toast.textContent = message;
+            toast.classList.add('visible');
+            
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, duration);
         }
 
-        function filterApps(category, searchQuery = '') {
-            const appGrid = document.getElementById('appGrid');
-            appGrid.innerHTML = '';
-
-            const filteredApps = apps.filter(app => {
-                const matchesCategory = category === 'featured' ? true : app.category.includes(category);
-                const matchesSearch = searchQuery === '' || 
-                    app.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                    app.description.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesCategory && matchesSearch;
-            });
-
-            filteredApps.forEach(app => {
-                appGrid.innerHTML += createAppCard(app);
-            });
+        /**
+         * Save app state to localStorage
+         */
+        function saveState() {
+            const stateToSave = {
+                favorites: state.favorites,
+                selectedGenres: state.selectedGenres,
+                theme: state.theme,
+                notificationsEnabled: state.notificationsEnabled,
+                developerMode: state.developerMode,
+                reducedMotion: state.reducedMotion,
+                currentView: state.currentView,
+                currentDisplay: state.currentDisplay
+            };
+            
+            localStorage.setItem('loomForgeState', JSON.stringify(stateToSave));
         }
 
-        // Event Listeners
-        document.querySelectorAll('.nav-button').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                filterApps(button.dataset.category, document.getElementById('searchInput').value);
-            });
-        });
-
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const activeCategory = document.querySelector('.nav-button.active').dataset.category;
-            filterApps(activeCategory, e.target.value);
-        });
-
-        // Initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            filterApps('featured');
-        });
-    </script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Check if the homescreen parameter is not already in the URL
-        if (window.location.search.indexOf('?homescreen=true') === -1) {
-            // Ensure app reloads in full-screen mode if not already
-            if (window.navigator.standalone === false || !window.matchMedia('(display-mode: standalone)').matches) {
-                // Add the homescreen=true query parameter to avoid infinite redirects
-                window.location.href = './modified.html?homescreen=true';
+        /**
+         * Load app state from localStorage
+         */
+        function loadState() {
+            const savedState = localStorage.getItem('loomForgeState');
+            
+            if (savedState) {
+                const parsedState = JSON.parse(savedState);
+                
+                // Update state with saved values
+                state.favorites = parsedState.favorites || [];
+                state.selectedGenres = parsedState.selectedGenres || [];
+                state.theme = parsedState.theme || state.theme;
+                state.notificationsEnabled = parsedState.notificationsEnabled || state.notificationsEnabled;
+                state.developerMode = parsedState.developerMode || false;
+                state.reducedMotion = parsedState.reducedMotion || false;
+                state.currentView = parsedState.currentView || 'grid';
+                state.currentDisplay = parsedState.currentDisplay || 'detailed';
+                
+                // Update UI to reflect loaded state
+                updateUIFromState();
             }
         }
-    });
-</script>
+
+        /**
+         * Update all UI elements based on the current state
+         */
+        function updateUIFromState() {
+            // Apply theme settings
+            applyTheme();
+            
+            // Update view mode UI
+            updateViewModeUI();
+            
+            // Update toggle switches
+            developerModeToggle.checked = state.developerMode;
+            reducedMotionToggle.checked = state.reducedMotion;
+            newAppsNotificationToggle.checked = state.notificationsEnabled.newApps;
+            appUpdatesNotificationToggle.checked = state.notificationsEnabled.appUpdates;
+            
+            // Update theme options
+            themeOptions.forEach(option => {
+                const isActive = option.dataset.theme === state.theme.base;
+                option.classList.toggle('active', isActive);
+                option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            
+            // Update visual style options
+            styleOptions.forEach(option => {
+                const isActive = option.dataset.style === (state.theme.style === 'default' ? 'default' : state.theme.style);
+                option.classList.toggle('active', isActive);
+                option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            
+            // Update color options
+            colorOptions.forEach(option => {
+                const isActive = option.dataset.color === state.theme.accent;
+                option.classList.toggle('active', isActive);
+            });
+            
+            // Update genre badges
+            genreBadges.forEach(badge => {
+                const genre = badge.dataset.genre;
+                const isSelected = state.selectedGenres.includes(genre);
+                badge.classList.toggle('selected', isSelected);
+                badge.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+            });
+            
+            // If reduced motion is enabled, apply it to the body
+            document.body.classList.toggle('reduced-motion', state.reducedMotion);
+            
+            // Update all segmented control highlights
+            updateSegmentedControlHighlights();
+        }
+
+        // -------------- APP CARD CREATION --------------
+        /**
+         * Create an app card element
+         * @param {Object} app - The app data
+         * @returns {string} - HTML string for the app card
+         */
+         function createAppCard(app) {
+    // Check if app is in favorites
+    const isFavorite = state.favorites.includes(app.id);
+    
+    // Developer info section (only visible in developer mode)
+    const developerInfo = state.developerMode ? `
+        <div class="developer-info visible">
+            <div class="developer-row">
+                <span class="developer-label">Developer:</span>
+                <span class="developer-value">${app.developer}</span>
+            </div>
+            <div class="developer-row">
+                <span class="developer-label">Version:</span>
+                <span class="developer-value">${app.version}</span>
+            </div>
+            <div class="developer-row">
+                <span class="developer-label">Updated:</span>
+                <span class="developer-value">${app.lastUpdated}</span>
+            </div>
+            <div class="developer-row">
+                <span class="developer-label">Permissions:</span>
+                <span class="developer-value">${app.permissions.join(', ')}</span>
+            </div>
+        </div>
+    ` : '';
+    
+    return `
+        <div class="app-card" data-id="${app.id}">
+            <div class="app-header">
+                <img src="${app.image || 'Images/placeholder.png'}" alt="${app.title}" class="app-icon" onerror="this.src='Images/placeholder.png'">
+                <div class="app-info">
+                    <h2 class="app-title">${app.title}</h2>
+                    <p class="app-description">${app.description}</p>
+                    <div class="app-metadata">
+                        <span class="app-badge ${app.price}">${app.price === 'free' ? 'Free' : app.priceTier || 'Paid'}</span>
+                    </div>
+                    ${developerInfo}
+                </div>
+            </div>
+            <div class="app-footer">
+                <a href="${app.url}" class="enter-button">Open</a>
+                <button class="action-button favorite-button ${isFavorite ? 'active' : ''}" data-id="${app.id}" aria-label="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}" aria-pressed="${isFavorite ? 'true' : 'false'}">
+                    ${isFavorite ? '♥' : '♡'}
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+        // -------------- APP FILTERING & DISPLAY --------------
+        /**
+         * Filter apps based on current state and display them
+         */
+        function filterAndDisplayApps() {
+            // Show loading state
+            appGrid.innerHTML = '<div class="loading-spinner" aria-label="Loading apps"></div>';
+            
+            // Use setTimeout to ensure the loading state is rendered
+            // This also gives a more natural, app-like feeling for transitions
+            setTimeout(() => {
+                const searchQuery = state.searchQuery.toLowerCase();
+                const sortBy = state.filters.sort;
+                const categoryValue = state.filters.category;
+                const languageValue = state.filters.language;
+                const priceValue = state.filters.price;
+                
+                let filteredApps = APPS_DATA.filter(app => {
+                    // Filter by current tab/category
+                    if (state.currentCategory === 'favorites') {
+                        if (!state.favorites.includes(app.id)) return false;
+                    } else if (state.currentCategory !== 'featured' && state.currentCategory !== 'for-you' && !app.category.includes(state.currentCategory)) {
+                        return false;
+                    }
+                    
+                    // For You tab (personalized based on selected genres)
+                    if (state.currentCategory === 'for-you') {
+                        // If no genres selected, show featured apps
+                        if (state.selectedGenres.length === 0) {
+                            if (!app.category.includes('featured')) return false;
+                        } else {
+                            // Otherwise filter by matching genres
+                            const hasMatchingGenre = app.genres.some(genre => state.selectedGenres.includes(genre));
+                            if (!hasMatchingGenre) return false;
+                        }
+                    }
+                    
+                    // Search query
+                    if (searchQuery && !app.title.toLowerCase().includes(searchQuery) && 
+                        !app.description.toLowerCase().includes(searchQuery)) {
+                        return false;
+                    }
+                    
+                    // Apply dropdown filters
+                    if (categoryValue !== 'all' && !app.category.includes(categoryValue)) {
+                        return false;
+                    }
+                    
+                    if (languageValue !== 'all' && !app.language.includes(languageValue)) {
+                        return false;
+                    }
+                    
+                    if (priceValue !== 'all' && app.price !== priceValue) {
+                        return false;
+                    }
+                    
+                    return true;
+                });
+                
+                // Sort apps based on selected sort option
+                switch (sortBy) {
+                    case 'name':
+                        filteredApps.sort((a, b) => a.title.localeCompare(b.title));
+                        break;
+                    case 'recent':
+                        filteredApps.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+                        break;
+                        case 'popular':
+default:
+    // Sort alphabetically instead
+    filteredApps.sort((a, b) => a.title.localeCompare(b.title));
+    break;
+    break;
+                }
+                
+                // Update UI
+                if (filteredApps.length === 0) {
+                    appGrid.innerHTML = '<div class="no-results">No apps found matching your criteria.</div>';
+                    return;
+                }
+                
+                // Set the container class based on current view mode
+                appGrid.className = state.currentView === 'list' ? 'app-list' : 'app-grid';
+                if (state.currentView === 'grid' && state.currentDisplay === 'compact') {
+                    appGrid.classList.add('compact');
+                }
+                
+                // Render apps
+                appGrid.innerHTML = filteredApps.map(app => createAppCard(app)).join('');
+                
+                // Add event listeners to favorite buttons
+                document.querySelectorAll('.favorite-button').forEach(button => {
+                    button.addEventListener('click', toggleFavorite);
+                });
+                
+                // Set up swipe actions for iOS-like interaction on mobile
+                setupSwipeActions();
+            }, 300);
+        }
+
+        // -------------- MOBILE SWIPE INTERACTION --------------
+        /**
+         * Set up swipe actions for app cards on mobile
+         * Creates iOS-like swipe-to-favorite functionality
+         */
+        function setupSwipeActions() {
+            // Skip setup on desktop
+            if (window.matchMedia('(min-width: 769px)').matches) return;
+            
+            const appCards = document.querySelectorAll('.app-card');
+            
+            appCards.forEach(card => {
+                let startX;
+                let currentX;
+                let isDragging = false;
+                
+                // Handle touch start
+                card.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    
+                    // Remove any transition during drag
+                    card.style.transition = 'none';
+                }, { passive: true });
+                
+                // Handle touch move
+                card.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    
+                    currentX = e.touches[0].clientX;
+                    const diffX = currentX - startX;
+                    
+                    // Only allow left swipe (negative diffX) and limit maximum drag
+                    if (diffX < 0 && diffX > -100) {
+                        card.style.transform = `translateX(${diffX}px)`;
+                    }
+                }, { passive: true });
+                
+                // Handle touch end
+                card.addEventListener('touchend', () => {
+                    if (!isDragging) return;
+                    
+                    isDragging = false;
+                    const diffX = currentX - startX;
+                    
+                    // If swiped far enough, trigger favorite action
+                    if (diffX < -50) {
+                        const appId = card.dataset.id;
+                        toggleFavoriteById(appId);
+                    }
+                    
+                    // Return to original position with animation
+                    card.style.transition = 'transform 0.3s ease';
+                    card.style.transform = '';
+                    
+                    // Remove transition after animation completes
+                    setTimeout(() => {
+                        card.style.transition = '';
+                    }, 300);
+                });
+                
+                // Handle touch cancel
+                card.addEventListener('touchcancel', () => {
+                    if (!isDragging) return;
+                    
+                    isDragging = false;
+                    
+                    // Reset position with animation
+                    card.style.transition = 'transform 0.3s ease';
+                    card.style.transform = '';
+                    
+                    setTimeout(() => {
+                        card.style.transition = '';
+                    }, 300);
+                });
+            });
+        }
+
+        // -------------- FAVORITES MANAGEMENT --------------
+        /**
+         * Toggle favorite status for an app
+         * @param {Event} e - Click event
+         */
+        function toggleFavorite(e) {
+            const button = e.currentTarget;
+            const appId = button.dataset.id;
+            
+            toggleFavoriteById(appId);
+        }
+        
+        /**
+         * Toggle favorite status by app ID
+         * @param {string} appId - The app ID to toggle
+         */
+        function toggleFavoriteById(appId) {
+            const index = state.favorites.indexOf(appId);
+            const isFavorite = index !== -1;
+            
+            // Update state
+            if (isFavorite) {
+                state.favorites.splice(index, 1);
+                showToast('Removed from favorites');
+            } else {
+                state.favorites.push(appId);
+                showToast('Added to favorites');
+            }
+            
+            // Save to localStorage
+            saveState();
+            
+            // If we're on the favorites tab, refresh the display
+            if (state.currentCategory === 'favorites') {
+                filterAndDisplayApps();
+            } else {
+                // Otherwise just update the specific button
+                const button = document.querySelector(`.favorite-button[data-id="${appId}"]`);
+                if (button) {
+                    button.classList.toggle('active');
+                    button.textContent = button.classList.contains('active') ? '♥' : '♡';
+                    button.setAttribute('aria-label', button.classList.contains('active') ? 'Remove from favorites' : 'Add to favorites');
+                    button.setAttribute('aria-pressed', button.classList.contains('active') ? 'true' : 'false');
+                }
+            }
+        }
+
+        // -------------- THEME & DISPLAY MANAGEMENT --------------
+        /**
+         * Apply the current theme to the document
+         */
+        function applyTheme() {
+            const htmlElement = document.documentElement;
+            const body = document.body;
+            
+            // First determine what actual theme to use
+            let effectiveTheme;
+            
+            if (state.theme.style !== 'default') {
+                // If a special style is selected, it overrides base theme
+                effectiveTheme = state.theme.style;
+            } else if (state.theme.base === 'system') {
+                // For system theme, use detected OS preference
+                effectiveTheme = state.systemPrefersDark ? 'dark' : 'light';
+                // Also set data-system-theme for fine-grained CSS control
+                htmlElement.setAttribute('data-system-theme', state.systemPrefersDark ? 'dark' : 'light');
+            } else {
+                // Otherwise use the selected base theme
+                effectiveTheme = state.theme.base;
+            }
+            
+            // Apply theme to html element (for CSS variables)
+            htmlElement.setAttribute('data-theme', state.theme.base);
+            
+            // Apply the effective theme to body (for actual display)
+            body.setAttribute('data-theme', effectiveTheme);
+            
+            // Apply accent color
+            body.setAttribute('data-accent', state.theme.accent);
+            
+            // Apply view mode attributes
+            body.setAttribute('data-view', state.currentView);
+            body.setAttribute('data-display', state.currentDisplay);
+        }
+        
+        /**
+         * Update the UI to reflect current view mode
+         */
+        function updateViewModeUI() {
+            // Update view buttons (grid/list)
+            viewOptions.forEach(option => {
+                const isActive = option.dataset.view === state.currentView;
+                option.classList.toggle('active', isActive);
+                option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            
+            // Update display mode buttons (detailed/compact)
+            displayOptions.forEach(option => {
+                const isActive = option.dataset.display === state.currentDisplay;
+                option.classList.toggle('active', isActive);
+                option.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+            
+            // Update segmented control highlights
+            updateSegmentedControlHighlights();
+        }
+        
+        /**
+         * Update the positions of all segmented control highlights
+         * This ensures the colorful highlight follows the selected option
+         */
+        function updateSegmentedControlHighlights() {
+            const segmentedControls = document.querySelectorAll('.segmented-control');
+            
+            segmentedControls.forEach(control => {
+                const activeOption = control.querySelector('.segmented-option.active');
+                const highlight = control.querySelector('.segmented-highlight');
+                
+                if (activeOption && highlight) {
+                    // Set width and position based on the active option
+                    highlight.style.width = `${activeOption.offsetWidth}px`;
+                    highlight.style.transform = `translateX(${activeOption.offsetLeft}px)`;
+                }
+            });
+        }
+
+        // -------------- EVENT LISTENERS --------------
+        /**
+         * Initialize all event listeners
+         */
+        function initializeEventListeners() {
+            // Search input
+            searchInput.addEventListener('input', () => {
+                state.searchQuery = searchInput.value;
+                filterAndDisplayApps();
+            });
+            
+            // Filter changes
+            sortFilter.addEventListener('change', () => {
+                state.filters.sort = sortFilter.value;
+                filterAndDisplayApps();
+            });
+            
+            categoryFilter.addEventListener('change', () => {
+                state.filters.category = categoryFilter.value;
+                filterAndDisplayApps();
+            });
+            
+            languageFilter.addEventListener('change', () => {
+                state.filters.language = languageFilter.value;
+                filterAndDisplayApps();
+            });
+            
+            priceFilter.addEventListener('change', () => {
+                state.filters.price = priceFilter.value;
+                filterAndDisplayApps();
+            });
+            
+            // Navigation tabs
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active state for all buttons
+                    navButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
+                    });
+                    
+                    // Set new active button
+                    button.classList.add('active');
+                    button.setAttribute('aria-selected', 'true');
+                    
+                    // Update state and refresh display
+                    state.currentCategory = button.dataset.category;
+                    filterAndDisplayApps();
+                });
+            });
+            
+            // View toggle button (quick toggle between grid/list)
+            toggleViewButton.addEventListener('click', () => {
+                state.currentView = state.currentView === 'grid' ? 'list' : 'grid';
+                saveState();
+                updateViewModeUI();
+                filterAndDisplayApps();
+            });
+            
+            // View options (Grid/List)
+            viewOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    state.currentView = option.dataset.view;
+                    saveState();
+                    updateViewModeUI();
+                    filterAndDisplayApps();
+                });
+            });
+            
+            // Display options (Detailed/Compact)
+            displayOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    state.currentDisplay = option.dataset.display;
+                    saveState();
+                    updateViewModeUI();
+                    filterAndDisplayApps();
+                });
+            });
+            
+            // Settings modal open/close
+            settingsButton.addEventListener('click', () => {
+                settingsModal.classList.add('visible');
+                settingsModal.setAttribute('aria-hidden', 'false');
+                // Focus the first focusable element for accessibility
+                setTimeout(() => {
+                    const firstFocusable = settingsModal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    if (firstFocusable) firstFocusable.focus();
+                }, 100);
+            });
+            
+            closeSettingsButton.addEventListener('click', () => {
+                settingsModal.classList.remove('visible');
+                settingsModal.setAttribute('aria-hidden', 'true');
+                // Return focus to the settings button
+                settingsButton.focus();
+            });
+            
+            // Close modal when clicking outside
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    settingsModal.classList.remove('visible');
+                    settingsModal.setAttribute('aria-hidden', 'true');
+                    settingsButton.focus();
+                }
+            });
+            
+            // Theme options (light/dark/system)
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update active state
+                    themeOptions.forEach(opt => {
+                        opt.classList.remove('active');
+                        opt.setAttribute('aria-pressed', 'false');
+                    });
+                    option.classList.add('active');
+                    option.setAttribute('aria-pressed', 'true');
+                    
+                    // Update state and save
+                    state.theme.base = option.dataset.theme;
+                    saveState();
+                    applyTheme();
+                    updateSegmentedControlHighlights();
+                });
+            });
+            
+            // Visual style options (default/frutiger/simple)
+            styleOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update active state
+                    styleOptions.forEach(opt => {
+                        opt.classList.remove('active');
+                        opt.setAttribute('aria-pressed', 'false');
+                    });
+                    option.classList.add('active');
+                    option.setAttribute('aria-pressed', 'true');
+                    
+                    // Update state and save
+                    state.theme.style = option.dataset.style === 'default' ? 'default' : option.dataset.style;
+                    saveState();
+                    applyTheme();
+                    updateSegmentedControlHighlights();
+                });
+            });
+            
+            // Color options
+            colorOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update active state
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                    
+                    // Update state and save
+                    state.theme.accent = option.dataset.color;
+                    saveState();
+                    applyTheme();
+                });
+            });
+            
+            // Developer mode toggle
+            developerModeToggle.addEventListener('change', () => {
+                state.developerMode = developerModeToggle.checked;
+                saveState();
+                filterAndDisplayApps();
+                
+                showToast(state.developerMode ? 'Developer mode enabled' : 'Developer mode disabled');
+            });
+            
+            // Reduced motion toggle
+            reducedMotionToggle.addEventListener('change', () => {
+                state.reducedMotion = reducedMotionToggle.checked;
+                document.body.classList.toggle('reduced-motion', state.reducedMotion);
+                saveState();
+                
+                showToast(state.reducedMotion ? 'Reduced motion enabled' : 'Reduced motion disabled');
+            });
+            
+            // Interface language
+            interfaceLanguage.addEventListener('change', () => {
+                // In a real app, this would trigger a language change
+                // For this demo, we just show a toast notification
+                showToast(`Interface language changed to ${interfaceLanguage.options[interfaceLanguage.selectedIndex].text}`);
+            });
+            
+            // Genre badges for personalization
+            genreBadges.forEach(badge => {
+                badge.addEventListener('click', () => {
+                    const genre = badge.dataset.genre;
+                    const isSelected = badge.classList.toggle('selected');
+                    badge.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+                    
+                    // Update selected genres list
+                    if (isSelected) {
+                        if (!state.selectedGenres.includes(genre)) {
+                            state.selectedGenres.push(genre);
+                        }
+                    } else {
+                        state.selectedGenres = state.selectedGenres.filter(g => g !== genre);
+                    }
+                    
+                    saveState();
+                    
+                    // If on "For You" tab, refresh the display
+                    if (state.currentCategory === 'for-you') {
+                        filterAndDisplayApps();
+                    }
+                });
+            });
+            
+            // Notification toggles
+            newAppsNotificationToggle.addEventListener('change', () => {
+                state.notificationsEnabled.newApps = newAppsNotificationToggle.checked;
+                
+                // Request notification permission if needed
+                if (state.notificationsEnabled.newApps && "Notification" in window) {
+                    Notification.requestPermission();
+                }
+                
+                saveState();
+            });
+            
+            appUpdatesNotificationToggle.addEventListener('change', () => {
+                state.notificationsEnabled.appUpdates = appUpdatesNotificationToggle.checked;
+                
+                // Request notification permission if needed
+                if (state.notificationsEnabled.appUpdates && "Notification" in window) {
+                    Notification.requestPermission();
+                }
+                
+                saveState();
+            });
+            
+            // System theme detection
+            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // Listen for OS theme changes
+            darkModeMediaQuery.addEventListener('change', (e) => {
+                state.systemPrefersDark = e.matches;
+                
+                // Update theme if using system preference
+                if (state.theme.base === 'system') {
+                    applyTheme();
+                }
+            });
+            
+            // Set initial system preference
+            state.systemPrefersDark = darkModeMediaQuery.matches;
+            
+            // Handle keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                // Close modal on escape
+                if (e.key === 'Escape' && settingsModal.classList.contains('visible')) {
+                    settingsModal.classList.remove('visible');
+                    settingsModal.setAttribute('aria-hidden', 'true');
+                    settingsButton.focus();
+                }
+            });
+            
+            // Handle resize events for segmented controls
+            window.addEventListener('resize', () => {
+                // Debounce resize handling
+                clearTimeout(window.resizeTimer);
+                window.resizeTimer = setTimeout(() => {
+                    updateSegmentedControlHighlights();
+                }, 250);
+            });
+        }
+
+        // -------------- APP INITIALIZATION --------------
+        /**
+         * Initialize the app
+         */
+        function init() {
+            // Load saved state from localStorage
+            loadState();
+            
+            // Apply initial theme
+            applyTheme();
+            
+            // Filter and display initial apps
+            filterAndDisplayApps();
+            
+            // Set up event listeners
+            initializeEventListeners();
+            
+            // Update segmented control highlights
+            updateSegmentedControlHighlights();
+            
+            // iOS WebView specific optimizations
+            if (window.navigator.standalone) {
+                document.body.classList.add('standalone-mode');
+            }
+        }
+        
+        // -------------- START APP --------------
+        // Initialize when the DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // Handle iOS Safari overscroll
+        document.addEventListener('touchmove', (e) => {
+            // Prevent multi-touch gestures from causing unwanted behavior
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+
+    <!-- Standalone mode detection -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if app is running in full-screen/PWA mode
+            if (window.matchMedia('(display-mode: standalone)').matches || 
+                window.navigator.standalone) {
+                document.body.classList.add('standalone-mode');
+            }
+        });
+    </script>
 </body>
 </html>
