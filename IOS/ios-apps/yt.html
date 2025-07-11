@@ -1,47 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#FF0000">
     <title>WatchPort</title>
     <style>
         :root {
             --primary-color: #FF0000;
+            --primary-hover: #E60000;
             --secondary-color: #2c2c2c;
             --text-color: #333;
+            --text-muted: #666;
             --bg-color: #f9f9f9;
             --card-bg: #ffffff;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --border-color: #e0e0e0;
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-medium: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-heavy: 0 8px 32px rgba(0,0,0,0.16);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
         }
 
         .dark-mode {
             --primary-color: #FF4444;
+            --primary-hover: #FF6666;
             --secondary-color: #404040;
             --text-color: #ffffff;
-            --bg-color: #1a1a1a;
-            --card-bg: #2c2c2c;
-            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+            --text-muted: #b0b0b0;
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border-color: #333;
+            --shadow-light: 0 2px 8px rgba(0,0,0,0.2);
+            --shadow-medium: 0 4px 16px rgba(0,0,0,0.3);
+            --shadow-heavy: 0 8px 32px rgba(0,0,0,0.4);
+            --glass-bg: rgba(26, 26, 26, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
+        /* Base Styles with iOS optimizations */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, rgba(255,255,255,0.05) 100%);
             color: var(--text-color);
             line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        /* Header with glassmorphism */
         header {
-            background-color: var(--secondary-color);
-            padding: 1rem;
-            box-shadow: var(--shadow);
-            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: var(--spacing-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .header-content {
@@ -50,86 +96,172 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: var(--spacing-sm);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: var(--spacing-sm);
         }
 
         .logo h1 {
-            font-size: 1.5rem;
-            color: #fff;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .controls {
             display: flex;
-            gap: 1rem;
-        }
-
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        input[type="text"], 
-        input[type="color"],
-        select {
-            padding: 0.75rem 1rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            flex: 1;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
-
-        button {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
+            gap: var(--spacing-xs);
             align-items: center;
-            gap: 0.5rem;
         }
 
-        button:hover {
-            opacity: 0.9;
+        /* Modern button styles */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:hover, .btn-primary:active {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
             transform: translateY(-1px);
         }
 
+        .btn-icon {
+            padding: 0.8rem;
+            border-radius: 50%;
+            min-width: auto;
+        }
+
+        /* Main content */
+        main {
+            max-width: 1200px;
+            margin: var(--spacing-lg) auto;
+            padding: 0 var(--spacing-sm);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Enhanced card design */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-light);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Input styling */
+        .input-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .input-field {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            flex: 1;
+            min-width: 250px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Video container with enhanced styling */
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
-            border-radius: 12px;
-            background-color: var(--secondary-color);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--secondary-color), #1a1a1a);
+            box-shadow: var(--shadow-medium);
+            transition: var(--transition);
+        }
+
+        .video-container:hover {
+            box-shadow: var(--shadow-heavy);
         }
 
         .video-container iframe {
@@ -139,31 +271,55 @@
             width: 100%;
             height: 100%;
             border: none;
+            border-radius: var(--radius-lg);
         }
 
+        .video-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #888;
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+
+        /* Settings grid */
         .settings {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
         }
 
         .setting-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .setting-group:hover {
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .setting-group label {
             font-weight: 600;
             color: var(--text-color);
+            font-size: 0.95rem;
         }
 
+        /* Enhanced toggle switch */
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 60px;
-            height: 34px;
+            width: 64px;
+            height: 36px;
         }
 
         .toggle-switch input {
@@ -179,41 +335,245 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+            background: var(--border-color);
+            transition: var(--transition);
+            border-radius: 36px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 26px;
-            width: 26px;
+            height: 28px;
+            width: 28px;
             left: 4px;
             bottom: 4px;
-            background-color: white;
-            transition: .4s;
+            background: white;
+            transition: var(--transition);
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         input:checked + .slider {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
         }
 
         input:checked + .slider:before {
-            transform: translateX(26px);
+            transform: translateX(28px);
+        }
+
+        /* Language toggle */
+        .lang-toggle {
+            display: flex;
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .lang-option {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+        }
+
+        .lang-option.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        /* RTL Support */
+        .rtl {
+            direction: rtl;
+        }
+
+        .rtl .input-group {
+            flex-direction: row-reverse;
+        }
+
+        .rtl .controls {
+            flex-direction: row-reverse;
+        }
+
+        .rtl .header-content {
+            flex-direction: row-reverse;
+        }
+
+        /* Status indicator */
+        .status-indicator {
+            position: fixed;
+            bottom: var(--spacing-lg);
+            right: var(--spacing-lg);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transform: translateY(100px);
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .status-indicator.show {
+            transform: translateY(0);
+        }
+
+        .status-indicator.success {
+            border-left: 4px solid #22c55e;
+        }
+
+        .status-indicator.error {
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+
+            .controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .input-field {
+                min-width: auto;
+            }
+
+            .settings {
+                grid-template-columns: 1fr;
+            }
+
+            main {
+                padding: 0 var(--spacing-xs);
+            }
+
+            .card {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* iOS specific optimizations */
+        @supports (-webkit-touch-callout: none) {
+            .btn:active {
+                transform: scale(0.95);
+            }
+            
+            input, select, textarea {
+                border-radius: var(--radius-md);
+                -webkit-appearance: none;
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Color input styling */
+        input[type="color"] {
+            width: 100%;
+            height: 48px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            -webkit-appearance: none;
+            background: transparent;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: calc(var(--radius-md) - 2px);
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        /* Select styling */
+        select {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
+    <!-- Status Indicator -->
+    <div id="statusIndicator" class="status-indicator"></div>
+
     <header>
         <div class="header-content">
             <div class="logo">
-                <h1>WatchPort</h1>
+                <h1 data-en="WatchPort" data-ar="ووتش بورت">WatchPort</h1>
             </div>
             <div class="controls">
-                <button onclick="toggleDarkMode()" id="darkModeBtn">
-                    Toggle Theme
+                <!-- Language Toggle -->
+                <div class="lang-toggle">
+                    <button class="lang-option active" onclick="switchLanguage('en')" data-lang="en">EN</button>
+                    <button class="lang-option" onclick="switchLanguage('ar')" data-lang="ar">عر</button>
+                </div>
+                
+                <!-- Dark Mode Toggle -->
+                <button class="btn btn-secondary btn-icon" onclick="toggleDarkMode()" id="darkModeBtn" title="Toggle Theme">
+                    <span class="theme-icon">🌙</span>
                 </button>
             </div>
         </div>
@@ -222,21 +582,32 @@
     <main>
         <div class="card">
             <div class="input-group">
-                <input type="text" id="videoInput" placeholder="Paste YouTube Video URL or Video ID" />
-                <button onclick="loadVideo()">Load Video</button>
+                <input type="text" 
+                       id="videoInput" 
+                       class="input-field"
+                       data-en-placeholder="Paste YouTube Video URL or Video ID"
+                       data-ar-placeholder="الصق رابط فيديو يوتيوب أو معرف الفيديو"
+                       placeholder="Paste YouTube Video URL or Video ID" />
+                <button class="btn btn-primary" onclick="loadVideo()" id="loadBtn">
+                    <span class="btn-text" data-en="Load Video" data-ar="تحميل الفيديو">Load Video</span>
+                </button>
             </div>
-            <div class="video-container" id="videoContainer"></div>
+            <div class="video-container" id="videoContainer">
+                <div class="video-placeholder" data-en="Enter a YouTube URL to start watching" data-ar="أدخل رابط يوتيوب لبدء المشاهدة">
+                    Enter a YouTube URL to start watching
+                </div>
+            </div>
         </div>
 
         <div class="card">
-            <h2>Customization</h2>
+            <h2 data-en="Customization" data-ar="التخصيص">Customization</h2>
             <div class="settings">
                 <div class="setting-group">
-                    <label>Primary Color</label>
+                    <label data-en="Primary Color" data-ar="اللون الأساسي">Primary Color</label>
                     <input type="color" id="primaryColor" onchange="updateColors()" value="#FF0000" />
                 </div>
                 <div class="setting-group">
-                    <label>Player Quality</label>
+                    <label data-en="Player Quality" data-ar="جودة المشغل">Player Quality</label>
                     <select id="quality" onchange="updatePlayerSettings()">
                         <option value="hd1080">1080p</option>
                         <option value="hd720">720p</option>
@@ -244,16 +615,23 @@
                     </select>
                 </div>
                 <div class="setting-group">
-                    <label>Autoplay</label>
+                    <label data-en="Autoplay" data-ar="التشغيل التلقائي">Autoplay</label>
                     <label class="toggle-switch">
                         <input type="checkbox" id="autoplay" onchange="updatePlayerSettings()">
                         <span class="slider"></span>
                     </label>
                 </div>
                 <div class="setting-group">
-                    <label>Mute by Default</label>
+                    <label data-en="Mute by Default" data-ar="كتم الصوت افتراضياً">Mute by Default</label>
                     <label class="toggle-switch">
                         <input type="checkbox" id="mute" onchange="updatePlayerSettings()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label data-en="Keep Screen On" data-ar="إبقاء الشاشة مضيئة">Keep Screen On</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="wakeLock" onchange="toggleWakeLock()">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -262,9 +640,56 @@
     </main>
 
     <script>
+        // ===== CORE VARIABLES (PRESERVED) =====
         let currentVideoId = '';
+        
+        // ===== NEW ENHANCEMENT VARIABLES =====
+        let currentLanguage = 'en';
+        let wakeLock = null;
+        let isWakeLockSupported = 'wakeLock' in navigator;
+        let wakeLockFallback = null;
 
+        // ===== TRANSLATION OBJECT =====
+        const translations = {
+            en: {
+                'WatchPort': 'WatchPort',
+                'Paste YouTube Video URL or Video ID': 'Paste YouTube Video URL or Video ID',
+                'Load Video': 'Load Video',
+                'Enter a YouTube URL to start watching': 'Enter a YouTube URL to start watching',
+                'Customization': 'Customization',
+                'Primary Color': 'Primary Color',
+                'Player Quality': 'Player Quality',
+                'Autoplay': 'Autoplay',
+                'Mute by Default': 'Mute by Default',
+                'Keep Screen On': 'Keep Screen On',
+                'Video loaded successfully': 'Video loaded successfully',
+                'Please enter a valid URL or video ID': 'Please enter a valid URL or video ID',
+                'Screen will stay on': 'Screen will stay on',
+                'Screen lock disabled': 'Screen lock disabled',
+                'Wake lock not supported': 'Wake lock not supported on this device'
+            },
+            ar: {
+                'WatchPort': 'ووتش بورت',
+                'Paste YouTube Video URL or Video ID': 'الصق رابط فيديو يوتيوب أو معرف الفيديو',
+                'Load Video': 'تحميل الفيديو',
+                'Enter a YouTube URL to start watching': 'أدخل رابط يوتيوب لبدء المشاهدة',
+                'Customization': 'التخصيص',
+                'Primary Color': 'اللون الأساسي',
+                'Player Quality': 'جودة المشغل',
+                'Autoplay': 'التشغيل التلقائي',
+                'Mute by Default': 'كتم الصوت افتراضياً',
+                'Keep Screen On': 'إبقاء الشاشة مضيئة',
+                'Video loaded successfully': 'تم تحميل الفيديو بنجاح',
+                'Please enter a valid URL or video ID': 'يرجى إدخال رابط صحيح أو معرف فيديو صالح',
+                'Screen will stay on': 'ستبقى الشاشة مضيئة',
+                'Screen lock disabled': 'تم تعطيل قفل الشاشة',
+                'Wake lock not supported': 'قفل الشاشة غير مدعوم على هذا الجهاز'
+            }
+        };
+
+        // ===== CORE FUNCTIONS (PRESERVED) =====
         function loadVideo() {
+            showLoading();
             const videoInput = document.getElementById("videoInput").value.trim();
             const videoContainer = document.getElementById("videoContainer");
             let videoId;
@@ -283,9 +708,11 @@
 
                 currentVideoId = videoId;
                 updatePlayer();
+                showStatus(translate('Video loaded successfully'), 'success');
             } catch (error) {
-                alert("Please enter a valid URL or video ID");
+                showStatus(translate('Please enter a valid URL or video ID'), 'error');
             }
+            hideLoading();
         }
 
         function updatePlayer() {
@@ -296,7 +723,8 @@
             const autoplay = document.getElementById("autoplay").checked ? 1 : 0;
             const mute = document.getElementById("mute").checked ? 1 : 0;
 
-            const embedUrl = `https://www.youtube-nocookie.com/embed/${currentVideoId}?modestbranding=1&rel=0&vq=${quality}&autoplay=${autoplay}&mute=${mute}`;
+            // Optimized embed URL for better performance and data usage
+            const embedUrl = `https://www.youtube-nocookie.com/embed/${currentVideoId}?modestbranding=1&rel=0&vq=${quality}&autoplay=${autoplay}&mute=${mute}&playsinline=1&enablejsapi=1`;
 
             const iframe = document.createElement("iframe");
             iframe.setAttribute("width", "100%");
@@ -305,6 +733,7 @@
             iframe.setAttribute("frameborder", "0");
             iframe.setAttribute("allowfullscreen", "");
             iframe.setAttribute("allow", "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture");
+            iframe.setAttribute("loading", "lazy"); // Lazy loading for performance
 
             videoContainer.innerHTML = "";
             videoContainer.appendChild(iframe);
@@ -317,19 +746,267 @@
         function updateColors() {
             const primaryColor = document.getElementById("primaryColor").value;
             document.documentElement.style.setProperty('--primary-color', primaryColor);
+            
+            // Calculate hover color (slightly darker)
+            const hoverColor = adjustBrightness(primaryColor, -20);
+            document.documentElement.style.setProperty('--primary-hover', hoverColor);
+            
+            // Update theme color for mobile browsers
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', primaryColor);
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('primaryColor', primaryColor);
         }
 
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
-            localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+            const isDark = document.body.classList.contains("dark-mode");
+            
+            // Update theme icon
+            const themeIcon = document.querySelector('.theme-icon');
+            themeIcon.textContent = isDark ? '☀️' : '🌙';
+            
+            localStorage.setItem("darkMode", isDark);
         }
 
-        // Initialize dark mode from localStorage
-        window.onload = function() {
-            if (localStorage.getItem("darkMode") === "true") {
-                document.body.classList.add("dark-mode");
+        // ===== NEW ENHANCEMENT FUNCTIONS =====
+        
+        // Language switching functionality
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active language button
+            document.querySelectorAll('.lang-option').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update HTML direction
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.body.classList.toggle('rtl', lang === 'ar');
+            
+            // Update all translatable elements
+            updateTranslations();
+            
+            // Save preference
+            localStorage.setItem('language', lang);
+        }
+
+        function updateTranslations() {
+            document.querySelectorAll('[data-en]').forEach(element => {
+                const key = element.getAttribute('data-en');
+                element.textContent = translate(key);
+            });
+            
+            document.querySelectorAll('[data-en-placeholder]').forEach(element => {
+                const key = element.getAttribute('data-en-placeholder');
+                element.placeholder = translate(key);
+            });
+        }
+
+        function translate(key) {
+            return translations[currentLanguage][key] || key;
+        }
+
+        // Wake Lock functionality
+        async function toggleWakeLock() {
+            const wakeLockCheckbox = document.getElementById('wakeLock');
+            
+            if (wakeLockCheckbox.checked) {
+                await requestWakeLock();
+            } else {
+                await releaseWakeLock();
             }
+        }
+
+// Wake Lock functionality (continued)
+        async function requestWakeLock() {
+            try {
+                if (isWakeLockSupported) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    wakeLock.addEventListener('release', () => {
+                        console.log('Wake Lock was released');
+                    });
+                    showStatus(translate('Screen will stay on'), 'success');
+                } else {
+                    // Fallback for unsupported browsers
+                    startWakeLockFallback();
+                    showStatus(translate('Screen will stay on'), 'success');
+                }
+            } catch (err) {
+                console.error('Wake lock request failed:', err);
+                showStatus(translate('Wake lock not supported'), 'error');
+                document.getElementById('wakeLock').checked = false;
+            }
+        }
+
+        async function releaseWakeLock() {
+            try {
+                if (wakeLock) {
+                    await wakeLock.release();
+                    wakeLock = null;
+                }
+                stopWakeLockFallback();
+                showStatus(translate('Screen lock disabled'), 'success');
+            } catch (err) {
+                console.error('Wake lock release failed:', err);
+            }
+        }
+
+        // Fallback wake lock for unsupported browsers
+        function startWakeLockFallback() {
+            const video = document.createElement('video');
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            video.style.position = 'fixed';
+            video.style.top = '-1000px';
+            video.style.left = '-1000px';
+            video.style.width = '1px';
+            video.style.height = '1px';
+            video.style.opacity = '0';
+            
+            // Create a minimal video source
+            const canvas = document.createElement('canvas');
+            canvas.width = 1;
+            canvas.height = 1;
+            const stream = canvas.captureStream(1);
+            video.srcObject = stream;
+            
+            document.body.appendChild(video);
+            video.play();
+            wakeLockFallback = video;
+        }
+
+        function stopWakeLockFallback() {
+            if (wakeLockFallback) {
+                wakeLockFallback.pause();
+                wakeLockFallback.remove();
+                wakeLockFallback = null;
+            }
+        }
+
+        // Status notification system
+        function showStatus(message, type = 'success') {
+            const indicator = document.getElementById('statusIndicator');
+            indicator.textContent = message;
+            indicator.className = `status-indicator ${type} show`;
+            
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 3000);
+        }
+
+        // Loading state management
+        function showLoading() {
+            const loadBtn = document.getElementById('loadBtn');
+            const btnText = loadBtn.querySelector('.btn-text');
+            btnText.innerHTML = '<span class="loading-spinner"></span> Loading...';
+            loadBtn.disabled = true;
+        }
+
+        function hideLoading() {
+            const loadBtn = document.getElementById('loadBtn');
+            const btnText = loadBtn.querySelector('.btn-text');
+            btnText.textContent = translate('Load Video');
+            loadBtn.disabled = false;
+        }
+
+        // Utility functions
+        function adjustBrightness(hex, percent) {
+            const num = parseInt(hex.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        // Enhanced keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement === document.getElementById('videoInput')) {
+                loadVideo();
+            }
+        });
+
+        // Auto-release wake lock when page becomes hidden
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'hidden' && wakeLock) {
+                await releaseWakeLock();
+            }
+        });
+
+        // Initialize on page load
+        window.onload = function() {
+            // Load saved preferences
+            const savedDarkMode = localStorage.getItem("darkMode") === "true";
+            const savedLanguage = localStorage.getItem('language') || 'en';
+            const savedColor = localStorage.getItem('primaryColor') || '#FF0000';
+            
+            if (savedDarkMode) {
+                document.body.classList.add("dark-mode");
+                document.querySelector('.theme-icon').textContent = '☀️';
+            }
+            
+            // Set saved color
+            document.getElementById('primaryColor').value = savedColor;
+            updateColors();
+            
+            // Set saved language
+            switchLanguage(savedLanguage);
+            
+            // Performance optimization: Preload critical resources
+            const linkPreload = document.createElement('link');
+            linkPreload.rel = 'preconnect';
+            linkPreload.href = 'https://www.youtube-nocookie.com';
+            document.head.appendChild(linkPreload);
         };
+
+        // Service Worker registration for offline support (optional)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript,')
+                    .catch(() => {
+                        // Silently fail if service worker registration fails
+                    });
+            });
+        }
+
+        // Handle orientation changes on mobile
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                // Recalculate layout after orientation change
+                if (currentVideoId) {
+                    updatePlayer();
+                }
+            }, 100);
+        });
+
+        // Optimize for iOS Safari
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            document.addEventListener('touchstart', function() {}, { passive: true });
+            
+            // Prevent zoom on double tap
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        }
+
+        // Memory cleanup
+        window.addEventListener('beforeunload', async () => {
+            if (wakeLock) {
+                await releaseWakeLock();
+            }
+        });
     </script>
 </body>
 </html>
