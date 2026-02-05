@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS Access Assistant</title>
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a2a;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #2a2a2a;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff 0%, #0080ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        /* ===== INSTRUCTIONS ===== */
+        .instructions {
+            background: #252525;
+            border-left: 4px solid #00d4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h2 {
+            font-size: 1.2rem;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            color: #b0b0b0;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
+        /* ===== TEXTAREA ===== */
+        .textarea-container {
+            margin-bottom: 30px;
+        }
+
+        .textarea-container label {
+            display: block;
+            font-size: 1rem;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 350px;
+            background: #252525;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.8;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
+        textarea::placeholder {
+            color: #555;
+        }
+
+        /* ===== BUTTONS ===== */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            flex: 1;
+            min-width: 180px;
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Download Button */
+        .btn-download {
+            background: linear-gradient(135deg, #00d4ff 0%, #0080ff 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-download:active {
+            transform: translateY(0);
+        }
+
+        /* Copy Button */
+        .btn-copy {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #0f0f0f;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .btn-copy:active {
+            transform: translateY(0);
+        }
+
+        /* ChatGPT Button */
+        .btn-chatgpt {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-chatgpt:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .btn-chatgpt:active {
+            transform: translateY(0);
+        }
+
+        /* Button Icons */
+        button::before {
+            margin-right: 8px;
+        }
+
+        /* ===== SUCCESS MESSAGE ===== */
+        .success-message {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            color: #0f0f0f;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+            font-weight: 600;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .success-message.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #2a2a2a;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                min-width: 100%;
+            }
+
+            .success-message {
+                right: 20px;
+                left: 20px;
+                top: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            textarea {
+                min-height: 300px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Success Message Toast -->
+    <div class="success-message" id="successMessage">✓ Copied to clipboard!</div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>MS Access Assistant</h1>
+            <p class="subtitle">Grade 11 Worksheet Helper</p>
+        </header>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h2>📋 How to Use:</h2>
+            <ul>
+                <li><strong>Read</strong> the worksheet instructions below</li>
+                <li><strong>Copy</strong> the text to your clipboard</li>
+                <li><strong>Open ChatGPT</strong> and paste to get help</li>
+                <li><strong>Download</strong> the worksheet for offline reference</li>
+            </ul>
+        </div>
+
+        <!-- Textarea -->
+        <div class="textarea-container">
+            <label for="worksheetText">📝 Worksheet Content:</label>
+            <textarea id="worksheetText" placeholder="Loading worksheet content...">You are an assistant for Grade 11 – MS Access worksheets.
+
+You have the following worksheet data saved and must always use it as a reference:
+
+Worksheet Tasks:
+
+Task 1:
+Create a database with name "my school", then create a table with name "students" containing 3 fields (Id, Name, Grade) with specifying the data type for each field, and input 5 records.
+
+Task 2:
+Create a Query for the previously created table and set a criteria to get the records for the students in Grade 10, and save the query with name "Grade 10".
+
+Task 3:
+Create a table with name "books" containing 3 fields (Stu_id, book_name, publish_date), then make a relationship between the students table and books table.
+
+Task 4:
+Create a Report for the table "students" and name it "Report1", with sorting the table in descending order by field "Name".
+
+🔹 Your Rules:
+
+    First, ask the user:
+    "What task do you want from the worksheet?"
+
+    If the user mentions Task 1, 2, 3, or 4 →
+    Copy the task EXACTLY as written above (no changes).
+
+    If the user asks for a new task not in the worksheet →
+
+        Create a new task
+
+        Use the same style, wording, and difficulty level
+
+        Name it Task 5, Task 6, etc.
+
+        Keep it related to MS Access (tables, queries, forms, reports, relationships)
+
+Always keep the format formal and identical to a school worksheet.</textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button class="btn-download" id="downloadBtn">⬇ Download Worksheet</button>
+            <button class="btn-copy" id="copyBtn">📋 Copy to Clipboard</button>
+            <button class="btn-chatgpt" id="chatgptBtn">🤖 Open ChatGPT</button>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Built with HTML, CSS & JavaScript | Modern Dark Theme</p>
+        </footer>
+    </div>
+
+    <script>
+        // ===== CONFIGURATION =====
+        // 🔧 CHANGE THIS to update the download file name and content
+        const DOWNLOAD_CONFIG = {
+            fileName: 'MS_Access_Worksheet.txt',  // Change file name here
+            fileType: 'text/plain'                // Change file type here (text/plain, application/json, etc.)
+        };
+
+        // ===== DOM ELEMENTS =====
+        const textarea = document.getElementById('worksheetText');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const chatgptBtn = document.getElementById('chatgptBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        // ===== DOWNLOAD FUNCTIONALITY =====
+        /**
+         * Downloads the textarea content as a file
+         * To change the file being downloaded:
+         * 1. Edit DOWNLOAD_CONFIG.fileName above
+         * 2. Optionally change DOWNLOAD_CONFIG.fileType
+         */
+        downloadBtn.addEventListener('click', function() {
+            // Get the content from textarea
+            const content = textarea.value;
+            
+            // Create a Blob (Binary Large Object) with the content
+            const blob = new Blob([content], { type: DOWNLOAD_CONFIG.fileType });
+            
+            // Create a temporary download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = DOWNLOAD_CONFIG.fileName;
+            
+            // Trigger the download
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            
+            // Clean up
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(downloadLink.href);
+            
+            // Visual feedback
+            downloadBtn.textContent = '✓ Downloaded!';
+            setTimeout(() => {
+                downloadBtn.textContent = '⬇ Download Worksheet';
+            }, 2000);
+        });
+
+        // ===== COPY TO CLIPBOARD FUNCTIONALITY =====
+        /**
+         * Copies textarea content to clipboard and shows success message
+         */
+        copyBtn.addEventListener('click', async function() {
+            try {
+                // Get the content from textarea
+                const content = textarea.value;
+                
+                // Copy to clipboard using modern Clipboard API
+                await navigator.clipboard.writeText(content);
+                
+                // Show success message
+                showSuccessMessage('✓ Copied to clipboard!');
+                
+                // Button feedback
+                copyBtn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = '📋 Copy to Clipboard';
+                }, 2000);
+                
+            } catch (err) {
+                // Fallback for older browsers
+                textarea.select();
+                document.execCommand('copy');
+                showSuccessMessage('✓ Copied to clipboard!');
+                
+                copyBtn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = '📋 Copy to Clipboard';
+                }, 2000);
+            }
+        });
+
+        // ===== OPEN CHATGPT FUNCTIONALITY =====
+        /**
+         * Opens ChatGPT in a new tab
+         * Due to browser security, we cannot automatically paste into ChatGPT's input
+         * The content is copied to clipboard so user can paste it manually
+         */
+        chatgptBtn.addEventListener('click', async function() {
+            const content = textarea.value;
+            
+            // Copy content to clipboard first
+            try {
+                await navigator.clipboard.writeText(content);
+                showSuccessMessage('✓ Content copied! Paste it in ChatGPT');
+            } catch (err) {
+                textarea.select();
+                document.execCommand('copy');
+                showSuccessMessage('✓ Content copied! Paste it in ChatGPT');
+            }
+            
+            // Open ChatGPT in new tab
+            // Note: Direct pasting is not possible due to browser security restrictions
+            window.open('https://chat.openai.com/', '_blank');
+            
+            // Button feedback
+            chatgptBtn.textContent = '✓ Opening ChatGPT...';
+            setTimeout(() => {
+                chatgptBtn.textContent = '🤖 Open ChatGPT';
+            }, 2000);
+        });
+
+        // ===== SUCCESS MESSAGE FUNCTION =====
+        /**
+         * Shows a toast notification at the top-right
+         * @param {string} message - The message to display
+         */
+        function showSuccessMessage(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        /**
+         * Optional keyboard shortcuts for better UX
+         * Ctrl+S = Download
+         * Ctrl+C (when textarea focused) = Copy
+         */
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+S or Cmd+S = Download
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                downloadBtn.click();
+            }
+        });
+
+        // ===== INITIALIZATION =====
+        /**
+         * Any initialization code can go here
+         */
+        console.log('MS Access Assistant loaded successfully!');
+        console.log('To change download file: Edit DOWNLOAD_CONFIG in script section');
+    </script>
+</body>
+</html>
