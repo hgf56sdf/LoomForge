@@ -349,10 +349,10 @@ Always keep the format formal and identical to a school worksheet.</textarea>
 
     <script>
         // ===== CONFIGURATION =====
-        // 🔧 CHANGE THIS to update the download file name and content
+        // 🔧 CHANGE THIS to update the download file URL
         const DOWNLOAD_CONFIG = {
-            fileName: 'MS_Access_Worksheet.txt',  // Change file name here
-            fileType: 'text/plain'                // Change file type here (text/plain, application/json, etc.)
+            fileUrl: 'https://loomforge.netlify.app/ios/images/G_11.pdf',  // Change URL here
+            fileName: 'G_11.pdf'  // Optional: specify download filename
         };
 
         // ===== DOM ELEMENTS =====
@@ -364,22 +364,17 @@ Always keep the format formal and identical to a school worksheet.</textarea>
 
         // ===== DOWNLOAD FUNCTIONALITY =====
         /**
-         * Downloads the textarea content as a file
+         * Downloads a file from the specified URL
          * To change the file being downloaded:
-         * 1. Edit DOWNLOAD_CONFIG.fileName above
-         * 2. Optionally change DOWNLOAD_CONFIG.fileType
+         * 1. Edit DOWNLOAD_CONFIG.fileUrl above
+         * 2. Optionally change DOWNLOAD_CONFIG.fileName
          */
         downloadBtn.addEventListener('click', function() {
-            // Get the content from textarea
-            const content = textarea.value;
-            
-            // Create a Blob (Binary Large Object) with the content
-            const blob = new Blob([content], { type: DOWNLOAD_CONFIG.fileType });
-            
             // Create a temporary download link
             const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.href = DOWNLOAD_CONFIG.fileUrl;
             downloadLink.download = DOWNLOAD_CONFIG.fileName;
+            downloadLink.target = '_blank';  // Open in new tab as fallback
             
             // Trigger the download
             document.body.appendChild(downloadLink);
@@ -387,10 +382,9 @@ Always keep the format formal and identical to a school worksheet.</textarea>
             
             // Clean up
             document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(downloadLink.href);
             
             // Visual feedback
-            downloadBtn.textContent = '✓ Downloaded!';
+            downloadBtn.textContent = '✓ Downloading...';
             setTimeout(() => {
                 downloadBtn.textContent = '⬇ Download Worksheet';
             }, 2000);
