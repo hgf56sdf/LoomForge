@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="موسوعة الأسئلة والأجوبة العربية">
+<title>موسوعة الأسئلة والأجوبة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ===========================
+     CSS VARIABLES & RESET
+  =========================== */
+  :root {
+    --bg-primary: #0d0f14;
+    --bg-secondary: #13161e;
+    --bg-card: #1a1e2a;
+    --bg-card-hover: #1f2434;
+    --bg-glass: rgba(26, 30, 42, 0.85);
+    --border: rgba(255,255,255,0.07);
+    --border-active: rgba(99, 179, 237, 0.4);
+    --accent: #63b3ed;
+    --accent-warm: #f6ad55;
+    --accent-green: #68d391;
+    --text-primary: #e8eaf0;
+    --text-secondary: #8892a4;
+    --text-muted: #555e6e;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --transition: 0.22s ease;
+
+    /* Category colors */
+    --cat-دين: #a78bfa;
+    --cat-جغرافيا: #34d399;
+    --cat-السعودية: #60a5fa;
+    --cat-منوعات: #f97316;
+    --cat-أكلات: #fb7185;
+    --cat-كرة-قدم: #facc15;
+    --cat-شركات: #38bdf8;
+    --cat-لغات: #a3e635;
+    --cat-مدن: #f472b6;
+    --cat-تراث: #fb923c;
+    --cat-إلكترونيات: #22d3ee;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Tajawal', 'Cairo', sans-serif;
+    min-height: 100vh;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ===========================
+     BACKGROUND TEXTURE
+  =========================== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(99, 179, 237, 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(167, 139, 250, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===========================
+     STICKY HEADER
+  =========================== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13, 15, 20, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0 10px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .search-wrap {
+    flex: 1;
+    position: relative;
+    max-width: 500px;
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 10px 38px 10px 16px;
+    color: var(--text-primary);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    direction: rtl;
+  }
+
+  #searchInput:focus {
+    border-color: var(--border-active);
+    box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.1);
+  }
+
+  #searchInput::placeholder { color: var(--text-muted); }
+
+  .stats-bar {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    padding: 0 0 8px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  #resultCount { color: var(--accent); font-weight: 600; }
+
+  /* ===========================
+     TOPIC FILTER TABS
+  =========================== */
+  .topics-wrap {
+    background: rgba(13, 15, 20, 0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 97px;
+    z-index: 90;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .topics-wrap::-webkit-scrollbar { display: none; }
+
+  .topics-inner {
+    display: flex;
+    gap: 6px;
+    padding: 8px 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    min-width: max-content;
+  }
+
+  .topic-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    white-space: nowrap;
+    direction: rtl;
+  }
+
+  .topic-btn .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .topic-btn:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .topic-btn.active {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-active);
+    box-shadow: 0 0 12px rgba(99, 179, 237, 0.15);
+  }
+
+  /* ===========================
+     MAIN LAYOUT
+  =========================== */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===========================
+     LETTER SECTIONS
+  =========================== */
+  .letter-section {
+    margin-bottom: 32px;
+  }
+
+  .letter-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    position: sticky;
+    top: 145px;
+    z-index: 80;
+    padding: 6px 0;
+  }
+
+  .letter-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(99,179,237,0.15), rgba(167,139,250,0.1));
+    border: 1px solid rgba(99,179,237,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .letter-label {
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+
+  .letter-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    padding: 2px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* ===========================
+     QUESTION CARDS GRID
+  =========================== */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+
+  /* ===========================
+     QA CARD
+  =========================== */
+  .qa-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+    cursor: pointer;
+    will-change: transform;
+  }
+
+  .qa-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: var(--shadow);
+  }
+
+  .qa-card.open {
+    border-color: var(--border-active);
+    box-shadow: 0 0 20px rgba(99,179,237,0.08);
+  }
+
+  .card-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 14px 12px;
+  }
+
+  .card-q-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: rgba(99,179,237,0.12);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .card-q-text {
+    flex: 1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.6;
+  }
+
+  .card-toggle {
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    margin-top: 4px;
+    transition: transform var(--transition), color var(--transition);
+  }
+
+  .qa-card.open .card-toggle {
+    transform: rotate(180deg);
+    color: var(--accent);
+  }
+
+  .card-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+    opacity: 0;
+  }
+
+  .qa-card.open .card-answer {
+    max-height: 200px;
+    opacity: 1;
+  }
+
+  .card-answer-inner {
+    padding: 0 14px 14px 14px;
+    border-top: 1px solid var(--border);
+    margin: 0 14px;
+    padding-top: 10px;
+  }
+
+  .answer-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .answer-text {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-warm);
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px 12px;
+  }
+
+  .category-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 12px;
+    border: 1px solid currentColor;
+    opacity: 0.75;
+  }
+
+  /* ===========================
+     EMPTY STATE
+  =========================== */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    display: none;
+  }
+
+  .empty-state.visible { display: block; }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+
+  .empty-title {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .empty-sub {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* ===========================
+     JUMP NAV (alphabet sidebar)
+  =========================== */
+  .jump-nav {
+    position: fixed;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px 4px;
+  }
+
+  .jump-btn {
+    width: 26px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+
+  .jump-btn:hover {
+    background: rgba(99,179,237,0.15);
+    color: var(--accent);
+  }
+
+  /* ===========================
+     RESPONSIVE
+  =========================== */
+  @media (max-width: 768px) {
+    .logo span { display: none; }
+    .letter-header { top: 135px; }
+    .topics-wrap { top: 85px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .jump-nav { display: none; }
+    .header-top { gap: 8px; }
+  }
+
+  @media (max-width: 480px) {
+    .topics-wrap { top: 83px; }
+    header { padding: 0 12px; }
+    main { padding: 16px 12px 60px; }
+  }
+
+  /* ===========================
+     ANIMATIONS
+  =========================== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .letter-section {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .qa-card {
+    animation: fadeUp 0.35s ease both;
+  }
+
+  /* ===========================
+     SCROLLBAR
+  =========================== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--bg-card-hover); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ========================
+     HEADER
+======================== -->
+<header role="banner">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">📚</div>
+      <span>موسوعة الأسئلة</span>
+    </div>
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="ابحث في الأسئلة والأجوبة..."
+        aria-label="بحث في الأسئلة"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="stats-bar" aria-live="polite">
+    عرض <span id="resultCount">0</span> سؤال
+  </div>
+</header>
+
+<!-- ========================
+     TOPIC FILTER TABS
+======================== -->
+<nav class="topics-wrap" aria-label="تصفية حسب الموضوع">
+  <div class="topics-inner" id="topicsContainer">
+    <!-- Injected by JS -->
+  </div>
+</nav>
+
+<!-- ========================
+     JUMP NAV
+======================== -->
+<nav class="jump-nav" aria-label="التنقل بين الحروف" id="jumpNav">
+  <!-- Injected by JS -->
+</nav>
+
+<!-- ========================
+     MAIN CONTENT
+======================== -->
+<main id="mainContent" role="main">
+  <div id="questionsContainer"></div>
+  <div class="empty-state" id="emptyState" role="status" aria-live="polite">
+    <div class="empty-icon">🔎</div>
+    <div class="empty-title">لا توجد نتائج</div>
+    <div class="empty-sub">جرب كلمات بحث مختلفة أو تصنيفًا آخر</div>
+  </div>
+</main>
+
+<script>
+/* ================================================
+   DATA
+   To add more questions, follow this structure:
+   { letter: 'ا', q: 'السؤال', a: 'الإجابة', cat: 'التصنيف' }
+================================================ */
+const DATA = [
+  // ===== ا =====
+  {letter:'ا',q:'نبي بنى الكعبة مع ابنه إسماعيل؟',a:'إبراهيم',cat:'دين'},
+  {letter:'ا',q:'دولة خليجية بجوار السعودية؟',a:'إمارات',cat:'جغرافيا'},
+  {letter:'ا',q:'مدينة سعودية في منطقة عسير؟',a:'أبها',cat:'السعودية'},
+  {letter:'ا',q:'حيوان صغير يقفز ويحب الجزر؟',a:'أرنب',cat:'منوعات'},
+  {letter:'ا',q:'حيوان بحري له ثمانية أذرع؟',a:'أخطبوط',cat:'منوعات'},
+  {letter:'ا',q:'فاكهة استوائية صفراء؟',a:'أناناس',cat:'أكلات'},
+  {letter:'ا',q:'لاعب كرة قدم مصري مشهور؟',a:'أحمد حجازي',cat:'كرة قدم'},
+  {letter:'ا',q:'لاعب كرة قدم إسباني اسمه أندريس؟',a:'إنييستا',cat:'كرة قدم'},
+  {letter:'ا',q:'شركة هواتف أمريكية معروفة؟',a:'أبل',cat:'شركات'},
+  {letter:'ا',q:'لغة يتحدث بها أهل إسبانيا؟',a:'إسبانية',cat:'لغات'},
+  {letter:'ا',q:'لغة رسمية في السعودية؟',a:'عربية',cat:'لغات'},
+  {letter:'ا',q:'مدينة أردنية عاصمة الأردن؟',a:'عمّان',cat:'مدن وعواصم'},
+  {letter:'ا',q:'دولة أفريقية عاصمتها أديس أبابا؟',a:'إثيوبيا',cat:'جغرافيا'},
+  {letter:'ا',q:'مدينة سعودية تاريخية في الجنوب؟',a:'أحد رفيدة',cat:'السعودية'},
+  {letter:'ا',q:'لباس تراثي يلبس حول الخصر؟',a:'إزار',cat:'تراث'},
+  {letter:'ا',q:'أكلة أساسية من الحبوب؟',a:'أرز',cat:'أكلات'},
+  {letter:'ا',q:'جهاز إلكتروني يبرد الهواء؟',a:'مكيف',cat:'إلكترونيات'},
+  {letter:'ا',q:'صفة يحبها الله تعني حفظ الحقوق؟',a:'أمانة',cat:'دين'},
+  {letter:'ا',q:'طائر كبير يعيش قرب الماء؟',a:'إوز',cat:'منوعات'},
+  {letter:'ا',q:'مكان مرتفع في الجبال؟',a:'أكمة',cat:'جغرافيا'},
+  // ===== ب =====
+  {letter:'ب',q:'مدينة سعودية في القصيم مشهورة بالتمور؟',a:'بريدة',cat:'السعودية'},
+  {letter:'ب',q:'طائر صغير يغرد بصوت جميل؟',a:'بلبل',cat:'منوعات'},
+  {letter:'ب',q:'فاكهة صفراء طويلة يحبها القرد؟',a:'بانانا',cat:'أكلات'},
+  {letter:'ب',q:'لاعب كرة قدم إنجليزي مشهور اسمه جود؟',a:'بيلينغهام',cat:'كرة قدم'},
+  {letter:'ب',q:'لاعب كرة قدم ويلزي اسمه غاريث؟',a:'بيل',cat:'كرة قدم'},
+  {letter:'ب',q:'شركة سيارات ألمانية فاخرة؟',a:'بي إم دبليو',cat:'شركات'},
+  {letter:'ب',q:'شركة ألعاب فيديو مشهورة؟',a:'بلايستيشن',cat:'شركات'},
+  {letter:'ب',q:'لغة يتحدث بها أهل البرازيل؟',a:'برتغالية',cat:'لغات'},
+  {letter:'ب',q:'عاصمة ألمانيا؟',a:'برلين',cat:'مدن وعواصم'},
+  {letter:'ب',q:'دولة أوروبية عاصمتها بروكسل؟',a:'بلجيكا',cat:'جغرافيا'},
+  {letter:'ب',q:'لباس عربي تراثي يلبس فوق الثوب؟',a:'بشت',cat:'تراث'},
+  {letter:'ب',q:'مادة عطرية تستخدم في الضيافة؟',a:'بخور',cat:'تراث'},
+  {letter:'ب',q:'حيوان كبير يعيش في الغابة؟',a:'ببر',cat:'منوعات'},
+  {letter:'ب',q:'أكلة أرز مشهورة في آسيا؟',a:'برياني',cat:'أكلات'},
+  {letter:'ب',q:'مدينة سعودية في الجنوب؟',a:'بيشة',cat:'السعودية'},
+  {letter:'ب',q:'جهاز إلكتروني للكتابة على الكمبيوتر؟',a:'لوحة مفاتيح',cat:'إلكترونيات'},
+  {letter:'ب',q:'لعبة إلكترونية مشهورة؟',a:'ببجي',cat:'إلكترونيات'},
+  {letter:'ب',q:'نوع خبز عربي معروف؟',a:'بر',cat:'أكلات'},
+  {letter:'ب',q:'نبي ذكر في القرآن اسمه يبدأ بب؟',a:'بكر',cat:'دين'},
+  {letter:'ب',q:'شيء نستخدمه في البناء؟',a:'بلوك',cat:'منوعات'},
+  // ===== ت =====
+  {letter:'ت',q:'مدينة سعودية تاريخية في الشمال؟',a:'تيماء',cat:'السعودية'},
+  {letter:'ت',q:'عبادة تعني الرجوع إلى الله؟',a:'توبة',cat:'دين'},
+  {letter:'ت',q:'فاكهة صغيرة حمراء؟',a:'توت',cat:'أكلات'},
+  {letter:'ت',q:'طائر كبير جميل الذيل؟',a:'طاووس',cat:'منوعات'},
+  {letter:'ت',q:'شركة سيارات كهربائية مشهورة؟',a:'تسلا',cat:'شركات'},
+  {letter:'ت',q:'لاعب كرة قدم برازيلي مشهور؟',a:'تياغو سيلفا',cat:'كرة قدم'},
+  {letter:'ت',q:'دولة أوروبية عاصمتها أنقرة؟',a:'تركيا',cat:'جغرافيا'},
+  {letter:'ت',q:'عاصمة دولة اليابان؟',a:'طوكيو',cat:'مدن وعواصم'},
+  {letter:'ت',q:'لباس تقليدي يغطي الجسم؟',a:'ثوب',cat:'تراث'},
+  {letter:'ت',q:'أكلة آسيوية معروفة؟',a:'تمبورا',cat:'أكلات'},
+  {letter:'ت',q:'جهاز يستخدم للتواصل بالصوت؟',a:'تلفون',cat:'إلكترونيات'},
+  {letter:'ت',q:'لغة يتحدث بها أهل تايلند؟',a:'تايلندية',cat:'لغات'},
+  {letter:'ت',q:'حيوان صغير له ذيل طويل؟',a:'تمساح',cat:'منوعات'},
+  {letter:'ت',q:'مدينة سعودية قريبة من المدينة؟',a:'تبوك',cat:'السعودية'},
+  {letter:'ت',q:'جهاز في البيت لعرض القنوات؟',a:'تلفاز',cat:'إلكترونيات'},
+  {letter:'ت',q:'نجم كرة قدم بلجيكي اسمه تيبو؟',a:'تيبو كورتوا',cat:'كرة قدم'},
+  {letter:'ت',q:'دولة في آسيا عاصمتها تايبيه؟',a:'تايوان',cat:'جغرافيا'},
+  {letter:'ت',q:'نوع تمر مشهور في السعودية؟',a:'تمر',cat:'أكلات'},
+  {letter:'ت',q:'حيوان كبير يعيش في البحر؟',a:'تن',cat:'منوعات'},
+  // ===== ث =====
+  {letter:'ث',q:'لباس عربي تقليدي طويل؟',a:'ثوب',cat:'تراث'},
+  {letter:'ث',q:'مدح شخص بكلام جميل؟',a:'ثناء',cat:'منوعات'},
+  {letter:'ث',q:'ما تنتجه الأشجار من فواكه؟',a:'ثمر',cat:'منوعات'},
+  {letter:'ث',q:'نبات عطري يستخدم في الطعام؟',a:'ثوم',cat:'أكلات'},
+  {letter:'ث',q:'حيوان بحري كبير؟',a:'ثور بحري',cat:'منوعات'},
+  {letter:'ث',q:'مدينة سعودية في الشرقية؟',a:'ثادق',cat:'السعودية'},
+  {letter:'ث',q:'لغة قديمة تكلم بها بعض العرب؟',a:'ثمودية',cat:'لغات'},
+  {letter:'ث',q:'نوع حيوان من البقر؟',a:'ثور',cat:'منوعات'},
+  {letter:'ث',q:'كلمة تعني الشكر؟',a:'ثناء',cat:'دين'},
+  {letter:'ث',q:'نبات يزرع في الحدائق؟',a:'ثيل',cat:'منوعات'},
+  {letter:'ث',q:'مدينة سعودية قديمة في طريق الحج؟',a:'ثعلبية',cat:'السعودية'},
+  {letter:'ث',q:'نوع تمر معروف؟',a:'ثريّا',cat:'أكلات'},
+  {letter:'ث',q:'حيوان صغير يعيش في الصحراء؟',a:'ثعلب',cat:'منوعات'},
+  {letter:'ث',q:'اسم نجم في السماء؟',a:'ثريا',cat:'جغرافيا'},
+  {letter:'ث',q:'جهاز إنارة في السقف؟',a:'ثريا',cat:'إلكترونيات'},
+  {letter:'ث',q:'كلمة تعني القوة في الدين؟',a:'ثبات',cat:'دين'},
+  // ===== ج =====
+  {letter:'ج',q:'مدينة سعودية كبيرة على البحر الأحمر؟',a:'جدة',cat:'السعودية'},
+  {letter:'ج',q:'حيوان يعيش في الصحراء ويتحمل العطش؟',a:'جمل',cat:'منوعات'},
+  {letter:'ج',q:'مكان جميل في الآخرة؟',a:'جنة',cat:'دين'},
+  {letter:'ج',q:'لاعب كرة قدم إنجليزي اسمه جود؟',a:'جود بيلينغهام',cat:'كرة قدم'},
+  {letter:'ج',q:'شركة سيارات أمريكية قديمة؟',a:'جيب',cat:'شركات'},
+  {letter:'ج',q:'دولة في أوروبا عاصمتها تبليسي؟',a:'جورجيا',cat:'جغرافيا'},
+  {letter:'ج',q:'مدينة سعودية في الجوف؟',a:'جبة',cat:'السعودية'},
+  {letter:'ج',q:'لغة يتحدث بها أهل ألمانيا؟',a:'جرمانية',cat:'لغات'},
+  {letter:'ج',q:'أكلة عربية من الأرز؟',a:'جريش',cat:'أكلات'},
+  {letter:'ج',q:'لباس تراثي طويل؟',a:'جبة',cat:'تراث'},
+  {letter:'ج',q:'حيوان سريع في الغابة؟',a:'جاكوار',cat:'منوعات'},
+  {letter:'ج',q:'حيوان صغير يعيش قرب الماء؟',a:'جرادة',cat:'منوعات'},
+  {letter:'ج',q:'جهاز في الكمبيوتر لمعالجة البيانات؟',a:'جي بي يو',cat:'إلكترونيات'},
+  {letter:'ج',q:'لاعب كرة قدم برازيلي اسمه جابرييل؟',a:'جابرييل جيسوس',cat:'كرة قدم'},
+  {letter:'ج',q:'أكلة حلوة عربية؟',a:'جلاب',cat:'أكلات'},
+  // ===== ح =====
+  {letter:'ح',q:'عبادة يزور فيها المسلم مكة؟',a:'حج',cat:'دين'},
+  {letter:'ح',q:'مدينة سعودية في الجنوب؟',a:'حائل',cat:'السعودية'},
+  {letter:'ح',q:'حيوان سريع يركبه الناس؟',a:'حصان',cat:'منوعات'},
+  {letter:'ح',q:'لاعب كرة قدم مغربي مشهور؟',a:'حكيم زياش',cat:'كرة قدم'},
+  {letter:'ح',q:'شركة هواتف صينية؟',a:'هواوي',cat:'شركات'},
+  {letter:'ح',q:'جهاز نستخدمه لسماع الصوت؟',a:'سماعات',cat:'إلكترونيات'},
+  {letter:'ح',q:'فاكهة خضراء حلوة؟',a:'حب حب',cat:'أكلات'},
+  {letter:'ح',q:'لباس تقليدي يلبسه الرجال؟',a:'حزام',cat:'تراث'},
+  {letter:'ح',q:'طائر يعيش قرب البيوت؟',a:'حمام',cat:'منوعات'},
+  {letter:'ح',q:'مدينة سعودية في الشمال؟',a:'حفر الباطن',cat:'السعودية'},
+  {letter:'ح',q:'لغة قديمة في الجزيرة العربية؟',a:'حميرية',cat:'لغات'},
+  {letter:'ح',q:'نوع تمر مشهور؟',a:'حلوة',cat:'أكلات'},
+  {letter:'ح',q:'حيوان صغير يعيش في البحر؟',a:'حبار',cat:'منوعات'},
+  {letter:'ح',q:'مدينة في فلسطين؟',a:'حيفا',cat:'مدن وعواصم'},
+  {letter:'ح',q:'لاعب كرة قدم سعودي مشهور؟',a:'حسين عبدالغني',cat:'كرة قدم'},
+  {letter:'ح',q:'صفة يحبها الله تعني اللطف؟',a:'حلم',cat:'دين'},
+  {letter:'ح',q:'نبات أخضر يؤكل؟',a:'حمص',cat:'أكلات'},
+  {letter:'ح',q:'حيوان مفترس في الغابة؟',a:'حوت',cat:'منوعات'},
+  // ===== خ =====
+  {letter:'خ',q:'مدينة سعودية في عسير؟',a:'خميس مشيط',cat:'السعودية'},
+  {letter:'خ',q:'فاكهة برتقالية لذيذة؟',a:'خوخ',cat:'أكلات'},
+  {letter:'خ',q:'بيت البدو في الصحراء؟',a:'خيمة',cat:'تراث'},
+  {letter:'خ',q:'شركة إلكترونيات يابانية؟',a:'كانون',cat:'شركات'},
+  {letter:'خ',q:'جهاز في البيت يحفظ الطعام باردًا؟',a:'ثلاجة',cat:'إلكترونيات'},
+  {letter:'خ',q:'دولة أوروبية عاصمتها زغرب؟',a:'كرواتيا',cat:'جغرافيا'},
+  {letter:'خ',q:'مدينة سعودية في القصيم؟',a:'خبراء',cat:'السعودية'},
+  {letter:'خ',q:'لغة يتحدث بها أهل الصين؟',a:'صينية',cat:'لغات'},
+  {letter:'خ',q:'أكلة عربية من الخبز واللحم؟',a:'خبز',cat:'أكلات'},
+  {letter:'خ',q:'حيوان صحراوي صغير؟',a:'خنفساء',cat:'منوعات'},
+  {letter:'خ',q:'طائر كبير يعيش في المزارع؟',a:'خفاش',cat:'منوعات'},
+  {letter:'خ',q:'نبات يستخدم في العطور؟',a:'خزامى',cat:'منوعات'},
+  {letter:'خ',q:'لاعب كرة قدم بلجيكي اسمه كيفن؟',a:'كيفن دي بروين',cat:'كرة قدم'},
+  {letter:'خ',q:'نوع تمر سعودي؟',a:'خلاص',cat:'أكلات'},
+  {letter:'خ',q:'قطعة قماش تستخدم في التراث؟',a:'خمار',cat:'تراث'},
+  {letter:'خ',q:'صفة في الدين تعني الخوف من الله؟',a:'خشوع',cat:'دين'},
+  // ===== د =====
+  {letter:'د',q:'مدينة سعودية على الخليج العربي؟',a:'دمام',cat:'السعودية'},
+  {letter:'د',q:'دولة أوروبية عاصمتها كوبنهاغن؟',a:'دنمارك',cat:'جغرافيا'},
+  {letter:'د',q:'حيوان بحري ذكي يقفز فوق الماء؟',a:'دلفين',cat:'منوعات'},
+  {letter:'د',q:'لاعب كرة قدم بلجيكي اسمه كيفن؟',a:'دي بروين',cat:'كرة قدم'},
+  {letter:'د',q:'شركة ألعاب فيديو مشهورة؟',a:'ديسني',cat:'شركات'},
+  {letter:'د',q:'جهاز نستخدمه لتخزين الملفات؟',a:'درايف',cat:'إلكترونيات'},
+  {letter:'د',q:'لغة يتحدث بها أهل ألمانيا؟',a:'دويتش',cat:'لغات'},
+  {letter:'د',q:'أكلة من الأرز واللحم؟',a:'دجاج',cat:'أكلات'},
+  {letter:'د',q:'لباس تراثي للرأس؟',a:'دقلة',cat:'تراث'},
+  {letter:'د',q:'مدينة مغربية كبيرة؟',a:'دار البيضاء',cat:'مدن وعواصم'},
+  {letter:'د',q:'نبي ذكر في القرآن؟',a:'داود',cat:'دين'},
+  {letter:'د',q:'حيوان صغير يعيش في الغابة؟',a:'دب',cat:'منوعات'},
+  {letter:'د',q:'مدينة سعودية في الجنوب؟',a:'دومة الجندل',cat:'السعودية'},
+  {letter:'د',q:'فاكهة صغيرة حلوة؟',a:'دراق',cat:'أكلات'},
+  {letter:'د',q:'لاعب كرة قدم إيفواري اسمه ديدييه؟',a:'دروغبا',cat:'كرة قدم'},
+  {letter:'د',q:'صفة في الدين تعني الدعاء لله؟',a:'دعاء',cat:'دين'},
+  // ===== ذ =====
+  {letter:'ذ',q:'حيوان مفترس يعيش في الغابة؟',a:'ذئب',cat:'منوعات'},
+  {letter:'ذ',q:'حيوان يشبه الغزال؟',a:'ظبي',cat:'منوعات'},
+  {letter:'ذ',q:'نبي ذكر في القرآن اسمه يبدأ بذ؟',a:'ذو الكفل',cat:'دين'},
+  {letter:'ذ',q:'مدينة سعودية صغيرة؟',a:'ذهبان',cat:'السعودية'},
+  {letter:'ذ',q:'لغة قديمة في اليمن؟',a:'ذمارية',cat:'لغات'},
+  {letter:'ذ',q:'طعام يؤكل في الإفطار؟',a:'ذرة',cat:'أكلات'},
+  {letter:'ذ',q:'مدينة يمنية معروفة؟',a:'ذمار',cat:'مدن وعواصم'},
+  {letter:'ذ',q:'نبات يزرع في المزارع؟',a:'ذرة',cat:'منوعات'},
+  {letter:'ذ',q:'صفة تعني الذكاء؟',a:'ذكاء',cat:'منوعات'},
+  {letter:'ذ',q:'صفة يحبها الله تعني تذكره؟',a:'ذكر',cat:'دين'},
+  {letter:'ذ',q:'شيء يلمع في الشمس؟',a:'ذهب',cat:'منوعات'},
+  {letter:'ذ',q:'قطعة تراثية من الحلي؟',a:'ذهب',cat:'تراث'},
+  {letter:'ذ',q:'دولة أفريقية؟',a:'ذامبيا',cat:'جغرافيا'},
+  {letter:'ذ',q:'نبات صحراوي؟',a:'ذعلوق',cat:'منوعات'},
+  {letter:'ذ',q:'طائر صغير؟',a:'ذعرة',cat:'منوعات'},
+  {letter:'ذ',q:'كلمة في الدين تعني التسبيح؟',a:'ذكر',cat:'دين'},
+  // ===== ر =====
+  {letter:'ر',q:'عاصمة السعودية؟',a:'رياض',cat:'السعودية'},
+  {letter:'ر',q:'فاكهة حمراء مليئة بالبذور؟',a:'رمان',cat:'أكلات'},
+  {letter:'ر',q:'لاعب كرة قدم برازيلي مشهور؟',a:'رونالدو',cat:'كرة قدم'},
+  {letter:'ر',q:'لاعب كرة قدم فرنسي اسمه كريم؟',a:'بنزيمة',cat:'كرة قدم'},
+  {letter:'ر',q:'شركة سيارات يابانية؟',a:'رينو',cat:'شركات'},
+  {letter:'ر',q:'جهاز يرسل الصوت في البيت؟',a:'راديو',cat:'إلكترونيات'},
+  {letter:'ر',q:'دولة أفريقية عاصمتها كيغالي؟',a:'رواندا',cat:'جغرافيا'},
+  {letter:'ر',q:'مدينة مغربية جميلة؟',a:'رباط',cat:'مدن وعواصم'},
+  {letter:'ر',q:'لغة يتحدث بها أهل روسيا؟',a:'روسية',cat:'لغات'},
+  {letter:'ر',q:'حيوان صغير سريع؟',a:'راكون',cat:'منوعات'},
+  {letter:'ر',q:'لباس تراثي للرأس؟',a:'ردن',cat:'تراث'},
+  {letter:'ر',q:'نبي ذكر في القرآن؟',a:'رسول',cat:'دين'},
+  {letter:'ر',q:'نبات أخضر يؤكل؟',a:'رجلة',cat:'أكلات'},
+  {letter:'ر',q:'مدينة سعودية شمالية؟',a:'رفحاء',cat:'السعودية'},
+  // ===== ز =====
+  {letter:'ز',q:'زهرة جميلة ذات رائحة طيبة؟',a:'زنبق',cat:'منوعات'},
+  {letter:'ز',q:'فاكهة خضراء طويلة؟',a:'زيتون',cat:'أكلات'},
+  {letter:'ز',q:'مدينة سعودية في الجنوب؟',a:'زلفي',cat:'السعودية'},
+  {letter:'ز',q:'دولة أوروبية؟',a:'زيمبابوي',cat:'جغرافيا'},
+  {letter:'ز',q:'لاعب كرة قدم فرنسي شهير؟',a:'زيدان',cat:'كرة قدم'},
+  {letter:'ز',q:'شركة تقنية كبيرة؟',a:'زيروكس',cat:'شركات'},
+  {letter:'ز',q:'جهاز صغير للموسيقى؟',a:'زاز',cat:'إلكترونيات'},
+  {letter:'ز',q:'لغة أفريقية؟',a:'زولو',cat:'لغات'},
+  {letter:'ز',q:'أكلة مشهورة من الزيتون؟',a:'زيت زيتون',cat:'أكلات'},
+  {letter:'ز',q:'طائر جميل؟',a:'زرزور',cat:'منوعات'},
+  {letter:'ز',q:'لباس تراثي يوضع حول الخصر؟',a:'زنار',cat:'تراث'},
+  {letter:'ز',q:'صفة جميلة في الدين؟',a:'زهد',cat:'دين'},
+  {letter:'ز',q:'نبات أخضر عطري؟',a:'زعتر',cat:'أكلات'},
+  // ===== س =====
+  {letter:'س',q:'مدينة سعودية مقدسة؟',a:'مكة',cat:'السعودية'},
+  {letter:'س',q:'كوكب الحلقات في المجموعة الشمسية؟',a:'زحل',cat:'جغرافيا'},
+  {letter:'س',q:'لاعب كرة قدم برتغالي مشهور؟',a:'كريستيانو رونالدو',cat:'كرة قدم'},
+  {letter:'س',q:'شركة بحث على الإنترنت؟',a:'سامسونج',cat:'شركات'},
+  {letter:'س',q:'جهاز إلكتروني صغير محمول؟',a:'سماعة',cat:'إلكترونيات'},
+  {letter:'س',q:'دولة آسيوية؟',a:'سنغافورة',cat:'جغرافيا'},
+  {letter:'س',q:'مدينة لبنانية؟',a:'صيدا',cat:'مدن وعواصم'},
+  {letter:'س',q:'لغة يتحدث بها أهل السويد؟',a:'سويدية',cat:'لغات'},
+  {letter:'س',q:'أكلة عربية مشهورة؟',a:'سمبوسة',cat:'أكلات'},
+  {letter:'س',q:'طائر صغير؟',a:'سنونو',cat:'منوعات'},
+  {letter:'س',q:'لباس تراثي عربي؟',a:'سدارة',cat:'تراث'},
+  {letter:'س',q:'نبي ذكر في القرآن؟',a:'سليمان',cat:'دين'},
+  {letter:'س',q:'نبات أخضر؟',a:'سبانخ',cat:'أكلات'},
+  {letter:'س',q:'مدينة سعودية في الشمال؟',a:'سكاكا',cat:'السعودية'},
+  // ===== ش =====
+  {letter:'ش',q:'شهر في رمضان؟',a:'شوال',cat:'دين'},
+  {letter:'ش',q:'مدينة سورية قديمة؟',a:'شام',cat:'مدن وعواصم'},
+  {letter:'ش',q:'لاعب كرة قدم عربي؟',a:'شاكر',cat:'كرة قدم'},
+  {letter:'ش',q:'شركة تقنية كبيرة؟',a:'شاومي',cat:'شركات'},
+  {letter:'ش',q:'جهاز يعرض الصور والفيديو؟',a:'شاشة',cat:'إلكترونيات'},
+  {letter:'ش',q:'دولة في آسيا؟',a:'شيلي',cat:'جغرافيا'},
+  {letter:'ش',q:'لغة أوروبية؟',a:'شيكية',cat:'لغات'},
+  {letter:'ش',q:'أكلة شرقية لذيذة؟',a:'شاورما',cat:'أكلات'},
+  {letter:'ش',q:'طائر كبير؟',a:'شاهين',cat:'منوعات'},
+  {letter:'ش',q:'لباس تراثي عربي للرأس؟',a:'شماغ',cat:'تراث'},
+  {letter:'ش',q:'نبات شوكي؟',a:'شوك',cat:'منوعات'},
+  {letter:'ش',q:'مدينة سعودية؟',a:'شرورة',cat:'السعودية'},
+  // ===== ص =====
+  {letter:'ص',q:'عبادة يمتنع فيها المسلم عن الطعام؟',a:'صوم',cat:'دين'},
+  {letter:'ص',q:'حيوان الصحراء الكبير؟',a:'صقر',cat:'منوعات'},
+  {letter:'ص',q:'مدينة سعودية في جازان؟',a:'صبيا',cat:'السعودية'},
+  {letter:'ص',q:'لاعب كرة قدم مصري عالمي؟',a:'محمد صلاح',cat:'كرة قدم'},
+  {letter:'ص',q:'شركة ألعاب إلكترونية؟',a:'صوني',cat:'شركات'},
+  {letter:'ص',q:'جهاز يسجل الأصوات؟',a:'صندوق أصوات',cat:'إلكترونيات'},
+  {letter:'ص',q:'دولة عربية كبيرة؟',a:'صومال',cat:'جغرافيا'},
+  {letter:'ص',q:'مدينة مصرية قديمة؟',a:'صعيد',cat:'مدن وعواصم'},
+  {letter:'ص',q:'لغة أفريقية؟',a:'صومالية',cat:'لغات'},
+  {letter:'ص',q:'أكلة عربية مشهورة؟',a:'صالونة',cat:'أكلات'},
+  {letter:'ص',q:'طائر صغير سريع؟',a:'صقر',cat:'منوعات'},
+  {letter:'ص',q:'لباس تراثي؟',a:'صدرية',cat:'تراث'},
+  {letter:'ص',q:'نبات يزرع في المزارع؟',a:'صبر',cat:'منوعات'},
+  // ===== ض =====
+  {letter:'ض',q:'حيوان له قوقعة؟',a:'ضب',cat:'منوعات'},
+  {letter:'ض',q:'مدينة سعودية صغيرة؟',a:'ضبا',cat:'السعودية'},
+  {letter:'ض',q:'صفة جميلة في الدين؟',a:'ضبط',cat:'دين'},
+  {letter:'ض',q:'نبات صحراوي؟',a:'ضمر',cat:'منوعات'},
+  {letter:'ض',q:'حيوان من الزواحف؟',a:'ضبة',cat:'منوعات'},
+  // ===== ط =====
+  {letter:'ط',q:'طائر جميل ذيله طويل وملون؟',a:'طاووس',cat:'منوعات'},
+  {letter:'ط',q:'مدينة سعودية تاريخية؟',a:'طائف',cat:'السعودية'},
+  {letter:'ط',q:'نبي ذكر في القرآن؟',a:'طالوت',cat:'دين'},
+  {letter:'ط',q:'لاعب كرة قدم إيطالي مشهور؟',a:'طوتي',cat:'كرة قدم'},
+  {letter:'ط',q:'شركة طيران عربية؟',a:'طيران ناس',cat:'شركات'},
+  {letter:'ط',q:'جهاز يطبع الأوراق؟',a:'طابعة',cat:'إلكترونيات'},
+  {letter:'ط',q:'دولة عربية؟',a:'طرابلس',cat:'مدن وعواصم'},
+  {letter:'ط',q:'لغة في آسيا؟',a:'طاجيكية',cat:'لغات'},
+  {letter:'ط',q:'أكلة تركية مشهورة؟',a:'طماطم',cat:'أكلات'},
+  {letter:'ط',q:'لباس تراثي عربي؟',a:'طاقية',cat:'تراث'},
+  {letter:'ط',q:'نبات طويل؟',a:'طلح',cat:'منوعات'},
+  // ===== ظ =====
+  {letter:'ظ',q:'حيوان يشبه الغزال بجمال؟',a:'ظبي',cat:'منوعات'},
+  {letter:'ظ',q:'صفة سيئة في الدين؟',a:'ظلم',cat:'دين'},
+  {letter:'ظ',q:'مدينة في الإمارات؟',a:'ظفار',cat:'مدن وعواصم'},
+  {letter:'ظ',q:'نبات ظلي كبير؟',a:'ظل',cat:'منوعات'},
+  // ===== ع =====
+  {letter:'ع',q:'عاصمة المملكة العربية السعودية؟',a:'الرياض',cat:'السعودية'},
+  {letter:'ع',q:'عبادة يصلي فيها المسلم خمس مرات؟',a:'عبادة',cat:'دين'},
+  {letter:'ع',q:'لاعب كرة قدم سعودي مشهور؟',a:'علي البليهي',cat:'كرة قدم'},
+  {letter:'ع',q:'شركة تقنية مشهورة؟',a:'علي بابا',cat:'شركات'},
+  {letter:'ع',q:'جهاز للإضاءة؟',a:'عدسة',cat:'إلكترونيات'},
+  {letter:'ع',q:'دولة عربية شمال أفريقيا؟',a:'عُمان',cat:'جغرافيا'},
+  {letter:'ع',q:'مدينة مغربية قديمة؟',a:'عكاشة',cat:'مدن وعواصم'},
+  {letter:'ع',q:'لغة سامية قديمة؟',a:'عربية',cat:'لغات'},
+  {letter:'ع',q:'أكلة عربية مشهورة؟',a:'عصيدة',cat:'أكلات'},
+  {letter:'ع',q:'طائر بني اللون؟',a:'عصفور',cat:'منوعات'},
+  {letter:'ع',q:'لباس تراثي عربي؟',a:'عقال',cat:'تراث'},
+  {letter:'ع',q:'نبات عطري؟',a:'عود',cat:'منوعات'},
+  {letter:'ع',q:'مدينة سعودية في الشرق؟',a:'عنيزة',cat:'السعودية'},
+  // ===== غ =====
+  {letter:'غ',q:'طائر كبير يطير عالياً؟',a:'غراب',cat:'منوعات'},
+  {letter:'غ',q:'لاعب كرة قدم إسباني؟',a:'غاريث بيل',cat:'كرة قدم'},
+  {letter:'غ',q:'شركة رياضية مشهورة؟',a:'غوتشي',cat:'شركات'},
+  {letter:'غ',q:'دولة أفريقية؟',a:'غانا',cat:'جغرافيا'},
+  {letter:'غ',q:'مدينة مغربية؟',a:'غسيل',cat:'مدن وعواصم'},
+  {letter:'غ',q:'لغة في آسيا؟',a:'غوجاراتية',cat:'لغات'},
+  {letter:'غ',q:'أكلة عربية؟',a:'غريبة',cat:'أكلات'},
+  {letter:'غ',q:'لباس تراثي يوضع على الرأس؟',a:'غترة',cat:'تراث'},
+  {letter:'غ',q:'صفة جميلة في الإسلام تعني الكرم؟',a:'غفران',cat:'دين'},
+  {letter:'غ',q:'حيوان صغير يعيش في الحقول؟',a:'غزال',cat:'منوعات'},
+  {letter:'غ',q:'نبات أخضر في الصحراء؟',a:'غاف',cat:'منوعات'},
+  {letter:'غ',q:'نبات عطري يستخدم في الطعام؟',a:'غار',cat:'أكلات'},
+  // ===== ف =====
+  {letter:'ف',q:'حيوان صغير يحب الجبن؟',a:'فأر',cat:'منوعات'},
+  {letter:'ف',q:'لاعب كرة قدم هولندي اسمه روبن؟',a:'فان بيرسي',cat:'كرة قدم'},
+  {letter:'ف',q:'شركة سيارات إيطالية مشهورة؟',a:'فيراري',cat:'شركات'},
+  {letter:'ف',q:'مدينة سعودية في منطقة جازان؟',a:'فرسان',cat:'السعودية'},
+  {letter:'ف',q:'دولة آسيوية عاصمتها مانيلا؟',a:'فلبين',cat:'جغرافيا'},
+  {letter:'ف',q:'مدينة مغربية عريقة؟',a:'فاس',cat:'مدن وعواصم'},
+  {letter:'ف',q:'لغة يتحدث بها أهل فرنسا؟',a:'فرنسية',cat:'لغات'},
+  {letter:'ف',q:'جهاز إلكتروني للتصوير؟',a:'فلاش',cat:'إلكترونيات'},
+  {letter:'ف',q:'فاكهة حمراء صغيرة؟',a:'فراولة',cat:'أكلات'},
+  {letter:'ف',q:'أكلة عربية من الفول؟',a:'فول',cat:'أكلات'},
+  {letter:'ف',q:'طائر يعيش في المزارع؟',a:'فاختة',cat:'منوعات'},
+  {letter:'ف',q:'لباس تراثي يوضع على الرأس؟',a:'فروة',cat:'تراث'},
+  {letter:'ف',q:'نبي ذكر في القرآن؟',a:'فرعون (شخص في قصة موسى)',cat:'دين'},
+  {letter:'ف',q:'مدينة سعودية في الشمال؟',a:'فيفا',cat:'السعودية'},
+  {letter:'ف',q:'لاعب كرة قدم إسباني اسمه سيسك؟',a:'فابريغاس',cat:'كرة قدم'},
+  {letter:'ف',q:'نبات يستخدم في الطعام؟',a:'فلفل',cat:'أكلات'},
+  {letter:'ف',q:'حيوان يعيش في البحر؟',a:'فقمة',cat:'منوعات'},
+  {letter:'ف',q:'مدينة في العراق؟',a:'فلوجة',cat:'مدن وعواصم'},
+  {letter:'ف',q:'صفة جميلة في الإسلام تعني النجاح؟',a:'فلاح',cat:'دين'},
+  // ===== ق =====
+  {letter:'ق',q:'كتاب المسلمين المقدس؟',a:'قرآن',cat:'دين'},
+  {letter:'ق',q:'لاعب كرة قدم برازيلي اسمه فيليب؟',a:'كوتينيو',cat:'كرة قدم'},
+  {letter:'ق',q:'شركة طيران عربية؟',a:'قطر للطيران',cat:'شركات'},
+  {letter:'ق',q:'مدينة سعودية في القصيم؟',a:'قصيم',cat:'السعودية'},
+  {letter:'ق',q:'دولة عربية في الخليج؟',a:'قطر',cat:'جغرافيا'},
+  {letter:'ق',q:'عاصمة تونس؟',a:'قيروان',cat:'مدن وعواصم'},
+  {letter:'ق',q:'جهاز في الكمبيوتر يحسب العمليات؟',a:'معالج',cat:'إلكترونيات'},
+  {letter:'ق',q:'أكلة عربية من الأرز؟',a:'قوزي',cat:'أكلات'},
+  {letter:'ق',q:'طائر يعيش قرب الماء؟',a:'قطقاط',cat:'منوعات'},
+  {letter:'ق',q:'لباس تراثي قديم؟',a:'قفطان',cat:'تراث'},
+  {letter:'ق',q:'مدينة سعودية في الشمال؟',a:'قيصومة',cat:'السعودية'},
+  {letter:'ق',q:'حيوان أليف صغير؟',a:'قط',cat:'منوعات'},
+  {letter:'ق',q:'نبات صحراوي؟',a:'قبار',cat:'منوعات'},
+  {letter:'ق',q:'صفة جميلة في الإسلام تعني القناعة؟',a:'قناعة',cat:'دين'},
+  // ===== ك =====
+  {letter:'ك',q:'مدينة سعودية مشهورة؟',a:'كرك',cat:'السعودية'},
+  {letter:'ك',q:'حيوان ضخم في الغابة؟',a:'كلب',cat:'منوعات'},
+  {letter:'ك',q:'لاعب كرة قدم برازيلي؟',a:'كاكا',cat:'كرة قدم'},
+  {letter:'ك',q:'دولة أوروبية عاصمتها كراكوف؟',a:'كرواتيا',cat:'جغرافيا'},
+  {letter:'ك',q:'مدينة مغربية قديمة؟',a:'كازابلانكا',cat:'مدن وعواصم'},
+  {letter:'ك',q:'لغة يتحدث بها أهل كندا؟',a:'كندية',cat:'لغات'},
+  {letter:'ك',q:'شركة سيارات ألمانية؟',a:'كيا',cat:'شركات'},
+  {letter:'ك',q:'جهاز إلكتروني صغير؟',a:'كاميرا',cat:'إلكترونيات'},
+  {letter:'ك',q:'أكلة عربية مشهورة؟',a:'كبسة',cat:'أكلات'},
+  {letter:'ك',q:'طائر صغير يعيش قرب البيوت؟',a:'كناري',cat:'منوعات'},
+  {letter:'ك',q:'نبات عطري في الطبخ؟',a:'كزبرة',cat:'أكلات'},
+  {letter:'ك',q:'لباس تراثي عربي؟',a:'كوفية',cat:'تراث'},
+  {letter:'ك',q:'نبي ذكر في القرآن؟',a:'كليم',cat:'دين'},
+  {letter:'ك',q:'حيوان صغير يعيش في الماء؟',a:'كركدن',cat:'منوعات'},
+  {letter:'ك',q:'فاكهة حمراء صغيرة؟',a:'كرز',cat:'أكلات'},
+  {letter:'ك',q:'صفة جميلة في الإسلام؟',a:'كرم',cat:'دين'},
+  // ===== ل =====
+  {letter:'ل',q:'مدينة سعودية جنوبية؟',a:'لحجر',cat:'السعودية'},
+  {letter:'ل',q:'نبي ذكر في القرآن؟',a:'لوط',cat:'دين'},
+  {letter:'ل',q:'دولة أوروبية عاصمتها لشبونة؟',a:'لشبونة',cat:'جغرافيا'},
+  {letter:'ل',q:'مدينة مغربية تاريخية؟',a:'الرباط',cat:'مدن وعواصم'},
+  {letter:'ل',q:'لغة يتحدث بها أهل لبنان؟',a:'لبنانية',cat:'لغات'},
+  {letter:'ل',q:'شركة سيارات مشهورة؟',a:'لاندروفر',cat:'شركات'},
+  {letter:'ل',q:'جهاز في البيت لعرض القنوات؟',a:'لابتوب',cat:'إلكترونيات'},
+  {letter:'ل',q:'أكلة مشهورة؟',a:'لازانيا',cat:'أكلات'},
+  {letter:'ل',q:'طائر صغير ملون؟',a:'لقلق',cat:'منوعات'},
+  {letter:'ل',q:'نبات يستخدم في الطعام؟',a:'لفت',cat:'أكلات'},
+  {letter:'ل',q:'لباس تقليدي عربي؟',a:'ليفة',cat:'تراث'},
+  {letter:'ل',q:'حيوان يعيش في الغابة؟',a:'ليمور',cat:'منوعات'},
+  {letter:'ل',q:'مدينة سعودية شمالية؟',a:'لويم',cat:'السعودية'},
+  {letter:'ل',q:'صفة في الدين تعني التسامح؟',a:'لطف',cat:'دين'},
+  {letter:'ل',q:'فاكهة حلوة؟',a:'ليمون',cat:'أكلات'},
+  // ===== م =====
+  {letter:'م',q:'مدينة سعودية مشهورة؟',a:'مكة',cat:'السعودية'},
+  {letter:'م',q:'نبي ذكر في القرآن؟',a:'موسى',cat:'دين'},
+  {letter:'م',q:'لاعب كرة قدم مصري مشهور؟',a:'محمد صلاح',cat:'كرة قدم'},
+  {letter:'م',q:'دولة أوروبية عاصمتها مدريد؟',a:'إسبانيا',cat:'جغرافيا'},
+  {letter:'م',q:'مدينة مغربية تاريخية؟',a:'مكناس',cat:'مدن وعواصم'},
+  {letter:'م',q:'لغة يتحدث بها أهل المغرب؟',a:'مغربية',cat:'لغات'},
+  {letter:'م',q:'شركة سيارات مشهورة؟',a:'مرسيدس',cat:'شركات'},
+  {letter:'م',q:'جهاز إلكتروني يستخدم للموسيقى؟',a:'مشغل',cat:'إلكترونيات'},
+  {letter:'م',q:'أكلة عربية مشهورة؟',a:'مقلوبة',cat:'أكلات'},
+  {letter:'م',q:'طائر يعيش قرب الماء؟',a:'مالك',cat:'منوعات'},
+  {letter:'م',q:'نبات يستخدم في الطعام؟',a:'ملوخية',cat:'أكلات'},
+  {letter:'م',q:'لباس تراثي عربي؟',a:'معطف',cat:'تراث'},
+  {letter:'م',q:'مدينة سعودية شمالية؟',a:'المجمعة',cat:'السعودية'},
+  {letter:'م',q:'لاعب كرة قدم برازيلي؟',a:'ماركينيوس',cat:'كرة قدم'},
+  {letter:'م',q:'صفة جميلة في الدين؟',a:'مسامحة',cat:'دين'},
+  {letter:'م',q:'فاكهة حلوة؟',a:'موز',cat:'أكلات'},
+  // ===== ن =====
+  {letter:'ن',q:'نبي ذكر في القرآن؟',a:'نوح',cat:'دين'},
+  {letter:'ن',q:'مدينة سعودية جنوبية؟',a:'نجران',cat:'السعودية'},
+  {letter:'ن',q:'لاعب كرة قدم برازيلي مشهور؟',a:'نيمار',cat:'كرة قدم'},
+  {letter:'ن',q:'دولة آسيوية؟',a:'نيبال',cat:'جغرافيا'},
+  {letter:'ن',q:'مدينة مغربية؟',a:'نواكشوط',cat:'مدن وعواصم'},
+  {letter:'ن',q:'لغة يتحدث بها أهل النرويج؟',a:'نرويجية',cat:'لغات'},
+  {letter:'ن',q:'شركة سيارات مشهورة؟',a:'نيسان',cat:'شركات'},
+  {letter:'ن',q:'جهاز إلكتروني صغير؟',a:'نوت بوك',cat:'إلكترونيات'},
+  {letter:'ن',q:'أكلة عربية مشهورة؟',a:'نودلز',cat:'أكلات'},
+  {letter:'ن',q:'طائر صغير؟',a:'نقار',cat:'منوعات'},
+  {letter:'ن',q:'نبات أخضر في الحدائق؟',a:'نعناع',cat:'أكلات'},
+  {letter:'ن',q:'لباس تراثي قديم؟',a:'نقاب',cat:'تراث'},
+  {letter:'ن',q:'حيوان صغير يعيش في الغابة؟',a:'نمس',cat:'منوعات'},
+  {letter:'ن',q:'مدينة سعودية شمالية؟',a:'نفود',cat:'السعودية'},
+  {letter:'ن',q:'لاعب كرة قدم عربي؟',a:'ناصر الشمراني',cat:'كرة قدم'},
+  {letter:'ن',q:'صفة في الدين تعني الصبر؟',a:'نصيب',cat:'دين'},
+  {letter:'ن',q:'مدينة عراقية؟',a:'نينوى',cat:'مدن وعواصم'},
+  {letter:'ن',q:'فاكهة حمراء صغيرة؟',a:'نكتارين',cat:'أكلات'},
+  // ===== هـ =====
+  {letter:'هـ',q:'مدينة سعودية شمالية؟',a:'هجرة',cat:'السعودية'},
+  {letter:'هـ',q:'نبي ذكر في القرآن؟',a:'هارون',cat:'دين'},
+  {letter:'هـ',q:'لاعب كرة قدم عربي مشهور؟',a:'هتان',cat:'كرة قدم'},
+  {letter:'هـ',q:'دولة آسيوية عاصمتها هانوي؟',a:'فيتنام',cat:'جغرافيا'},
+  {letter:'هـ',q:'لغة يتحدث بها أهل هولندا؟',a:'هولندية',cat:'لغات'},
+  {letter:'هـ',q:'شركة سيارات مشهورة؟',a:'هوندا',cat:'شركات'},
+  {letter:'هـ',q:'جهاز إلكتروني؟',a:'هارد',cat:'إلكترونيات'},
+  {letter:'هـ',q:'أكلة عربية مشهورة؟',a:'هريس',cat:'أكلات'},
+  {letter:'هـ',q:'طائر صغير؟',a:'هدهد',cat:'منوعات'},
+  {letter:'هـ',q:'نبات يستخدم في الطبخ؟',a:'هيل',cat:'أكلات'},
+  {letter:'هـ',q:'لباس تراثي عربي؟',a:'هود',cat:'تراث'},
+  {letter:'هـ',q:'لاعب كرة قدم برازيلي مشهور؟',a:'هالك',cat:'كرة قدم'},
+  {letter:'هـ',q:'صفة جميلة في الدين؟',a:'هدوء',cat:'دين'},
+  {letter:'هـ',q:'مدينة عراقية؟',a:'هيت',cat:'مدن وعواصم'},
+  {letter:'هـ',q:'فاكهة صيفية؟',a:'هليون',cat:'أكلات'},
+  // ===== و =====
+  {letter:'و',q:'مدينة سعودية في الشرق؟',a:'وادي الدواسر',cat:'السعودية'},
+  {letter:'و',q:'نبي ذكر في القرآن؟',a:'واصف',cat:'دين'},
+  {letter:'و',q:'لاعب كرة قدم مشهور؟',a:'وليد',cat:'كرة قدم'},
+  {letter:'و',q:'دولة أفريقية؟',a:'واغادوغو',cat:'جغرافيا'},
+  {letter:'و',q:'مدينة مغربية؟',a:'ورزازات',cat:'مدن وعواصم'},
+  {letter:'و',q:'شركة سيارات مشهورة؟',a:'وولفو',cat:'شركات'},
+  {letter:'و',q:'جهاز إلكتروني صغير؟',a:'ويفر',cat:'إلكترونيات'},
+  {letter:'و',q:'أكلة عربية مشهورة؟',a:'ورق عنب',cat:'أكلات'},
+  {letter:'و',q:'لباس تراثي؟',a:'وشاح',cat:'تراث'},
+  {letter:'و',q:'حيوان صغير؟',a:'ولف',cat:'منوعات'},
+  {letter:'و',q:'مدينة سعودية شمالية؟',a:'وادي الفرع',cat:'السعودية'},
+  {letter:'و',q:'صفة جميلة في الدين؟',a:'ود',cat:'دين'},
+  {letter:'و',q:'مدينة عراقية؟',a:'وادي حوران',cat:'مدن وعواصم'},
+  {letter:'و',q:'فاكهة صيفية؟',a:'وليموت',cat:'أكلات'},
+  // ===== ي =====
+  {letter:'ي',q:'مدينة سعودية شمالية؟',a:'ينبع',cat:'السعودية'},
+  {letter:'ي',q:'نبي ذكر في القرآن؟',a:'يونس',cat:'دين'},
+  {letter:'ي',q:'لاعب كرة قدم مصري مشهور؟',a:'يوسف',cat:'كرة قدم'},
+  {letter:'ي',q:'دولة آسيوية؟',a:'اليمن',cat:'جغرافيا'},
+  {letter:'ي',q:'لغة يتحدث بها أهل اليابان؟',a:'يابانية',cat:'لغات'},
+  {letter:'ي',q:'شركة سيارات مشهورة؟',a:'ياماها',cat:'شركات'},
+  {letter:'ي',q:'جهاز إلكتروني صغير؟',a:'يواس بي',cat:'إلكترونيات'},
+  {letter:'ي',q:'أكلة عربية مشهورة؟',a:'يقطين',cat:'أكلات'},
+  {letter:'ي',q:'طائر صغير؟',a:'يعسوب',cat:'منوعات'},
+  {letter:'ي',q:'لغة يستخدمها أهل اليابان؟',a:'يابانية',cat:'لغات'},
+  {letter:'ي',q:'لباس تراثي عربي؟',a:'ياقوت',cat:'تراث'},
+  {letter:'ي',q:'حيوان صغير؟',a:'يمامة',cat:'منوعات'},
+  {letter:'ي',q:'مدينة سعودية جنوبية؟',a:'يدمة',cat:'السعودية'},
+  {letter:'ي',q:'صفة جميلة في الدين؟',a:'يسر',cat:'دين'},
+  {letter:'ي',q:'مدينة عراقية؟',a:'يثرب',cat:'مدن وعواصم'},
+  {letter:'ي',q:'فاكهة حلوة؟',a:'يوسفي',cat:'أكلات'},
+  {letter:'ي',q:'نبات أخضر؟',a:'ياسمين',cat:'منوعات'},
+];
+
+/* ================================================
+   CATEGORY COLORS MAP
+   Add new categories here when expanding data
+================================================ */
+const CAT_COLORS = {
+  'دين': '#a78bfa',
+  'جغرافيا': '#34d399',
+  'السعودية': '#60a5fa',
+  'منوعات': '#f97316',
+  'أكلات': '#fb7185',
+  'كرة قدم': '#facc15',
+  'شركات': '#38bdf8',
+  'لغات': '#a3e635',
+  'مدن وعواصم': '#f472b6',
+  'مدن': '#f472b6',
+  'تراث': '#fb923c',
+  'إلكترونيات': '#22d3ee',
+};
+
+const CAT_ICONS = {
+  'دين': '☪️', 'جغرافيا': '🌍', 'السعودية': '🇸🇦',
+  'منوعات': '🎲', 'أكلات': '🍽️', 'كرة قدم': '⚽',
+  'شركات': '🏢', 'لغات': '🗣️', 'مدن وعواصم': '🏙️',
+  'مدن': '🏙️', 'تراث': '🏺', 'إلكترونيات': '💻',
+};
+
+/* ================================================
+   STATE
+================================================ */
+let activeCategory = 'الكل';
+let searchQuery = '';
+let openCards = new Set();
+
+/* ================================================
+   DERIVED DATA
+================================================ */
+// Get unique categories
+const allCategories = ['الكل', ...new Set(DATA.map(d => d.cat))];
+
+// Get unique letters in order
+const ARABIC_LETTER_ORDER = ['ا','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','هـ','و','ي'];
+
+/* ================================================
+   INIT
+================================================ */
+function init() {
+  buildTopics();
+  buildJumpNav();
+  render();
+  bindEvents();
+}
+
+function buildTopics() {
+  const container = document.getElementById('topicsContainer');
+  container.innerHTML = allCategories.map(cat => {
+    const color = cat === 'الكل' ? 'var(--accent)' : (CAT_COLORS[cat] || '#888');
+    const icon = cat === 'الكل' ? '📋' : (CAT_ICONS[cat] || '•');
+    return `<button
+      class="topic-btn ${cat === activeCategory ? 'active' : ''}"
+      data-cat="${cat}"
+      style="--cat-color:${color}"
+      aria-pressed="${cat === activeCategory}"
+    >
+      <span>${icon}</span>
+      ${cat}
+    </button>`;
+  }).join('');
+}
+
+function buildJumpNav() {
+  const nav = document.getElementById('jumpNav');
+  nav.innerHTML = ARABIC_LETTER_ORDER.map(l =>
+    `<a class="jump-btn" href="#letter-${l}" aria-label="انتقل إلى حرف ${l}">${l}</a>`
+  ).join('');
+}
+
+/* ================================================
+   FILTER DATA
+================================================ */
+function getFiltered() {
+  const q = searchQuery.trim().toLowerCase();
+  return DATA.filter(item => {
+    const catMatch = activeCategory === 'الكل' || item.cat === activeCategory;
+    if (!catMatch) return false;
+    if (!q) return true;
+    return item.q.includes(q) || item.a.toLowerCase().includes(q) || item.cat.includes(q);
+  });
+}
+
+/* ================================================
+   RENDER
+================================================ */
+function render() {
+  const filtered = getFiltered();
+  const container = document.getElementById('questionsContainer');
+  const emptyState = document.getElementById('emptyState');
+  const countEl = document.getElementById('resultCount');
+
+  countEl.textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    emptyState.classList.add('visible');
+    return;
+  }
+
+  emptyState.classList.remove('visible');
+
+  // Group by letter
+  const grouped = {};
+  filtered.forEach(item => {
+    if (!grouped[item.letter]) grouped[item.letter] = [];
+    grouped[item.letter].push(item);
+  });
+
+  // Sort letters in Arabic order
+  const sortedLetters = ARABIC_LETTER_ORDER.filter(l => grouped[l]);
+
+  container.innerHTML = sortedLetters.map((letter, si) => {
+    const items = grouped[letter];
+    const cards = items.map((item, idx) => buildCard(item, `${letter}-${idx}`, (si * 20 + idx) * 30)).join('');
+    return `
+      <section class="letter-section" id="letter-${letter}" aria-labelledby="lh-${letter}" style="animation-delay:${si * 40}ms">
+        <div class="letter-header">
+          <div class="letter-badge" aria-hidden="true">${letter}</div>
+          <span class="letter-label" id="lh-${letter}">حرف ${letter}</span>
+          <span class="letter-count">${items.length} سؤال</span>
+        </div>
+        <div class="cards-grid">${cards}</div>
+      </section>
+    `;
+  }).join('');
+
+  // Re-attach card events
+  bindCardEvents();
+}
+
+function buildCard(item, id, delay) {
+  const color = CAT_COLORS[item.cat] || '#888';
+  const isOpen = openCards.has(id);
+  return `
+    <article
+      class="qa-card ${isOpen ? 'open' : ''}"
+      data-id="${id}"
+      aria-expanded="${isOpen}"
+      role="button"
+      tabindex="0"
+      style="animation-delay:${delay}ms"
+    >
+      <div class="card-question">
+        <div class="card-q-icon" aria-hidden="true">س</div>
+        <div class="card-q-text">${escapeHtml(item.q)}</div>
+        <div class="card-toggle" aria-hidden="true">▼</div>
+      </div>
+      <div class="card-answer" aria-hidden="${!isOpen}">
+        <div class="card-answer-inner">
+          <div class="answer-label">الإجابة</div>
+          <div class="answer-text">${escapeHtml(item.a)}</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="category-tag" style="color:${color};border-color:${color}">
+          ${CAT_ICONS[item.cat] || ''} ${item.cat}
+        </span>
+      </div>
+    </article>
+  `;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ================================================
+   EVENT BINDING
+================================================ */
+function bindEvents() {
+  // Search
+  const searchInput = document.getElementById('searchInput');
+  let searchTimeout;
+  searchInput.addEventListener('input', e => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = e.target.value;
+      openCards.clear();
+      render();
+    }, 250);
+  });
+
+  // Topics
+  document.getElementById('topicsContainer').addEventListener('click', e => {
+    const btn = e.target.closest('.topic-btn');
+    if (!btn) return;
+    activeCategory = btn.dataset.cat;
+    openCards.clear();
+
+    // Update active state
+    document.querySelectorAll('.topic-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.cat === activeCategory);
+      b.setAttribute('aria-pressed', b.dataset.cat === activeCategory);
+    });
+
+    render();
+  });
+}
+
+function bindCardEvents() {
+  document.querySelectorAll('.qa-card').forEach(card => {
+    card.addEventListener('click', () => toggleCard(card));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleCard(card);
+      }
+    });
+  });
+}
+
+function toggleCard(card) {
+  const id = card.dataset.id;
+  const isOpen = card.classList.contains('open');
+
+  if (isOpen) {
+    openCards.delete(id);
+    card.classList.remove('open');
+    card.setAttribute('aria-expanded', 'false');
+    card.querySelector('.card-answer').setAttribute('aria-hidden', 'true');
+  } else {
+    openCards.add(id);
+    card.classList.add('open');
+    card.setAttribute('aria-expanded', 'true');
+    card.querySelector('.card-answer').setAttribute('aria-hidden', 'false');
+  }
+}
+
+// Boot
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
