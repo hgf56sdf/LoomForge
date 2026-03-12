@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لعبة الحروف</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+
+/* ─────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────── */
+:root {
+  --red:     #d42020;
+  --green:   #1a7a35;
+  --yellow:  #e8c84a;
+  --bg:      #0d1117;
+  --surf:    #161b22;
+  --surf2:   #1c2430;
+  --border:  #30363d;
+  --text:    #e6edf3;
+  --muted:   #7d8590;
+  --accent:  #6e40c9;
+  --hex:     92px;
+  --font:    'Tajawal', 'Traditional Arabic', serif;
+  --spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease:    cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--surf); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+header {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(22, 27, 34, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 28px; height: 58px;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 20px; font-weight: 900;
+  background: linear-gradient(120deg, var(--red) 0%, #f59e0b 45%, var(--green) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; white-space: nowrap;
+  letter-spacing: .5px;
+}
+
+/* Tab switcher pill */
+.tab-switcher {
+  display: flex; gap: 2px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 3px;
+}
+
+.tab-btn {
+  padding: 6px 18px; border: none; border-radius: 7px;
+  font-size: 13px; font-family: var(--font); font-weight: 700;
+  cursor: pointer; color: var(--muted);
+  background: transparent;
+  transition: background .18s var(--ease), color .18s var(--ease);
+  white-space: nowrap;
+}
+.tab-btn.active {
+  background: var(--accent); color: #fff;
+  box-shadow: 0 2px 10px rgba(110,64,201,.4);
+}
+.tab-btn:hover:not(.active) { color: var(--text); background: var(--border); }
+
+/* Turn indicator — just colored dots */
+.turn-dots {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+}
+.tdot {
+  width: 13px; height: 13px; border-radius: 50%;
+  transition: opacity .25s, transform .25s var(--spring);
+  opacity: .25;
+}
+.tdot.on { opacity: 1; transform: scale(1.35); }
+.tdot-a { background: var(--red);   box-shadow: 0 0 8px var(--red);   }
+.tdot-b { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+/* ─────────────────────────────────────────
+   TAB PANELS
+───────────────────────────────────────── */
+.tab-panel { display: none; }
+.tab-panel.active {
+  display: grid;
+  animation: fadeUp .22s var(--ease);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────
+   GAME PANEL — 3-col grid
+───────────────────────────────────────── */
+#game-panel {
+  grid-template-columns: 210px 1fr 210px;
+  gap: 18px;
+  padding: 20px 18px;
+  max-width: 1300px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* ─────────────────────────────────────────
+   GLASS CARD (sidebars)
+───────────────────────────────────────── */
+.card {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+.card-title {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Divider line between sections */
+.divider {
+  height: 1px; background: var(--border);
+  margin: 4px 0;
+}
+
+/* Team badge */
+.team-badge {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 11px; border-radius: 10px;
+  border: 2px solid transparent;
+  transition: border-color .2s, box-shadow .2s;
+}
+.team-badge.active-turn {
+  border-color: currentColor;
+  box-shadow: 0 0 0 3px rgba(255,255,255,.04);
+}
+.badge-dot {
+  width: 26px; height: 26px; border-radius: 8px;
+  flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+.badge-name { font-size: 14px; font-weight: 700; }
+.badge-dir  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ─────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────── */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; padding: 10px 14px;
+  border: none; border-radius: 10px;
+  font-size: 13px; font-family: var(--font); font-weight: 700;
+  cursor: pointer; transition: all .17s var(--ease);
+  line-height: 1.2; text-align: center;
+}
+
+/* Primary */
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover {
+  background: #7c4ddf; transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(110,64,201,.45);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--border); transform: translateY(-1px); }
+
+/* Danger */
+.btn-danger { background: rgba(240,80,80,.1); color: #f87171; border: 1px solid rgba(240,80,80,.25); }
+.btn-danger:hover { background: rgba(240,80,80,.18); transform: translateY(-1px); }
+
+/* Roulette shortcut */
+.btn-roulette {
+  background: linear-gradient(135deg, rgba(110,64,201,.18), rgba(59,130,246,.18));
+  color: #a78bfa;
+  border: 1px solid rgba(110,64,201,.35);
+}
+.btn-roulette:hover {
+  background: linear-gradient(135deg, rgba(110,64,201,.28), rgba(59,130,246,.28));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(110,64,201,.3);
+}
+
+/* Hint A */
+.btn-hint-a {
+  background: rgba(212,32,32,.1); color: #ff7070;
+  border: 1px solid rgba(212,32,32,.3);
+}
+.btn-hint-a:hover:not(:disabled) { background: rgba(212,32,32,.18); transform: translateY(-1px); }
+.btn-hint-a:disabled { opacity: .35; cursor: not-allowed; transform: none !important; }
+
+/* Hint B */
+.btn-hint-b {
+  background: rgba(26,122,53,.1); color: #4ade80;
+  border: 1px solid rgba(26,122,53,.35);
+}
+.btn-hint-b:hover:not(:disabled) { background: rgba(26,122,53,.18); transform: translateY(-1px); }
+.btn-hint-b:disabled { opacity: .35; cursor: not-allowed; transform: none !important; }
+
+/* Power — gold shimmer */
+.btn-power {
+  background: linear-gradient(135deg, #92400e, #b45309, #d97706, #f59e0b);
+  color: #1a0a00; border: none;
+  box-shadow: 0 3px 12px rgba(217,119,6,.35);
+  position: relative; overflow: hidden;
+}
+.btn-power::after {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+  transform: skewX(-20deg);
+  transition: left .5s ease;
+}
+.btn-power:hover::after { left: 160%; }
+.btn-power:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(217,119,6,.5); }
+
+/* ─────────────────────────────────────────
+   BOARD FRAME
+───────────────────────────────────────── */
+.board-wrapper {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+
+.board-surround {
+  position: relative;
+  padding: 26px 30px;
+  background: var(--green);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+}
+
+/* Red left/right stripes */
+.board-surround::before,
+.board-surround::after {
+  content: ''; position: absolute;
+  top: 0; bottom: 0; width: 32px;
+  background: var(--red); z-index: 1;
+}
+.board-surround::before { left: 0; }
+.board-surround::after  { right: 0; }
+
+/* Diagonal corner cuts (green over red) */
+.corner-tl, .corner-tr, .corner-bl, .corner-br {
+  position: absolute; width: 50px; height: 50px; z-index: 2;
+}
+.corner-tl { top:0; left:0;   background: linear-gradient(135deg, var(--green) 50%, transparent 50%); }
+.corner-tr { top:0; right:0;  background: linear-gradient(225deg, var(--green) 50%, transparent 50%); }
+.corner-bl { bottom:0; left:0;  background: linear-gradient(45deg,  var(--green) 50%, transparent 50%); }
+.corner-br { bottom:0; right:0; background: linear-gradient(315deg, var(--green) 50%, transparent 50%); }
+
+#hex-board {
+  position: relative; z-index: 3;
+  direction: ltr; display: inline-block; padding: 4px;
+}
+
+/* ─────────────────────────────────────────
+   HEX TILES
+───────────────────────────────────────── */
+.hex-row {
+  display: flex; justify-content: center;
+  margin-bottom: calc(0px - var(--hex) * 0.268);
+}
+
+.hex-tile {
+  width: var(--hex);
+  height: calc(var(--hex) * 1.1547);
+  position: relative;
+  cursor: pointer; margin: 0 3px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform .18s var(--spring), filter .12s;
+  user-select: none; -webkit-tap-highlight-color: transparent;
+  will-change: transform;
+  /* Outer shape — acts as the black border */
+  clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background: #000;
+}
+
+/* Inner hex — the actual colored fill */
+.hex-tile::before {
+  content: ''; position: absolute;
+  top: 5%; left: 4.5%; width: 91%; height: 90%;
+  clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background: #252535;
+  transition: background .18s var(--ease);
+  z-index: 0;
+}
+
+/* Letter */
+.hex-tile .ltr {
+  font-family: var(--font);
+  font-size: calc(var(--hex) * 0.52);
+  font-weight: 900;
+  color: rgba(255,255,255,.42);
+  position: relative; z-index: 2;
+  line-height: 1; pointer-events: none;
+  transition: color .15s;
+  text-shadow:
+     1px  1px 0 #000, -1px  1px 0 #000,
+     1px -1px 0 #000, -1px -1px 0 #000,
+     0    1px 0 #000,  0   -1px 0 #000,
+     1px  0   0 #000, -1px  0   0 #000;
+}
+
+/* ── STATES ── */
+.hex-tile[data-s="empty"]   { background: #0a0a0f; }
+.hex-tile[data-s="empty"]::before { background: #252535; }
+.hex-tile[data-s="empty"] .ltr { color: rgba(255,255,255,.35); }
+
+.hex-tile[data-s="a"] { background: #000; transform: scale(1.07); z-index: 2; }
+.hex-tile[data-s="a"]::before { background: var(--red); }
+.hex-tile[data-s="a"] .ltr {
+  color: #fff;
+  text-shadow: 1px 1px 0 #6b0000,-1px 1px 0 #6b0000,1px -1px 0 #6b0000,-1px -1px 0 #6b0000,0 1px 0 #6b0000,0 -1px 0 #6b0000,1px 0 0 #6b0000,-1px 0 0 #6b0000;
+}
+
+.hex-tile[data-s="b"] { background: #000; transform: scale(1.07); z-index: 2; }
+.hex-tile[data-s="b"]::before { background: var(--green); }
+.hex-tile[data-s="b"] .ltr {
+  color: #fff;
+  text-shadow: 1px 1px 0 #003a14,-1px 1px 0 #003a14,1px -1px 0 #003a14,-1px -1px 0 #003a14,0 1px 0 #003a14,0 -1px 0 #003a14,1px 0 0 #003a14,-1px 0 0 #003a14;
+}
+
+.hex-tile[data-s="neutral"] { background: #000; transform: scale(1.04); }
+.hex-tile[data-s="neutral"]::before { background: var(--yellow); }
+.hex-tile[data-s="neutral"] .ltr {
+  color: rgba(0,0,0,.8);
+  text-shadow: 1px 1px 0 rgba(0,0,0,.2),-1px 1px 0 rgba(0,0,0,.2),1px -1px 0 rgba(0,0,0,.2),-1px -1px 0 rgba(0,0,0,.2);
+}
+
+/* Hover */
+.hex-tile:hover { transform: scale(1.13); z-index: 10; filter: brightness(1.18); }
+.hex-tile[data-s="a"]:hover,
+.hex-tile[data-s="b"]:hover,
+.hex-tile[data-s="neutral"]:hover { transform: scale(1.13); filter: brightness(1.14); }
+
+
+/* Click bounce */
+@keyframes tClick {
+  0%   { transform: scale(1.07); }
+  42%  { transform: scale(1.22); }
+  100% { transform: scale(1.07); }
+}
+.hex-tile.clicked[data-s="a"],
+.hex-tile.clicked[data-s="b"],
+.hex-tile.clicked[data-s="neutral"] { animation: tClick .24s var(--spring); }
+
+
+/* ─────────────────────────────────────────
+   TOAST
+───────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 30px; left: 50%;
+  transform: translateX(-50%) translateY(14px);
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 13px 26px; border-radius: 14px;
+  font-size: 15px; font-weight: 700;
+  font-family: var(--font);
+  box-shadow: 0 8px 32px rgba(0,0,0,.55);
+  z-index: 600; opacity: 0; pointer-events: none;
+  transition: opacity .25s, transform .25s var(--spring);
+  max-width: 88vw; text-align: center; white-space: pre-line;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ─────────────────────────────────────────
+   ROULETTE PAGE
+───────────────────────────────────────── */
+#roulette-panel {
+  grid-template-columns: 1fr 290px;
+  gap: 24px;
+  padding: 24px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.wheel-card {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 18px;
+}
+
+.wheel-card-title {
+  font-size: 18px; font-weight: 900;
+  align-self: flex-start;
+}
+
+.wheel-wrap { position: relative; display: inline-block; }
+
+#wheel-canvas {
+  display: block; border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--border), 0 0 40px rgba(110,64,201,.25), 0 16px 50px rgba(0,0,0,.55);
+}
+
+.wheel-ptr {
+  position: absolute; top: -14px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 12px solid transparent; border-right: 12px solid transparent;
+  border-top: 24px solid #e6edf3;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)); z-index: 5;
+}
+
+#spin-btn {
+  padding: 12px 42px; border-radius: 40px;
+  font-size: 15px; font-weight: 900; font-family: var(--font);
+  background: linear-gradient(135deg, var(--accent), #7c4ddf);
+  color: #fff; border: none; cursor: pointer;
+  transition: all .18s; letter-spacing: .4px;
+  box-shadow: 0 4px 18px rgba(110,64,201,.4);
+}
+#spin-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 7px 26px rgba(110,64,201,.55); }
+#spin-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+#r-result {
+  font-size: 18px; font-weight: 900; font-family: var(--font);
+  padding: 10px 26px; border-radius: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  min-width: 200px; min-height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  transition: color .3s;
+  color: var(--muted);
+}
+
+/* Item manager */
+.items-card {
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.items-card-title {
+  font-size: 14px; font-weight: 900;
+  padding-bottom: 10px; border-bottom: 1px solid var(--border);
+}
+
+.item-add-row { display: flex; gap: 8px; }
+
+.item-input {
+  flex: 1; padding: 9px 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 9px; color: var(--text);
+  font-size: 14px; font-family: var(--font); font-weight: 700;
+  outline: none; direction: rtl;
+  transition: border-color .15s;
+}
+.item-input:focus { border-color: var(--accent); }
+
+.btn-add {
+  padding: 9px 14px; background: var(--accent); color: #fff;
+  border: none; border-radius: 9px; cursor: pointer;
+  font-size: 20px; font-weight: 700; line-height: 1;
+  transition: all .15s;
+}
+.btn-add:hover { background: #7c4ddf; transform: scale(1.06); }
+
+.items-list {
+  list-style: none; max-height: 350px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 6px;
+}
+
+.r-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; background: var(--bg);
+  border-radius: 9px; border: 1px solid var(--border);
+  animation: fadeUp .15s var(--ease);
+}
+.r-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.r-text {
+  flex: 1; font-size: 13px; font-family: var(--font); font-weight: 700;
+  direction: rtl; background: transparent; border: none;
+  border-bottom: 1px solid transparent; color: var(--text);
+  outline: none; cursor: text;
+}
+.r-text:focus { border-bottom-color: var(--accent); }
+.r-del {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: 17px; padding: 2px 5px;
+  border-radius: 5px; transition: all .12s; line-height: 1;
+}
+.r-del:hover { background: rgba(240,80,80,.15); color: #f87171; }
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 980px) {
+  #game-panel    { grid-template-columns: 1fr; }
+  #roulette-panel { grid-template-columns: 1fr; }
+  :root { --hex: 72px; }
+}
+@media (max-width: 600px) {
+  :root { --hex: 54px; }
+  header { padding: 0 14px; }
+  .logo { font-size: 17px; }
+  .tab-btn { padding: 5px 12px; font-size: 12px; }
+  .win-box { padding: 36px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     HEADER
+     ═══════════════════════════════════ -->
+<header>
+  <div class="logo">لعبة الحروف</div>
+
+  <nav class="tab-switcher">
+    <button class="tab-btn active" data-tab="game">🎮</button>
+    <button class="tab-btn" data-tab="roulette">🎰</button>
+  </nav>
+
+  <div class="turn-dots">
+    <div class="tdot tdot-a on" id="tdot-a"></div>
+    <div class="tdot tdot-b"   id="tdot-b"></div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════
+     GAME TAB
+     ═══════════════════════════════════ -->
+<div id="game-panel" class="tab-panel active">
+
+  <!-- ── LEFT: Team A ── -->
+  <aside class="card">
+    <div class="card-title">الفريق الأحمر</div>
+
+    <div class="team-badge active-turn" id="card-a"
+         style="color:var(--red); background:rgba(212,32,32,.07);">
+      <div class="badge-dot" style="background:var(--red);"></div>
+      <div>
+        <div class="badge-name">الأحمر</div>
+        <div class="badge-dir">يمين ← يسار</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <button class="btn btn-hint-a" id="btn-hint-a">💡</button>
+    <button class="btn btn-power"  id="btn-power-a">⚡</button>
+  </aside>
+
+  <!-- ── CENTER: Board ── -->
+  <div class="board-wrapper">
+    <div class="board-surround">
+      <div class="corner-tl"></div>
+      <div class="corner-tr"></div>
+      <div class="corner-bl"></div>
+      <div class="corner-br"></div>
+      <div id="hex-board"></div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT: Team B + standalone Controls ── -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+
+    <!-- Team B card -->
+    <div class="card">
+      <div class="card-title">الفريق الأخضر</div>
+
+      <div class="team-badge" id="card-b"
+           style="color:var(--green); background:rgba(26,122,53,.07);">
+        <div class="badge-dot" style="background:var(--green);"></div>
+        <div>
+          <div class="badge-name">الأخضر</div>
+          <div class="badge-dir">فوق ↕ تحت</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <button class="btn btn-hint-b" id="btn-hint-b">💡</button>
+      <button class="btn btn-power"  id="btn-power-b">⚡</button>
+    </div>
+
+    <!-- Standalone Controls card -->
+    <div class="card">
+      <div class="card-title">التحكم</div>
+      <button class="btn btn-primary"   id="btn-reset">🔄 لعبة جديدة</button>
+      <button class="btn btn-ghost"     id="btn-randomize">🔀 خلط الحروف</button>
+      <button class="btn btn-danger"    id="btn-clear">🗑️ مسح الألوان</button>
+      <button class="btn btn-roulette"  id="btn-go-roulette">🎰 افتح الرولیت</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ROULETTE TAB
+     ═══════════════════════════════════ -->
+<div id="roulette-panel" class="tab-panel">
+
+  <div class="wheel-card">
+    <div class="wheel-card-title">🎰 عجلة الحظ</div>
+    <div class="wheel-wrap">
+      <div class="wheel-ptr"></div>
+      <canvas id="wheel-canvas" width="340" height="340"></canvas>
+    </div>
+    <button id="spin-btn">أدِّر العجلة</button>
+    <div id="r-result">—</div>
+  </div>
+
+  <div class="items-card">
+    <div class="items-card-title">⚙️ إدارة العناصر</div>
+    <div class="item-add-row">
+      <input class="item-input" id="new-item-input"
+             type="text" placeholder="أضف عنصر..." maxlength="30">
+      <button class="btn-add" id="add-item-btn">+</button>
+    </div>
+    <ul class="items-list" id="items-list"></ul>
+  </div>
+
+</div>
+
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════ -->
+<script>
+/* ────────────────────────────────────
+   CONSTANTS
+──────────────────────────────────── */
+const LETTERS = [
+  'أ','ب','ت','ث','ج','ح','خ','د','ذ','ر',
+  'ز','س','ش','ص','ض','ط','ظ','ع','غ','ف',
+  'ق','ك','ل','م','ن','ه','و','ي'
+];
+
+// Diamond shape — 4+5+5+5+5+4 = 28 tiles (one per letter)
+const ROW_W = [4, 5, 5, 5, 5, 4];
+
+// State cycle per click
+const CYCLE = ['empty', 'a', 'b', 'neutral'];
+
+/* ────────────────────────────────────
+   GAME STATE
+──────────────────────────────────── */
+const G = {
+  grid: [],
+  turn: 'a',
+  moves: 0,
+  hintUsed: { a: false, b: false }
+};
+
+/* ────────────────────────────────────
+   DOM
+──────────────────────────────────── */
+const boardEl  = document.getElementById('hex-board');
+const toastEl  = document.getElementById('toast');
+const tdotA    = document.getElementById('tdot-a');
+const tdotB    = document.getElementById('tdot-b');
+const cardA    = document.getElementById('card-a');
+const cardB    = document.getElementById('card-b');
+
+/* ────────────────────────────────────
+   TOAST
+──────────────────────────────────── */
+let _toastT = null;
+function toast(msg, ms = 3500) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(_toastT);
+  _toastT = setTimeout(() => toastEl.classList.remove('show'), ms);
+}
+
+/* ────────────────────────────────────
+   BUILD + RENDER GRID
+──────────────────────────────────── */
+function buildGrid() {
+  const pool = shuffle([...LETTERS]);
+  G.grid = [];
+  let i = 0;
+  for (let r = 0; r < ROW_W.length; r++) {
+    G.grid[r] = [];
+    for (let c = 0; c < ROW_W[r]; c++) {
+      G.grid[r][c] = { letter: pool[i++], state: 'empty' };
+    }
+  }
+}
+
+function renderBoard() {
+  boardEl.innerHTML = '';
+  const px   = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hex'));
+  const maxW = Math.max(...ROW_W);
+  const tw   = px + 6; // tile width + 2× margin
+
+  for (let r = 0; r < G.grid.length; r++) {
+    const row = document.createElement('div');
+    row.className = 'hex-row';
+    const missing  = (maxW - ROW_W[r]) / 2;
+    const oddShift = (r % 2 === 1) ? px / 2 : 0;
+    row.style.marginLeft = (missing * tw + oddShift) + 'px';
+
+    for (let c = 0; c < G.grid[r].length; c++) {
+      const tile = document.createElement('div');
+      tile.className   = 'hex-tile';
+      tile.dataset.row = r;
+      tile.dataset.col = c;
+      tile.dataset.s   = G.grid[r][c].state;
+
+      const span = document.createElement('span');
+      span.className   = 'ltr';
+      span.textContent = G.grid[r][c].letter;
+
+      tile.appendChild(span);
+      tile.addEventListener('click', onTileClick);
+      row.appendChild(tile);
+    }
+    boardEl.appendChild(row);
+  }
+}
+
+/* ────────────────────────────────────
+   TILE CLICK
+──────────────────────────────────── */
+function onTileClick(e) {
+  const tile = e.currentTarget;
+  const r = +tile.dataset.row, c = +tile.dataset.col;
+  const cell = G.grid[r][c];
+
+  cell.state   = CYCLE[(CYCLE.indexOf(cell.state) + 1) % CYCLE.length];
+  tile.dataset.s = cell.state;
+
+  tile.classList.remove('clicked');
+  void tile.offsetWidth;
+  tile.classList.add('clicked');
+  setTimeout(() => tile.classList.remove('clicked'), 260);
+
+  G.moves++;
+  G.turn = G.turn === 'a' ? 'b' : 'a';
+  syncTurnUI();
+}
+
+
+
+/* ────────────────────────────────────
+   UI SYNC
+──────────────────────────────────── */
+function syncTurnUI() {
+  const isA = G.turn === 'a';
+  tdotA.classList.toggle('on', isA);
+  tdotB.classList.toggle('on', !isA);
+  cardA.classList.toggle('active-turn', isA);
+  cardB.classList.toggle('active-turn', !isA);
+}
+
+function getTile(r, c) {
+  return boardEl.querySelector(`.hex-tile[data-row="${r}"][data-col="${c}"]`);
+}
+
+/* ────────────────────────────────────
+   HINT BUTTONS
+──────────────────────────────────── */
+document.getElementById('btn-hint-a').addEventListener('click', () => {
+  if (G.hintUsed.a) return;
+  G.hintUsed.a = true;
+  const btn = document.getElementById('btn-hint-a');
+  btn.disabled = true;
+  btn.innerHTML = '💡 تم استخدام التلميح';
+  toast('🎙️ المنتج رح يعطي تلميح للفريق الأحمر الحين!', 4200);
+});
+
+document.getElementById('btn-hint-b').addEventListener('click', () => {
+  if (G.hintUsed.b) return;
+  G.hintUsed.b = true;
+  const btn = document.getElementById('btn-hint-b');
+  btn.disabled = true;
+  btn.innerHTML = '💡 تم استخدام التلميح';
+  toast('🎙️ المنتج رح يعطي تلميح للفريق الأخضر الحين!', 4200);
+});
+
+/* ────────────────────────────────────
+   POWER BUTTONS — display-only message
+──────────────────────────────────── */
+document.getElementById('btn-power-a').addEventListener('click', () =>
+  toast('⚡ هذي القوة تنستخدم بس إذا كنت تحجب الفريق الثاني عن الفوز!', 4200)
+);
+document.getElementById('btn-power-b').addEventListener('click', () =>
+  toast('⚡ هذي القوة تنستخدم بس إذا كنت تحجب الفريق الثاني عن الفوز!', 4200)
+);
+
+/* ────────────────────────────────────
+   CONTROLS
+──────────────────────────────────── */
+document.getElementById('btn-reset').addEventListener('click', () => fullReset(true));
+
+document.getElementById('btn-randomize').addEventListener('click', () => {
+  const pool = shuffle([...LETTERS]);
+  let i = 0;
+  for (let r = 0; r < G.grid.length; r++) {
+    for (let c = 0; c < G.grid[r].length; c++) {
+      G.grid[r][c].letter = pool[i++];
+      const el = getTile(r, c);
+      if (el) el.querySelector('.ltr').textContent = G.grid[r][c].letter;
+    }
+  }
+});
+
+document.getElementById('btn-clear').addEventListener('click', () => {
+  for (let r = 0; r < G.grid.length; r++) {
+    for (let c = 0; c < G.grid[r].length; c++) {
+      G.grid[r][c].state = 'empty';
+      const el = getTile(r, c);
+      if (el) { el.dataset.s = 'empty'; el.classList.remove('win-path'); }
+    }
+  }
+  G.over = false; G.moves = 0;
+  overlay.classList.remove('show');
+});
+
+// Roulette shortcut button — switches to roulette tab
+document.getElementById('btn-go-roulette').addEventListener('click', () => {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="roulette"]').classList.add('active');
+  document.getElementById('roulette-panel').classList.add('active');
+  setTimeout(drawWheel, 40);
+});
+
+function fullReset(newLetters) {
+  G.turn = 'a'; G.moves = 0;
+  G.hintUsed = { a: false, b: false };
+
+  const hA = document.getElementById('btn-hint-a');
+  const hB = document.getElementById('btn-hint-b');
+  hA.disabled = false; hA.innerHTML = '💡 تلميح';
+  hB.disabled = false; hB.innerHTML = '💡 تلميح';
+
+  if (newLetters) { buildGrid(); renderBoard(); }
+  else {
+    document.querySelectorAll('.hex-tile').forEach(t => {
+      G.grid[+t.dataset.row][+t.dataset.col].state = 'empty';
+      t.dataset.s = 'empty'; t.classList.remove('win-path');
+    });
+  }
+  syncTurnUI();
+}
+
+/* ────────────────────────────────────
+   TABS
+──────────────────────────────────── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const t = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(t + '-panel').classList.add('active');
+    if (t === 'roulette') setTimeout(drawWheel, 40);
+  });
+});
+
+/* ────────────────────────────────────
+   UTILITY
+──────────────────────────────────── */
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ════════════════════════════════════════
+   ROULETTE — completely independent module
+   ════════════════════════════════════════ */
+let rItems = ['الفريق الأول','الفريق الثاني','الفريق الثالث','الفريق الرابع','جولة إضافية','مفاجأة!','حظ سعيد'];
+
+const WC = [
+  '#e63946','#2d9e4f','#f59e0b','#6d28d9',
+  '#e07b39','#3b82f6','#ec4899','#06b6d4',
+  '#10b981','#f97316','#8b5cf6','#84cc16'
+];
+
+const wCvs = document.getElementById('wheel-canvas');
+const wCtx = wCvs.getContext('2d');
+let wA = 0, wV = 0, wSpin = false, wRaf = null;
+
+function drawWheel(angle) {
+  const a = angle !== undefined ? angle : wA;
+  const W = wCvs.width, H = wCvs.height;
+  const cx = W/2, cy = H/2, r = W/2 - 12;
+  const n = rItems.length;
+  wCtx.clearRect(0, 0, W, H);
+
+  if (!n) {
+    wCtx.beginPath(); wCtx.arc(cx,cy,r,0,Math.PI*2);
+    wCtx.fillStyle = '#1c2430'; wCtx.fill(); return;
+  }
+
+  const sl = (Math.PI * 2) / n;
+  for (let i = 0; i < n; i++) {
+    const s = a + i*sl, e = s+sl, m = s+sl/2;
+    wCtx.beginPath(); wCtx.moveTo(cx,cy); wCtx.arc(cx,cy,r,s,e); wCtx.closePath();
+    wCtx.fillStyle = WC[i % WC.length]; wCtx.fill();
+    wCtx.strokeStyle = 'rgba(0,0,0,.32)'; wCtx.lineWidth = 1.5; wCtx.stroke();
+
+    wCtx.save(); wCtx.translate(cx,cy); wCtx.rotate(m);
+    wCtx.textAlign = 'right'; wCtx.textBaseline = 'middle';
+    const fs = Math.max(9, Math.min(14, Math.floor(280/n)));
+    wCtx.font = `bold ${fs}px Tajawal,serif`;
+    wCtx.fillStyle = 'rgba(0,0,0,.85)';
+    wCtx.shadowColor = 'rgba(255,255,255,.35)'; wCtx.shadowBlur = 2;
+    wCtx.fillText(rItems[i], r * .76, 0); wCtx.restore();
+  }
+
+  // Outer ring
+  wCtx.beginPath(); wCtx.arc(cx,cy,r+2,0,Math.PI*2);
+  wCtx.strokeStyle = 'rgba(255,255,255,.08)'; wCtx.lineWidth = 3; wCtx.stroke();
+
+  // Hub
+  wCtx.beginPath(); wCtx.arc(cx,cy,21,0,Math.PI*2);
+  wCtx.fillStyle = '#0d1117'; wCtx.fill();
+  wCtx.strokeStyle = '#6e40c9'; wCtx.lineWidth = 3; wCtx.stroke();
+
+  wCtx.beginPath(); wCtx.arc(cx,cy,8,0,Math.PI*2);
+  wCtx.fillStyle = '#7c4ddf'; wCtx.fill();
+}
+
+function spinWheel() {
+  if (wSpin || rItems.length < 2) return;
+  wSpin = true;
+  document.getElementById('spin-btn').disabled = true;
+  document.getElementById('r-result').textContent = '...';
+  document.getElementById('r-result').style.color = 'var(--muted)';
+  wV = .21 + Math.random() * .14;
+
+  function frame() {
+    wA += wV; wV *= .9882;
+    drawWheel(wA);
+    if (wV > .0016) { wRaf = requestAnimationFrame(frame); }
+    else {
+      wSpin = false;
+      document.getElementById('spin-btn').disabled = false;
+      const n = rItems.length, sl = (Math.PI*2)/n;
+      const norm = ((-wA - Math.PI/2) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+      const idx = Math.floor(norm/sl) % n;
+      const res = document.getElementById('r-result');
+      res.textContent = `🎉 ${rItems[idx]}`;
+      res.style.color = WC[idx % WC.length];
+    }
+  }
+  cancelAnimationFrame(wRaf); frame();
+}
+
+document.getElementById('spin-btn').addEventListener('click', spinWheel);
+
+function renderRItems() {
+  const list = document.getElementById('items-list');
+  list.innerHTML = '';
+  rItems.forEach((item, i) => {
+    const li  = document.createElement('li'); li.className = 'r-item';
+    const dot = document.createElement('div'); dot.className = 'r-dot'; dot.style.background = WC[i % WC.length];
+    const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'r-text'; inp.value = item;
+    inp.addEventListener('change', e => { rItems[i] = e.target.value; drawWheel(); });
+    const del = document.createElement('button'); del.className = 'r-del'; del.textContent = '×';
+    del.addEventListener('click', () => { rItems.splice(i,1); renderRItems(); drawWheel(); });
+    li.appendChild(dot); li.appendChild(inp); li.appendChild(del); list.appendChild(li);
+  });
+}
+
+function addRItem() {
+  const inp = document.getElementById('new-item-input');
+  const v = inp.value.trim(); if (!v) return;
+  rItems.push(v); inp.value = '';
+  renderRItems(); drawWheel();
+}
+
+document.getElementById('add-item-btn').addEventListener('click', addRItem);
+document.getElementById('new-item-input').addEventListener('keydown', e => { if (e.key === 'Enter') addRItem(); });
+
+/* ────────────────────────────────────
+   STARTUP
+──────────────────────────────────── */
+buildGrid();
+renderBoard();
+syncTurnUI();
+renderRItems();
+setTimeout(drawWheel, 80);
+</script>
+</body>
+</html>
