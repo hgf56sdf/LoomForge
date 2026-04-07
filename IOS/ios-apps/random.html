@@ -2,462 +2,641 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Chemistry Quizzes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QuizVault</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
-.screen{display:none;min-height:100vh}
-.screen.active{display:block}
+:root{
+  --bg:#0d0d0f;
+  --surface:#16161a;
+  --surface2:#1e1e24;
+  --surface3:#26262e;
+  --accent:#c8f03a;
+  --accent2:#7c3aed;
+  --text:#f0f0f2;
+  --muted:#8888a0;
+  --danger:#ff4d6d;
+  --success:#3afcb0;
+  --warning:#ffd166;
+  --border:#2a2a36;
+  --radius:14px;
+  --radius-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
 
-/* HOME */
-#home{padding:20px}
-.home-header{text-align:center;padding:30px 20px 20px}
-.home-header h1{font-size:26px;font-weight:700;color:#1a365d;margin-bottom:6px}
-.home-header p{font-size:15px;color:#4a5568}
-.section-title{font-size:13px;font-weight:600;color:#718096;text-transform:uppercase;letter-spacing:.8px;margin:20px 0 10px 4px}
-.quiz-card{background:#fff;border-radius:14px;padding:16px 18px;margin-bottom:10px;cursor:pointer;border:2px solid transparent;transition:border-color .15s,transform .1s;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+/* SCREENS */
+.screen{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;display:none;opacity:0;transform:translateY(16px);transition:opacity .25s,transform .25s}
+.screen.active{display:block;opacity:1;transform:translateY(0)}
+
+/* ======= HOME ======= */
+#home{background:var(--bg)}
+.home-hero{padding:50px 24px 32px;position:relative;overflow:hidden}
+.home-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(124,58,237,.18) 0%,transparent 70%);pointer-events:none}
+.home-hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(200,240,58,.1) 0%,transparent 70%);pointer-events:none}
+.brand{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:20px}
+.hero-title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1.1;margin-bottom:10px}
+.hero-title span{color:var(--accent)}
+.hero-sub{color:var(--muted);font-size:14px;font-weight:300}
+
+.home-body{padding:0 24px 100px}
+
+.section-label{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:28px 0 12px}
+
+/* Upload zone */
+.upload-zone{border:1.5px dashed var(--border);border-radius:var(--radius);padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface);position:relative;overflow:hidden}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(200,240,58,.04)}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{width:44px;height:44px;border-radius:12px;background:rgba(200,240,58,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:22px}
+.upload-zone h3{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px}
+.upload-zone p{font-size:13px;color:var(--muted)}
+.upload-zone .format-link{color:var(--accent);font-size:13px;font-weight:500;cursor:pointer;margin-top:8px;display:inline-block;text-decoration:none}
+.upload-zone .format-link:hover{text-decoration:underline}
+
+/* Quiz cards */
+.quiz-grid{display:flex;flex-direction:column;gap:10px}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden}
+.quiz-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transition:transform .2s;transform-origin:bottom}
+.quiz-card:hover{border-color:rgba(200,240,58,.3);background:var(--surface2)}
+.quiz-card:hover::before{transform:scaleY(1)}
 .quiz-card:active{transform:scale(.98)}
-.quiz-card.selected{border-color:#3182ce}
-.quiz-card:hover{border-color:#90cdf4}
-.card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.card-body{flex:1;min-width:0}
-.card-body h3{font-size:15px;font-weight:600;color:#2d3748;margin-bottom:2px}
-.card-body p{font-size:13px;color:#718096}
-.card-arrow{color:#cbd5e0;font-size:18px;flex-shrink:0}
-.start-btn{width:100%;padding:16px;background:#3182ce;color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:600;cursor:pointer;margin-top:20px;transition:background .15s}
-.start-btn:active{background:#2b6cb0}
-.start-btn:disabled{background:#a0aec0;cursor:not-allowed}
+.qc-icon{width:42px;height:42px;border-radius:10px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.qc-body{flex:1;min-width:0}
+.qc-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qc-meta{font-size:12px;color:var(--muted)}
+.qc-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.qc-arrow{color:var(--muted);font-size:18px;transition:transform .18s}
+.quiz-card:hover .qc-arrow{transform:translateX(3px);color:var(--accent)}
+.delete-btn{width:28px;height:28px;border-radius:7px;background:transparent;border:1px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--muted);transition:all .15s}
+.delete-btn:hover{background:rgba(255,77,109,.12);border-color:rgba(255,77,109,.3);color:var(--danger)}
 
-/* QUIZ */
-#quiz{padding:0}
-.quiz-topbar{background:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;border-bottom:1px solid #e2e8f0}
-.back-btn{background:none;border:none;font-size:22px;cursor:pointer;color:#4a5568;padding:4px;line-height:1;flex-shrink:0}
-.quiz-title{font-size:15px;font-weight:600;color:#2d3748;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.q-counter{font-size:13px;color:#718096;flex-shrink:0}
-.progress-bar{height:4px;background:#e2e8f0}
-.progress-fill{height:100%;background:#3182ce;transition:width .3s}
-.quiz-body{padding:18px}
-.question-card{background:#fff;border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.question-text{font-size:16px;font-weight:500;color:#2d3748;line-height:1.5;margin-bottom:18px}
-.option{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:10px;border:1.5px solid #e2e8f0;margin-bottom:8px;cursor:pointer;transition:all .15s;background:#fff}
-.option:last-child{margin-bottom:0}
+.empty-state{text-align:center;padding:40px 20px}
+.empty-state .e-icon{font-size:40px;margin-bottom:12px;opacity:.4}
+.empty-state p{color:var(--muted);font-size:14px}
+
+/* FAB */
+.fab-bar{position:fixed;bottom:0;left:0;right:0;padding:16px 24px 28px;background:linear-gradient(to top,var(--bg) 60%,transparent);pointer-events:none;z-index:50}
+.fab-bar button{pointer-events:all}
+.fab-format{width:100%;padding:15px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.5px}
+.fab-format:active{transform:scale(.98);background:#b8e030}
+
+/* ======= FORMAT MODAL ======= */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-sheet{background:var(--surface);border-radius:22px 22px 0 0;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;padding:28px 24px 40px;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.modal-overlay.open .modal-sheet{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 24px}
+.modal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}
+.modal-sub{color:var(--muted);font-size:13px;margin-bottom:24px}
+.format-block{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:14px}
+.format-block h4{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.code-box{background:var(--bg);border-radius:8px;padding:14px;font-family:monospace;font-size:12.5px;color:#cdd6f4;line-height:1.8;overflow-x:auto;white-space:pre}
+.format-note{background:rgba(200,240,58,.07);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 14px;font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+.format-note strong{color:var(--text)}
+.copy-btn{width:100%;padding:13px;background:var(--surface3);color:var(--text);border:1px solid var(--border);border-radius:10px;font-family:'Syne',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;margin-top:6px}
+.copy-btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.copy-btn:active{transform:scale(.98)}
+.close-modal{position:absolute;top:18px;right:20px;width:32px;height:32px;border-radius:50%;background:var(--surface3);border:none;color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ======= QUIZ SCREEN ======= */
+#quiz{background:var(--bg)}
+.quiz-topbar{padding:16px 20px 12px;display:flex;align-items:center;gap:12px;position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border)}
+.back-btn{width:36px;height:36px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1}
+.back-btn:hover{background:var(--surface2);border-color:var(--border)}
+.quiz-title-bar{flex:1;min-width:0}
+.quiz-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q-count{font-size:12px;color:var(--muted)}
+.prog-wrap{height:3px;background:var(--surface3)}
+.prog-fill{height:100%;background:var(--accent);transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+.quiz-body{padding:18px 20px 120px}
+.q-number{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.q-text{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;line-height:1.4;margin-bottom:22px;color:var(--text)}
+
+.option{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;border:1.5px solid var(--border);margin-bottom:9px;cursor:pointer;transition:all .15s;background:var(--surface);-webkit-user-select:none;user-select:none}
 .option:active{transform:scale(.99)}
-.option.correct{background:#f0fff4;border-color:#48bb78;pointer-events:none}
-.option.wrong{background:#fff5f5;border-color:#fc8181;pointer-events:none}
-.option.disabled{pointer-events:none;opacity:.6}
-.option-letter{width:30px;height:30px;border-radius:50%;border:1.5px solid #cbd5e0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#718096;flex-shrink:0;background:#f7fafc}
-.option.correct .option-letter{background:#48bb78;border-color:#48bb78;color:#fff}
-.option.wrong .option-letter{background:#fc8181;border-color:#fc8181;color:#fff}
-.option-text{font-size:15px;color:#2d3748;flex:1;line-height:1.4}
-.option.correct .option-text{color:#22543d;font-weight:500}
-.option.wrong .option-text{color:#742a2a}
-.feedback{font-size:14px;padding:10px 14px;border-radius:8px;margin-top:10px}
-.feedback.correct-msg{background:#f0fff4;color:#276749;border-left:3px solid #48bb78}
-.feedback.wrong-msg{background:#fff5f5;color:#9b2c2c;border-left:3px solid #fc8181}
-.next-btn{width:100%;padding:15px;background:#3182ce;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-top:6px;transition:background .15s}
-.next-btn:active{background:#2b6cb0}
+.option:hover{border-color:rgba(200,240,58,.4);background:var(--surface2)}
+.opt-letter{width:32px;height:32px;border-radius:8px;background:var(--surface3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .15s}
+.opt-text{font-size:15px;color:var(--text);flex:1;line-height:1.4}
 
-/* RESULTS */
-#results{padding:20px}
-.results-header{text-align:center;padding:30px 20px 24px}
-.score-circle{width:130px;height:130px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px;border:5px solid #3182ce}
-.score-circle.great{border-color:#48bb78}
-.score-circle.ok{border-color:#ed8936}
-.score-circle.poor{border-color:#fc8181}
-.score-num{font-size:38px;font-weight:700;line-height:1;color:#2d3748}
-.score-label{font-size:13px;color:#718096;margin-top:2px}
-.results-title{font-size:20px;font-weight:700;color:#2d3748;margin-bottom:6px}
-.results-sub{font-size:15px;color:#718096}
-.results-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
-.stat-box{background:#fff;border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.stat-num{font-size:26px;font-weight:700;color:#2d3748}
-.stat-lbl{font-size:12px;color:#718096;margin-top:2px}
-.review-section{margin-top:16px}
-.review-title{font-size:15px;font-weight:600;color:#4a5568;margin-bottom:10px}
-.review-item{background:#fff;border-radius:12px;padding:16px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.review-q{font-size:14px;font-weight:500;color:#2d3748;margin-bottom:8px;line-height:1.4}
-.review-row{display:flex;align-items:flex-start;gap:8px;font-size:13px;margin-bottom:4px;line-height:1.4}
-.tag{padding:2px 7px;border-radius:5px;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px}
-.tag.your{background:#ebf8ff;color:#2c5282}
-.tag.ans{background:#f0fff4;color:#276749}
-.tag.wrong-tag{background:#fff5f5;color:#9b2c2c}
-.results-btns{display:flex;flex-direction:column;gap:10px;margin-top:20px}
-.btn-primary{padding:15px;background:#3182ce;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;width:100%;transition:background .15s}
-.btn-primary:active{background:#2b6cb0}
-.btn-secondary{padding:15px;background:#fff;color:#4a5568;border:1.5px solid #e2e8f0;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;width:100%;transition:background .15s}
-.btn-secondary:active{background:#f7fafc}
+.option.correct{background:rgba(58,252,176,.07);border-color:rgba(58,252,176,.5);pointer-events:none}
+.option.correct .opt-letter{background:var(--success);border-color:var(--success);color:#000}
+.option.correct .opt-text{color:var(--success)}
+.option.wrong{background:rgba(255,77,109,.07);border-color:rgba(255,77,109,.4);pointer-events:none}
+.option.wrong .opt-letter{background:var(--danger);border-color:var(--danger);color:#fff}
+.option.wrong .opt-text{color:var(--danger)}
+.option.dimmed{pointer-events:none;opacity:.45}
+
+.feedback-box{border-radius:10px;padding:13px 16px;margin-top:4px;margin-bottom:6px;font-size:14px;line-height:1.5;display:none}
+.feedback-box.correct{background:rgba(58,252,176,.08);border:1px solid rgba(58,252,176,.25);color:var(--success)}
+.feedback-box.wrong{background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.25);color:#ff8fa3}
+
+.q-nav{position:fixed;bottom:0;left:0;right:0;padding:14px 20px 28px;background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:10}
+.q-nav button{width:100%;padding:16px;border-radius:12px;font-family:'Syne',sans-serif;font-size:16px;font-weight:700;cursor:pointer;border:none;transition:all .15s}
+.btn-next{background:var(--accent);color:#000;display:none}
+.btn-next:active{transform:scale(.98);background:#b8e030}
+
+/* ======= RESULTS ======= */
+#results{background:var(--bg)}
+.results-hero{padding:44px 24px 28px;text-align:center;position:relative;overflow:hidden}
+.results-hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(200,240,58,.12) 0%,transparent 70%);pointer-events:none}
+.score-ring{width:140px;height:140px;margin:0 auto 20px;position:relative}
+.score-ring svg{width:140px;height:140px;transform:rotate(-90deg)}
+.score-ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring-bg{stroke:var(--surface3)}
+.ring-fg{stroke:var(--accent);stroke-dasharray:376;stroke-dashoffset:376;transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1) .3s}
+.ring-fg.ok{stroke:var(--warning)}
+.ring-fg.poor{stroke:var(--danger)}
+.score-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1}
+.score-pct{font-size:13px;color:var(--muted);margin-top:2px}
+.results-label{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px}
+.results-desc{font-size:14px;color:var(--muted)}
+
+.results-body{padding:0 20px 100px}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center}
+.stat-n{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;line-height:1;margin-bottom:4px}
+.stat-l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+.review-head{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+.review-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:8px}
+.review-q-text{font-size:14px;font-weight:500;margin-bottom:10px;line-height:1.4;color:var(--text)}
+.review-row{display:flex;align-items:flex-start;gap:8px;font-size:13px;margin-bottom:5px;line-height:1.4}
+.review-row:last-child{margin-bottom:0}
+.badge{padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;font-family:'Syne',sans-serif;letter-spacing:.5px}
+.badge.your{background:rgba(255,77,109,.12);color:#ff8fa3;border:1px solid rgba(255,77,109,.2)}
+.badge.ans{background:rgba(58,252,176,.1);color:var(--success);border:1px solid rgba(58,252,176,.2)}
+.badge.ok-ans{background:rgba(200,240,58,.1);color:var(--accent);border:1px solid rgba(200,240,58,.2)}
+
+.results-btns{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.btn-prim{padding:15px;background:var(--accent);color:#000;border:none;border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:100%;transition:all .15s}
+.btn-prim:active{transform:scale(.98)}
+.btn-sec{padding:15px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:12px;font-family:'Syne',sans-serif;font-size:15px;font-weight:600;cursor:pointer;width:100%;transition:all .15s}
+.btn-sec:hover{background:var(--surface2)}
+.btn-sec:active{transform:scale(.98)}
+
+/* TOAST */
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--surface3);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:30px;font-size:13px;font-weight:500;z-index:999;transition:transform .3s cubic-bezier(.4,0,.2,1);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* DELETE CONFIRM */
+.del-confirm{background:var(--surface2);border:1px solid rgba(255,77,109,.3);border-radius:12px;padding:14px 16px;margin-top:6px;display:none}
+.del-confirm.show{display:flex;align-items:center;gap:10px}
+.del-confirm p{font-size:13px;color:var(--muted);flex:1;line-height:1.4}
+.del-yes{padding:7px 14px;background:var(--danger);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.del-no{padding:7px 14px;background:var(--surface3);color:var(--text);border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
 </style>
 </head>
 <body>
 
-<div id="home" class="screen active">
-  <div class="home-header">
-    <h1>Chemistry Quizzes</h1>
-    <p>Select a quiz to begin</p>
-  </div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
-  <div style="max-width:600px;margin:0 auto;padding:0 16px 30px">
-    <div class="section-title">Hydrocarbons</div>
-    <div class="quiz-card" onclick="startQuiz(0)">
-      <div class="card-icon" style="background:#ebf8ff">🧪</div>
-      <div class="card-body"><h3>Hydrocarbons</h3><p>15 questions · Basics &amp; petroleum</p></div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="quiz-card" onclick="startQuiz(1)">
-      <div class="card-icon" style="background:#f0fff4">⛓️</div>
-      <div class="card-body"><h3>Alkanes</h3><p>15 questions · Saturated hydrocarbons</p></div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="quiz-card" onclick="startQuiz(2)">
-      <div class="card-icon" style="background:#fffaf0">🔗</div>
-      <div class="card-body"><h3>Alkenes &amp; Alkynes</h3><p>10 questions · Unsaturated hydrocarbons</p></div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="quiz-card" onclick="startQuiz(3)">
-      <div class="card-icon" style="background:#fff5f5">🪞</div>
-      <div class="card-body"><h3>Isomers</h3><p>15 questions · Structural &amp; stereoisomers</p></div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="quiz-card" onclick="startQuiz(4)">
-      <div class="card-icon" style="background:#faf5ff">⬡</div>
-      <div class="card-body"><h3>Aromatic Hydrocarbons</h3><p>15 questions · Benzene &amp; aromaticity</p></div>
-      <div class="card-arrow">›</div>
+<!-- FORMAT MODAL -->
+<div class="modal-overlay" id="formatModal" onclick="closeFormatIfBg(event)">
+  <div class="modal-sheet" style="position:relative">
+    <div class="modal-handle"></div>
+    <button class="close-modal" onclick="closeFormat()">×</button>
+    <div class="modal-title">File Format Guide</div>
+    <div class="modal-sub">Create a .txt file with this exact format, then upload it.</div>
+
+    <div class="format-block">
+      <h4>Basic Structure</h4>
+      <div class="code-box">QUIZ: Your Quiz Title Here
+
+Q: Question text goes here?
+A: First option
+B: Second option
+C: Third option
+D: Fourth option
+ANS: B
+
+Q: Another question?
+A: Option one
+B: Option two
+C: Option three
+D: Option four
+ANS: A</div>
     </div>
 
-    <div class="section-title">Substituted Hydrocarbons</div>
-    <div class="quiz-card" onclick="startQuiz(5)">
-      <div class="card-icon" style="background:#e6fffa">🔀</div>
-      <div class="card-body"><h3>Substituted Hydrocarbons</h3><p>15 questions · Functional groups &amp; halocarbons</p></div>
-      <div class="card-arrow">›</div>
+    <div class="format-note">
+      <strong>Rules:</strong><br>
+      • Start with <strong>QUIZ:</strong> followed by the quiz name<br>
+      • Each question starts with <strong>Q:</strong><br>
+      • Options are <strong>A: B: C: D:</strong> (2–4 options supported)<br>
+      • Correct answer is <strong>ANS:</strong> followed by the letter<br>
+      • Blank lines between questions are optional<br>
+      • You can have multiple quizzes in one file — just start a new <strong>QUIZ:</strong> block
     </div>
-    <div class="quiz-card" onclick="startQuiz(6)">
-      <div class="card-icon" style="background:#ebfaf0">💧</div>
-      <div class="card-body"><h3>Alcohols, Ethers &amp; Amines</h3><p>15 questions · –OH, –O–, –NH₂</p></div>
-      <div class="card-arrow">›</div>
+
+    <div class="format-block">
+      <h4>Multi-Quiz Example</h4>
+      <div class="code-box">QUIZ: Math Basics
+
+Q: What is 2 + 2?
+A: 3
+B: 4
+C: 5
+D: 6
+ANS: B
+
+Q: What is 10 / 2?
+A: 3
+B: 4
+C: 5
+D: 6
+ANS: C
+
+QUIZ: Science Facts
+
+Q: What planet is closest to the Sun?
+A: Earth
+B: Venus
+C: Mercury
+D: Mars
+ANS: C</div>
     </div>
-    <div class="quiz-card" onclick="startQuiz(7)">
-      <div class="card-icon" style="background:#fffbeb">⚗️</div>
-      <div class="card-body"><h3>Carbonyl Compounds</h3><p>15 questions · Aldehydes, ketones &amp; more</p></div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="quiz-card" onclick="startQuiz(8)">
-      <div class="card-icon" style="background:#fff0f3">⚡</div>
-      <div class="card-body"><h3>Reaction Types</h3><p>15 questions · Addition, elimination &amp; more</p></div>
-      <div class="card-arrow">›</div>
-    </div>
+
+    <button class="copy-btn" onclick="copyTemplate()">Copy Template</button>
   </div>
 </div>
 
+<!-- HOME -->
+<div id="home" class="screen active">
+  <div class="home-hero">
+    <div class="brand">QuizVault</div>
+    <h1 class="hero-title">Your Quizzes,<br><span>Your Rules.</span></h1>
+    <p class="hero-sub">Upload a .txt file to create quizzes instantly.</p>
+  </div>
+
+  <div class="home-body">
+    <div class="section-label">Upload Quiz File</div>
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" accept=".txt" id="fileInput" onchange="handleFile(this.files[0])">
+      <div class="upload-icon">📂</div>
+      <h3>Tap to upload .txt file</h3>
+      <p>Or drag &amp; drop your quiz file here</p>
+      <a class="format-link" onclick="openFormat(event)">View file format guide →</a>
+    </div>
+
+    <div class="del-confirm" id="delConfirm">
+      <p id="delConfirmText">Delete this quiz?</p>
+      <button class="del-yes" id="delYesBtn">Delete</button>
+      <button class="del-no" onclick="cancelDelete()">Cancel</button>
+    </div>
+
+    <div class="section-label">Saved Quizzes</div>
+    <div class="quiz-grid" id="quizGrid"></div>
+  </div>
+
+  <div class="fab-bar">
+    <button class="fab-format" onclick="openFormat(null)">View Format Guide</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
 <div id="quiz" class="screen">
   <div class="quiz-topbar">
     <button class="back-btn" onclick="goHome()">‹</button>
-    <div class="quiz-title" id="quiz-title"></div>
-    <div class="q-counter" id="q-counter"></div>
+    <div class="quiz-title-bar">
+      <div class="quiz-name" id="quizName"></div>
+      <div class="q-count" id="qCount"></div>
+    </div>
   </div>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-  <div class="quiz-body" id="quiz-body"></div>
+  <div class="prog-wrap"><div class="prog-fill" id="progFill"></div></div>
+  <div class="quiz-body" id="quizBody"></div>
+  <div class="q-nav">
+    <button class="btn-next" id="btnNext" onclick="nextQ()">Next Question</button>
+  </div>
 </div>
 
+<!-- RESULTS -->
 <div id="results" class="screen">
-  <div style="max-width:600px;margin:0 auto">
-    <div class="results-header">
-      <div class="score-circle" id="score-circle">
-        <div class="score-num" id="score-num"></div>
-        <div class="score-label">/ <span id="score-total"></span></div>
-      </div>
-      <div class="results-title" id="results-title"></div>
-      <div class="results-sub" id="results-sub"></div>
+  <div class="results-hero">
+    <div class="score-ring">
+      <svg viewBox="0 0 140 140"><circle class="ring-bg" cx="70" cy="70" r="60"/><circle class="ring-fg" id="ringFg" cx="70" cy="70" r="60"/></svg>
+      <div class="score-inner"><div class="score-big" id="scoreBig"></div><div class="score-pct" id="scorePct"></div></div>
     </div>
-    <div style="padding:0 20px">
-      <div class="results-stats">
-        <div class="stat-box"><div class="stat-num" id="stat-correct" style="color:#48bb78"></div><div class="stat-lbl">Correct</div></div>
-        <div class="stat-box"><div class="stat-num" id="stat-wrong" style="color:#fc8181"></div><div class="stat-lbl">Incorrect</div></div>
-      </div>
-      <div class="review-section">
-        <div class="review-title">Question Review</div>
-        <div id="review-list"></div>
-      </div>
-      <div class="results-btns">
-        <button class="btn-primary" onclick="retryQuiz()">Try Again</button>
-        <button class="btn-secondary" onclick="goHome()">Back to Quizzes</button>
-      </div>
+    <div class="results-label" id="resultsLabel"></div>
+    <div class="results-desc" id="resultsDesc"></div>
+  </div>
+  <div class="results-body">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-n" id="statC" style="color:var(--success)"></div><div class="stat-l">Correct</div></div>
+      <div class="stat-card"><div class="stat-n" id="statW" style="color:var(--danger)"></div><div class="stat-l">Wrong</div></div>
+    </div>
+    <div class="review-head">Question Review</div>
+    <div id="reviewList"></div>
+    <div class="results-btns">
+      <button class="btn-prim" onclick="retryQuiz()">Try Again</button>
+      <button class="btn-sec" onclick="goHome()">Back to Quizzes</button>
     </div>
   </div>
 </div>
 
 <script>
-var QUIZZES = [
-{name:"Hydrocarbons",questions:[
-{q:"What does organic chemistry study?",opts:["All elements","Carbon compounds","Metals only","Gases only"],ans:1},
-{q:"Who proved that organic compounds can be made in the lab?",opts:["Dalton","Rutherford","Wöhler","Bohr"],ans:2},
-{q:"Why can carbon form many different compounds?",opts:["It has 2 bonds","It is very heavy","It forms 4 bonds and chains","It only bonds with hydrogen"],ans:2},
-{q:"Which of the following is NOT an organic compound?",opts:["CH₄","CO₂","C₂H₆","C₃H₈"],ans:1},
-{q:"Hydrocarbons contain which elements?",opts:["Carbon and oxygen","Hydrogen and oxygen","Carbon and hydrogen","Carbon only"],ans:2},
-{q:"Which type of hydrocarbon has only single bonds?",opts:["Alkene","Alkyne","Alkane","Aromatic"],ans:2},
-{q:"What is the general formula of alkenes?",opts:["CₙH₂ₙ₊₂","CₙH₂ₙ","CₙH₂ₙ₋₂","CH₄"],ans:1},
-{q:"Unsaturated hydrocarbons contain:",opts:["Only single bonds","Double or triple bonds","No hydrogen","Only carbon"],ans:1},
-{q:"What is the main source of hydrocarbons?",opts:["Water","Air","Petroleum","Metals"],ans:2},
-{q:"Fractional distillation separates substances based on:",opts:["Color","Density","Boiling point","Shape"],ans:2},
-{q:"What is cracking used for?",opts:["Joining molecules","Breaking large hydrocarbons into smaller ones","Cooling oil","Adding oxygen"],ans:1},
-{q:"Gasoline mainly contains hydrocarbons with how many carbon atoms?",opts:["1–3","2–4","5–12","20–30"],ans:2},
-{q:"What does octane rating measure?",opts:["Color of fuel","Fuel quality","Density","Temperature"],ans:1},
-{q:"Which is a saturated hydrocarbon?",opts:["Alkene","Alkyne","Alkane","Benzene"],ans:2},
-{q:"What happens during fractional distillation?",opts:["Oil freezes","Oil burns completely","Vapors condense at different levels","Molecules break apart"],ans:2}
-]},
-{name:"Alkanes",questions:[
-{q:"What type of bonds do alkanes contain?",opts:["Double bonds","Triple bonds","Only single bonds","Ionic bonds"],ans:2},
-{q:"Alkanes are classified as:",opts:["Unsaturated hydrocarbons","Saturated hydrocarbons","Aromatic compounds","Ionic compounds"],ans:1},
-{q:"What is the general formula of alkanes?",opts:["CₙH₂ₙ","CₙH₂ₙ₊₂","CₙH₂ₙ₋₂","CH₄"],ans:1},
-{q:"Which suffix is used for alkanes?",opts:["–ene","–yne","–ol","–ane"],ans:3},
-{q:"Members of a homologous series differ by:",opts:["–CH₃","–CH₂–","–OH","–COOH"],ans:1},
-{q:"Which of the following is a branched alkane?",opts:["A straight carbon chain","A ring structure","A chain with side groups attached","A compound with double bonds"],ans:2},
-{q:"What is the parent chain?",opts:["The shortest chain","The longest continuous carbon chain","The branch","A double bond"],ans:1},
-{q:"Cycloalkanes have which general formula?",opts:["CₙH₂ₙ₊₂","CₙH₂ₙ","CₙH₂ₙ₋₂","CH₄"],ans:1},
-{q:"Why do alkanes have low boiling points?",opts:["They are ionic","They form hydrogen bonds","They are nonpolar and weak intermolecular forces","They contain oxygen"],ans:2},
-{q:"Which statement is TRUE about alkanes?",opts:["They are highly reactive","They are polar","They have strong C–C bonds","They dissolve in water easily"],ans:2},
-{q:"Which of the following is NOT an alkane?",opts:["Methane","Ethene","Propane","Butane"],ans:1},
-{q:"What type of intermolecular forces exist between alkane molecules?",opts:["Hydrogen bonding","Ionic bonds","Van der Waals forces","Covalent bonds"],ans:2},
-{q:"Cycloalkanes are:",opts:["Unsaturated","Aromatic","Saturated and cyclic","Contain triple bonds"],ans:2},
-{q:"What is a substituent?",opts:["The main chain","A ring structure","A side group attached to the parent chain","A double bond"],ans:2},
-{q:"Which of the following best describes methane?",opts:["Polar and reactive","Nonpolar with low boiling point","Contains double bonds","Ionic compound"],ans:1}
-]},
-{name:"Alkenes & Alkynes",questions:[
-{q:"Alkenes are classified as:",opts:["Saturated hydrocarbons","Unsaturated hydrocarbons","Ionic compounds","Aromatic compounds"],ans:1},
-{q:"What type of bond is found in alkenes?",opts:["Single bond","Double bond","Triple bond","Ionic bond"],ans:1},
-{q:"What is the general formula of alkenes?",opts:["CₙH₂ₙ₊₂","CₙH₂ₙ","CₙH₂ₙ₋₂","CH₄"],ans:1},
-{q:"Alkynes contain:",opts:["Only single bonds","At least one double bond","At least one triple bond","No bonds"],ans:2},
-{q:"What is the general formula of alkynes?",opts:["CₙH₂ₙ₊₂","CₙH₂ₙ","CₙH₂ₙ₋₂","CₙHₙ"],ans:2},
-{q:"Why are alkenes and alkynes more reactive than alkanes?",opts:["They contain oxygen","They have ionic bonds","They have double/triple bonds with higher electron density","They are heavier"],ans:2},
-{q:"Which of the following is an alkene?",opts:["Ethane","Ethene","Ethyne","Methane"],ans:1},
-{q:"Which of the following is an alkyne?",opts:["Propane","Propene","Propyne","Butane"],ans:2},
-{q:"Alkenes and alkynes are generally:",opts:["Polar","Ionic","Nonpolar","Charged"],ans:2},
-{q:"Which statement is TRUE?",opts:["Alkanes are more reactive than alkenes","Alkynes contain double bonds","Alkenes and alkynes are unsaturated","All hydrocarbons contain oxygen"],ans:2}
-]},
-{name:"Isomers",questions:[
-{q:"What are isomers?",opts:["Compounds with different formulas and same structure","Compounds with same molecular formula but different structures","Compounds with same structure and same formula","Compounds with only carbon"],ans:1},
-{q:"Structural isomers differ in:",opts:["Spatial arrangement only","Bonding arrangement of atoms","Number of atoms","Molecular formula"],ans:1},
-{q:"Which pair is an example of structural isomers?",opts:["Cis and trans compounds","Mirror image molecules","1-propanol and 2-propanol","d- and l-isomers"],ans:2},
-{q:"Stereoisomers have:",opts:["Different bonding order","Same bonding but different spatial arrangement","Different molecular formulas","No bonds"],ans:1},
-{q:"Geometric isomers occur due to:",opts:["Triple bonds","Free rotation in single bonds","Restricted rotation around double bonds","Ionic bonding"],ans:2},
-{q:"In cis isomers, groups are:",opts:["On opposite sides","On the same side","Randomly arranged","Not bonded"],ans:1},
-{q:"Trans isomers are generally:",opts:["Bent","Same shape as cis","More straight","Circular"],ans:2},
-{q:"Optical isomers are:",opts:["Structural isomers","Identical molecules","Mirror images of each other","Double-bond isomers"],ans:2},
-{q:"What is required for optical isomerism?",opts:["Double bond","Triple bond","Asymmetric carbon","Ionic bond"],ans:2},
-{q:"d- and l-isomers differ in:",opts:["Molecular formula","Boiling point only","Direction of light rotation","Number of atoms"],ans:2},
-{q:"Why can isomers have different properties?",opts:["They have different atoms","They have different molecular formulas","Their structures are different","They contain metals"],ans:2},
-{q:"Which statement is TRUE?",opts:["All isomers behave the same","Structural isomers have identical properties","Optical isomers can behave differently in biological systems","Geometric isomers only exist in alkanes"],ans:2},
-{q:"Which type of isomerism involves cis/trans?",opts:["Optical","Structural","Geometric","Chain"],ans:2},
-{q:"Which of the following is TRUE about trans fats?",opts:["Bent structure","Liquid at room temperature","Linked to heart disease","Same as cis fats"],ans:2},
-{q:"What best describes stereoisomers?",opts:["Same formula, different bonding","Same bonding, different 3D arrangement","Different formula","No structure"],ans:1}
-]},
-{name:"Aromatic Hydrocarbons",questions:[
-{q:"Aromatic hydrocarbons contain:",opts:["Only single bonds","A benzene ring","Oxygen atoms","Ionic bonds"],ans:1},
-{q:"What is the formula of benzene?",opts:["C₆H₁₂","C₆H₆","C₅H₁₂","CH₄"],ans:1},
-{q:"Who discovered benzene?",opts:["Kekulé","Linus Pauling","Michael Faraday","Dalton"],ans:2},
-{q:"The structure of benzene is:",opts:["Linear chain","Square","Hexagonal ring","Triangle"],ans:2},
-{q:"Why is benzene unusually stable?",opts:["It has ionic bonds","It contains oxygen","Electrons are delocalized","It has triple bonds"],ans:2},
-{q:"Friedrich Kekulé is known for:",opts:["Discovering benzene","Explaining hybrid orbitals","Proposing the ring structure of benzene","Naming hydrocarbons"],ans:2},
-{q:"Linus Pauling explained benzene stability using:",opts:["Ionic theory","Hybrid orbital theory","Atomic mass","Nuclear reactions"],ans:1},
-{q:"Compared to aliphatic compounds, aromatic compounds are:",opts:["Less stable","More reactive","More stable","Ionic"],ans:2},
-{q:"Aromatic compounds are generally:",opts:["Highly reactive","Less reactive than expected","Ionic","Polar"],ans:1},
-{q:"Which of the following is TRUE?",opts:["Aromatic compounds do not contain carbon","Aliphatic compounds contain benzene rings","Aromatic compounds contain benzene rings","All hydrocarbons are aromatic"],ans:2},
-{q:"What type of electrons are found in benzene?",opts:["Localized electrons","Free ions","Delocalized electrons","No electrons"],ans:2},
-{q:"One use of aromatic hydrocarbons is:",opts:["Food additives only","Industrial solvents","Oxygen production","Water purification only"],ans:1},
-{q:"A major risk of aromatic hydrocarbons is:",opts:["They are too stable","They improve health","They can be carcinogenic","They are always safe"],ans:2},
-{q:"Aromatic hydrocarbons differ from aliphatic because they:",opts:["Have no carbon","Contain benzene rings","Are ionic","Only have single bonds"],ans:1},
-{q:"Which statement best describes benzene?",opts:["Highly reactive and unstable","Non-carbon compound","Stable ring with delocalized electrons","Contains triple bonds"],ans:2}
-]},
-{name:"Substituted Hydrocarbons",questions:[
-{q:"What is a functional group?",opts:["A group of carbon atoms only","An atom/group that determines how a molecule reacts","A type of bond only","A metal ion"],ans:1},
-{q:"What happens when a functional group is added to a hydrocarbon?",opts:["Nothing changes","Only mass changes","Physical and chemical properties change","It becomes inorganic"],ans:2},
-{q:"Which of the following is a halogen?",opts:["Oxygen","Nitrogen","Chlorine","Carbon"],ans:2},
-{q:"A halocarbon is:",opts:["A compound with oxygen","A compound with a halogen","A metal compound","A hydrocarbon only"],ans:1},
-{q:"Alkyl halides have halogens attached to:",opts:["Aromatic rings","Aliphatic carbons","Oxygen atoms","Double bonds"],ans:1},
-{q:"Aryl halides have halogens attached to:",opts:["Aliphatic chains","Triple bonds","Aromatic rings","Hydrogen atoms"],ans:2},
-{q:"Why do halocarbons have higher boiling points?",opts:["They are lighter","They form ionic bonds","They have dipole–dipole attractions","They have no intermolecular forces"],ans:2},
-{q:"A substitution reaction involves:",opts:["Adding atoms","Removing all atoms","Replacing one atom/group with another","Breaking into smaller molecules"],ans:2},
-{q:"Halogenation is:",opts:["Adding oxygen","Replacing hydrogen with a halogen","Forming double bonds","Removing hydrogen only"],ans:1},
-{q:"What is formed when an alkyl halide reacts with a basic solution?",opts:["Alkene","Alcohol","Acid","Salt only"],ans:1},
-{q:"Which is TRUE about aromatic compounds?",opts:["They are less stable","They contain benzene rings","They are always reactive","They contain no carbon"],ans:1},
-{q:"Which is an example of an aliphatic compound?",opts:["Benzene","Toluene","Alkane","Phenol"],ans:2},
-{q:"What type of forces exist in halocarbons due to halogens?",opts:["Ionic bonds","Hydrogen bonds","Temporary dipoles","No forces"],ans:2},
-{q:"Plastics are:",opts:["Metals","Polymers","Elements","Gases"],ans:1},
-{q:"Which statement is correct?",opts:["Alkyl halides are aromatic","Aryl halides are aliphatic","Functional groups affect reactivity","Halogens decrease boiling point"],ans:2}
-]},
-{name:"Alcohols, Ethers & Amines",questions:[
-{q:"Alcohols contain which functional group?",opts:["–NH₂","–OH","–COOH","R–O–R"],ans:1},
-{q:"The general structure of an alcohol is:",opts:["R–O–R","R–NH₂","R–OH","R–COOH"],ans:2},
-{q:"Why do alcohols have high boiling points?",opts:["They are nonpolar","They form hydrogen bonds","They are ionic","They contain nitrogen"],ans:1},
-{q:"Small alcohols are soluble in water because they are:",opts:["Nonpolar","Ionic","Polar","Metallic"],ans:2},
-{q:"What is the suffix used for alcohols?",opts:["–ane","–ene","–ol","–amine"],ans:2},
-{q:"What is the functional group of ethers?",opts:["–OH","R–O–R","–NH₂","–COOH"],ans:1},
-{q:"Why do ethers have lower boiling points than alcohols?",opts:["They are heavier","They are ionic","They cannot hydrogen bond with themselves","They contain nitrogen"],ans:2},
-{q:"Amines contain which element?",opts:["Oxygen","Hydrogen","Nitrogen","Chlorine"],ans:2},
-{q:"A primary (1°) amine has:",opts:["3 carbons attached to N","2 carbons attached to N","1 carbon attached to N","No carbons"],ans:2},
-{q:"Which compound has the highest boiling point?",opts:["Ether","Alcohol","Alkane","Alkene"],ans:1},
-{q:"Which compound has the weakest hydrogen bonding?",opts:["Alcohol","Amine","Ether","All equal"],ans:2},
-{q:"What is denatured alcohol?",opts:["Pure ethanol","Ethanol with toxic substances added","Methanol only","Water + ethanol"],ans:1},
-{q:"Which is TRUE about ethers?",opts:["They contain –OH","They hydrogen bond strongly","They are volatile","They contain nitrogen"],ans:2},
-{q:"Amines can be classified based on:",opts:["Oxygen atoms","Number of carbon groups attached to nitrogen","Double bonds","Ring structure"],ans:1},
-{q:"Which statement is correct?",opts:["Alcohols are nonpolar","Ethers have higher boiling points than alcohols","Amines can form hydrogen bonds","Alcohols cannot mix with water"],ans:2}
-]},
-{name:"Carbonyl Compounds",questions:[
-{q:"What is a carbonyl group?",opts:["C–O","C≡O","C=O","O–H"],ans:2},
-{q:"Which compound has the carbonyl group at the end of the chain?",opts:["Ketone","Aldehyde","Ester","Amide"],ans:1},
-{q:"In aldehydes, the carbonyl carbon is bonded to:",opts:["Two carbons","One carbon and one hydrogen","Two hydrogens","Oxygen only"],ans:1},
-{q:"The suffix for aldehydes is:",opts:["–one","–ol","–al","–oate"],ans:2},
-{q:"Ketones have the carbonyl group:",opts:["At the end","In the middle","Outside the chain","In a ring only"],ans:1},
-{q:"In ketones, the carbonyl carbon is bonded to:",opts:["One carbon and one hydrogen","Two carbons","One oxygen only","Three hydrogens"],ans:1},
-{q:"Why must ketones include a number in their name?",opts:["To show number of carbons","To show branching","To show position of carbonyl group","To show polarity"],ans:2},
-{q:"What is the functional group of carboxylic acids?",opts:["–CHO","–COOH","–CO–","–OH"],ans:1},
-{q:"Carboxylic acids are:",opts:["Nonpolar","Basic","Acidic and polar","Inert"],ans:2},
-{q:"Esters are formed from:",opts:["Alkane + Alkene","Acid + Alcohol","Ketone + Amine","Ether + Water"],ans:1},
-{q:"Esters are known for:",opts:["No smell","Sweet/fruity smell","Metallic smell","Strong acidity"],ans:1},
-{q:"What is the functional group of amides?",opts:["–COOH","–CONH₂","–NH₂","–CHO"],ans:1},
-{q:"Why are ketones somewhat soluble in water?",opts:["They are nonpolar","They form ionic bonds","Their carbonyl group is polar","They contain metals"],ans:2},
-{q:"A condensation reaction:",opts:["Breaks molecules apart","Adds oxygen","Combines molecules and releases water","Removes carbon"],ans:2},
-{q:"Which statement is TRUE?",opts:["Ketones bond to hydrogen at carbonyl carbon","Esters rarely have smell","Aldehydes have carbonyl at the end","Amides are nonpolar"],ans:2}
-]},
-{name:"Reaction Types",questions:[
-{q:"In an elimination reaction, what happens?",opts:["Atoms are added","Atoms are replaced","Atoms are removed and a double bond forms","Molecules break into ions"],ans:2},
-{q:"Elimination reactions usually produce:",opts:["Alkanes","Alkenes","Alcohols","Amines"],ans:1},
-{q:"Dehydration means removal of:",opts:["H₂","O₂","H₂O","CO₂"],ans:2},
-{q:"Dehydrogenation means removal of:",opts:["Oxygen","Water","Hydrogen","Nitrogen"],ans:2},
-{q:"Addition reactions occur mainly in:",opts:["Alkanes","Alkenes and alkynes","Aromatic compounds only","Metals"],ans:1},
-{q:"In an addition reaction, a double bond becomes:",opts:["Triple bond","Ionic bond","Single bond","No bond"],ans:2},
-{q:"Hydration is:",opts:["Removing water","Adding hydrogen","Adding water across a bond","Removing oxygen"],ans:2},
-{q:"Hydrogenation involves adding:",opts:["Oxygen","Water","Hydrogen","Nitrogen"],ans:2},
-{q:"What is required for hydrogenation?",opts:["Heat only","Light only","Catalyst","Water"],ans:2},
-{q:"Hydrogenation is used to convert:",opts:["Solids to liquids","Unsaturated fats to saturated fats","Alcohols to acids","Alkanes to alkenes"],ans:1},
-{q:"Substitution reactions involve:",opts:["Adding atoms","Removing atoms","Replacing one group with another","Breaking all bonds"],ans:2},
-{q:"Redox reactions involve:",opts:["Only carbon","Gain or loss of oxygen/hydrogen","Only hydrogen bonds","Only water"],ans:1},
-{q:"Condensation reactions:",opts:["Break molecules apart","Add oxygen","Combine molecules and release water","Remove hydrogen only"],ans:2},
-{q:"Which reaction forms a double bond?",opts:["Addition","Substitution","Elimination","Condensation"],ans:2},
-{q:"Which statement is TRUE?",opts:["Addition removes atoms","Elimination adds atoms","Substitution replaces atoms","Condensation adds water"],ans:2}
-]}
-];
+var STORAGE_KEY='quizvault_v1';
+var quizzes={};
+var currentQuizId=null,currentQ=0,answers=[],answered=false;
+var pendingDeleteId=null;
+var LETTERS=['A','B','C','D'];
 
-var currentQuiz=null,currentQ=0,answers=[],answered=false;
-var letters=["A","B","C","D"];
+// ---- STORAGE ----
+function load(){
+  try{var d=localStorage.getItem(STORAGE_KEY);quizzes=d?JSON.parse(d):{}}
+  catch(e){quizzes={}}
+}
+function save(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(quizzes))}
+  catch(e){showToast('Storage full – try deleting old quizzes')}
+}
 
+// ---- SCREENS ----
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
-}
-
-function startQuiz(idx){
-  currentQuiz=idx;
-  currentQ=0;
-  answers=[];
-  answered=false;
-  showScreen('quiz');
-  renderQuestion();
-}
-
-function goHome(){showScreen('home')}
-
-function renderQuestion(){
-  var quiz=QUIZZES[currentQuiz];
-  var q=quiz.questions[currentQ];
-  var total=quiz.questions.length;
-  document.getElementById('quiz-title').textContent=quiz.name;
-  document.getElementById('q-counter').textContent=(currentQ+1)+'/'+total;
-  document.getElementById('progress-fill').style.width=(((currentQ)/total)*100)+'%';
-  answered=false;
-
-  var html='<div class="question-card">';
-  html+='<div class="question-text">Q'+(currentQ+1)+'. '+q.q+'</div>';
-  q.opts.forEach(function(opt,i){
-    html+='<div class="option" id="opt-'+i+'" onclick="selectOption('+i+')">';
-    html+='<div class="option-letter">'+letters[i]+'</div>';
-    html+='<div class="option-text">'+opt+'</div>';
-    html+='</div>';
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.classList.remove('active');
+    s.style.opacity='0';
+    s.style.transform='translateY(16px)';
+    setTimeout(function(){s.style.display='none'},260);
   });
-  html+='<div id="feedback" style="display:none"></div>';
-  html+='</div>';
-
-  var isLast=(currentQ===total-1);
-  html+='<button class="next-btn" id="next-btn" onclick="nextQuestion()" style="display:none">'+(isLast?'See Results':'Next Question')+'</button>';
-  document.getElementById('quiz-body').innerHTML=html;
+  var el=document.getElementById(id);
+  el.style.display='block';
+  requestAnimationFrame(function(){
+    el.classList.add('active');
+    el.scrollTop=0;
+  });
 }
 
-function selectOption(i){
+// ---- TOAST ----
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2600);
+}
+
+// ---- FORMAT MODAL ----
+function openFormat(e){if(e&&e.preventDefault)e.preventDefault();document.getElementById('formatModal').classList.add('open')}
+function closeFormat(){document.getElementById('formatModal').classList.remove('open')}
+function closeFormatIfBg(e){if(e.target===document.getElementById('formatModal'))closeFormat()}
+
+function copyTemplate(){
+  var t="QUIZ: My Quiz Title\n\nQ: Your question here?\nA: Option one\nB: Option two\nC: Option three\nD: Option four\nANS: A\n\nQ: Another question?\nA: First\nB: Second\nC: Third\nD: Fourth\nANS: C";
+  if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){showToast('Template copied!')}).catch(function(){fallbackCopy(t)})}
+  else{fallbackCopy(t)}
+}
+function fallbackCopy(t){
+  var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  showToast('Template copied!');
+}
+
+// ---- FILE PARSING ----
+function handleFile(file){
+  if(!file)return;
+  if(!file.name.endsWith('.txt')){showToast('Please upload a .txt file');return}
+  var reader=new FileReader();
+  reader.onload=function(e){parseQuizFile(e.target.result,file.name)};
+  reader.readAsText(file);
+  document.getElementById('fileInput').value='';
+}
+
+function parseQuizFile(text,filename){
+  var lines=text.split('\n').map(function(l){return l.trim()});
+  var quizBlocks=[];
+  var current=null;
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    if(l.toUpperCase().startsWith('QUIZ:')){
+      if(current)quizBlocks.push(current);
+      current={name:l.slice(5).trim(),questions:[]};
+    } else if(current){
+      quizBlocks.push(current);current=null;
+    }
+    if(current===null&&l.toUpperCase().startsWith('QUIZ:')){
+      current={name:l.slice(5).trim(),questions:[]};
+    }
+  }
+  if(current)quizBlocks.push(current);
+
+  // Re-parse properly
+  quizBlocks=[];current=null;
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    if(/^QUIZ:/i.test(l)){
+      if(current)quizBlocks.push(current);
+      current={name:l.replace(/^QUIZ:/i,'').trim(),questions:[]};
+    }
+  }
+  if(current)quizBlocks.push(current);
+
+  // Now parse questions per block
+  var allBlocks=[];
+  var curBlock=null;var curQ=null;
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i];
+    if(/^QUIZ:/i.test(l)){
+      if(curQ&&curBlock)curBlock.questions.push(curQ);curQ=null;
+      if(curBlock)allBlocks.push(curBlock);
+      curBlock={name:l.replace(/^QUIZ:/i,'').trim(),questions:[]};
+    } else if(/^Q:/i.test(l)&&curBlock){
+      if(curQ)curBlock.questions.push(curQ);
+      curQ={q:l.replace(/^Q:/i,'').trim(),opts:[],ans:0};
+    } else if(curQ&&/^[A-D]:/i.test(l)){
+      curQ.opts.push(l.slice(2).trim());
+    } else if(curQ&&/^ANS:/i.test(l)){
+      var letter=l.replace(/^ANS:/i,'').trim().toUpperCase();
+      curQ.ans=Math.max(0,LETTERS.indexOf(letter));
+    }
+  }
+  if(curQ&&curBlock)curBlock.questions.push(curQ);
+  if(curBlock)allBlocks.push(curBlock);
+
+  var added=0;
+  allBlocks.forEach(function(b){
+    var valid=b.questions.filter(function(q){return q.opts.length>=2});
+    if(b.name&&valid.length>0){
+      var id='q_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+      quizzes[id]={id:id,name:b.name,questions:valid,created:Date.now()};
+      added++;
+    }
+  });
+
+  if(added===0){showToast('No valid quizzes found — check the format');return}
+  save();
+  renderHome();
+  showToast(added+' quiz'+(added>1?'zes':'')+' added!');
+}
+
+// ---- DRAG & DROP ----
+var uz=document.getElementById('uploadZone');
+uz.addEventListener('dragover',function(e){e.preventDefault();uz.classList.add('drag')});
+uz.addEventListener('dragleave',function(){uz.classList.remove('drag')});
+uz.addEventListener('drop',function(e){
+  e.preventDefault();uz.classList.remove('drag');
+  var f=e.dataTransfer.files[0];if(f)handleFile(f);
+});
+
+// ---- HOME ----
+function renderHome(){
+  var grid=document.getElementById('quizGrid');
+  var ids=Object.keys(quizzes).sort(function(a,b){return quizzes[b].created-quizzes[a].created});
+  if(ids.length===0){
+    grid.innerHTML='<div class="empty-state"><div class="e-icon">📭</div><p>No quizzes yet.<br>Upload a .txt file to get started.</p></div>';
+    return;
+  }
+  var emojis=['🧪','📐','🌍','📖','🔬','🎯','💡','⚗️','🔢','🧬'];
+  grid.innerHTML=ids.map(function(id,i){
+    var qz=quizzes[id];
+    var em=emojis[i%emojis.length];
+    return '<div class="quiz-card" id="card-'+id+'">'
+      +'<div class="qc-icon">'+em+'</div>'
+      +'<div class="qc-body"><div class="qc-name">'+escHtml(qz.name)+'</div>'
+      +'<div class="qc-meta">'+qz.questions.length+' question'+(qz.questions.length!==1?'s':'')+'</div></div>'
+      +'<div class="qc-actions">'
+      +'<button class="delete-btn" onclick="askDelete(event,\''+id+'\')">🗑</button>'
+      +'<div class="qc-arrow">›</div></div></div>';
+  }).join('');
+  ids.forEach(function(id){
+    var card=document.getElementById('card-'+id);
+    card.addEventListener('click',function(e){
+      if(e.target.closest('.delete-btn'))return;
+      startQuiz(id);
+    });
+  });
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// ---- DELETE ----
+function askDelete(e,id){
+  e.stopPropagation();
+  pendingDeleteId=id;
+  var dc=document.getElementById('delConfirm');
+  document.getElementById('delConfirmText').textContent='Delete "'+quizzes[id].name+'"?';
+  document.getElementById('delYesBtn').onclick=function(){confirmDelete()};
+  dc.classList.add('show');
+  dc.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function cancelDelete(){pendingDeleteId=null;document.getElementById('delConfirm').classList.remove('show')}
+function confirmDelete(){
+  if(!pendingDeleteId)return;
+  delete quizzes[pendingDeleteId];
+  pendingDeleteId=null;
+  save();renderHome();
+  document.getElementById('delConfirm').classList.remove('show');
+  showToast('Quiz deleted');
+}
+
+// ---- QUIZ ----
+function startQuiz(id){
+  currentQuizId=id;currentQ=0;answers=[];answered=false;
+  showScreen('quiz');
+  renderQ();
+}
+function goHome(){showScreen('home');cancelDelete()}
+
+function renderQ(){
+  var qz=quizzes[currentQuizId];
+  var q=qz.questions[currentQ];
+  var total=qz.questions.length;
+  document.getElementById('quizName').textContent=qz.name;
+  document.getElementById('qCount').textContent=(currentQ+1)+' / '+total;
+  document.getElementById('progFill').style.width=(currentQ/total*100)+'%';
+  answered=false;
+  document.getElementById('btnNext').style.display='none';
+  document.getElementById('btnNext').textContent=(currentQ===total-1)?'See Results':'Next Question';
+
+  var html='<div class="q-number">Question '+(currentQ+1)+' of '+total+'</div>';
+  html+='<div class="q-text">'+escHtml(q.q)+'</div>';
+  q.opts.forEach(function(opt,i){
+    html+='<div class="option" id="opt'+i+'" onclick="pick('+i+')">'
+      +'<div class="opt-letter">'+LETTERS[i]+'</div>'
+      +'<div class="opt-text">'+escHtml(opt)+'</div></div>';
+  });
+  html+='<div class="feedback-box" id="fbBox"></div>';
+  document.getElementById('quizBody').innerHTML=html;
+}
+
+function pick(i){
   if(answered)return;
   answered=true;
-  var q=QUIZZES[currentQuiz].questions[currentQ];
+  var q=quizzes[currentQuizId].questions[currentQ];
   answers.push({chosen:i,correct:q.ans});
-
   for(var j=0;j<q.opts.length;j++){
-    var el=document.getElementById('opt-'+j);
+    var el=document.getElementById('opt'+j);
     if(j===q.ans){el.classList.add('correct')}
-    else if(j===i&&i!==q.ans){el.classList.add('wrong')}
-    else{el.classList.add('disabled')}
+    else if(j===i){el.classList.add('wrong')}
+    else{el.classList.add('dimmed')}
   }
-
-  var fb=document.getElementById('feedback');
-  if(i===q.ans){
-    fb.className='feedback correct-msg';
-    fb.textContent='Correct!';
-  } else {
-    fb.className='feedback wrong-msg';
-    fb.textContent='Incorrect. The answer is '+letters[q.ans]+': '+q.opts[q.ans];
-  }
+  var fb=document.getElementById('fbBox');
   fb.style.display='block';
-  document.getElementById('next-btn').style.display='block';
+  if(i===q.ans){fb.className='feedback-box correct';fb.textContent='✓ Correct!'}
+  else{fb.className='feedback-box wrong';fb.textContent='✗ Correct answer: '+LETTERS[q.ans]+' — '+q.opts[q.ans]}
+  document.getElementById('btnNext').style.display='block';
+  // scroll to show feedback
+  setTimeout(function(){fb.scrollIntoView({behavior:'smooth',block:'nearest'})},80);
 }
 
-function nextQuestion(){
+function nextQ(){
   currentQ++;
-  var total=QUIZZES[currentQuiz].questions.length;
-  if(currentQ>=total){showResults();return;}
-  renderQuestion();
-  window.scrollTo(0,0);
+  var total=quizzes[currentQuizId].questions.length;
+  if(currentQ>=total){showResults();return}
+  renderQ();
+  document.getElementById('quiz').scrollTop=0;
 }
 
+// ---- RESULTS ----
 function showResults(){
-  var quiz=QUIZZES[currentQuiz];
+  var qz=quizzes[currentQuizId];
   var correct=answers.filter(function(a){return a.chosen===a.correct}).length;
-  var total=quiz.questions.length;
-  var pct=Math.round((correct/total)*100);
+  var total=qz.questions.length;
+  var pct=Math.round(correct/total*100);
 
-  document.getElementById('score-num').textContent=correct;
-  document.getElementById('score-total').textContent=total;
-  document.getElementById('stat-correct').textContent=correct;
-  document.getElementById('stat-wrong').textContent=total-correct;
+  document.getElementById('scoreBig').textContent=correct+'/'+total;
+  document.getElementById('scorePct').textContent=pct+'%';
+  document.getElementById('statC').textContent=correct;
+  document.getElementById('statW').textContent=total-correct;
 
-  var circle=document.getElementById('score-circle');
-  circle.className='score-circle';
-  var title='',sub='';
-  if(pct>=80){circle.classList.add('great');title='Excellent work!';sub='You really know your chemistry.'}
-  else if(pct>=60){circle.classList.add('ok');title='Good job!';sub='Review a few topics and try again.'}
-  else{circle.classList.add('poor');title='Keep studying!';sub='Go over the material and try again.'}
+  var ring=document.getElementById('ringFg');
+  ring.className='ring-fg';
+  if(pct>=80){}
+  else if(pct>=60){ring.classList.add('ok')}
+  else{ring.classList.add('poor')}
 
-  document.getElementById('results-title').textContent=title;
-  document.getElementById('results-sub').textContent=sub+'  ('+pct+'%)';
+  var circumference=376;
+  ring.style.strokeDashoffset=circumference;
+  setTimeout(function(){ring.style.strokeDashoffset=circumference-(circumference*pct/100)},100);
+
+  if(pct>=80){document.getElementById('resultsLabel').textContent='Excellent!';document.getElementById('resultsDesc').textContent='Outstanding performance. You nailed it.'}
+  else if(pct>=60){document.getElementById('resultsLabel').textContent='Good Job!';document.getElementById('resultsDesc').textContent='Solid work. A bit more review and you\'ll ace it.'}
+  else{document.getElementById('resultsLabel').textContent='Keep Going!';document.getElementById('resultsDesc').textContent='Review the material and try again — you\'ve got this.'}
 
   var html='';
   answers.forEach(function(a,i){
-    var q=quiz.questions[i];
-    var isCorrect=a.chosen===a.correct;
-    html+='<div class="review-item">';
-    html+='<div class="review-q">Q'+(i+1)+'. '+q.q+'</div>';
-    if(isCorrect){
-      html+='<div class="review-row"><span class="tag ans">Correct</span><span>'+letters[a.correct]+': '+q.opts[a.correct]+'</span></div>';
+    var q=qz.questions[i];
+    var ok=a.chosen===a.correct;
+    html+='<div class="review-card">';
+    html+='<div class="review-q-text">'+escHtml(q.q)+'</div>';
+    if(ok){
+      html+='<div class="review-row"><span class="badge ok-ans">CORRECT</span><span>'+LETTERS[a.correct]+': '+escHtml(q.opts[a.correct])+'</span></div>';
     } else {
-      html+='<div class="review-row"><span class="tag wrong-tag">Your answer</span><span>'+letters[a.chosen]+': '+q.opts[a.chosen]+'</span></div>';
-      html+='<div class="review-row"><span class="tag ans">Answer</span><span>'+letters[a.correct]+': '+q.opts[a.correct]+'</span></div>';
+      html+='<div class="review-row"><span class="badge your">YOUR ANSWER</span><span>'+LETTERS[a.chosen]+': '+escHtml(q.opts[a.chosen])+'</span></div>';
+      html+='<div class="review-row"><span class="badge ans">ANSWER</span><span>'+LETTERS[a.correct]+': '+escHtml(q.opts[a.correct])+'</span></div>';
     }
     html+='</div>';
   });
-  document.getElementById('review-list').innerHTML=html;
+  document.getElementById('reviewList').innerHTML=html;
 
-  document.getElementById('progress-fill').style.width='100%';
+  document.getElementById('progFill').style.width='100%';
   showScreen('results');
 }
 
-function retryQuiz(){startQuiz(currentQuiz)}
+function retryQuiz(){startQuiz(currentQuizId)}
+
+// ---- INIT ----
+load();renderHome();
 </script>
 </body>
 </html>
