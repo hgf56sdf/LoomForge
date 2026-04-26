@@ -1,0 +1,2699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APCS — Industrial Pollution Control Simulator</title>
+<style>
+/* ============================================================
+   APEX INDUSTRIAL CONTROL SYSTEM — Design System
+   Aesthetic: Military-grade industrial, CRT-era precision,
+   inspired by SCADA HMI terminals and refinery control rooms.
+   Font: IBM Plex Mono + IBM Plex Sans for authenticity.
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=Orbitron:wght@400;700;900&display=swap');
+
+:root {
+  /* Core palette — dark phosphor-green industrial */
+  --bg-deep:       #070c0f;
+  --bg-panel:      #0d1519;
+  --bg-card:       #101b21;
+  --bg-card-hi:    #152028;
+  --bg-input:      #0a1318;
+  --border:        #1e3040;
+  --border-hi:     #2a4a60;
+
+  /* Phosphor accent system */
+  --green:         #00ff88;
+  --green-dim:     #00994d;
+  --green-glow:    rgba(0,255,136,0.12);
+  --cyan:          #00d4ff;
+  --cyan-dim:      #007a99;
+  --cyan-glow:     rgba(0,212,255,0.10);
+  --amber:         #ffaa00;
+  --amber-dim:     #996600;
+  --amber-glow:    rgba(255,170,0,0.12);
+  --red:           #ff3355;
+  --red-dim:       #991f33;
+  --red-glow:      rgba(255,51,85,0.12);
+  --purple:        #cc44ff;
+
+  /* Text */
+  --text-primary:  #d4e8f0;
+  --text-secondary:#6a8fa0;
+  --text-muted:    #3a5a6a;
+  --text-accent:   #00ff88;
+
+  /* Typography */
+  --font-mono:     'IBM Plex Mono', monospace;
+  --font-sans:     'IBM Plex Sans', sans-serif;
+  --font-display:  'Orbitron', sans-serif;
+
+  /* Sizing */
+  --sidebar-w:     240px;
+  --header-h:      54px;
+  --radius:        4px;
+  --radius-lg:     6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  overflow: hidden;
+}
+
+/* Scanline overlay for CRT effect */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+
+/* ── LAYOUT ── */
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.sidebar::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--green-dim), transparent);
+  opacity: 0.4;
+}
+
+.logo {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.logo-mark {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  flex-shrink: 0;
+  box-shadow: 0 0 12px var(--green-glow);
+  animation: pulse-logo 3s ease-in-out infinite;
+}
+
+@keyframes pulse-logo {
+  0%, 100% { box-shadow: 0 0 12px rgba(0,255,136,0.2); }
+  50%       { box-shadow: 0 0 24px rgba(0,255,136,0.5); }
+}
+
+.logo-text { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--green); letter-spacing: 3px; }
+.logo-sub  { font-size: 9px; color: var(--text-muted); letter-spacing: 1px; margin-top: 2px; }
+
+.sidebar-section { padding: 10px 0; }
+.sidebar-label { padding: 6px 18px; font-size: 9px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 18px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  position: relative;
+  border-left: 2px solid transparent;
+  font-size: 12px;
+}
+
+.nav-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.nav-item.active {
+  background: rgba(0,255,136,0.06);
+  color: var(--green);
+  border-left-color: var(--green);
+}
+
+.nav-item .nav-icon { font-size: 14px; width: 18px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--red);
+  color: white;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+.nav-badge.ok { background: var(--green-dim); }
+
+.sidebar-status {
+  margin-top: auto;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+}
+
+.status-row { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; }
+.status-row span:first-child { color: var(--text-muted); }
+.dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; }
+.dot.green  { background: var(--green); box-shadow: 0 0 6px var(--green); animation: blink 2s infinite; }
+.dot.amber  { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.dot.red    { background: var(--red); box-shadow: 0 0 6px var(--red); animation: blink 0.8s infinite; }
+
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ── MAIN AREA ── */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── HEADER ── */
+.header {
+  height: var(--header-h);
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 20px;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.breadcrumb { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; }
+.breadcrumb .crumb { color: var(--text-primary); }
+.breadcrumb .sep { color: var(--border-hi); }
+
+.header-spacer { flex: 1; }
+
+.sys-time { font-family: var(--font-display); font-size: 12px; color: var(--cyan); letter-spacing: 2px; }
+.operator-badge {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 12px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 2px; font-size: 10px; color: var(--text-secondary);
+}
+.operator-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+.alarm-btn {
+  padding: 4px 10px; background: rgba(255,51,85,0.15);
+  border: 1px solid var(--red-dim); color: var(--red); border-radius: 2px;
+  cursor: pointer; font-family: var(--font-mono); font-size: 10px;
+  transition: all 0.15s;
+}
+.alarm-btn:hover { background: rgba(255,51,85,0.25); }
+
+/* ── CONTENT AREA ── */
+.content {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+
+/* ── SECTION TABS ── */
+.tab-bar { display: flex; gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; flex-shrink: 0; }
+.tab-btn {
+  padding: 8px 16px; font-family: var(--font-mono); font-size: 11px;
+  background: var(--bg-card); color: var(--text-muted); border: none;
+  cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: all 0.15s;
+}
+.tab-btn:hover { background: var(--bg-card-hi); color: var(--text-primary); }
+.tab-btn.active { background: var(--bg-card-hi); color: var(--green); position: relative; }
+.tab-btn.active::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; background: var(--green);
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+}
+
+.card-title {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title .accent { color: var(--cyan); }
+.card-title-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+
+/* ── METRIC CARDS ── */
+.metrics-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.metric-card:hover { border-color: var(--border-hi); }
+
+.metric-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+}
+
+.metric-card.green::after { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+.metric-card.cyan::after  { background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+.metric-card.amber::after { background: linear-gradient(90deg, transparent, var(--amber), transparent); }
+.metric-card.red::after   { background: linear-gradient(90deg, transparent, var(--red), transparent); }
+.metric-card.purple::after{ background: linear-gradient(90deg, transparent, var(--purple), transparent); }
+
+.metric-label { font-size: 9px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.metric-value { font-family: var(--font-display); font-size: 22px; font-weight: 700; line-height: 1; }
+.metric-card.green .metric-value { color: var(--green); }
+.metric-card.cyan  .metric-value { color: var(--cyan); }
+.metric-card.amber .metric-value { color: var(--amber); }
+.metric-card.red   .metric-value { color: var(--red); }
+.metric-card.purple .metric-value { color: var(--purple); }
+.metric-unit { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+.metric-delta { font-size: 9px; margin-top: 6px; }
+.metric-delta.down { color: var(--green); }
+.metric-delta.up   { color: var(--red); }
+
+/* ── GRID LAYOUTS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-65-35 { display: grid; grid-template-columns: 65fr 35fr; gap: 14px; }
+.grid-40-60 { display: grid; grid-template-columns: 40fr 60fr; gap: 14px; }
+
+/* ── CONTROLS ── */
+.control-group { margin-bottom: 14px; }
+.control-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; color: var(--text-secondary); margin-bottom: 5px; letter-spacing: 0.5px;
+}
+.control-label .val { color: var(--cyan); font-weight: 600; font-family: var(--font-mono); }
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%; height: 3px;
+  background: var(--border);
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan-glow);
+  cursor: pointer;
+  border: 2px solid var(--bg-deep);
+  transition: box-shadow 0.15s;
+}
+input[type=range]:hover::-webkit-slider-thumb {
+  box-shadow: 0 0 16px var(--cyan);
+}
+
+select {
+  width: 100%; padding: 7px 10px;
+  background: var(--bg-input); border: 1px solid var(--border);
+  color: var(--text-primary); font-family: var(--font-mono); font-size: 12px;
+  border-radius: var(--radius); outline: none; cursor: pointer;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236a8fa0'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  transition: border-color 0.15s;
+}
+select:focus { border-color: var(--cyan-dim); }
+
+/* ── PIPELINE BUILDER ── */
+.pipeline-container {
+  display: flex; align-items: center; gap: 0;
+  overflow-x: auto; padding: 16px 0;
+  min-height: 140px;
+  position: relative;
+}
+
+.pipeline-stage {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; flex-shrink: 0;
+  cursor: grab;
+  transition: transform 0.15s;
+  position: relative;
+}
+.pipeline-stage:active { cursor: grabbing; transform: scale(0.95); }
+.pipeline-stage.dragging { opacity: 0.4; }
+.pipeline-stage.drag-over .unit-box { border-color: var(--cyan) !important; box-shadow: 0 0 20px var(--cyan-glow); }
+
+.pipeline-arrow {
+  width: 36px; height: 2px;
+  background: linear-gradient(90deg, var(--border-hi), var(--cyan-dim));
+  flex-shrink: 0; position: relative; align-self: center; margin-top: -20px;
+}
+.pipeline-arrow::after {
+  content: '▶';
+  position: absolute; right: -6px; top: -7px;
+  color: var(--cyan-dim); font-size: 10px;
+}
+
+.unit-box {
+  width: 90px; height: 72px;
+  background: var(--bg-card-hi);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--radius);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 8px;
+  transition: all 0.2s;
+  position: relative;
+}
+.unit-box:hover { border-color: var(--cyan-dim); background: rgba(0,212,255,0.05); }
+.unit-box .unit-icon { font-size: 20px; }
+.unit-box .unit-name { font-size: 9px; color: var(--text-muted); text-align: center; letter-spacing: 0.5px; }
+.unit-box .unit-eff {
+  font-size: 10px; font-weight: 700; font-family: var(--font-display);
+}
+
+.unit-remove {
+  position: absolute; top: -6px; right: -6px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--red); color: white; font-size: 9px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; opacity: 0; transition: opacity 0.15s;
+  border: none; font-family: var(--font-mono);
+}
+.pipeline-stage:hover .unit-remove { opacity: 1; }
+
+.unit-status-dot {
+  position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 3px;
+}
+.unit-status-dot span {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--green);
+}
+
+.add-unit-btn {
+  width: 72px; height: 72px;
+  border: 1px dashed var(--border-hi); border-radius: var(--radius);
+  background: transparent; color: var(--text-muted); font-size: 22px;
+  cursor: pointer; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 4px; transition: all 0.2s;
+  flex-shrink: 0; font-family: var(--font-mono);
+}
+.add-unit-btn:hover { border-color: var(--green-dim); color: var(--green); background: var(--green-glow); }
+.add-unit-btn span { font-size: 9px; letter-spacing: 1px; }
+
+.unit-source {
+  background: rgba(0,255,136,0.08);
+  border: 1px solid var(--green-dim);
+}
+.unit-source .unit-name { color: var(--green); }
+
+.unit-sink {
+  background: rgba(255,170,0,0.08);
+  border: 1px solid var(--amber-dim);
+}
+.unit-sink .unit-name { color: var(--amber); }
+
+/* ── TABLES ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.data-table th {
+  text-align: left; padding: 6px 10px;
+  font-size: 9px; letter-spacing: 1.5px; color: var(--text-muted);
+  text-transform: uppercase; border-bottom: 1px solid var(--border);
+}
+.data-table td { padding: 7px 10px; border-bottom: 1px solid rgba(30,48,64,0.5); }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); }
+.data-table td.mono { font-family: var(--font-display); }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 2px; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.badge.ok      { background: rgba(0,255,136,0.12); color: var(--green); border: 1px solid var(--green-dim); }
+.badge.warn    { background: rgba(255,170,0,0.12); color: var(--amber); border: 1px solid var(--amber-dim); }
+.badge.alarm   { background: rgba(255,51,85,0.12);  color: var(--red);   border: 1px solid var(--red-dim); }
+.badge.info    { background: rgba(0,212,255,0.12); color: var(--cyan);  border: 1px solid var(--cyan-dim); }
+
+/* ── CANVAS CHARTS ── */
+.chart-wrap { position: relative; }
+canvas { display: block; }
+.chart-legend { display: flex; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 9px; color: var(--text-muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 4px 0; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.progress-fill.green  { background: linear-gradient(90deg, var(--green-dim), var(--green)); box-shadow: 0 0 8px var(--green-glow); }
+.progress-fill.cyan   { background: linear-gradient(90deg, var(--cyan-dim), var(--cyan)); }
+.progress-fill.amber  { background: linear-gradient(90deg, var(--amber-dim), var(--amber)); }
+.progress-fill.red    { background: linear-gradient(90deg, var(--red-dim), var(--red)); }
+
+/* ── BUTTONS ── */
+.btn {
+  padding: 7px 14px; border-radius: var(--radius);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  border: 1px solid; cursor: pointer; transition: all 0.15s;
+}
+.btn-primary {
+  background: rgba(0,255,136,0.1); border-color: var(--green-dim);
+  color: var(--green);
+}
+.btn-primary:hover { background: rgba(0,255,136,0.2); box-shadow: 0 0 12px var(--green-glow); }
+.btn-secondary {
+  background: transparent; border-color: var(--border-hi); color: var(--text-secondary);
+}
+.btn-secondary:hover { border-color: var(--cyan-dim); color: var(--cyan); }
+.btn-danger {
+  background: rgba(255,51,85,0.1); border-color: var(--red-dim); color: var(--red);
+}
+.btn-danger:hover { background: rgba(255,51,85,0.2); }
+
+/* ── UNIT SELECTOR MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg-panel); border: 1px solid var(--border-hi);
+  border-radius: var(--radius-lg); padding: 24px; width: 500px;
+  transform: scale(0.95); transition: transform 0.2s;
+  box-shadow: 0 0 60px rgba(0,0,0,0.8);
+}
+.modal-overlay.open .modal { transform: scale(1); }
+.modal-title { font-family: var(--font-display); font-size: 14px; color: var(--green); letter-spacing: 2px; margin-bottom: 16px; }
+.unit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.unit-option {
+  padding: 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  cursor: pointer; text-align: center; transition: all 0.15s;
+  background: var(--bg-card);
+}
+.unit-option:hover { border-color: var(--cyan-dim); background: var(--cyan-glow); }
+.unit-option .opt-icon { font-size: 24px; margin-bottom: 6px; }
+.unit-option .opt-name { font-size: 10px; color: var(--text-primary); margin-bottom: 2px; }
+.unit-option .opt-tag  { font-size: 9px; color: var(--text-muted); }
+
+/* ── LOG PANEL ── */
+.log-panel {
+  height: 160px; overflow-y: auto;
+  background: var(--bg-deep); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 8px; font-size: 10px; font-family: var(--font-mono);
+}
+.log-entry { padding: 2px 0; display: flex; gap: 8px; }
+.log-time { color: var(--text-muted); flex-shrink: 0; }
+.log-msg.info    { color: var(--cyan); }
+.log-msg.warn    { color: var(--amber); }
+.log-msg.error   { color: var(--red); }
+.log-msg.ok      { color: var(--green); }
+.log-msg.default { color: var(--text-primary); }
+
+/* ── AI ASSISTANT PANEL ── */
+.ai-panel {
+  background: linear-gradient(135deg, rgba(0,255,136,0.04), rgba(0,212,255,0.04));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px;
+}
+.ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.ai-orb {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: conic-gradient(var(--green), var(--cyan), var(--purple), var(--green));
+  animation: spin 4s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.ai-title { font-size: 11px; color: var(--green); letter-spacing: 1px; }
+.ai-suggestion { font-size: 11px; color: var(--text-secondary); line-height: 1.6; padding: 8px; background: var(--bg-input); border-radius: var(--radius); border-left: 2px solid var(--green-dim); }
+
+/* ── FLOW DIAGRAM ── */
+.flow-canvas { width: 100%; border-radius: var(--radius); }
+
+/* ── SECTION PAGES ── */
+.page { display: none; flex-direction: column; gap: 14px; }
+.page.active { display: flex; }
+
+/* ── COMPLIANCE GAUGE ── */
+.gauge-row { display: flex; gap: 10px; }
+.gauge-item { flex: 1; }
+.gauge-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-bottom: 4px; }
+.gauge-limit { font-size: 9px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── TOOLTIP ── */
+.tooltip { position: relative; }
+.tooltip-text {
+  display: none; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+  background: var(--bg-panel); border: 1px solid var(--border-hi); border-radius: var(--radius);
+  padding: 6px 10px; font-size: 10px; color: var(--text-secondary); white-space: nowrap; z-index: 100;
+}
+.tooltip:hover .tooltip-text { display: block; }
+
+/* ── ANIMATED FLOW DOTS ── */
+@keyframes flow-dot {
+  0%   { opacity: 0; left: 0%; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { opacity: 0; left: 90%; }
+}
+
+/* ── ALARM FLASH ── */
+@keyframes alarm-flash { 0%,100% { background: rgba(255,51,85,0.05); } 50% { background: rgba(255,51,85,0.15); } }
+.alarm-active { animation: alarm-flash 1s infinite; }
+
+/* ── INPUT NUMBER ── */
+input[type=number] {
+  background: var(--bg-input); border: 1px solid var(--border);
+  color: var(--text-primary); font-family: var(--font-mono); font-size: 12px;
+  padding: 6px 8px; border-radius: var(--radius); width: 100%; outline: none;
+}
+input[type=number]:focus { border-color: var(--cyan-dim); }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ══════════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════════ -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark"></div>
+      <div>
+        <div class="logo-text">APEX</div>
+        <div class="logo-sub">v3.2.1 INDUSTRIAL SIM</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Control Modules</div>
+      <div class="nav-item active" onclick="switchPage('dashboard')">
+        <span class="nav-icon">◈</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="switchPage('pipeline')">
+        <span class="nav-icon">⬡</span> Pipeline Builder
+      </div>
+      <div class="nav-item" onclick="switchPage('emissions')">
+        <span class="nav-icon">☁</span> Emissions
+      </div>
+      <div class="nav-item" onclick="switchPage('energy')">
+        <span class="nav-icon">⚡</span> Energy & Cost
+      </div>
+      <div class="nav-item" onclick="switchPage('compliance')">
+        <span class="nav-icon">⚖</span> Compliance
+        <span class="nav-badge" id="alarm-badge">0</span>
+      </div>
+      <div class="nav-item" onclick="switchPage('analytics')">
+        <span class="nav-icon">▦</span> Analytics
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">System</div>
+      <div class="nav-item" onclick="switchPage('config')">
+        <span class="nav-icon">⚙</span> Configuration
+      </div>
+      <div class="nav-item" onclick="switchPage('log')">
+        <span class="nav-icon">≡</span> Event Log
+      </div>
+    </div>
+
+    <div class="sidebar-status">
+      <div class="status-row">
+        <span>SYSTEM</span>
+        <span><span class="dot green" id="sys-dot"></span><span id="sys-status-text">OPERATIONAL</span></span>
+      </div>
+      <div class="status-row">
+        <span>SIMULATION</span>
+        <span style="color:var(--cyan)" id="sim-fps">60 FPS</span>
+      </div>
+      <div class="status-row">
+        <span>UNITS ONLINE</span>
+        <span id="units-online" style="color:var(--green)">0 / 0</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════
+       MAIN
+  ═══════════════════════════════════════════════ -->
+  <main class="main">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="breadcrumb">
+        APEX <span class="sep">/</span>
+        <span class="crumb" id="breadcrumb-label">Dashboard</span>
+      </div>
+      <div class="header-spacer"></div>
+      <div class="sys-time" id="clock">00:00:00</div>
+      <div class="operator-badge">
+        <div class="operator-dot"></div>
+        OPR-01 · CONTROL ROOM A
+      </div>
+      <button class="alarm-btn" id="alarm-banner" onclick="switchPage('compliance')">
+        ⚠ <span id="alarm-count">0</span> ALARMS
+      </button>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ════════════════════════════════ PAGE: DASHBOARD ════ -->
+      <div class="page active" id="page-dashboard">
+        <!-- KPI Row -->
+        <div class="metrics-row">
+          <div class="metric-card green">
+            <div class="metric-label">SO₂ Removal</div>
+            <div class="metric-value" id="kpi-so2">--</div>
+            <div class="metric-unit">% efficiency</div>
+            <div class="metric-delta down" id="kpi-so2-delta">▼ 0%</div>
+          </div>
+          <div class="metric-card cyan">
+            <div class="metric-label">NOx Removal</div>
+            <div class="metric-value" id="kpi-nox">--</div>
+            <div class="metric-unit">% efficiency</div>
+            <div class="metric-delta down" id="kpi-nox-delta">▼ 0%</div>
+          </div>
+          <div class="metric-card amber">
+            <div class="metric-label">CO₂ Captured</div>
+            <div class="metric-value" id="kpi-co2">--</div>
+            <div class="metric-unit">% of inlet</div>
+            <div class="metric-delta" id="kpi-co2-delta">── 0%</div>
+          </div>
+          <div class="metric-card red">
+            <div class="metric-label">Energy Load</div>
+            <div class="metric-value" id="kpi-energy">--</div>
+            <div class="metric-unit">MW total</div>
+            <div class="metric-delta up" id="kpi-energy-delta">▲ 0 MW</div>
+          </div>
+          <div class="metric-card purple">
+            <div class="metric-label">Op. Cost</div>
+            <div class="metric-value" id="kpi-cost">--</div>
+            <div class="metric-unit">$/hr</div>
+            <div class="metric-delta" id="kpi-cost-delta">── $0/hr</div>
+          </div>
+        </div>
+
+        <!-- Main charts row -->
+        <div class="grid-65-35">
+          <div class="card">
+            <div class="card-title-bar">
+              <div class="card-title">◈ <span class="accent">EMISSION PROFILE</span> — Real-time</div>
+              <div class="badge info" id="sim-badge">● LIVE</div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="emission-chart" width="560" height="180"></canvas>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>SO₂</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>NOx</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>CO₂</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--text-muted)"></div>PM</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">⬡ <span class="accent">UNIT PERFORMANCE</span></div>
+            <div id="unit-performance-list">
+              <div style="color:var(--text-muted);font-size:11px;text-align:center;padding:20px">No units in pipeline.<br>Go to Pipeline Builder.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI + Flow -->
+        <div class="grid-40-60">
+          <div class="ai-panel">
+            <div class="ai-header">
+              <div class="ai-orb"></div>
+              <div class="ai-title">APEX INTELLIGENCE ENGINE</div>
+              <div class="badge info" style="margin-left:auto">AI</div>
+            </div>
+            <div class="ai-suggestion" id="ai-suggestion">
+              Initializing analysis engine... Awaiting simulation data.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">⚡ <span class="accent">PROCESS OVERVIEW</span></div>
+            <canvas id="flow-canvas" width="420" height="100" class="flow-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════ PAGE: PIPELINE BUILDER ════ -->
+      <div class="page" id="page-pipeline">
+        <div class="card">
+          <div class="card-title-bar">
+            <div class="card-title">⬡ <span class="accent">PIPELINE BUILDER</span> — Drag to reorder</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-secondary" onclick="resetPipeline()">↺ Reset</button>
+              <button class="btn btn-primary" onclick="openUnitModal()">+ Add Unit</button>
+            </div>
+          </div>
+          <div class="pipeline-container" id="pipeline-container">
+            <!-- Populated by JS -->
+          </div>
+          <div style="margin-top:8px;font-size:9px;color:var(--text-muted);letter-spacing:1px">
+            DRAG TO REORDER · HOVER UNIT TO REMOVE · MAX 8 UNITS · FLUE GAS FLOWS LEFT→RIGHT
+          </div>
+        </div>
+
+        <!-- Unit parameter controls -->
+        <div class="grid-3" id="unit-controls-grid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Emissions flow table -->
+        <div class="card">
+          <div class="card-title">◈ <span class="accent">STAGE-BY-STAGE EMISSION FLOW</span></div>
+          <table class="data-table" id="flow-table">
+            <thead>
+              <tr>
+                <th>Stage</th><th>Unit</th>
+                <th>SO₂ (mg/m³)</th><th>NOx (mg/m³)</th>
+                <th>CO₂ (%)</th><th>PM (mg/m³)</th>
+                <th>Removal SO₂</th><th>Removal NOx</th>
+                <th>Energy (MW)</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="flow-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════ PAGE: EMISSIONS ════ -->
+      <div class="page" id="page-emissions">
+        <!-- Source Configuration -->
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">☁ <span class="accent">EMISSION SOURCE</span> — Generator Configuration</div>
+            <div class="control-group">
+              <div class="control-label">Fuel Type</div>
+              <select id="fuel-type" onchange="updateSim()">
+                <option value="coal">Coal (Bituminous)</option>
+                <option value="lignite">Lignite (Brown Coal)</option>
+                <option value="gas">Natural Gas</option>
+                <option value="biomass">Biomass</option>
+                <option value="oilshale">Oil Shale</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>Flue Gas Temperature</span>
+                <span class="val" id="temp-val">350°C</span>
+              </div>
+              <input type="range" id="temp-slider" min="100" max="600" value="350" oninput="updateSim()">
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>Flow Rate</span>
+                <span class="val" id="flow-val">5000 Nm³/hr</span>
+              </div>
+              <input type="range" id="flow-slider" min="500" max="20000" value="5000" step="100" oninput="updateSim()">
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>Excess Air Factor (λ)</span>
+                <span class="val" id="air-val">1.20</span>
+              </div>
+              <input type="range" id="air-slider" min="1.0" max="2.0" value="1.2" step="0.05" oninput="updateSim()">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">◈ <span class="accent">RAW EMISSION CONCENTRATIONS</span></div>
+            <table class="data-table">
+              <thead><tr><th>Pollutant</th><th>Inlet Conc.</th><th>Unit</th><th>Load</th><th>Class</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>SO₂</td>
+                  <td class="mono" id="inlet-so2">--</td>
+                  <td>mg/Nm³</td>
+                  <td class="mono" id="inlet-so2-load">--</td>
+                  <td><span class="badge alarm">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>NOx</td>
+                  <td class="mono" id="inlet-nox">--</td>
+                  <td>mg/Nm³</td>
+                  <td class="mono" id="inlet-nox-load">--</td>
+                  <td><span class="badge warn">MED</span></td>
+                </tr>
+                <tr>
+                  <td>CO₂</td>
+                  <td class="mono" id="inlet-co2">--</td>
+                  <td>vol %</td>
+                  <td class="mono" id="inlet-co2-load">--</td>
+                  <td><span class="badge info">GHG</span></td>
+                </tr>
+                <tr>
+                  <td>PM₁₀</td>
+                  <td class="mono" id="inlet-pm">--</td>
+                  <td>mg/Nm³</td>
+                  <td class="mono" id="inlet-pm-load">--</td>
+                  <td><span class="badge alarm">HIGH</span></td>
+                </tr>
+                <tr>
+                  <td>HCl</td>
+                  <td class="mono" id="inlet-hcl">--</td>
+                  <td>mg/Nm³</td>
+                  <td>--</td>
+                  <td><span class="badge warn">LOW</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Emission bars -->
+        <div class="card">
+          <div class="card-title">▦ <span class="accent">INLET vs OUTLET COMPARISON</span></div>
+          <div id="emission-compare">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════ PAGE: ENERGY & COST ════ -->
+      <div class="page" id="page-energy">
+        <div class="metrics-row">
+          <div class="metric-card cyan">
+            <div class="metric-label">Total Energy</div>
+            <div class="metric-value" id="e-total">--</div>
+            <div class="metric-unit">MW</div>
+          </div>
+          <div class="metric-card amber">
+            <div class="metric-label">Op. Cost/hr</div>
+            <div class="metric-value" id="e-cost-hr">--</div>
+            <div class="metric-unit">USD</div>
+          </div>
+          <div class="metric-card red">
+            <div class="metric-label">Cost/ton SO₂</div>
+            <div class="metric-value" id="e-cost-so2">--</div>
+            <div class="metric-unit">USD/ton</div>
+          </div>
+          <div class="metric-card green">
+            <div class="metric-label">Carbon Tax</div>
+            <div class="metric-value" id="e-carbon-tax">--</div>
+            <div class="metric-unit">USD/hr</div>
+          </div>
+          <div class="metric-card purple">
+            <div class="metric-label">Byproduct Value</div>
+            <div class="metric-value" id="e-byproduct">--</div>
+            <div class="metric-unit">USD/hr</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">⚡ <span class="accent">ENERGY BREAKDOWN BY UNIT</span></div>
+            <canvas id="energy-chart" width="380" height="200"></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title">$ <span class="accent">COST ANALYSIS</span></div>
+            <table class="data-table" id="cost-table">
+              <thead><tr><th>Unit</th><th>Energy (MW)</th><th>Reagent Cost</th><th>Total $/hr</th></tr></thead>
+              <tbody id="cost-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">♲ <span class="accent">BYPRODUCT MANAGEMENT</span></div>
+            <table class="data-table" id="byproduct-table">
+              <thead><tr><th>Stream</th><th>Quantity</th><th>Disposition</th><th>Risk</th></tr></thead>
+              <tbody id="byproduct-body"></tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title">⚖ <span class="accent">TRADEOFF ANALYSIS</span></div>
+            <canvas id="tradeoff-chart" width="380" height="180"></canvas>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--cyan)"></div>Efficiency</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Cost ($/hr)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════ PAGE: COMPLIANCE ════ -->
+      <div class="page" id="page-compliance">
+        <div class="card">
+          <div class="card-title-bar">
+            <div class="card-title">⚖ <span class="accent">REGULATORY COMPLIANCE</span> — IED / EPA Standards</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="font-size:10px;color:var(--text-muted)">Carbon Tax Rate ($/ton):</span>
+              <input type="number" id="carbon-tax-rate" value="25" min="0" max="200" style="width:70px" onchange="updateSim()">
+            </div>
+          </div>
+          <div id="compliance-gauges">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card" id="alarm-card">
+            <div class="card-title">⚠ <span class="accent">ACTIVE ALARMS & ALERTS</span></div>
+            <div id="alarm-list">
+              <div style="color:var(--green);font-size:11px;padding:8px">✓ No active alarms</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">◈ <span class="accent">FAILURE SCENARIOS</span></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button class="btn btn-danger" onclick="triggerFailure('catalyst')">☠ Catalyst Poisoning</button>
+              <button class="btn btn-danger" onclick="triggerFailure('overload')">⚡ System Overload</button>
+              <button class="btn btn-danger" onclick="triggerFailure('saturation')">⬛ Sorbent Saturation</button>
+              <button class="btn btn-danger" onclick="triggerFailure('fouling')">⬒ Precipitator Fouling</button>
+              <button class="btn btn-secondary" onclick="clearFailures()">↺ Clear All Faults</button>
+              <button class="btn btn-secondary" onclick="runOptimize()">★ Auto-Optimize</button>
+            </div>
+            <div style="margin-top:12px">
+              <div class="card-title" style="margin-bottom:8px">FAULT STATUS</div>
+              <div id="fault-status" style="font-size:11px;color:var(--green)">✓ All systems nominal</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════ PAGE: ANALYTICS ════ -->
+      <div class="page" id="page-analytics">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">▦ <span class="accent">EFFICIENCY vs TEMPERATURE</span> — SCR Window</div>
+            <canvas id="scr-chart" width="380" height="200"></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title">▦ <span class="accent">FLOW RATE vs REMOVAL</span> — Contact Time Effect</div>
+            <canvas id="flow-chart" width="380" height="200"></canvas>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">▦ <span class="accent">REAGENT CONSUMPTION</span> — Cumulative</div>
+            <canvas id="reagent-chart" width="380" height="200"></canvas>
+          </div>
+          <div class="card">
+            <div class="card-title">★ <span class="accent">OPTIMIZATION SURFACE</span> — Eff. vs Cost</div>
+            <canvas id="optim-chart" width="380" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════ PAGE: CONFIG ════ -->
+      <div class="page" id="page-config">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">⚙ <span class="accent">REAGENT CONFIGURATION</span></div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>Ca(OH)₂ Concentration (scrubber)</span>
+                <span class="val" id="lime-val">15 %</span>
+              </div>
+              <input type="range" id="lime-slider" min="5" max="30" value="15" oninput="updateSim()">
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>NH₃ Injection Rate (SCR)</span>
+                <span class="val" id="nh3-val">100 %</span>
+              </div>
+              <input type="range" id="nh3-slider" min="10" max="150" value="100" oninput="updateSim()">
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>Activated Carbon Load (CC)</span>
+                <span class="val" id="carbon-val">100 %</span>
+              </div>
+              <input type="range" id="carbon-slider" min="10" max="100" value="100" oninput="updateSim()">
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">⚙ <span class="accent">OPERATING PARAMETERS</span></div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>System Pressure (kPa)</span>
+                <span class="val" id="pressure-val">101 kPa</span>
+              </div>
+              <input type="range" id="pressure-slider" min="80" max="150" value="101" oninput="updateSim()">
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>Moisture Content (%)</span>
+                <span class="val" id="moisture-val">10 %</span>
+              </div>
+              <input type="range" id="moisture-slider" min="0" max="40" value="10" oninput="updateSim()">
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span>ESP Voltage (kV)</span>
+                <span class="val" id="esp-val">50 kV</span>
+              </div>
+              <input type="range" id="esp-slider" min="20" max="80" value="50" oninput="updateSim()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════ PAGE: LOG ════ -->
+      <div class="page" id="page-log">
+        <div class="card">
+          <div class="card-title-bar">
+            <div class="card-title">≡ <span class="accent">SYSTEM EVENT LOG</span></div>
+            <button class="btn btn-secondary" onclick="clearLog()">✕ Clear</button>
+          </div>
+          <div class="log-panel" id="main-log" style="height:400px"></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<!-- ══════════ UNIT SELECTOR MODAL ══════════ -->
+<div class="modal-overlay" id="unit-modal">
+  <div class="modal">
+    <div class="modal-title">SELECT CONTROL UNIT</div>
+    <div class="unit-grid">
+      <div class="unit-option" onclick="addUnit('cyclone')">
+        <div class="opt-icon">🌀</div>
+        <div class="opt-name">Cyclone Separator</div>
+        <div class="opt-tag">Coarse PM removal</div>
+      </div>
+      <div class="unit-option" onclick="addUnit('esp')">
+        <div class="opt-icon">⚡</div>
+        <div class="opt-name">Electrostatic Ppt.</div>
+        <div class="opt-tag">Fine PM / sub-micron</div>
+      </div>
+      <div class="unit-option" onclick="addUnit('scrubber')">
+        <div class="opt-icon">💧</div>
+        <div class="opt-name">Wet Scrubber</div>
+        <div class="opt-tag">SO₂ + HCl removal</div>
+      </div>
+      <div class="unit-option" onclick="addUnit('scr')">
+        <div class="opt-icon">⚗</div>
+        <div class="opt-name">SCR Reactor</div>
+        <div class="opt-tag">NOx → N₂ catalytic</div>
+      </div>
+      <div class="unit-option" onclick="addUnit('carboncap')">
+        <div class="opt-icon">🧲</div>
+        <div class="opt-name">Carbon Capture</div>
+        <div class="opt-tag">CO₂ adsorption</div>
+      </div>
+      <div class="unit-option" onclick="addUnit('baghouse')">
+        <div class="opt-icon">🔲</div>
+        <div class="opt-name">Bag Filter</div>
+        <div class="opt-tag">PM high-efficiency</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;text-align:right">
+      <button class="btn btn-secondary" onclick="closeUnitModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     JAVASCRIPT — SIMULATION ENGINE
+══════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// UNIT DEFINITIONS — Scientific parameters for each control unit
+// ═══════════════════════════════════════════════════════════════
+const UNIT_DEFS = {
+  cyclone: {
+    name: 'Cyclone', icon: '🌀', color: '#00d4ff',
+    // Cyclone removes coarse particles (>10μm) via centrifugal force
+    // Efficiency modeled by Lapple model: η = 1/(1+(Dc/D)²)
+    // Simplified: ~85% coarse PM removal, not SO₂/NOx
+    so2_eff: 0, nox_eff: 0, co2_eff: 0, pm_eff: 0.82,
+    base_energy: 0.05, // MW per unit
+    reagent: 'None', reagent_cost: 0,
+    temp_min: 0, temp_max: 600,
+    desc: 'Centrifugal PM separation',
+    constraints: { min_temp: 0, max_temp: 600, pm_only: true }
+  },
+  esp: {
+    name: 'ESP', icon: '⚡', color: '#ffaa00',
+    // Electrostatic precipitator: Deutsch-Anderson equation
+    // η = 1 - exp(-w·A/Q)  where w=drift velocity, A=plate area, Q=flow
+    // Voltage-dependent drift velocity: w ∝ V²
+    so2_eff: 0, nox_eff: 0, co2_eff: 0, pm_eff: 0.97,
+    base_energy: 0.12,
+    reagent: 'Electricity', reagent_cost: 15,
+    temp_min: 80, temp_max: 400,
+    desc: 'High-voltage PM collection',
+    constraints: { voltage_dependent: true }
+  },
+  scrubber: {
+    name: 'Wet Scrubber', icon: '💧', color: '#00ff88',
+    // Gas absorption: SO₂ + Ca(OH)₂ → CaSO₃ + H₂O
+    // Efficiency via HTU/NTU: η = 1 - exp(-NTU)
+    // NTU influenced by: lime conc, L/G ratio, temperature, residence time
+    so2_eff: 0.92, nox_eff: 0.15, co2_eff: 0.05, pm_eff: 0.45,
+    base_energy: 0.35,
+    reagent: 'Ca(OH)₂', reagent_cost: 85,
+    temp_min: 50, temp_max: 180,
+    desc: 'Alkaline wet absorption',
+    constraints: { temp_sensitive: true, produces_sludge: true }
+  },
+  scr: {
+    name: 'SCR', icon: '⚗', color: '#cc44ff',
+    // Selective Catalytic Reduction: 4NO + 4NH₃ + O₂ → 4N₂ + 6H₂O
+    // Optimal window: 280–420°C (V₂O₅/TiO₂ catalyst)
+    // Efficiency drops outside window, poisoned by SO₃, As
+    so2_eff: 0.05, nox_eff: 0.92, co2_eff: 0, pm_eff: 0,
+    base_energy: 0.15,
+    reagent: 'NH₃', reagent_cost: 120,
+    temp_min: 280, temp_max: 420,
+    desc: 'Catalytic DeNOx (NH₃)',
+    constraints: { temp_window: true, catalyst_poisoning: true }
+  },
+  carboncap: {
+    name: 'Carbon Cap', icon: '🧲', color: '#00ff88',
+    // Pressure Swing Adsorption on zeolite/activated carbon
+    // Langmuir isotherm: q = qm·K·P / (1 + K·P)
+    // Saturation degrades performance; regeneration cycle modeled
+    so2_eff: 0.02, nox_eff: 0.02, co2_eff: 0.85, pm_eff: 0,
+    base_energy: 0.80,
+    reagent: 'Activated Carbon', reagent_cost: 200,
+    temp_min: 40, temp_max: 200,
+    desc: 'PSA CO₂ capture',
+    constraints: { saturation: true, high_energy: true }
+  },
+  baghouse: {
+    name: 'Bag Filter', icon: '🔲', color: '#6a8fa0',
+    // Fabric filtration: Kozeny-Carman equation for pressure drop
+    // η ≈ 99.5% for PM; also captures some SO₂ with reagent injection
+    so2_eff: 0.10, nox_eff: 0, co2_eff: 0, pm_eff: 0.995,
+    base_energy: 0.20,
+    reagent: 'None', reagent_cost: 0,
+    temp_min: 80, temp_max: 260,
+    desc: 'Fabric PM filtration',
+    constraints: { max_temp: 260 }
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// FUEL EMISSION PROFILES — Base pollutant concentrations
+// Values: SO₂ (mg/Nm³), NOx (mg/Nm³), CO₂ (vol%), PM (mg/Nm³)
+// Based on EU BAT reference documents for combustion plants
+// ═══════════════════════════════════════════════════════════════
+const FUEL_PROFILES = {
+  coal:    { so2: 2800, nox: 650,  co2: 14.5, pm: 4500, hcl: 120, name: 'Bituminous Coal' },
+  lignite: { so2: 3800, nox: 500,  co2: 16.2, pm: 6000, hcl: 60,  name: 'Lignite' },
+  gas:     { so2: 12,   nox: 300,  co2: 11.5, pm: 15,   hcl: 5,   name: 'Natural Gas' },
+  biomass: { so2: 400,  nox: 420,  co2: 12.0, pm: 1200, hcl: 200, name: 'Biomass' },
+  oilshale:{ so2: 3200, nox: 720,  co2: 15.8, pm: 5500, hcl: 180, name: 'Oil Shale' }
+};
+
+// EU IED / EPA emission limits (mg/Nm³ or vol%)
+const LIMITS = {
+  so2: 200, nox: 200, co2_pct: 5.0, pm: 20
+};
+
+// ═══════════════════════════════════════════════════════════════
+// SIMULATION STATE
+// ═══════════════════════════════════════════════════════════════
+const state = {
+  fuel: 'coal',
+  temp: 350,       // °C flue gas temperature
+  flowRate: 5000,  // Nm³/hr
+  airFactor: 1.2,  // excess air (lambda)
+  pressure: 101,   // kPa
+  moisture: 10,    // %
+  espVoltage: 50,  // kV
+  lime: 15,        // % Ca(OH)₂ concentration
+  nh3: 100,        // % NH₃ injection rate
+  carbonLoad: 100, // % sorbent saturation avoidance
+  carbonTaxRate: 25, // $/ton CO₂
+
+  pipeline: [],    // array of unit type strings
+  faults: {},      // fault flags
+  history: [],     // time-series for chart
+
+  // Computed outputs
+  inlet: {},
+  outlet: {},
+  stages: [],
+  energy: 0,
+  costPerHr: 0,
+  alarms: []
+};
+
+// ═══════════════════════════════════════════════════════════════
+// SIMULATION ENGINE
+// Core function: runs the full multi-stage simulation
+// ═══════════════════════════════════════════════════════════════
+function runSimulation() {
+  const fuel = FUEL_PROFILES[state.fuel];
+  const T    = state.temp;     // °C
+  const Q    = state.flowRate; // Nm³/hr
+  const λ    = state.airFactor;
+
+  // ── Inlet concentrations (with temperature and air correction) ──
+  // Higher temperature increases SO₂ volatility factor
+  // Higher excess air dilutes concentrations
+  const tempFactor = 1 + (T - 350) * 0.0008; // ±0.08% per °C from nominal
+  const airDilute  = 1 / (λ * 0.95);          // dilution from excess air
+
+  const inlet = {
+    so2: fuel.so2 * tempFactor * airDilute,
+    nox: fuel.nox * tempFactor * (1 + (T - 350) * 0.001), // NOx increases with T
+    co2: fuel.co2 * airDilute,
+    pm:  fuel.pm  * (1 + state.moisture * 0.005),          // moisture increases PM adhesion
+    hcl: fuel.hcl * airDilute
+  };
+  state.inlet = { ...inlet };
+
+  // ── Stage-by-stage processing ──
+  let cur = { ...inlet };
+  const stages = [];
+  let totalEnergy = 0;
+
+  for (let i = 0; i < state.pipeline.length; i++) {
+    const utype = state.pipeline[i];
+    const udef  = UNIT_DEFS[utype];
+
+    // Compute effective efficiencies with physical corrections
+    let eff = computeUnitEfficiency(utype, cur, T, Q, state.faults[utype]);
+
+    // Compute removal
+    const removed = {
+      so2: cur.so2 * eff.so2,
+      nox: cur.nox * eff.nox,
+      co2: cur.co2 * eff.co2,
+      pm:  cur.pm  * eff.pm
+    };
+
+    const after = {
+      so2: cur.so2 - removed.so2,
+      nox: cur.nox - removed.nox,
+      co2: cur.co2 - removed.co2,
+      pm:  cur.pm  - removed.pm,
+      hcl: cur.hcl * (utype === 'scrubber' ? 0.2 : 1)
+    };
+
+    // Energy calculation (MW) — scaled with flow rate
+    const flowScale = Q / 5000;
+    const energy = udef.base_energy * flowScale * (state.faults[utype] ? 1.3 : 1);
+
+    stages.push({
+      stage: i + 1, unit: utype, name: udef.name,
+      before: { ...cur }, after: { ...after },
+      eff, removed, energy,
+      fault: !!state.faults[utype]
+    });
+
+    cur = { ...after };
+    totalEnergy += energy;
+  }
+
+  state.outlet = { ...cur };
+  state.stages  = stages;
+  state.energy  = totalEnergy;
+
+  // ── Cost calculation ──
+  state.costPerHr = computeCost(stages, Q);
+
+  // ── Alarm checking ──
+  state.alarms = checkAlarms(cur, T, Q);
+
+  return { inlet, outlet: cur, stages, totalEnergy };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UNIT EFFICIENCY MODEL
+// Computes corrected efficiency per unit type based on operating
+// conditions. Applies physical/chemical corrections to base eff.
+// ═══════════════════════════════════════════════════════════════
+function computeUnitEfficiency(utype, cur, T, Q, fault) {
+  const base = UNIT_DEFS[utype];
+  let so2 = base.so2_eff;
+  let nox = base.nox_eff;
+  let co2 = base.co2_eff;
+  let pm  = base.pm_eff;
+
+  if (fault) {
+    // Fault degrades efficiency by 40–70%
+    so2 *= 0.4; nox *= 0.35; co2 *= 0.5; pm *= 0.6;
+    return { so2, nox, co2, pm };
+  }
+
+  // ── Contact time factor ──
+  // Higher flow → shorter contact → lower efficiency
+  // t ∝ 1/Q, so efficiency scales as 1 - (1-η₀)·exp(k·(Q-Q₀)/Q₀)
+  const Q_ref = 5000;
+  const flowFactor = Math.max(0.3, 1 - 0.18 * Math.log10(Q / Q_ref));
+
+  switch (utype) {
+    case 'cyclone':
+      // Cyclone: particle inertia (Stokes number) scales with Q
+      // Higher Q → more centrifugal force → slightly better for coarse PM
+      // But fine-particle efficiency drops with higher velocity
+      pm = 0.82 + Math.min(0.05, (Q - 3000) * 0.000005);
+      pm = Math.min(0.90, Math.max(0.65, pm));
+      break;
+
+    case 'esp':
+      // Deutsch-Anderson: η = 1 - exp(-w·A/Q)
+      // w (drift velocity) ∝ V² (ESP voltage squared)
+      // Higher temp reduces gas density → slightly better drift
+      const V = state.espVoltage;
+      const wDrift = 0.05 * (V / 50) ** 2;      // normalized drift velocity
+      const A_Q = 0.5 / (Q / Q_ref);             // specific collection area
+      pm = 1 - Math.exp(-wDrift * A_Q * 20);
+      pm = Math.max(0.80, Math.min(0.995, pm));
+      // High temperature reduces resistivity (improves)
+      if (T > 350) pm *= 1.02;
+      if (T > 400) pm *= 0.95; // re-entrainment
+      break;
+
+    case 'scrubber':
+      // NTU model for gas absorption
+      // NTU increases with: lime concentration, lower temp, lower Q
+      // SO₂ + Ca(OH)₂ → CaSO₃: stoichiometric check
+      const lime = state.lime / 15;  // normalized
+      const NTU_so2 = 2.8 * lime * flowFactor;
+      so2 = 1 - Math.exp(-NTU_so2);
+      so2 = Math.max(0.3, Math.min(0.98, so2));
+
+      // Temperature correction: optimal 60–80°C; penalty above 180°C
+      if (T > 150) { so2 *= Math.max(0.5, 1 - (T - 150) * 0.005); }
+      if (T < 50)  { so2 *= 0.7; }
+
+      nox = 0.15 * flowFactor * 0.6; // limited NOx removal in alkali
+      pm  = 0.45 * flowFactor;
+      break;
+
+    case 'scr':
+      // Catalyst efficiency modeled with Gaussian temperature window
+      // η_T = η_max · exp(-0.5·((T-T_opt)/σ)²)
+      // Optimal T_opt = 350°C, σ = 60°C for V₂O₅/TiO₂
+      const T_opt = 350, sigma = 60;
+      const tempEff = Math.exp(-0.5 * ((T - T_opt) / sigma) ** 2);
+      const nh3Factor = Math.min(1, state.nh3 / 100);  // NH₃ stoichiometry
+      const nh3Excess = Math.max(0, (state.nh3 - 100) / 100 * 0.1); // NH₃ slip
+      nox = 0.92 * tempEff * nh3Factor * flowFactor;
+      nox = Math.max(0, Math.min(0.96, nox - nh3Excess));
+
+      // Check catalyst poisoning (SO₃ from SO₂ at high temp)
+      if (cur.so2 > 500 && T > 400) nox *= 0.75; // SO₃ poisoning
+      break;
+
+    case 'carboncap':
+      // PSA/TSA: Langmuir isotherm model
+      // Loading q = q_max · (K·P_CO2) / (1 + K·P_CO2)
+      // Saturation reduces capacity over time → modeled via carbonLoad
+      const satFactor = state.carbonLoad / 100;
+      const P_co2 = (cur.co2 / 100) * (state.pressure / 101.325);
+      const K = 0.8; // Langmuir constant (bar⁻¹)
+      const q_ratio = (K * P_co2) / (1 + K * P_co2);
+      co2 = 0.90 * q_ratio * satFactor * flowFactor;
+      co2 = Math.max(0, Math.min(0.92, co2));
+
+      // High temp reduces adsorption capacity
+      if (T > 120) co2 *= Math.max(0.3, 1 - (T - 120) * 0.01);
+      break;
+
+    case 'baghouse':
+      // Near-perfect particle capture (99.5%) with minor flow effect
+      pm = 0.995 - (Q > 10000 ? (Q - 10000) * 0.000002 : 0);
+      pm = Math.max(0.97, pm);
+      // Temp limit: fabric degradation above 260°C
+      if (T > 260) pm *= Math.max(0.7, 1 - (T - 260) * 0.01);
+      // Activated carbon injection improves SO₂
+      so2 = 0.10 * (state.lime / 15);
+      break;
+  }
+
+  return { so2: clamp(so2,0,1), nox: clamp(nox,0,1), co2: clamp(co2,0,1), pm: clamp(pm,0,1) };
+}
+
+function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+// ═══════════════════════════════════════════════════════════════
+// COST ENGINE
+// Reagent cost, energy cost, maintenance, byproducts
+// ═══════════════════════════════════════════════════════════════
+function computeCost(stages, Q) {
+  let total = 0;
+  const energyPrice = 0.08; // $/kWh
+
+  for (const s of stages) {
+    const def = UNIT_DEFS[s.unit];
+    // Energy cost: MW → kW/hr = 1000 × MW, then × $/kWh
+    const energyCost = s.energy * 1000 * energyPrice;
+
+    // Reagent cost: scaled to flow and removal
+    let reagentCost = 0;
+    if (s.unit === 'scrubber') {
+      // kg Ca(OH)₂/hr = SO₂ removed (mg/Nm³ × Q (Nm³/hr)) × mol ratio / 1e6
+      const so2_removed_kg = s.removed.so2 * Q / 1e6; // kg/hr SO₂
+      const lime_kg = so2_removed_kg * (74 / 64) * 1.1; // stoich + 10% excess
+      reagentCost = lime_kg * (def.reagent_cost / 1000); // $/hr (cost in $/ton → /1000 for $/kg)
+    } else if (s.unit === 'scr') {
+      const nox_removed_mol = s.removed.nox * Q / 1e6 / 0.046; // mol/hr NOx
+      const nh3_kg = nox_removed_mol * 0.017 * (state.nh3 / 100); // kg NH₃/hr
+      reagentCost = nh3_kg * def.reagent_cost / 1000;
+    } else if (s.unit === 'carboncap') {
+      const co2_captured_ton = (s.before.co2 - s.after.co2) / 100 * Q * 1.96 / 1e6; // approx
+      reagentCost = co2_captured_ton * def.reagent_cost;
+    }
+
+    s.totalCost = energyCost + reagentCost;
+    s.energyCost = energyCost;
+    s.reagentCost = reagentCost;
+    total += s.totalCost;
+  }
+
+  // Carbon tax: remaining CO₂ at outlet
+  const co2_outlet_ton_hr = (state.outlet.co2 / 100) * Q * 1.96 / 1e6;
+  const carbonTax = co2_outlet_ton_hr * state.carbonTaxRate;
+  state.carbonTax = carbonTax;
+
+  return total;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ALARM / COMPLIANCE CHECKER
+// ═══════════════════════════════════════════════════════════════
+function checkAlarms(outlet, T, Q) {
+  const alarms = [];
+
+  if (outlet.so2 > LIMITS.so2)
+    alarms.push({ level: 'alarm', msg: `SO₂ outlet ${outlet.so2.toFixed(0)} mg/m³ exceeds limit ${LIMITS.so2}` });
+  else if (outlet.so2 > LIMITS.so2 * 0.8)
+    alarms.push({ level: 'warn', msg: `SO₂ approaching limit: ${outlet.so2.toFixed(0)} / ${LIMITS.so2} mg/m³` });
+
+  if (outlet.nox > LIMITS.nox)
+    alarms.push({ level: 'alarm', msg: `NOx outlet ${outlet.nox.toFixed(0)} mg/m³ exceeds limit ${LIMITS.nox}` });
+
+  if (outlet.pm > LIMITS.pm)
+    alarms.push({ level: 'alarm', msg: `PM outlet ${outlet.pm.toFixed(1)} mg/m³ exceeds limit ${LIMITS.pm}` });
+
+  if (outlet.co2 > LIMITS.co2_pct)
+    alarms.push({ level: 'warn', msg: `CO₂ outlet ${outlet.co2.toFixed(1)} vol% — high GHG footprint` });
+
+  // Scrubber temperature warning
+  const hasScrubber = state.pipeline.includes('scrubber');
+  if (hasScrubber && T > 160)
+    alarms.push({ level: 'warn', msg: `Scrubber inlet temp ${T}°C too high — efficiency degraded` });
+
+  // SCR window warning
+  const hasSCR = state.pipeline.includes('scr');
+  if (hasSCR && (T < 280 || T > 420))
+    alarms.push({ level: 'warn', msg: `SCR operating outside optimal window (280–420°C) — temp: ${T}°C` });
+
+  // Fault alarms
+  for (const [k, v] of Object.entries(state.faults)) {
+    if (v) alarms.push({ level: 'alarm', msg: `FAULT: ${UNIT_DEFS[k].name} — ${getFaultDesc(k)}` });
+  }
+
+  return alarms;
+}
+
+function getFaultDesc(utype) {
+  const descs = {
+    catalyst: 'Catalyst poisoning — NOx removal degraded',
+    overload: 'System overload — all units operating at reduced efficiency',
+    saturation: 'Sorbent saturated — CO₂ capture failing',
+    fouling: 'ESP fouling — PM removal critically degraded'
+  };
+  return descs[utype] || 'Unknown fault';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UI UPDATE FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+function updateSim() {
+  syncState();
+  const result = runSimulation();
+  updateDashboard(result);
+  updatePipelinePage();
+  updateEmissionsPage();
+  updateEnergyPage();
+  updateCompliancePage();
+  drawAllCharts();
+  updateAI();
+  updateStatusBar();
+}
+
+function syncState() {
+  state.fuel      = document.getElementById('fuel-type').value;
+  state.temp      = +document.getElementById('temp-slider').value;
+  state.flowRate  = +document.getElementById('flow-slider').value;
+  state.airFactor = +document.getElementById('air-slider').value;
+  state.pressure  = +document.getElementById('pressure-slider').value;
+  state.moisture  = +document.getElementById('moisture-slider').value;
+  state.espVoltage= +document.getElementById('esp-slider').value;
+  state.lime      = +document.getElementById('lime-slider').value;
+  state.nh3       = +document.getElementById('nh3-slider').value;
+  state.carbonLoad= +document.getElementById('carbon-slider').value;
+  state.carbonTaxRate = +document.getElementById('carbon-tax-rate').value;
+
+  // Sync labels
+  setLabel('temp-val',     `${state.temp}°C`);
+  setLabel('flow-val',     `${state.flowRate.toLocaleString()} Nm³/hr`);
+  setLabel('air-val',      state.airFactor.toFixed(2));
+  setLabel('pressure-val', `${state.pressure} kPa`);
+  setLabel('moisture-val', `${state.moisture} %`);
+  setLabel('esp-val',      `${state.espVoltage} kV`);
+  setLabel('lime-val',     `${state.lime} %`);
+  setLabel('nh3-val',      `${state.nh3} %`);
+  setLabel('carbon-val',   `${state.carbonLoad} %`);
+}
+
+function setLabel(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function updateDashboard(result) {
+  const { inlet, outlet, stages } = result;
+
+  // KPI: overall removal efficiency
+  const so2Eff = inlet.so2 > 0 ? (1 - outlet.so2 / inlet.so2) * 100 : 0;
+  const noxEff = inlet.nox > 0 ? (1 - outlet.nox / inlet.nox) * 100 : 0;
+  const co2Eff = inlet.co2 > 0 ? (1 - outlet.co2 / inlet.co2) * 100 : 0;
+
+  setVal('kpi-so2',    so2Eff.toFixed(1));
+  setVal('kpi-nox',    noxEff.toFixed(1));
+  setVal('kpi-co2',    co2Eff.toFixed(1));
+  setVal('kpi-energy', state.energy.toFixed(2));
+  setVal('kpi-cost',   state.costPerHr.toFixed(0));
+
+  // Unit performance list
+  const perf = document.getElementById('unit-performance-list');
+  if (stages.length === 0) {
+    perf.innerHTML = '<div style="color:var(--text-muted);font-size:11px;text-align:center;padding:20px">No units in pipeline.<br>Go to Pipeline Builder.</div>';
+  } else {
+    perf.innerHTML = stages.map(s => {
+      const so2r = (s.eff.so2 * 100).toFixed(1);
+      const noxr = (s.eff.nox * 100).toFixed(1);
+      const pmr  = (s.eff.pm  * 100).toFixed(1);
+      const barColor = s.fault ? 'var(--red)' : (s.energy > 0.5 ? 'var(--amber)' : 'var(--green)');
+      return `
+        <div style="margin-bottom:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:11px">${UNIT_DEFS[s.unit].icon} ${s.name}</span>
+            ${s.fault ? '<span class="badge alarm">FAULT</span>' : '<span class="badge ok">ONLINE</span>'}
+          </div>
+          <div style="font-size:9px;color:var(--text-muted);margin-bottom:3px">
+            SO₂: ${so2r}% · NOx: ${noxr}% · PM: ${pmr}% · ${s.energy.toFixed(2)} MW
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${Math.max(so2r,noxr,pmr)}%;background:${barColor}"></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // Push to history
+  const now = Date.now();
+  state.history.push({ t: now, so2: outlet.so2, nox: outlet.nox, co2: outlet.co2, pm: outlet.pm });
+  if (state.history.length > 60) state.history.shift();
+
+  drawEmissionChart();
+}
+
+function updatePipelinePage() {
+  renderPipeline();
+  renderFlowTable();
+  renderUnitControls();
+}
+
+function updateEmissionsPage() {
+  const i = state.inlet, o = state.outlet;
+  const Q = state.flowRate;
+
+  setVal('inlet-so2',      i.so2.toFixed(0));
+  setVal('inlet-nox',      i.nox.toFixed(0));
+  setVal('inlet-co2',      i.co2.toFixed(2));
+  setVal('inlet-pm',       i.pm.toFixed(0));
+  setVal('inlet-hcl',      i.hcl.toFixed(0));
+  setVal('inlet-so2-load', (i.so2 * Q / 1e6).toFixed(3) + ' kg/hr');
+  setVal('inlet-nox-load', (i.nox * Q / 1e6).toFixed(3) + ' kg/hr');
+  setVal('inlet-co2-load', (i.co2 * Q * 1.96 / 1e6).toFixed(1) + ' t/hr');
+  setVal('inlet-pm-load',  (i.pm  * Q / 1e6).toFixed(3) + ' kg/hr');
+
+  // Comparison bars
+  const compare = document.getElementById('emission-compare');
+  const pollutants = [
+    { key: 'so2', label: 'SO₂', unit: 'mg/m³', limit: LIMITS.so2 },
+    { key: 'nox', label: 'NOx', unit: 'mg/m³', limit: LIMITS.nox },
+    { key: 'pm',  label: 'PM',  unit: 'mg/m³', limit: LIMITS.pm  },
+    { key: 'co2', label: 'CO₂', unit: 'vol%',  limit: LIMITS.co2_pct }
+  ];
+  compare.innerHTML = pollutants.map(p => {
+    const inVal  = i[p.key];
+    const outVal = o[p.key];
+    const maxVal = Math.max(inVal, p.limit * 3, 0.01);
+    const inPct  = Math.min(100, (inVal  / maxVal) * 100);
+    const outPct = Math.min(100, (outVal / maxVal) * 100);
+    const limPct = Math.min(100, (p.limit/ maxVal) * 100);
+    const ok     = outVal <= p.limit;
+    return `
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:10px">
+          <span style="color:var(--text-secondary)">${p.label}</span>
+          <span style="color:var(--text-muted)">Limit: <span style="color:var(--amber)">${p.limit} ${p.unit}</span></span>
+        </div>
+        <div style="position:relative;height:20px;background:var(--bg-deep);border-radius:2px;overflow:hidden">
+          <div style="position:absolute;top:2px;height:7px;width:${inPct}%;background:rgba(255,51,85,0.3);border-radius:2px;left:0">
+            <span style="font-size:8px;position:absolute;right:3px;top:0;color:var(--red);white-space:nowrap">${inVal.toFixed(1)}</span>
+          </div>
+          <div style="position:absolute;bottom:2px;height:7px;width:${outPct}%;background:${ok?'rgba(0,255,136,0.5)':'rgba(255,51,85,0.7)'};border-radius:2px;left:0">
+            <span style="font-size:8px;position:absolute;right:3px;top:0;color:${ok?'var(--green)':'var(--red)'};white-space:nowrap">${outVal.toFixed(1)}</span>
+          </div>
+          <div style="position:absolute;top:0;bottom:0;left:${limPct}%;width:1px;background:var(--amber);opacity:0.8"></div>
+        </div>
+        <div style="display:flex;gap:16px;font-size:9px;color:var(--text-muted);margin-top:2px">
+          <span>▌ Inlet</span><span>▌ Outlet</span>
+          <span style="margin-left:auto">${ok?'<span class="badge ok">COMPLIANT</span>':'<span class="badge alarm">VIOLATION</span>'}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function updateEnergyPage() {
+  setVal('e-total',    state.energy.toFixed(2));
+  setVal('e-cost-hr',  state.costPerHr.toFixed(0));
+  setVal('e-carbon-tax', (state.carbonTax || 0).toFixed(2));
+
+  // Cost per ton SO₂ removed
+  const so2rem = (state.inlet.so2 - state.outlet.so2) * state.flowRate / 1e9; // tons/hr
+  const costPerTon = so2rem > 0 ? state.costPerHr / so2rem : 0;
+  setVal('e-cost-so2', costPerTon > 10000 ? '∞' : costPerTon.toFixed(0));
+
+  // Byproduct value
+  const byproductVal = computeByproductValue();
+  setVal('e-byproduct', byproductVal.toFixed(2));
+
+  // Cost table
+  const tbody = document.getElementById('cost-table-body');
+  if (state.stages.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted)">No units in pipeline</td></tr>';
+  } else {
+    tbody.innerHTML = state.stages.map(s =>
+      `<tr>
+        <td>${UNIT_DEFS[s.unit].icon} ${s.name}</td>
+        <td class="mono" style="color:var(--cyan)">${s.energy.toFixed(3)}</td>
+        <td class="mono" style="color:var(--amber)">$${(s.reagentCost||0).toFixed(2)}/hr</td>
+        <td class="mono" style="color:var(--green)">$${(s.totalCost||0).toFixed(2)}/hr</td>
+      </tr>`
+    ).join('');
+  }
+
+  // Byproduct table
+  const bptbody = document.getElementById('byproduct-body');
+  bptbody.innerHTML = computeByproducts().map(b =>
+    `<tr>
+      <td>${b.name}</td>
+      <td class="mono">${b.qty}</td>
+      <td>${b.disp}</td>
+      <td><span class="badge ${b.risk}">${b.riskLabel}</span></td>
+    </tr>`
+  ).join('');
+
+  drawEnergyChart();
+  drawTradeoffChart();
+}
+
+function computeByproducts() {
+  const results = [];
+  const Q = state.flowRate;
+
+  if (state.pipeline.includes('scrubber')) {
+    const so2rem = (state.inlet.so2 - state.outlet.so2) * Q / 1e6;
+    const sludge = so2rem * 2.5; // CaSO₃/CaSO₄ sludge ratio
+    results.push({
+      name: 'Scrubber Sludge (CaSO₃)',
+      qty: `${sludge.toFixed(2)} kg/hr`,
+      disp: 'Landfill / Gypsum recovery',
+      risk: 'warn', riskLabel: 'MEDIUM'
+    });
+  }
+  if (state.pipeline.includes('carboncap')) {
+    const co2cap = (state.inlet.co2 - state.outlet.co2) / 100 * Q * 1.96 / 1000;
+    results.push({
+      name: 'CO₂ (compressed)',
+      qty: `${co2cap.toFixed(2)} t/hr`,
+      disp: 'EOR / Geological storage',
+      risk: 'ok', riskLabel: 'LOW'
+    });
+  }
+  if (state.pipeline.includes('esp') || state.pipeline.includes('baghouse')) {
+    const pm_rem = (state.inlet.pm - state.outlet.pm) * Q / 1e6;
+    results.push({
+      name: 'Fly Ash (collected PM)',
+      qty: `${pm_rem.toFixed(2)} kg/hr`,
+      disp: 'Cement industry / Disposal',
+      risk: 'ok', riskLabel: 'LOW'
+    });
+  }
+  if (state.pipeline.includes('scr')) {
+    results.push({
+      name: 'NH₃ Slip',
+      qty: `${(state.nh3 > 100 ? (state.nh3-100)*0.5 : 0).toFixed(1)} ppm`,
+      disp: 'Atmospheric emission',
+      risk: state.nh3 > 110 ? 'alarm' : 'ok',
+      riskLabel: state.nh3 > 110 ? 'HIGH' : 'LOW'
+    });
+  }
+  if (results.length === 0)
+    results.push({ name: 'No byproducts', qty: '—', disp: '—', risk: 'ok', riskLabel: 'NONE' });
+  return results;
+}
+
+function computeByproductValue() {
+  // CaSO₄ (gypsum) can be sold ~$30/ton
+  const Q = state.flowRate;
+  if (state.pipeline.includes('scrubber')) {
+    const so2rem = (state.inlet.so2 - state.outlet.so2) * Q / 1e6;
+    const gypsum_ton = so2rem * 2.5 / 1000;
+    return gypsum_ton * 30; // $/hr
+  }
+  return 0;
+}
+
+function updateCompliancePage() {
+  const o = state.outlet;
+  const pollutants = [
+    { key: 'so2', label: 'SO₂', val: o.so2,  limit: LIMITS.so2,     unit: 'mg/m³' },
+    { key: 'nox', label: 'NOx', val: o.nox,  limit: LIMITS.nox,     unit: 'mg/m³' },
+    { key: 'pm',  label: 'PM',  val: o.pm,   limit: LIMITS.pm,      unit: 'mg/m³' },
+    { key: 'co2', label: 'CO₂', val: o.co2,  limit: LIMITS.co2_pct, unit: 'vol%' }
+  ];
+
+  const gauges = document.getElementById('compliance-gauges');
+  gauges.innerHTML = `<div class="gauge-row">` + pollutants.map(p => {
+    const pct = Math.min(100, (p.val / p.limit) * 100);
+    const color = pct > 100 ? 'red' : (pct > 80 ? 'amber' : 'green');
+    return `<div class="gauge-item">
+      <div class="gauge-label">
+        <span>${p.label}</span>
+        <span style="color:var(--${color})">${p.val.toFixed(p.key==='co2'?2:1)} ${p.unit}</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill ${color}" style="width:${Math.min(100,pct)}%"></div>
+      </div>
+      <div class="gauge-limit">Limit: ${p.limit} ${p.unit} (${pct.toFixed(0)}%)</div>
+    </div>`;
+  }).join('') + `</div>`;
+
+  // Alarms
+  const alarmCount = state.alarms.length;
+  document.getElementById('alarm-count').textContent = alarmCount;
+  document.getElementById('alarm-badge').textContent = alarmCount;
+  document.getElementById('alarm-badge').className = 'nav-badge' + (alarmCount > 0 ? '' : ' ok');
+
+  const alarmList = document.getElementById('alarm-list');
+  if (state.alarms.length === 0) {
+    alarmList.innerHTML = '<div style="color:var(--green);font-size:11px;padding:8px">✓ All emission limits satisfied</div>';
+  } else {
+    alarmList.innerHTML = state.alarms.map(a =>
+      `<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+        <span class="badge ${a.level === 'alarm' ? 'alarm' : 'warn'}">${a.level.toUpperCase()}</span>
+        <span style="font-size:11px;color:var(--text-secondary)">${a.msg}</span>
+      </div>`
+    ).join('');
+  }
+}
+
+function updateStatusBar() {
+  const alarmCount = state.alarms.length;
+  const faultCount = Object.values(state.faults).filter(Boolean).length;
+  const hasCritical = state.alarms.some(a => a.level === 'alarm');
+
+  const dot = document.getElementById('sys-dot');
+  const txt = document.getElementById('sys-status-text');
+  if (faultCount > 0 || hasCritical) {
+    dot.className = 'dot red';
+    txt.textContent = 'DEGRADED';
+    document.getElementById('alarm-banner').style.background = 'rgba(255,51,85,0.25)';
+  } else if (alarmCount > 0) {
+    dot.className = 'dot amber';
+    txt.textContent = 'WARNING';
+  } else {
+    dot.className = 'dot green';
+    txt.textContent = 'OPERATIONAL';
+    document.getElementById('alarm-banner').style.background = '';
+  }
+
+  const online = state.pipeline.length - Object.values(state.faults).filter(Boolean).length;
+  document.getElementById('units-online').textContent = `${Math.max(0,online)} / ${state.pipeline.length}`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PIPELINE RENDERER
+// ═══════════════════════════════════════════════════════════════
+function renderPipeline() {
+  const container = document.getElementById('pipeline-container');
+  container.innerHTML = '';
+
+  // Source node
+  const src = document.createElement('div');
+  src.className = 'pipeline-stage';
+  src.innerHTML = `<div class="unit-box unit-source"><div class="unit-icon">🏭</div><div class="unit-name">FLUE GAS<br>SOURCE</div></div>`;
+  container.appendChild(src);
+
+  // Units
+  state.pipeline.forEach((utype, i) => {
+    // Arrow
+    const arrow = document.createElement('div');
+    arrow.className = 'pipeline-arrow';
+    container.appendChild(arrow);
+
+    const def = UNIT_DEFS[utype];
+    const isFault = !!state.faults[utype];
+    const eff = state.stages[i] ? Math.max(
+      state.stages[i].eff.so2, state.stages[i].eff.nox,
+      state.stages[i].eff.pm,  state.stages[i].eff.co2
+    ) * 100 : 0;
+
+    const stage = document.createElement('div');
+    stage.className = 'pipeline-stage';
+    stage.draggable = true;
+    stage.dataset.index = i;
+
+    stage.innerHTML = `
+      <div class="unit-box" style="border-color:${isFault ? 'var(--red)' : def.color}80;box-shadow:${isFault?'0 0 12px rgba(255,51,85,0.2)':'none'}">
+        <div class="unit-icon">${def.icon}</div>
+        <div class="unit-name" style="color:${isFault?'var(--red)':def.color}">${def.name}</div>
+        <div class="unit-eff" style="color:${isFault?'var(--red)':'var(--text-primary)'}">${isFault?'FAULT':eff.toFixed(0)+'%'}</div>
+        <button class="unit-remove" onclick="removeUnit(${i})">✕</button>
+      </div>`;
+
+    // Drag events
+    stage.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', i);
+      stage.classList.add('dragging');
+    });
+    stage.addEventListener('dragend', () => stage.classList.remove('dragging'));
+    stage.addEventListener('dragover', e => {
+      e.preventDefault();
+      stage.classList.add('drag-over');
+    });
+    stage.addEventListener('dragleave', () => stage.classList.remove('drag-over'));
+    stage.addEventListener('drop', e => {
+      e.preventDefault();
+      stage.classList.remove('drag-over');
+      const fromIdx = +e.dataTransfer.getData('text/plain');
+      const toIdx   = +stage.dataset.index;
+      if (fromIdx !== toIdx) {
+        const moved = state.pipeline.splice(fromIdx, 1)[0];
+        state.pipeline.splice(toIdx, 0, moved);
+        updateSim();
+      }
+    });
+
+    container.appendChild(stage);
+  });
+
+  // Final arrow + sink
+  if (state.pipeline.length > 0) {
+    const arr2 = document.createElement('div');
+    arr2.className = 'pipeline-arrow';
+    container.appendChild(arr2);
+  }
+
+  const sink = document.createElement('div');
+  sink.className = 'pipeline-stage';
+  sink.innerHTML = `<div class="unit-box unit-sink"><div class="unit-icon">🌬</div><div class="unit-name">STACK<br>OUTLET</div></div>`;
+  container.appendChild(sink);
+
+  // Add button
+  if (state.pipeline.length < 8) {
+    const arr3 = document.createElement('div');
+    arr3.style.width = '16px';
+    container.appendChild(arr3);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-unit-btn';
+    addBtn.innerHTML = '+<span>ADD</span>';
+    addBtn.onclick = openUnitModal;
+    container.appendChild(addBtn);
+  }
+}
+
+function renderFlowTable() {
+  const tbody = document.getElementById('flow-table-body');
+  if (state.stages.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="10" style="color:var(--text-muted);text-align:center;padding:16px">Add units to the pipeline to see flow data</td></tr>`;
+    return;
+  }
+
+  // Inlet row
+  const i = state.inlet;
+  let rows = `<tr style="background:rgba(255,51,85,0.05)">
+    <td>0</td><td style="color:var(--red)">🏭 SOURCE</td>
+    <td class="mono">${i.so2.toFixed(0)}</td><td class="mono">${i.nox.toFixed(0)}</td>
+    <td class="mono">${i.co2.toFixed(2)}</td><td class="mono">${i.pm.toFixed(0)}</td>
+    <td>—</td><td>—</td><td>—</td>
+    <td><span class="badge alarm">INLET</span></td>
+  </tr>`;
+
+  rows += state.stages.map(s => {
+    const so2r = (s.eff.so2 * 100).toFixed(1);
+    const noxr = (s.eff.nox * 100).toFixed(1);
+    const ok   = !s.fault;
+    return `<tr>
+      <td>${s.stage}</td>
+      <td>${UNIT_DEFS[s.unit].icon} ${s.name}</td>
+      <td class="mono" style="color:var(--${s.after.so2>LIMITS.so2?'red':'cyan'})">${s.after.so2.toFixed(0)}</td>
+      <td class="mono" style="color:var(--${s.after.nox>LIMITS.nox?'red':'cyan'})">${s.after.nox.toFixed(0)}</td>
+      <td class="mono">${s.after.co2.toFixed(2)}</td>
+      <td class="mono" style="color:var(--${s.after.pm>LIMITS.pm?'red':'cyan'})">${s.after.pm.toFixed(1)}</td>
+      <td class="mono" style="color:var(--green)">${so2r}%</td>
+      <td class="mono" style="color:var(--purple)">${noxr}%</td>
+      <td class="mono" style="color:var(--amber)">${s.energy.toFixed(3)} MW</td>
+      <td><span class="badge ${ok?'ok':'alarm'}">${ok?'ONLINE':'FAULT'}</span></td>
+    </tr>`;
+  }).join('');
+
+  tbody.innerHTML = rows;
+}
+
+function renderUnitControls() {
+  const grid = document.getElementById('unit-controls-grid');
+  if (state.pipeline.length === 0) {
+    grid.innerHTML = '';
+    return;
+  }
+  grid.innerHTML = state.pipeline.map((utype, i) => {
+    const def = UNIT_DEFS[utype];
+    const s   = state.stages[i];
+    return `<div class="card">
+      <div class="card-title">${def.icon} <span class="accent">${def.name.toUpperCase()}</span> — Stage ${i+1}</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-bottom:10px">${def.desc}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:10px;margin-bottom:10px">
+        <div>SO₂ eff: <span style="color:var(--green)">${s?(s.eff.so2*100).toFixed(1):0}%</span></div>
+        <div>NOx eff: <span style="color:var(--purple)">${s?(s.eff.nox*100).toFixed(1):0}%</span></div>
+        <div>PM eff:  <span style="color:var(--cyan)">${s?(s.eff.pm *100).toFixed(1):0}%</span></div>
+        <div>Energy:  <span style="color:var(--amber)">${s?s.energy.toFixed(3):0} MW</span></div>
+      </div>
+      <div style="font-size:9px;color:var(--text-muted)">Op window: ${def.temp_min}–${def.temp_max}°C · ${def.reagent}</div>
+      <div style="margin-top:8px">
+        <span style="font-size:9px;color:var(--text-muted)">PERFORMANCE</span>
+        <div class="progress-bar"><div class="progress-fill ${['ok','warn','alarm'][s&&(s.eff.so2||s.eff.nox||s.eff.pm)>0.5?0:s&&(s.eff.so2||s.eff.nox||s.eff.pm)>0.2?1:2]||'green'}" style="width:${s?Math.max(s.eff.so2,s.eff.nox,s.eff.pm)*100:0}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHART RENDERERS (vanilla Canvas)
+// ═══════════════════════════════════════════════════════════════
+
+// Shared canvas utility
+function prepCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return null;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  return ctx;
+}
+
+function drawGrid(ctx, w, h, rows, cols, color='rgba(30,48,64,0.6)') {
+  ctx.strokeStyle = color;
+  ctx.lineWidth   = 0.5;
+  for (let r = 0; r <= rows; r++) {
+    const y = (h / rows) * r;
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+  }
+  for (let c = 0; c <= cols; c++) {
+    const x = (w / cols) * c;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+  }
+}
+
+// Real-time emission time-series
+function drawEmissionChart() {
+  const ctx = prepCanvas('emission-chart');
+  if (!ctx) return;
+  const W = 560, H = 180, pad = { t:10, r:10, b:20, l:40 };
+  const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
+
+  ctx.save(); ctx.translate(pad.l, pad.t);
+  drawGrid(ctx, cw, ch, 4, 8);
+
+  const hist = state.history;
+  if (hist.length < 2) { ctx.restore(); return; }
+
+  const maxSO2 = Math.max(...hist.map(h => h.so2), 1);
+  const series = [
+    { key:'so2', color:'#ff3355', max: maxSO2 },
+    { key:'nox', color:'#ffaa00', max: Math.max(...hist.map(h=>h.nox), 1) },
+    { key:'co2', color:'#00d4ff', max: 20 },
+    { key:'pm',  color:'#6a8fa0', max: Math.max(...hist.map(h=>h.pm), 1) }
+  ];
+
+  for (const s of series) {
+    ctx.beginPath();
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = 1.5;
+    ctx.shadowColor = s.color;
+    ctx.shadowBlur = 4;
+    hist.forEach((h, i) => {
+      const x = (i / (hist.length - 1)) * cw;
+      const y = ch - (h[s.key] / s.max) * ch;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+
+  // Limit lines (SO₂)
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = 'rgba(255,170,0,0.5)';
+  ctx.lineWidth = 1;
+  const limitY = ch - (LIMITS.so2 / maxSO2) * ch;
+  if (limitY > 0 && limitY < ch) {
+    ctx.beginPath(); ctx.moveTo(0, limitY); ctx.lineTo(cw, limitY); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,170,0,0.7)'; ctx.font = '9px IBM Plex Mono';
+    ctx.fillText('SO₂ LIMIT', 4, limitY - 2);
+  }
+  ctx.setLineDash([]);
+
+  // Y-axis labels
+  ctx.fillStyle = '#3a5a6a'; ctx.font = '9px IBM Plex Mono';
+  ctx.textAlign = 'right';
+  for (let r = 0; r <= 4; r++) {
+    const y = (ch / 4) * r;
+    ctx.fillText(((1 - r/4) * maxSO2).toFixed(0), -4, y + 3);
+  }
+  ctx.restore();
+}
+
+function drawEnergyChart() {
+  const ctx = prepCanvas('energy-chart');
+  if (!ctx) return;
+  const W = 380, H = 200;
+
+  if (state.stages.length === 0) {
+    ctx.fillStyle = '#3a5a6a'; ctx.font = '12px IBM Plex Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText('No units in pipeline', W/2, H/2);
+    return;
+  }
+
+  const maxE = Math.max(...state.stages.map(s => s.energy), 0.01);
+  const barW  = (W - 40) / state.stages.length - 10;
+  const pad   = 30;
+
+  ctx.fillStyle = '#1e3040'; ctx.fillRect(0, 0, W, H);
+
+  state.stages.forEach((s, i) => {
+    const def = UNIT_DEFS[s.unit];
+    const x   = 20 + i * ((W - 40) / state.stages.length);
+    const bh  = (s.energy / maxE) * (H - pad - 30);
+    const y   = H - pad - bh;
+
+    // Bar gradient
+    const grad = ctx.createLinearGradient(0, y, 0, H - pad);
+    grad.addColorStop(0, def.color);
+    grad.addColorStop(1, def.color + '33');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, barW, bh);
+
+    // Label
+    ctx.fillStyle = '#6a8fa0'; ctx.font = '8px IBM Plex Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(def.name.slice(0,6), x + barW/2, H - 10);
+    ctx.fillStyle = def.color; ctx.font = '9px IBM Plex Mono';
+    ctx.fillText(s.energy.toFixed(2), x + barW/2, y - 4);
+  });
+}
+
+function drawTradeoffChart() {
+  const ctx = prepCanvas('tradeoff-chart');
+  if (!ctx) return;
+  const W = 380, H = 180;
+
+  ctx.fillStyle = '#0a1318'; ctx.fillRect(0, 0, W, H);
+  drawGrid(ctx, W, H, 4, 6);
+
+  // Generate tradeoff curve by varying flow rate
+  const flowVals = [], effVals = [], costVals = [];
+  const origFlow = state.flowRate;
+
+  for (let q = 1000; q <= 20000; q += 1000) {
+    state.flowRate = q;
+    runSimulation();
+    const i  = state.inlet, o = state.outlet;
+    const eff = i.so2 > 0 ? (1 - o.so2 / i.so2) * 100 : 0;
+    flowVals.push(q);
+    effVals.push(eff);
+    costVals.push(Math.min(state.costPerHr, 5000));
+  }
+  state.flowRate = origFlow;
+
+  const maxCost = Math.max(...costVals, 1);
+
+  // Draw efficiency line
+  ctx.beginPath(); ctx.strokeStyle = '#00d4ff'; ctx.lineWidth = 2;
+  effVals.forEach((e, i) => {
+    const x = (i / (effVals.length-1)) * (W - 20) + 10;
+    const y = H - 10 - (e / 100) * (H - 20);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Draw cost line
+  ctx.beginPath(); ctx.strokeStyle = '#ffaa00'; ctx.lineWidth = 2;
+  costVals.forEach((c, i) => {
+    const x = (i / (costVals.length-1)) * (W - 20) + 10;
+    const y = H - 10 - (c / maxCost) * (H - 20);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  ctx.fillStyle = '#3a5a6a'; ctx.font = '9px IBM Plex Mono';
+  ctx.textAlign = 'left';
+  ctx.fillText('← Lower flow: higher eff, higher cost', 8, 14);
+}
+
+// SCR efficiency vs temperature curve
+function drawSCRChart() {
+  const ctx = prepCanvas('scr-chart');
+  if (!ctx) return;
+  const W = 380, H = 200, pl = 35, pb = 25;
+
+  ctx.fillStyle = '#0a1318'; ctx.fillRect(0, 0, W, H);
+  drawGrid(ctx, W, H, 5, 8);
+
+  const temps = [], effs = [];
+  for (let t = 100; t <= 550; t += 10) {
+    temps.push(t);
+    // SCR Gaussian window
+    const T_opt = 350, sigma = 60;
+    const tempEff = Math.exp(-0.5 * ((t - T_opt) / sigma) ** 2) * 0.92;
+    effs.push(tempEff * 100);
+  }
+
+  ctx.beginPath(); ctx.strokeStyle = '#cc44ff'; ctx.lineWidth = 2;
+  ctx.shadowColor = '#cc44ff'; ctx.shadowBlur = 6;
+  temps.forEach((t, i) => {
+    const x  = pl + ((t - 100) / 450) * (W - pl - 10);
+    const y  = (H - pb) - (effs[i] / 100) * (H - pb - 15);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke(); ctx.shadowBlur = 0;
+
+  // Current temp indicator
+  const cx = pl + ((state.temp - 100) / 450) * (W - pl - 10);
+  ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 1; ctx.setLineDash([4,3]);
+  ctx.beginPath(); ctx.moveTo(cx, 10); ctx.lineTo(cx, H - pb); ctx.stroke();
+  ctx.setLineDash([]); ctx.fillStyle = '#00ff88'; ctx.font = '9px IBM Plex Mono';
+  ctx.textAlign = 'center'; ctx.fillText(`▼ ${state.temp}°C`, cx, 8);
+
+  // Optimal window shading
+  const x280 = pl + ((280 - 100) / 450) * (W - pl - 10);
+  const x420 = pl + ((420 - 100) / 450) * (W - pl - 10);
+  ctx.fillStyle = 'rgba(204,68,255,0.08)';
+  ctx.fillRect(x280, 10, x420 - x280, H - pb - 10);
+
+  // Axes
+  ctx.fillStyle = '#3a5a6a'; ctx.font = '8px IBM Plex Mono';
+  ctx.textAlign = 'center';
+  [100,200,300,400,500].forEach(t => {
+    const x = pl + ((t - 100) / 450) * (W - pl - 10);
+    ctx.fillText(`${t}°C`, x, H - 6);
+  });
+  ctx.textAlign = 'right';
+  [0,25,50,75,100].forEach(e => {
+    const y = (H - pb) - (e / 100) * (H - pb - 15);
+    ctx.fillText(`${e}%`, pl - 4, y + 3);
+  });
+
+  ctx.fillStyle = '#3a5a6a'; ctx.font = '9px IBM Plex Mono';
+  ctx.textAlign = 'left'; ctx.fillText('SCR NOx Removal Efficiency', pl + 4, 22);
+}
+
+// Flow rate vs removal efficiency
+function drawFlowChart() {
+  const ctx = prepCanvas('flow-chart');
+  if (!ctx) return;
+  const W = 380, H = 200;
+
+  ctx.fillStyle = '#0a1318'; ctx.fillRect(0, 0, W, H);
+  drawGrid(ctx, W, H, 5, 8);
+
+  const origFlow = state.flowRate;
+  const flows = [], so2Effs = [], noxEffs = [];
+
+  for (let q = 500; q <= 20000; q += 500) {
+    state.flowRate = q;
+    runSimulation();
+    const i = state.inlet, o = state.outlet;
+    flows.push(q);
+    so2Effs.push(i.so2 > 0 ? (1 - o.so2/i.so2)*100 : 0);
+    noxEffs.push(i.nox > 0 ? (1 - o.nox/i.nox)*100 : 0);
+  }
+  state.flowRate = origFlow;
+
+  const drawLine = (data, color) => {
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2;
+    data.forEach((v, i) => {
+      const x = 10 + (i / (data.length-1)) * (W - 20);
+      const y = H - 20 - (v / 100) * (H - 30);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  };
+
+  drawLine(so2Effs, '#00ff88');
+  drawLine(noxEffs, '#cc44ff');
+
+  // Current flow indicator
+  const qNorm = (state.flowRate - 500) / (20000 - 500);
+  const cx = 10 + qNorm * (W - 20);
+  ctx.strokeStyle = '#00d4ff'; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(cx, 5); ctx.lineTo(cx, H - 20); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#00d4ff'; ctx.font = '9px IBM Plex Mono'; ctx.textAlign = 'center';
+  ctx.fillText(`${state.flowRate.toLocaleString()} Nm³/hr`, cx, H - 22);
+
+  ctx.fillStyle = '#3a5a6a'; ctx.font = '8px IBM Plex Mono'; ctx.textAlign = 'right';
+  ctx.fillText('20000', W - 8, H - 6);
+  ctx.textAlign = 'left'; ctx.fillText('500 Nm³/hr', 10, H - 6);
+  ctx.fillText('Flow Rate →', W/2 - 20, H - 6);
+}
+
+function drawReagentChart() {
+  const ctx = prepCanvas('reagent-chart');
+  if (!ctx) return;
+  const W = 380, H = 200;
+  ctx.fillStyle = '#0a1318'; ctx.fillRect(0, 0, W, H);
+  drawGrid(ctx, W, H, 5, 6);
+
+  // Show reagent usage over 24h simulation (vary load)
+  const hours = Array.from({length: 24}, (_, i) => i);
+  const limeCons = [], nh3Cons = [];
+  hours.forEach(h => {
+    const loadFactor = 0.7 + 0.3 * Math.sin(h * Math.PI / 12);
+    const Q = state.flowRate * loadFactor;
+    if (state.pipeline.includes('scrubber')) {
+      const so2Stage = state.stages.find(s => s.unit === 'scrubber');
+      const so2rem = so2Stage ? so2Stage.removed.so2 * Q / 1e6 : 0;
+      limeCons.push(so2rem * 1.3 * 74/64);
+    } else limeCons.push(0);
+    if (state.pipeline.includes('scr')) {
+      const noxStage = state.stages.find(s => s.unit === 'scr');
+      const noxrem = noxStage ? noxStage.removed.nox * Q / 1e6 / 0.046 : 0;
+      nh3Cons.push(noxrem * 0.017 * (state.nh3/100));
+    } else nh3Cons.push(0);
+  });
+
+  const maxLime = Math.max(...limeCons, 1);
+  const maxNH3  = Math.max(...nh3Cons,  0.01);
+
+  const drawArea = (data, color, maxV) => {
+    ctx.beginPath();
+    ctx.moveTo(10, H - 20);
+    data.forEach((v, i) => {
+      const x = 10 + (i / (data.length-1)) * (W - 20);
+      const y = H - 20 - (v / maxV) * (H - 30);
+      ctx.lineTo(x, y);
+    });
+    ctx.lineTo(W - 10, H - 20); ctx.closePath();
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, color + '80'); grad.addColorStop(1, color + '10');
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 1.5;
+    data.forEach((v, i) => {
+      const x = 10 + (i / (data.length-1)) * (W - 20);
+      const y = H - 20 - (v / maxV) * (H - 30);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  };
+
+  drawArea(limeCons, '#00ff88', maxLime);
+  drawArea(nh3Cons,  '#cc44ff', maxNH3);
+
+  ctx.fillStyle = '#3a5a6a'; ctx.font = '8px IBM Plex Mono';
+  ctx.textAlign = 'center';
+  [0,6,12,18,23].forEach(h => {
+    const x = 10 + (h/23) * (W-20);
+    ctx.fillText(`${h}h`, x, H - 6);
+  });
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#00ff88'; ctx.fillText('Ca(OH)₂', 12, 16);
+  ctx.fillStyle = '#cc44ff'; ctx.fillText('NH₃', 80, 16);
+}
+
+function drawOptimChart() {
+  const ctx = prepCanvas('optim-chart');
+  if (!ctx) return;
+  const W = 380, H = 200;
+  ctx.fillStyle = '#0a1318'; ctx.fillRect(0, 0, W, H);
+  drawGrid(ctx, W, H, 5, 8);
+
+  // 2D scatter: efficiency vs cost across NH₃ rates
+  const points = [];
+  const origNH3 = state.nh3;
+  for (let n = 10; n <= 150; n += 10) {
+    state.nh3 = n;
+    runSimulation();
+    const i = state.inlet, o = state.outlet;
+    const eff  = i.nox > 0 ? (1 - o.nox/i.nox)*100 : 0;
+    const cost = state.costPerHr;
+    points.push({ eff, cost, nh3: n });
+  }
+  state.nh3 = origNH3;
+
+  const maxCost = Math.max(...points.map(p => p.cost), 1);
+  points.forEach(p => {
+    const x = 10 + (p.eff / 100) * (W - 20);
+    const y = (H - 20) - (p.cost / maxCost) * (H - 30);
+    const hue = p.eff > 70 ? '#00ff88' : p.eff > 40 ? '#ffaa00' : '#ff3355';
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI*2);
+    ctx.fillStyle = hue + 'cc'; ctx.fill();
+    ctx.strokeStyle = hue; ctx.lineWidth = 1; ctx.stroke();
+  });
+
+  ctx.fillStyle = '#3a5a6a'; ctx.font = '8px IBM Plex Mono';
+  ctx.textAlign = 'center';
+  ctx.fillText('NOx Removal Efficiency (%)', W/2, H - 6);
+  ctx.save(); ctx.translate(12, H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Cost ($/hr)', 0, 0); ctx.restore();
+  ctx.fillText('NH₃ Optimization Surface', W/2, 12);
+}
+
+function drawFlowDiagram() {
+  const ctx = prepCanvas('flow-canvas');
+  if (!ctx) return;
+  const W = 420, H = 100;
+
+  ctx.fillStyle = '#0d1519'; ctx.fillRect(0, 0, W, H);
+
+  const nodes = [{ label:'SOURCE', x:20, color:'#00ff88' }];
+  state.pipeline.forEach((u, i) => {
+    nodes.push({ label: UNIT_DEFS[u].name.slice(0,6), x: 20 + (i+1)*(W-40)/(state.pipeline.length+1), color: UNIT_DEFS[u].color });
+  });
+  nodes.push({ label:'STACK', x: W-20, color:'#ffaa00' });
+
+  // Draw connections
+  for (let i = 0; i < nodes.length-1; i++) {
+    const a = nodes[i], b = nodes[i+1];
+    const cx = (a.x + b.x) / 2;
+    ctx.beginPath();
+    const grad = ctx.createLinearGradient(a.x+12, 0, b.x-12, 0);
+    grad.addColorStop(0, a.color + '80');
+    grad.addColorStop(1, b.color + '80');
+    ctx.strokeStyle = grad; ctx.lineWidth = 3;
+    ctx.moveTo(a.x+14, H/2); ctx.lineTo(b.x-14, H/2);
+    ctx.stroke();
+    // Arrow
+    ctx.fillStyle = b.color + '80';
+    ctx.beginPath();
+    ctx.moveTo(b.x-14, H/2-4); ctx.lineTo(b.x-6, H/2); ctx.lineTo(b.x-14, H/2+4);
+    ctx.fill();
+  }
+
+  // Draw nodes
+  nodes.forEach(n => {
+    ctx.beginPath();
+    ctx.arc(n.x, H/2, 12, 0, Math.PI*2);
+    ctx.fillStyle = n.color + '30'; ctx.fill();
+    ctx.strokeStyle = n.color; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = n.color; ctx.font = 'bold 7px IBM Plex Mono';
+    ctx.textAlign = 'center'; ctx.fillText(n.label.slice(0,4), n.x, H/2+2);
+    ctx.fillStyle = '#6a8fa0'; ctx.font = '7px IBM Plex Mono';
+    ctx.fillText(n.label, n.x, H/2+20);
+  });
+}
+
+function drawAllCharts() {
+  drawEmissionChart();
+  drawEnergyChart();
+  drawTradeoffChart();
+  drawSCRChart();
+  drawFlowChart();
+  drawReagentChart();
+  drawOptimChart();
+  drawFlowDiagram();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AI SUGGESTION ENGINE
+// Rule-based expert system for configuration recommendations
+// ═══════════════════════════════════════════════════════════════
+function updateAI() {
+  const suggestions = [];
+  const o = state.outlet, i = state.inlet;
+
+  // SO₂ violation
+  if (o.so2 > LIMITS.so2 && !state.pipeline.includes('scrubber'))
+    suggestions.push('⚠ SO₂ limit exceeded. Add a Wet Scrubber to the pipeline for efficient SO₂ removal via Ca(OH)₂ absorption.');
+
+  // NOx violation
+  if (o.nox > LIMITS.nox && !state.pipeline.includes('scr'))
+    suggestions.push('⚠ NOx limit exceeded. Add an SCR Reactor — ensure temperature is in 280–420°C window for optimal catalyst performance.');
+
+  // PM violation
+  if (o.pm > LIMITS.pm && !state.pipeline.includes('esp') && !state.pipeline.includes('baghouse'))
+    suggestions.push('⚠ Particulate matter exceeds limits. Add an Electrostatic Precipitator or Bag Filter for >99% PM capture.');
+
+  // SCR temp window
+  if (state.pipeline.includes('scr') && (state.temp < 280 || state.temp > 420))
+    suggestions.push(`💡 SCR catalyst is outside its optimal window (current: ${state.temp}°C). Adjust temperature to 300–380°C for maximum NOx conversion.`);
+
+  // Scrubber too hot
+  if (state.pipeline.includes('scrubber') && state.temp > 150)
+    suggestions.push(`💡 Wet scrubber efficiency is degraded at ${state.temp}°C. Consider a heat exchanger upstream to cool gas below 120°C.`);
+
+  // Cyclone before ESP recommended
+  if (state.pipeline.includes('esp') && !state.pipeline.includes('cyclone')) {
+    const espIdx = state.pipeline.indexOf('esp');
+    if (espIdx === 0)
+      suggestions.push('💡 Add a Cyclone Separator before the ESP to remove coarse particles first — extends ESP life and improves efficiency.');
+  }
+
+  // NH₃ slip risk
+  if (state.nh3 > 110)
+    suggestions.push(`⚠ NH₃ injection rate at ${state.nh3}% — risk of NH₃ slip (secondary pollution). Reduce to ≤100% stoichiometric ratio.`);
+
+  // Energy intensity
+  if (state.energy > 2.0)
+    suggestions.push(`📊 High energy load detected (${state.energy.toFixed(2)} MW). Carbon capture is the largest consumer — consider optimizing cycle frequency.`);
+
+  // Optimal pipeline suggestion
+  if (state.pipeline.length === 0)
+    suggestions.push('🚀 START HERE: Recommended pipeline for coal combustion: Cyclone → ESP → Wet Scrubber → SCR → Carbon Capture. This achieves >95% removal for all pollutants.');
+
+  // Cost optimization
+  if (state.costPerHr > 1000)
+    suggestions.push(`💰 Operating cost $${state.costPerHr.toFixed(0)}/hr is high. Reduce NH₃ injection to stoichiometric levels and optimize scrubber L/G ratio.`);
+
+  // Good configuration
+  if (suggestions.length === 0)
+    suggestions.push('✅ Configuration is optimal. All emission limits are satisfied. Current tradeoff: cost efficiency at ' + (state.costPerHr).toFixed(0) + ' $/hr. Monitor for catalyst aging.');
+
+  const el = document.getElementById('ai-suggestion');
+  if (el) el.textContent = suggestions[Math.floor(Date.now() / 5000) % suggestions.length];
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PIPELINE MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function openUnitModal()  { document.getElementById('unit-modal').classList.add('open'); }
+function closeUnitModal() { document.getElementById('unit-modal').classList.remove('open'); }
+
+function addUnit(utype) {
+  if (state.pipeline.length >= 8) { addLog('warn', 'Pipeline full — max 8 units'); return; }
+  state.pipeline.push(utype);
+  closeUnitModal();
+  addLog('ok', `Added ${UNIT_DEFS[utype].name} to pipeline (stage ${state.pipeline.length})`);
+  updateSim();
+}
+
+function removeUnit(idx) {
+  const utype = state.pipeline[idx];
+  state.pipeline.splice(idx, 1);
+  delete state.faults[utype];
+  addLog('info', `Removed ${UNIT_DEFS[utype].name} from pipeline`);
+  updateSim();
+}
+
+function resetPipeline() {
+  state.pipeline = [];
+  state.faults   = {};
+  addLog('warn', 'Pipeline reset — all units removed');
+  updateSim();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FAILURE SCENARIOS
+// ═══════════════════════════════════════════════════════════════
+function triggerFailure(type) {
+  const faultMap = {
+    catalyst:   'scr',
+    overload:   null,   // affects all
+    saturation: 'carboncap',
+    fouling:    'esp'
+  };
+
+  if (type === 'overload') {
+    state.pipeline.forEach(u => state.faults[u] = true);
+    addLog('error', 'CRITICAL: System overload — all units degraded');
+  } else {
+    const unit = faultMap[type];
+    if (unit && state.pipeline.includes(unit)) {
+      state.faults[unit] = true;
+      addLog('error', `FAULT triggered: ${UNIT_DEFS[unit].name} — ${getFaultDesc(type)}`);
+    } else {
+      addLog('warn', `Fault ${type} — target unit not in pipeline`);
+    }
+  }
+
+  const faultDiv = document.getElementById('fault-status');
+  if (faultDiv) {
+    const faultList = Object.entries(state.faults).filter(([k,v])=>v).map(([k])=>UNIT_DEFS[k]?.name||k).join(', ');
+    faultDiv.innerHTML = `<span style="color:var(--red)">⚠ ACTIVE FAULTS: ${faultList}</span>`;
+  }
+  updateSim();
+}
+
+function clearFailures() {
+  state.faults = {};
+  addLog('ok', 'All faults cleared — systems restored to nominal');
+  const faultDiv = document.getElementById('fault-status');
+  if (faultDiv) faultDiv.innerHTML = `<span style="color:var(--green)">✓ All systems nominal</span>`;
+  updateSim();
+}
+
+function runOptimize() {
+  // Auto-set parameters to optimal values
+  document.getElementById('temp-slider').value  = 350;
+  document.getElementById('nh3-slider').value   = 100;
+  document.getElementById('lime-slider').value  = 20;
+  document.getElementById('esp-slider').value   = 60;
+  document.getElementById('carbon-slider').value = 100;
+  addLog('ok', 'APEX Optimizer: parameters set to optimal configuration');
+  updateSim();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EVENT LOG
+// ═══════════════════════════════════════════════════════════════
+const logEntries = [];
+function addLog(type, msg) {
+  const now = new Date();
+  const ts  = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+  logEntries.unshift({ ts, type, msg });
+  if (logEntries.length > 200) logEntries.pop();
+  renderLog();
+}
+
+function renderLog() {
+  const el = document.getElementById('main-log');
+  if (!el) return;
+  el.innerHTML = logEntries.map(e =>
+    `<div class="log-entry"><span class="log-time">${e.ts}</span><span class="log-msg ${e.type}">[${e.type.toUpperCase()}] ${e.msg}</span></div>`
+  ).join('');
+}
+
+function clearLog() { logEntries.length = 0; renderLog(); }
+
+// ═══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+function switchPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${id}`).classList.add('active');
+  document.querySelector(`.nav-item[onclick="switchPage('${id}')"]`).classList.add('active');
+  document.getElementById('breadcrumb-label').textContent = id.charAt(0).toUpperCase() + id.slice(1);
+  drawAllCharts();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════════════
+function updateClock() {
+  const now = new Date();
+  const ts  = [now.getHours(), now.getMinutes(), now.getSeconds()]
+    .map(v => v.toString().padStart(2,'0')).join(':');
+  const el  = document.getElementById('clock');
+  if (el) el.textContent = ts;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LIVE SIMULATION TICK — runs every second
+// Updates charts with slight random variation to simulate live data
+// ═══════════════════════════════════════════════════════════════
+let tickCount = 0;
+function liveUpdate() {
+  tickCount++;
+  // Small random perturbation to simulate real plant variability (±2%)
+  if (state.pipeline.length > 0) {
+    const perturbedHistory = { ...state.outlet };
+    perturbedHistory.so2 *= (1 + (Math.random() - 0.5) * 0.04);
+    perturbedHistory.nox *= (1 + (Math.random() - 0.5) * 0.04);
+    perturbedHistory.pm  *= (1 + (Math.random() - 0.5) * 0.06);
+    state.history.push({ t: Date.now(), ...perturbedHistory });
+    if (state.history.length > 60) state.history.shift();
+    drawEmissionChart();
+  }
+
+  // Rotate AI suggestions every 5 seconds
+  if (tickCount % 5 === 0) updateAI();
+
+  updateClock();
+  document.getElementById('sim-fps').textContent = '≈60 FPS';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+function init() {
+  // Default pipeline: standard coal plant treatment train
+  state.pipeline = ['cyclone', 'esp', 'scrubber', 'scr'];
+
+  addLog('ok', 'APEX Industrial Simulator v3.2.1 initialized');
+  addLog('info', 'Default pipeline loaded: Cyclone → ESP → Scrubber → SCR');
+  addLog('info', 'Fuel: Bituminous Coal | T: 350°C | Q: 5000 Nm³/hr');
+  addLog('info', 'Regulatory mode: EU IED 2010/75/EU');
+
+  updateSim();
+  setInterval(liveUpdate, 1000);
+  updateClock();
+
+  // Initial chart draws
+  setTimeout(drawAllCharts, 100);
+}
+
+init();
+</script>
+</body>
+</html>
