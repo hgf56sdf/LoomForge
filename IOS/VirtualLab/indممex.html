@@ -1,0 +1,3221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Virtual Genetics Lab</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:        #0d0f14;
+    --surface:   #141720;
+    --card:      #1b1f2e;
+    --border:    #272c3e;
+    --accent:    #6c8ef5;
+    --accent2:   #a78bfa;
+    --green:     #4ade80;
+    --yellow:    #fbbf24;
+    --red:       #f87171;
+    --text:      #e4e8f5;
+    --muted:     #6b7280;
+    --mono:      'Space Mono', monospace;
+    --sans:      'DM Sans', sans-serif;
+    --radius:    12px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% -10%, rgba(108,142,245,.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 110%, rgba(167,139,250,.10) 0%, transparent 60%);
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  /* ── Layout ── */
+  .app { max-width: 960px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    padding: 48px 0 40px;
+    position: relative;
+  }
+  header .dna-icon {
+    font-size: 2.8rem;
+    display: block;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  /* ── Main Tab Navigation ── */
+  .main-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .main-tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all .2s;
+    font-family: var(--sans);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .main-tab.active {
+    background: linear-gradient(135deg, rgba(108,142,245,.2), rgba(167,139,250,.2));
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(108,142,245,.15);
+  }
+  .main-tab:hover:not(.active) { border-color: #3a4060; color: var(--text); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn .4s ease; }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .card.highlight::before { opacity: 1; }
+
+  .card-title {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── Grid ── */
+  .parent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 560px) { .parent-grid { grid-template-columns: 1fr; } }
+
+  /* ── Parent Panel ── */
+  .parent-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+  }
+  .parent-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .parent-label span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .parent-panel:last-child .parent-label span { background: var(--accent2); }
+
+  /* ── Trait Row ── */
+  .trait-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .trait-icon { font-size: 1.1rem; width: 26px; text-align: center; flex-shrink: 0; }
+  .trait-row label { font-size: 0.82rem; color: var(--muted); width: 76px; flex-shrink: 0; }
+
+  select, input[type="text"] {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 8px 12px;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  input[type="text"] { cursor: text; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+  select:focus, input:focus { outline: none; border-color: var(--accent); }
+  select:hover, input:hover  { border-color: #3a4060; }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    border: none;
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    letter-spacing: .5px;
+  }
+  .btn-primary:hover  { opacity: .88; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(108,142,245,.3); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-secondary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    flex: 1;
+  }
+  .btn-secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .btn-secondary:disabled { opacity: .35; cursor: not-allowed; }
+  .btn-accent {
+    background: rgba(108,142,245,.12);
+    border: 1px solid rgba(108,142,245,.35);
+    color: var(--accent);
+    flex: 1;
+  }
+  .btn-accent:hover:not(:disabled) { background: rgba(108,142,245,.22); }
+  .btn-accent:disabled { opacity: .35; cursor: not-allowed; }
+  .btn-danger {
+    background: rgba(248,113,113,.12);
+    border: 1px solid rgba(248,113,113,.35);
+    color: var(--red);
+    flex: 1;
+  }
+  .btn-danger:hover:not(:disabled) { background: rgba(248,113,113,.22); }
+  .btn-danger:disabled { opacity: .35; cursor: not-allowed; }
+
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ── Punnett Square ── */
+  .trait-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all .2s;
+    font-family: var(--sans);
+  }
+  .tab.active { background: rgba(108,142,245,.15); border-color: var(--accent); color: var(--accent); }
+  .tab:hover:not(.active) { border-color: #3a4060; color: var(--text); }
+
+  .punnett-wrap { overflow-x: auto; }
+  .punnett {
+    display: inline-grid;
+    gap: 4px;
+    background: var(--surface);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    min-width: 200px;
+  }
+  .punnett-cell {
+    min-width: 70px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: all .2s;
+  }
+  .punnett-header {
+    background: rgba(108,142,245,.15);
+    color: var(--accent);
+    border: 1px solid rgba(108,142,245,.25);
+  }
+  .punnett-corner { background: transparent; }
+  .punnett-result {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: default;
+  }
+  .punnett-result:hover { border-color: var(--accent); transform: scale(1.04); }
+
+  /* ── Results Table ── */
+  .results-table { width: 100%; border-collapse: collapse; }
+  .results-table th {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .results-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(39,44,62,.6);
+    font-size: 0.88rem;
+    vertical-align: middle;
+  }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table tr:hover td { background: rgba(108,142,245,.04); }
+
+  .geno-pill {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    background: rgba(108,142,245,.12);
+    border: 1px solid rgba(108,142,245,.25);
+    border-radius: 4px;
+    padding: 2px 8px;
+    color: var(--accent);
+    display: inline-block;
+  }
+  .dominant-pill {
+    background: rgba(74,222,128,.1);
+    border-color: rgba(74,222,128,.3);
+    color: var(--green);
+  }
+  .recessive-pill {
+    background: rgba(248,113,113,.1);
+    border-color: rgba(248,113,113,.3);
+    color: var(--red);
+  }
+
+  /* ── Percentage Bar ── */
+  .pct-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .pct-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .pct-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .6s ease;
+  }
+  .pct-label { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); width: 38px; text-align: right; }
+
+  /* ── Visual Offspring Cards ── */
+  .offspring-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .offspring-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+  }
+  .offspring-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .offspring-card.selected {
+    border-color: var(--accent2);
+    background: rgba(167,139,250,.08);
+    box-shadow: 0 0 0 2px rgba(167,139,250,.2);
+  }
+  .offspring-card .check {
+    position: absolute;
+    top: 8px; right: 8px;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .offspring-card.selected .check { opacity: 1; }
+  .offspring-emoji { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+  .offspring-traits { font-size: 0.72rem; color: var(--muted); line-height: 1.8; }
+  .offspring-traits strong { color: var(--text); font-size: 0.78rem; }
+
+  /* ── Explanation Box ── */
+  .explanation-box {
+    background: rgba(108,142,245,.06);
+    border: 1px solid rgba(108,142,245,.2);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+  }
+  .explanation-box p {
+    color: #b0bbdd;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  .explanation-box p:last-child { margin-bottom: 0; }
+  .explanation-box p::before { content: '◦ '; color: var(--accent); }
+
+  /* ── Random Child Display ── */
+  .child-display {
+    display: none;
+    align-items: center;
+    gap: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    margin-top: 16px;
+    animation: fadeSlide .4s ease;
+  }
+  .child-display.visible { display: flex; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .child-emoji-big { font-size: 3.5rem; flex-shrink: 0; }
+  .child-info { flex: 1; }
+  .child-info h3 { font-family: var(--mono); font-size: 0.9rem; color: var(--accent); margin-bottom: 8px; }
+  .child-info .trait-line { font-size: 0.85rem; color: var(--text); margin-bottom: 4px; }
+  .child-info .trait-line .trait-val { color: var(--accent2); font-weight: 600; }
+
+  /* ── Next Gen ── */
+  .nextgen-info {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent);
+  }
+  .selected-pair {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .pair-pill {
+    background: rgba(167,139,250,.12);
+    border: 1px solid rgba(167,139,250,.3);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent2);
+  }
+  .pair-arrow { color: var(--muted); font-size: 1.2rem; }
+
+  /* ── Animations ── */
+  .fade-in { animation: fadeIn .5s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Hidden ── */
+  .hidden { display: none !important; }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* ── Generation Badge ── */
+  .gen-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(251,191,36,.1);
+    border: 1px solid rgba(251,191,36,.3);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--yellow);
+    margin-left: auto;
+  }
+
+  /* ── None-selected trait row dimming ── */
+  .trait-row.trait-disabled { opacity: .38; }
+  .trait-row.trait-disabled select { border-style: dashed; }
+
+  /* ════════════════════════════════════════
+     PEDIGREE / FAMILY TREE STYLES
+  ════════════════════════════════════════ */
+
+  /* Trait switcher tabs inside pedigree */
+  .ped-trait-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .ped-trait-bar label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 1px;
+    margin-right: 4px;
+  }
+
+  /* SVG canvas wrapper — horizontally scrollable on mobile */
+  .pedigree-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 8px;
+  }
+  #pedigreeSvg {
+    display: block;
+    min-width: 340px;
+  }
+
+  /* Tooltip that floats over hovered nodes */
+  .ped-tooltip {
+    position: fixed;
+    background: #0d0f14;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: var(--text);
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity .18s;
+    max-width: 180px;
+    line-height: 1.6;
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  }
+  .ped-tooltip.visible { opacity: 1; }
+  .ped-tooltip strong { color: var(--accent); display: block; margin-bottom: 2px; }
+
+  /* Legend row at bottom of pedigree */
+  .ped-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .ped-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .ped-legend-item svg { flex-shrink: 0; }
+
+  /* Generation history mini-timeline */
+  .gen-history {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .gen-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .gen-chip.active {
+    background: rgba(108,142,245,.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .gen-chip:hover:not(.active) { border-color: #3a4060; color: var(--text); }
+
+  /* ════════════════════════════════════════
+     CASE STUDY STYLES
+  ════════════════════════════════════════ */
+  .cs-trait-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    flex-wrap: wrap;
+  }
+  .cs-trait-row .cs-trait-name {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--accent);
+    min-width: 140px;
+    font-weight: 600;
+  }
+  .cs-trait-row .cs-trait-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    flex: 1;
+    min-width: 200px;
+  }
+  .cs-trait-row .cs-trait-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .cs-trait-row .cs-trait-controls label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+  .cs-trait-row .cs-trait-controls select {
+    min-width: 140px;
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+
+  .cs-add-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .cs-add-row input {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+  }
+  .cs-add-row select {
+    min-width: 180px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+  }
+
+  .cs-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .cs-result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .cs-result-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .cs-result-card .cs-result-emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+  .cs-result-card .cs-result-label { font-size: 0.82rem; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+  .cs-result-card .cs-result-geno { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
+  .cs-result-card .cs-result-pct { font-family: var(--mono); font-size: 0.78rem; color: var(--accent); margin-top: 6px; }
+
+  .cs-prob-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+  .cs-prob-table th, .cs-prob-table td {
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .cs-prob-table th {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ════════════════════════════════════════
+     GENETIC DISORDERS STYLES
+  ════════════════════════════════════════ */
+  .gd-disorder-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .gd-disorder-card:hover { border-color: var(--accent); }
+  .gd-disorder-card.selected {
+    border-color: var(--accent);
+    background: rgba(108,142,245,.08);
+    box-shadow: 0 0 0 2px rgba(108,142,245,.15);
+  }
+  .gd-disorder-card .gd-disorder-name {
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .gd-disorder-card .gd-disorder-info {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .gd-disorder-card .gd-disorder-info strong { color: var(--text); }
+
+  .gd-sex-select {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .gd-sex-select .gd-parent-block {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+  }
+  .gd-sex-select .gd-parent-block .gd-parent-title {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .gd-sex-select .gd-parent-block .gd-parent-title span {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .gd-sex-select .gd-parent-block:last-child .gd-parent-title span { background: var(--accent2); }
+
+  .gd-punnett-grid {
+    display: inline-grid;
+    gap: 4px;
+    background: var(--surface);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+  }
+  .gd-punnett-grid .gd-cell {
+    min-width: 80px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: all .2s;
+  }
+  .gd-punnett-grid .gd-cell.header {
+    background: rgba(108,142,245,.15);
+    color: var(--accent);
+    border: 1px solid rgba(108,142,245,.25);
+  }
+  .gd-punnett-grid .gd-cell.result {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    flex-direction: column;
+    gap: 2px;
+  }
+  .gd-punnett-grid .gd-cell.result:hover { border-color: var(--accent); transform: scale(1.04); }
+  .gd-punnett-grid .gd-cell.result .gd-cell-sex { font-size: 0.7rem; color: var(--muted); font-weight: 400; }
+  .gd-punnett-grid .gd-cell.result .gd-cell-status { font-size: 0.72rem; font-weight: 600; }
+
+  .gd-outcome-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .gd-outcome-bar .gd-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .gd-outcome-bar .gd-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width .6s ease;
+  }
+  .gd-outcome-bar .gd-bar-label {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    width: 48px;
+    text-align: right;
+  }
+
+  /* ── Responsive tweaks ── */
+  @media (max-width: 480px) {
+    .child-display { flex-direction: column; text-align: center; }
+    .btn-row { flex-direction: column; }
+    .cs-trait-row { flex-direction: column; align-items: flex-start; }
+    .cs-trait-row .cs-trait-controls { width: 100%; }
+    .cs-trait-row .cs-trait-controls select { flex: 1; }
+    .gd-sex-select { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ① Header -->
+  <header>
+    <span class="dna-icon">🧬</span>
+    <h1>Virtual Genetics Lab</h1>
+    <p>Simulate genetic crosses · Punnett squares · Offspring generation · Case studies · Disorders</p>
+  </header>
+
+  <!-- Main Tab Navigation -->
+  <div class="main-tabs">
+    <button class="main-tab active" data-tab="simulation" onclick="switchMainTab('simulation')">⚡ Simulation</button>
+    <button class="main-tab" data-tab="pedigree" onclick="switchMainTab('pedigree')">🌳 Pedigree</button>
+    <button class="main-tab" data-tab="casestudy" onclick="switchMainTab('casestudy')">📋 Case Study</button>
+    <button class="main-tab" data-tab="disorders" onclick="switchMainTab('disorders')">🧪 Genetic Disorders</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       TAB 1: SIMULATION (Original Content)
+  ════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-simulation">
+
+    <!-- ② Parent Selection Panel -->
+    <div class="card highlight" id="parentCard">
+      <div class="card-title">
+        🔬 Parent Configuration
+        <span class="gen-badge" id="genBadge">Generation 1</span>
+      </div>
+
+      <div class="parent-grid">
+        <!-- Parent 1 -->
+        <div class="parent-panel" id="p1Panel">
+          <div class="parent-label"><span></span> Parent 1</div>
+
+          <div class="trait-row">
+            <span class="trait-icon">🌱</span>
+            <label>Height</label>
+            <select id="p1Height">
+              <option value="none">— None —</option>
+              <option value="tall">Tall (dominant)</option>
+              <option value="short">Short (recessive)</option>
+            </select>
+          </div>
+
+          <div class="trait-row">
+            <span class="trait-icon">👁️</span>
+            <label>Eye Color</label>
+            <select id="p1Eye">
+              <option value="none">— None —</option>
+              <option value="brown">Brown (dominant)</option>
+              <option value="blue">Blue (recessive)</option>
+            </select>
+          </div>
+
+          <div class="trait-row">
+            <span class="trait-icon">🧑</span>
+            <label>Hair Type</label>
+            <select id="p1Hair">
+              <option value="none">— None —</option>
+              <option value="curly">Curly (dominant)</option>
+              <option value="straight">Straight (recessive)</option>
+            </select>
+          </div>
+
+          <div class="divider" style="margin:14px 0 10px"></div>
+          <div style="font-size:.8rem;color:var(--muted);">Genotype: <span id="p1Geno" class="geno-pill" style="font-size:.78rem">—</span></div>
+        </div>
+
+        <!-- Parent 2 -->
+        <div class="parent-panel" id="p2Panel">
+          <div class="parent-label"><span></span> Parent 2</div>
+
+          <div class="trait-row">
+            <span class="trait-icon">🌱</span>
+            <label>Height</label>
+            <select id="p2Height">
+              <option value="none">— None —</option>
+              <option value="tall">Tall (dominant)</option>
+              <option value="short">Short (recessive)</option>
+            </select>
+          </div>
+
+          <div class="trait-row">
+            <span class="trait-icon">👁️</span>
+            <label>Eye Color</label>
+            <select id="p2Eye">
+              <option value="none">— None —</option>
+              <option value="brown">Brown (dominant)</option>
+              <option value="blue">Blue (recessive)</option>
+            </select>
+          </div>
+
+          <div class="trait-row">
+            <span class="trait-icon">🧑</span>
+            <label>Hair Type</label>
+            <select id="p2Hair">
+              <option value="none">— None —</option>
+              <option value="curly">Curly (dominant)</option>
+              <option value="straight">Straight (recessive)</option>
+            </select>
+          </div>
+
+          <div class="divider" style="margin:14px 0 10px"></div>
+          <div style="font-size:.8rem;color:var(--muted);">Genotype: <span id="p2Geno" class="geno-pill" style="font-size:.78rem">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ Simulate Button -->
+    <button class="btn btn-primary" id="simulateBtn" onclick="simulate()">
+      ⚡ Simulate Cross
+    </button>
+
+    <!-- ④ Results Section (hidden until simulated) -->
+    <div class="card hidden fade-in" id="resultsCard">
+      <div class="card-title">📊 Cross Results — All Traits</div>
+      <div id="resultsTableWrap"></div>
+    </div>
+
+    <!-- ⑤ Punnett Square -->
+    <div class="card hidden fade-in" id="punnettCard">
+      <div class="card-title">🔲 Punnett Square</div>
+      <div class="trait-tabs" id="punnettTabs"></div>
+      <div class="punnett-wrap">
+        <div class="punnett" id="punnettGrid"></div>
+      </div>
+    </div>
+
+    <!-- ⑥ Visual Traits Display -->
+    <div class="card hidden fade-in" id="visualCard">
+      <div class="card-title">👶 Possible Offspring — Visual</div>
+      <div class="offspring-grid" id="offspringGrid"></div>
+    </div>
+
+    <!-- ⑦ Explanation Box -->
+    <div class="card hidden fade-in" id="explanationCard">
+      <div class="card-title">💡 Genetic Explanation</div>
+      <div class="explanation-box" id="explanationBox"></div>
+    </div>
+
+    <!-- ⑧ Offspring Generator -->
+    <div class="card hidden fade-in" id="childCard">
+      <div class="card-title">🎲 Random Offspring Generator</div>
+      <div class="btn-row">
+        <button class="btn btn-accent" onclick="generateChild()">🎲 Generate Random Child</button>
+      </div>
+      <div class="child-display" id="childDisplay">
+        <span class="child-emoji-big" id="childEmoji"></span>
+        <div class="child-info">
+          <h3>OFFSPRING TRAITS</h3>
+          <div id="childTraits"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑨ Next Generation -->
+    <div class="card hidden fade-in" id="nextGenCard">
+      <div class="card-title">🔄 Next Generation</div>
+      <p class="nextgen-info">Select exactly 2 offspring cards above, then click "Next Generation" to run a new cross.</p>
+      <div class="selected-pair" id="selectedPair">
+        <span style="font-size:.85rem;color:var(--muted)">No offspring selected yet.</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="nextGenBtn" onclick="nextGeneration()" disabled>
+          🔄 Next Generation
+        </button>
+        <button class="btn btn-secondary" onclick="clearSelection()">✕ Clear Selection</button>
+      </div>
+    </div>
+
+  </div><!-- /tab-simulation -->
+
+  <!-- ════════════════════════════════════════════
+       TAB 2: PEDIGREE (Dedicated Tab)
+  ════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-pedigree">
+    <div class="card" id="pedigreeCard">
+      <div class="card-title">
+        🌳 Pedigree / Family Tree
+        <span style="margin-left:auto;font-size:.72rem;color:var(--muted);font-family:var(--sans);text-transform:none;letter-spacing:0">Hover nodes for details · Click offspring to select</span>
+      </div>
+
+      <!-- Trait switcher -->
+      <div class="ped-trait-bar">
+        <label>TRAIT:</label>
+        <div id="pedTraitTabs"></div>
+      </div>
+
+      <!-- Generation history chips -->
+      <div class="gen-history" id="genHistory"></div>
+
+      <!-- SVG canvas -->
+      <div class="pedigree-scroll">
+        <svg id="pedigreeSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <!-- Legend -->
+      <div class="ped-legend">
+        <div class="ped-legend-item">
+          <svg width="20" height="20"><rect x="2" y="2" width="16" height="16" rx="3" fill="#6c8ef5" stroke="#6c8ef5" stroke-width="1.5"/></svg>
+          Male · Dominant (filled)
+        </div>
+        <div class="ped-legend-item">
+          <svg width="20" height="20"><rect x="2" y="2" width="16" height="16" rx="3" fill="none" stroke="#6c8ef5" stroke-width="1.8"/></svg>
+          Male · Recessive (empty)
+        </div>
+        <div class="ped-legend-item">
+          <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="#a78bfa" stroke="#a78bfa" stroke-width="1.5"/></svg>
+          Female · Dominant (filled)
+        </div>
+        <div class="ped-legend-item">
+          <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="none" stroke="#a78bfa" stroke-width="1.8"/></svg>
+          Female · Recessive (empty)
+        </div>
+        <div class="ped-legend-item">
+          <svg width="20" height="20"><rect x="2" y="2" width="16" height="16" rx="3" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3 2"/></svg>
+          Selected for next gen
+        </div>
+      </div>
+    </div>
+  </div><!-- /tab-pedigree -->
+
+  <!-- ════════════════════════════════════════════
+       TAB 3: CASE STUDY (New)
+  ════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-casestudy">
+    <div class="card">
+      <div class="card-title">📋 Case Study — Custom Trait Simulator</div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px;">
+        Explore inheritance of common human traits. Select traits for both parents and simulate offspring outcomes.
+        Add your own custom traits to experiment with different inheritance patterns.
+      </p>
+
+      <!-- Parent Configuration -->
+      <div class="parent-grid">
+        <div class="parent-panel">
+          <div class="parent-label"><span></span> Parent 1</div>
+          <div id="csParent1Traits"></div>
+        </div>
+        <div class="parent-panel">
+          <div class="parent-label"><span></span> Parent 2</div>
+          <div id="csParent2Traits"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Add Custom Trait -->
+      <div style="font-family:var(--mono);font-size:0.78rem;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">Add Custom Trait</div>
+      <div class="cs-add-row">
+        <input type="text" id="csCustomName" placeholder="Trait name (e.g., Freckles)" />
+        <select id="csCustomDom">
+          <option value="">Select dominant phenotype...</option>
+        </select>
+        <select id="csCustomRec">
+          <option value="">Select recessive phenotype...</option>
+        </select>
+        <button class="btn btn-accent" onclick="csAddCustomTrait()" style="flex:0 0 auto;">➕ Add Trait</button>
+      </div>
+
+      <button class="btn btn-primary" onclick="csSimulate()" style="margin-top:8px;">
+        ⚡ Simulate Case Study Cross
+      </button>
+    </div>
+
+    <!-- Case Study Results -->
+    <div class="card hidden fade-in" id="csResultsCard">
+      <div class="card-title">📊 Case Study Results</div>
+      <div id="csResultsTableWrap"></div>
+    </div>
+
+    <!-- Case Study Punnett -->
+    <div class="card hidden fade-in" id="csPunnettCard">
+      <div class="card-title">🔲 Case Study Punnett Square</div>
+      <div class="trait-tabs" id="csPunnettTabs"></div>
+      <div class="punnett-wrap">
+        <div class="punnett" id="csPunnettGrid"></div>
+      </div>
+    </div>
+
+    <!-- Case Study Visual -->
+    <div class="card hidden fade-in" id="csVisualCard">
+      <div class="card-title">👶 Possible Offspring — Visual</div>
+      <div class="cs-results-grid" id="csVisualGrid"></div>
+    </div>
+
+    <!-- Case Study Explanation -->
+    <div class="card hidden fade-in" id="csExplanationCard">
+      <div class="card-title">💡 Genetic Explanation</div>
+      <div class="explanation-box" id="csExplanationBox"></div>
+    </div>
+  </div><!-- /tab-casestudy -->
+
+  <!-- ════════════════════════════════════════════
+       TAB 4: GENETIC DISORDERS (New)
+  ════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-disorders">
+    <div class="card">
+      <div class="card-title">🧪 Genetic Disorders — X-Linked & Autosomal Inheritance</div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:16px;">
+        Simulate inheritance patterns of genetic disorders. Select a disorder, configure parent genotypes (including sex chromosomes), and view offspring probabilities.
+        Disorders include X-linked recessive conditions (hemophilia, color blindness, G6PD deficiency) and autosomal conditions (cystic fibrosis, sickle cell).
+      </p>
+
+      <!-- Disorder Selection -->
+      <div style="font-family:var(--mono);font-size:0.78rem;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">Select Disorder</div>
+      <div id="gdDisorderList"></div>
+    </div>
+
+    <!-- Parent Configuration for Disorders -->
+    <div class="card hidden fade-in" id="gdParentCard">
+      <div class="card-title">🔬 Parent Configuration</div>
+      <div class="gd-sex-select">
+        <div class="gd-parent-block">
+          <div class="gd-parent-title"><span></span> Parent 1 (Father)</div>
+          <div class="trait-row">
+            <span class="trait-icon">♂️</span>
+            <label>Sex</label>
+            <select id="gdP1Sex" onchange="gdUpdateParentOptions()">
+              <option value="male">Male (XY)</option>
+              <option value="female">Female (XX)</option>
+            </select>
+          </div>
+          <div class="trait-row">
+            <span class="trait-icon">🧬</span>
+            <label>Genotype</label>
+            <select id="gdP1Geno"></select>
+          </div>
+          <div style="font-size:.8rem;color:var(--muted);margin-top:8px;">
+            Status: <span id="gdP1Status" class="geno-pill">—</span>
+          </div>
+        </div>
+        <div class="gd-parent-block">
+          <div class="gd-parent-title"><span></span> Parent 2 (Mother)</div>
+          <div class="trait-row">
+            <span class="trait-icon">♀️</span>
+            <label>Sex</label>
+            <select id="gdP2Sex" onchange="gdUpdateParentOptions()">
+              <option value="female">Female (XX)</option>
+              <option value="male">Male (XY)</option>
+            </select>
+          </div>
+          <div class="trait-row">
+            <span class="trait-icon">🧬</span>
+            <label>Genotype</label>
+            <select id="gdP2Geno"></select>
+          </div>
+          <div style="font-size:.8rem;color:var(--muted);margin-top:8px;">
+            Status: <span id="gdP2Status" class="geno-pill">—</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="gdSimulate()">
+        ⚡ Simulate Disorder Inheritance
+      </button>
+    </div>
+
+    <!-- Disorder Results -->
+    <div class="card hidden fade-in" id="gdResultsCard">
+      <div class="card-title">📊 Inheritance Results</div>
+      <div id="gdResultsContent"></div>
+    </div>
+
+    <!-- Disorder Punnett -->
+    <div class="card hidden fade-in" id="gdPunnettCard">
+      <div class="card-title">🔲 Disorder Punnett Square</div>
+      <div class="punnett-wrap" style="overflow-x:auto;">
+        <div class="gd-punnett-grid" id="gdPunnettGrid"></div>
+      </div>
+    </div>
+
+    <!-- Disorder Outcomes -->
+    <div class="card hidden fade-in" id="gdOutcomesCard">
+      <div class="card-title">👶 Offspring Probability Breakdown</div>
+      <div id="gdOutcomesContent"></div>
+    </div>
+
+    <!-- Disorder Explanation -->
+    <div class="card hidden fade-in" id="gdExplanationCard">
+      <div class="card-title">💡 Disorder Explanation</div>
+      <div class="explanation-box" id="gdExplanationBox"></div>
+    </div>
+  </div><!-- /tab-disorders -->
+
+  <!-- Floating tooltip (shared) -->
+  <div class="ped-tooltip" id="pedTooltip"></div>
+
+</div><!-- /app -->
+
+<script>
+  /* ══════════════════════════════════════════════════════
+     VIRTUAL GENETICS LAB — JavaScript
+     ══════════════════════════════════════════════════════ */
+
+  // ── Main Tab Switching ───────────────────────────────
+  function switchMainTab(tabId) {
+    document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.main-tab[data-tab="${tabId}"]`).classList.add('active');
+    document.getElementById('tab-' + tabId).classList.add('active');
+
+    // Refresh pedigree if switching to that tab and we have data
+    if (tabId === 'pedigree' && pedHistory.length > 0) {
+      renderPedigree();
+    }
+  }
+
+  // ── State ────────────────────────────────────────────
+  let currentOffspring   = [];  // [{geno, pheno}]
+  let selectedOffspring  = [];  // up to 2 cards
+  let punnettTraitIndex  = 0;   // which trait tab is active
+  let currentGeneration  = 1;
+
+  // ── Trait Definitions ────────────────────────────────
+  const TRAITS = [
+    {
+      key: 'height',
+      label: 'Height',
+      icon: '🌱',
+      dominant: 'tall', recessive: 'short',
+      domLetter: 'T',
+      phenoMap: {
+        TT: 'Tall', Tt: 'Tall', tT: 'Tall', tt: 'Short'
+      }
+    },
+    {
+      key: 'eye',
+      label: 'Eye Color',
+      icon: '👁️',
+      dominant: 'brown', recessive: 'blue',
+      domLetter: 'B',
+      phenoMap: {
+        BB: 'Brown', Bb: 'Brown', bB: 'Brown', bb: 'Blue'
+      }
+    },
+    {
+      key: 'hair',
+      label: 'Hair Type',
+      icon: '🧑',
+      dominant: 'curly', recessive: 'straight',
+      domLetter: 'C',
+      phenoMap: {
+        CC: 'Curly', Cc: 'Curly', cC: 'Curly', cc: 'Straight'
+      }
+    }
+  ];
+
+  /* ── genotype helpers ────────────────────────────────
+     Given a phenotype selection ('tall' | 'short') and
+     the trait, return a genotype string like 'TT', 'Tt', 'tt'
+     Dominant trait: randomly TT or Tt (50/50)
+  */
+  function phenoToGeno(phenotype, trait) {
+    const D = trait.domLetter;
+    const r = D.toLowerCase();
+    if (phenotype === trait.recessive) return r + r;          // tt
+    return Math.random() < 0.5 ? D + D : D + r;              // TT or Tt
+  }
+
+  // Normalise a 2-char genotype (sort so dominant always first for display)
+  function normalizeGeno(g) {
+    if (!g || g.length !== 2) return g || '';
+    const a = g[0], b = g[1];
+    // uppercase first
+    if (a === a.toLowerCase() && b === b.toUpperCase()) return b + a;
+    return g;
+  }
+
+  // Get phenotype from genotype
+  function genoToPheno(geno, trait) {
+    if (!geno || !trait) return '';
+    const D = trait.domLetter;
+    const r = D.toLowerCase();
+    // dominant: at least one uppercase
+    if (geno.toUpperCase() !== geno) {
+      // mixed case — check if any is dominant
+      const hasDom = geno[0] === D || geno[1] === D;
+      return hasDom ? trait.dominant : trait.recessive;
+    }
+    return geno === D + D || geno.includes(D) ? trait.dominant : trait.recessive;
+  }
+
+  // Is phenotype dominant?
+  function isDominant(geno, trait) {
+    if (!geno || !trait) return false;
+    const D = trait.domLetter;
+    return geno.includes(D);
+  }
+
+  // Cross two single-trait genotypes → list of 4 offspring genotypes
+  function crossGeno(g1, g2) {
+    if (!g1 || !g2 || g1.length < 2 || g2.length < 2) return ['--', '--', '--', '--'];
+    const alleles1 = [g1[0], g1[1]];
+    const alleles2 = [g2[0], g2[1]];
+    const result = [];
+    for (const a of alleles1) {
+      for (const b of alleles2) {
+        result.push(a + b);
+      }
+    }
+    return result; // 4 combos
+  }
+
+  // Combine multi-trait genotype string (e.g. "TtBbCc")
+  // and split into per-trait genotypes
+  function splitCombinedGeno(combined, traits) {
+    // e.g. "TtBbCc" → {"height":"Tt","eye":"Bb","hair":"Cc"}
+    const result = {};
+    let idx = 0;
+    for (const t of traits) {
+      result[t.key] = combined.substring(idx, idx + 2);
+      idx += 2;
+    }
+    return result;
+  }
+
+  /* ── Read parents from UI ────────────────────────────*/
+  function readParents() {
+    const p1 = {
+      height: document.getElementById('p1Height').value,
+      eye:    document.getElementById('p1Eye').value,
+      hair:   document.getElementById('p1Hair').value,
+    };
+    const p2 = {
+      height: document.getElementById('p2Height').value,
+      eye:    document.getElementById('p2Eye').value,
+      hair:   document.getElementById('p2Hair').value,
+    };
+
+    // Only include traits where BOTH parents have a selection (not 'none')
+    const activeTraits = TRAITS.filter(t => p1[t.key] !== 'none' && p2[t.key] !== 'none');
+
+    // Convert phenotype → genotype for each active trait
+    const geno1 = {}, geno2 = {};
+    for (const t of activeTraits) {
+      geno1[t.key] = phenoToGeno(p1[t.key], t);
+      geno2[t.key] = phenoToGeno(p2[t.key], t);
+    }
+
+    return { p1, p2, geno1, geno2, activeTraits };
+  }
+
+  // Update genotype preview labels in real-time
+  function updateGenoPreview() {
+    const { geno1, geno2, activeTraits } = readParents();
+    const str1 = activeTraits.map(t => geno1[t.key]).join('') || '—';
+    const str2 = activeTraits.map(t => geno2[t.key]).join('') || '—';
+    const el1 = document.getElementById('p1Geno');
+    const el2 = document.getElementById('p2Geno');
+    if (el1) el1.textContent = str1;
+    if (el2) el2.textContent = str2;
+  }
+
+  // Attach listeners — update preview + dim rows when none is chosen
+  ['p1Height','p1Eye','p1Hair','p2Height','p2Eye','p2Hair']
+    .forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('change', () => {
+        const row = el.closest('.trait-row');
+        if (row) row.classList.toggle('trait-disabled', el.value === 'none');
+        updateGenoPreview();
+      });
+    });
+  updateGenoPreview();
+
+  /* ══════════════════════════════════════════════════
+     MAIN SIMULATE FUNCTION
+  ══════════════════════════════════════════════════ */
+  function simulate() {
+    const { geno1, geno2, activeTraits } = readParents();
+
+    // Guard: need at least one active trait
+    if (activeTraits.length === 0) {
+      alert('Please select at least one trait for both parents before simulating.');
+      return;
+    }
+
+    // Cross each active trait independently → collect per-trait offspring arrays (4 each)
+    const traitOffspring = {};
+    for (const t of activeTraits) {
+      traitOffspring[t.key] = crossGeno(geno1[t.key], geno2[t.key]);
+    }
+
+    // Build combined offspring from active traits only
+    currentOffspring = [];
+    for (let i = 0; i < 4; i++) {
+      const child = {};
+      for (const t of activeTraits) {
+        const g = normalizeGeno(traitOffspring[t.key][i]);
+        child[t.key] = {
+          geno:  g,
+          pheno: isDominant(g, t) ? t.dominant : t.recessive,
+          dom:   isDominant(g, t)
+        };
+      }
+      currentOffspring.push(child);
+    }
+
+    // Store for Punnett and other renderers
+    window._traitOffspring = traitOffspring;
+    window._geno1 = geno1;
+    window._geno2 = geno2;
+    window._activeTraits = activeTraits;
+
+    // Render all sections
+    renderResults();
+    renderPunnett(0);
+    renderVisualOffspring();
+    renderExplanation();
+
+    // Show cards
+    ['resultsCard','punnettCard','visualCard','explanationCard','childCard','nextGenCard']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+      });
+
+    // Reset selection
+    selectedOffspring = [];
+    updateSelectedPair();
+    const childDisplay = document.getElementById('childDisplay');
+    if (childDisplay) childDisplay.classList.remove('visible');
+
+    // Update generation badge
+    const genBadge = document.getElementById('genBadge');
+    if (genBadge) genBadge.textContent = `Generation ${currentGeneration}`;
+
+    // Build / update pedigree
+    refreshPedigree();
+
+    // Scroll to results
+    setTimeout(() => {
+      const rc = document.getElementById('resultsCard');
+      if (rc) rc.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 100);
+  }
+
+  /* ── Render Results Table ────────────────────────────*/
+  function renderResults() {
+    const activeTraits = window._activeTraits;
+    if (!activeTraits || activeTraits.length === 0) return;
+    const tbody = [];
+    for (const t of activeTraits) {
+      // Aggregate phenotype counts across 4 offspring
+      const counts = { dom: 0, rec: 0 };
+      for (const child of currentOffspring) {
+        if (child[t.key]) {
+          child[t.key].dom ? counts.dom++ : counts.rec++;
+        }
+      }
+      const total = 4;
+      const domPct = Math.round((counts.dom / total) * 100);
+      const recPct = 100 - domPct;
+
+      tbody.push(`
+        <tr>
+          <td>${t.icon} <strong>${t.label}</strong></td>
+          <td>
+            <span class="geno-pill">${window._geno1[t.key] || '--'}</span>
+            <span style="color:var(--muted);margin:0 4px">×</span>
+            <span class="geno-pill">${window._geno2[t.key] || '--'}</span>
+          </td>
+          <td>
+            ${domPct > 0 ? `<span class="geno-pill dominant-pill">${capitalize(t.dominant)} ${domPct}%</span> ` : ''}
+            ${recPct > 0 ? `<span class="geno-pill recessive-pill">${capitalize(t.recessive)} ${recPct}%</span>` : ''}
+          </td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar"><div class="pct-bar-fill" style="width:${domPct}%"></div></div>
+              <span class="pct-label">${domPct}%</span>
+            </div>
+          </td>
+        </tr>
+      `);
+    }
+
+    const wrap = document.getElementById('resultsTableWrap');
+    if (wrap) {
+      wrap.innerHTML = `
+        <table class="results-table">
+          <thead><tr>
+            <th>Trait</th>
+            <th>Parent Cross</th>
+            <th>Phenotypes</th>
+            <th>Dom. Ratio</th>
+          </tr></thead>
+          <tbody>${tbody.join('')}</tbody>
+        </table>
+      `;
+    }
+  }
+
+  /* ── Render Punnett Square ───────────────────────────*/
+  function renderPunnett(traitIdx) {
+    const activeTraits = window._activeTraits;
+    if (!activeTraits || activeTraits.length === 0) return;
+    // Clamp index in case active set shrank
+    traitIdx = Math.min(traitIdx, activeTraits.length - 1);
+    punnettTraitIndex = traitIdx;
+    const t = activeTraits[traitIdx];
+    const g1 = window._geno1[t.key] || '--';
+    const g2 = window._geno2[t.key] || '--';
+    const cols = [g1[0] || '-', g1[1] || '-']; // alleles from parent 1
+    const rows = [g2[0] || '-', g2[1] || '-']; // alleles from parent 2
+
+    // Build tabs — only for active traits
+    const tabsHtml = activeTraits.map((tr, i) =>
+      `<button class="tab ${i === traitIdx ? 'active' : ''}" onclick="renderPunnett(${i})">${tr.icon} ${tr.label}</button>`
+    ).join('');
+    const tabsEl = document.getElementById('punnettTabs');
+    if (tabsEl) tabsEl.innerHTML = tabsHtml;
+
+    // Build 3×3 grid (corner + 2 header + 4 result cells)
+    const grid = document.getElementById('punnettGrid');
+    if (!grid) return;
+    grid.style.gridTemplateColumns = `repeat(3, auto)`;
+
+    let html = '';
+    // Row 0: corner + col headers
+    html += `<div class="punnett-cell punnett-corner"></div>`;
+    for (const c of cols) {
+      html += `<div class="punnett-cell punnett-header">${c}</div>`;
+    }
+    // Rows 1-2: row header + result cells
+    for (const r of rows) {
+      html += `<div class="punnett-cell punnett-header">${r}</div>`;
+      for (const c of cols) {
+        const combo = normalizeGeno(c + r);
+        const dom = isDominant(combo, t);
+        const pheno = dom ? t.dominant : t.recessive;
+        const color = dom ? 'var(--green)' : 'var(--red)';
+        html += `
+          <div class="punnett-cell punnett-result" title="${pheno}" style="border-color:${color}22">
+            <span style="color:${color}">${combo}</span>
+          </div>`;
+      }
+    }
+
+    grid.innerHTML = html;
+  }
+
+  /* ── Render Visual Offspring ─────────────────────────*/
+  function getOffspringEmoji(child) {
+    const activeTraits = window._activeTraits || TRAITS;
+    // Use first active trait for the main emoji; fall back gracefully
+    const hasHeight = activeTraits.find(t => t.key === 'height');
+    const hasEye    = activeTraits.find(t => t.key === 'eye');
+    const hasHair   = activeTraits.find(t => t.key === 'hair');
+    const heightEmoji = hasHeight ? (child.height?.pheno === 'tall' ? '🌲' : '🌿') : null;
+    const eyeEmoji    = hasEye    ? (child.eye?.pheno    === 'brown'  ? '🟤' : '🔵') : null;
+    const hairEmoji   = hasHair   ? (child.hair?.pheno   === 'curly'  ? '🌀' : '〰️') : null;
+    return { heightEmoji, eyeEmoji, hairEmoji };
+  }
+
+  function renderVisualOffspring() {
+    const activeTraits = window._activeTraits;
+    if (!activeTraits || activeTraits.length === 0) return;
+    const grid = document.getElementById('offspringGrid');
+    if (!grid) return;
+    grid.innerHTML = currentOffspring.map((child, i) => {
+      const { heightEmoji, eyeEmoji, hairEmoji } = getOffspringEmoji(child);
+      // Main card emoji: prefer height, else eye, else hair
+      const mainEmoji = heightEmoji || eyeEmoji || hairEmoji || '🧬';
+
+      // Build trait lines only for active traits
+      let traitLines = '';
+      if (eyeEmoji && child.eye)    traitLines += `${eyeEmoji} <strong>${capitalize(child.eye.pheno)}</strong> eyes<br>`;
+      if (hairEmoji && child.hair)   traitLines += `${hairEmoji} <strong>${capitalize(child.hair.pheno)}</strong> hair<br>`;
+      if (heightEmoji && child.height) traitLines += `🌱 <strong>${capitalize(child.height.pheno)}</strong>`;
+
+      const genoStr = activeTraits.map(t => child[t.key]?.geno || '').join('');
+
+      return `
+        <div class="offspring-card" id="offCard${i}" onclick="toggleOffspringSelect(${i})">
+          <span class="check">✔</span>
+          <span class="offspring-emoji">${mainEmoji}</span>
+          <div class="offspring-traits">${traitLines}</div>
+          <div style="margin-top:8px;font-family:var(--mono);font-size:.7rem;color:var(--muted)">${genoStr}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function toggleOffspringSelect(idx) {
+    const already = selectedOffspring.indexOf(idx);
+    if (already !== -1) {
+      selectedOffspring.splice(already, 1);
+    } else {
+      if (selectedOffspring.length >= 2) {
+        // Deselect oldest
+        const old = selectedOffspring.shift();
+        const oldCard = document.getElementById(`offCard${old}`);
+        if (oldCard) oldCard.classList.remove('selected');
+      }
+      selectedOffspring.push(idx);
+    }
+    const card = document.getElementById(`offCard${idx}`);
+    if (card) card.classList.toggle('selected', selectedOffspring.includes(idx));
+    updateSelectedPair();
+    // Sync pedigree selection highlight
+    if (pedHistory.length > 0) renderPedigree();
+  }
+
+  function clearSelection() {
+    selectedOffspring = [];
+    document.querySelectorAll('.offspring-card').forEach(c => c.classList.remove('selected'));
+    updateSelectedPair();
+    if (pedHistory.length > 0) renderPedigree();
+  }
+
+  function updateSelectedPair() {
+    const btn = document.getElementById('nextGenBtn');
+    const pairDiv = document.getElementById('selectedPair');
+    const activeTraits = window._activeTraits || [];
+
+    if (!pairDiv) return;
+
+    if (selectedOffspring.length === 0) {
+      pairDiv.innerHTML = `<span style="font-size:.85rem;color:var(--muted)">No offspring selected yet.</span>`;
+      if (btn) btn.disabled = true;
+      return;
+    }
+
+    let html = '';
+    for (const idx of selectedOffspring) {
+      const child = currentOffspring[idx];
+      if (!child) continue;
+      const genoStr = activeTraits.map(t => child[t.key]?.geno || '').join('');
+      html += `<span class="pair-pill">Offspring ${idx + 1}: ${genoStr}</span>`;
+    }
+    if (selectedOffspring.length === 2) {
+      html = html.replace('</span><span', '</span><span class="pair-arrow">×</span><span');
+    }
+    pairDiv.innerHTML = html;
+    if (btn) btn.disabled = selectedOffspring.length < 2;
+  }
+
+  /* ── Render Explanation ──────────────────────────────*/
+  function renderExplanation() {
+    const activeTraits = window._activeTraits;
+    if (!activeTraits || activeTraits.length === 0) return;
+    const lines = [];
+    for (const t of activeTraits) {
+      const g1 = window._geno1[t.key] || '--';
+      const g2 = window._geno2[t.key] || '--';
+      const D = t.domLetter;
+      const r = D.toLowerCase();
+
+      // Count dominant outcomes
+      const combos = crossGeno(g1, g2).map(normalizeGeno);
+      const domCount = combos.filter(c => isDominant(c, t)).length;
+      const recCount = 4 - domCount;
+
+      if (domCount === 4) {
+        lines.push(`${t.icon} <strong>${capitalize(t.dominant)} ${t.label}</strong>: All offspring inherit at least one dominant allele (${D}), so ${t.dominant} appears 100% of the time.`);
+      } else if (domCount === 3) {
+        lines.push(`${t.icon} <strong>${capitalize(t.dominant)} ${t.label}</strong>: The dominant allele (${D}) appears in 3 out of 4 offspring (75%), making ${t.dominant} the most common phenotype.`);
+      } else if (domCount === 2) {
+        lines.push(`${t.icon} <strong>${capitalize(t.label)}</strong>: A classic 50/50 split — ${t.dominant} and ${t.recessive} each appear in 2 of 4 offspring.`);
+      } else if (domCount === 1) {
+        lines.push(`${t.icon} <strong>${capitalize(t.recessive)} ${t.label}</strong>: The recessive trait (${r}${r}) appears in 3 out of 4 offspring. Both parents carry mostly recessive alleles.`);
+      } else {
+        lines.push(`${t.icon} <strong>${capitalize(t.recessive)} ${t.label}</strong>: Both parents are homozygous recessive (${r}${r}), so all offspring show ${t.recessive}.`);
+      }
+    }
+
+    lines.push(`🔬 <strong>Dominant vs Recessive</strong>: A dominant allele (uppercase) masks a recessive allele (lowercase). You need two copies of a recessive allele to express the recessive phenotype.`);
+
+    const box = document.getElementById('explanationBox');
+    if (box) box.innerHTML = lines.map(l => `<p>${l}</p>`).join('');
+  }
+
+  /* ── Generate Random Child ───────────────────────────*/
+  function generateChild() {
+    if (currentOffspring.length === 0) return;
+    const activeTraits = window._activeTraits;
+    if (!activeTraits || activeTraits.length === 0) return;
+    const child = currentOffspring[Math.floor(Math.random() * currentOffspring.length)];
+    const { heightEmoji, eyeEmoji, hairEmoji } = getOffspringEmoji(child);
+    const mainEmoji = heightEmoji || eyeEmoji || hairEmoji || '🧬';
+
+    const childEmoji = document.getElementById('childEmoji');
+    const childTraits = document.getElementById('childTraits');
+    if (childEmoji) childEmoji.textContent = mainEmoji;
+
+    // Build trait lines only for active traits
+    let traitHtml = '';
+    if (activeTraits.find(t => t.key === 'eye') && child.eye)
+      traitHtml += `<div class="trait-line">${eyeEmoji} Eyes: <span class="trait-val">${capitalize(child.eye.pheno)}</span> <span style="color:var(--muted);font-family:var(--mono);font-size:.78rem">(${child.eye.geno})</span></div>`;
+    if (activeTraits.find(t => t.key === 'hair') && child.hair)
+      traitHtml += `<div class="trait-line">${hairEmoji} Hair: <span class="trait-val">${capitalize(child.hair.pheno)}</span> <span style="color:var(--muted);font-family:var(--mono);font-size:.78rem">(${child.hair.geno})</span></div>`;
+    if (activeTraits.find(t => t.key === 'height') && child.height)
+      traitHtml += `<div class="trait-line">🌱 Height: <span class="trait-val">${capitalize(child.height.pheno)}</span> <span style="color:var(--muted);font-family:var(--mono);font-size:.78rem">(${child.height.geno})</span></div>`;
+
+    if (childTraits) childTraits.innerHTML = traitHtml;
+
+    const display = document.getElementById('childDisplay');
+    if (display) {
+      display.classList.remove('visible');
+      void display.offsetWidth;
+      display.classList.add('visible');
+    }
+  }
+
+  /* ── Next Generation ─────────────────────────────────*/
+  function nextGeneration() {
+    if (selectedOffspring.length < 2) return;
+
+    const activeTraits = window._activeTraits;
+    if (!activeTraits || activeTraits.length === 0) return;
+
+    const child1 = currentOffspring[selectedOffspring[0]];
+    const child2 = currentOffspring[selectedOffspring[1]];
+    if (!child1 || !child2) return;
+
+    const nextGeno1 = {}, nextGeno2 = {};
+    for (const t of activeTraits) {
+      nextGeno1[t.key] = child1[t.key]?.geno || '';
+      nextGeno2[t.key] = child2[t.key]?.geno || '';
+    }
+
+    currentGeneration++;
+    selectedOffspring = [];
+
+    simulateWithGenos(nextGeno1, nextGeno2, activeTraits);
+  }
+
+  function simulateWithGenos(geno1, geno2, activeTraits) {
+    if (!activeTraits || activeTraits.length === 0) return;
+    window._geno1 = geno1;
+    window._geno2 = geno2;
+    window._activeTraits = activeTraits;
+
+    // Cross each active trait
+    const traitOffspring = {};
+    for (const t of activeTraits) {
+      traitOffspring[t.key] = crossGeno(geno1[t.key], geno2[t.key]);
+    }
+
+    currentOffspring = [];
+    for (let i = 0; i < 4; i++) {
+      const child = {};
+      for (const t of activeTraits) {
+        const g = normalizeGeno(traitOffspring[t.key][i]);
+        child[t.key] = {
+          geno:  g,
+          pheno: isDominant(g, t) ? t.dominant : t.recessive,
+          dom:   isDominant(g, t)
+        };
+      }
+      currentOffspring.push(child);
+    }
+
+    window._traitOffspring = traitOffspring;
+
+    updateGenoPreview();
+    renderResults();
+    renderPunnett(0);
+    renderVisualOffspring();
+    renderExplanation();
+
+    const childDisplay = document.getElementById('childDisplay');
+    if (childDisplay) childDisplay.classList.remove('visible');
+    updateSelectedPair();
+    const genBadge = document.getElementById('genBadge');
+    if (genBadge) genBadge.textContent = `Generation ${currentGeneration}`;
+
+    const resultsCard = document.getElementById('resultsCard');
+    if (resultsCard) resultsCard.scrollIntoView({behavior:'smooth', block:'start'});
+
+    // Update pedigree with new generation
+    refreshPedigree();
+  }
+
+  /* ── Utilities ───────────────────────────────────────*/
+  function capitalize(str) {
+    return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+  }
+
+  // Map 'hair' → 'Hair' for DOM IDs (p1Hair, p2Eye etc.)
+  // Already handled in trait-row IDs above; helper for select IDs
+  // select IDs: p1Height, p1Eye, p1Hair — key 'eye' → 'Eye'
+  // We already handle this by capitalizing the key in the HTML attributes
+
+  /* ══════════════════════════════════════════════════════
+     PEDIGREE SYSTEM
+     ══════════════════════════════════════════════════════
+
+     Data model per generation:
+       { father, mother, children[] }
+       each person: { genotype, phenotype, isDominant, sex }
+
+     We store a history array so users can review past gens.
+  ══════════════════════════════════════════════════════ */
+
+  // ── Pedigree State ───────────────────────────────────
+  let pedTraitKey      = null;   // which trait is currently displayed
+  let pedHistory       = [];     // array of generation snapshots
+  let pedViewGen       = 0;      // which generation index is being viewed
+
+  // ── SVG helpers ──────────────────────────────────────
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+
+  function svgEl(tag, attrs = {}) {
+    const el = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+    return el;
+  }
+
+  /* ── createPedigreeSnapshot ──────────────────────────
+     Build a pedigree data object from current simulation state.
+     Called after every simulate() or simulateWithGenos().
+  */
+  function createPedigreeSnapshot() {
+    const activeTraits = window._activeTraits;
+    if (!activeTraits || activeTraits.length === 0) return null;
+
+    // Choose display trait: first active trait, or keep current if still active
+    if (!pedTraitKey || !activeTraits.find(t => t.key === pedTraitKey)) {
+      pedTraitKey = activeTraits[0].key;
+    }
+
+    const t = TRAITS.find(tr => tr.key === pedTraitKey);
+    if (!t) return null;
+
+    const g1 = window._geno1 || {};
+    const g2 = window._geno2 || {};
+
+    // Father = Parent 1, Mother = Parent 2
+    const father = {
+      genotype:   normalizeGeno(g1[pedTraitKey] || ''),
+      isDominant: isDominant(normalizeGeno(g1[pedTraitKey] || ''), t),
+      phenotype:  isDominant(normalizeGeno(g1[pedTraitKey] || ''), t) ? t.dominant : t.recessive,
+      sex: 'M',
+      genoMap: g1,
+    };
+    const mother = {
+      genotype:   normalizeGeno(g2[pedTraitKey] || ''),
+      isDominant: isDominant(normalizeGeno(g2[pedTraitKey] || ''), t),
+      phenotype:  isDominant(normalizeGeno(g2[pedTraitKey] || ''), t) ? t.dominant : t.recessive,
+      sex: 'F',
+      genoMap: g2,
+    };
+
+    // Children: alternate M/F for visual variety
+    const children = currentOffspring.map((child, i) => {
+      const g = child[pedTraitKey]?.geno || '';
+      const norm = normalizeGeno(g);
+      return {
+        genotype:   norm,
+        isDominant: isDominant(norm, t),
+        phenotype:  isDominant(norm, t) ? t.dominant : t.recessive,
+        sex: i % 2 === 0 ? 'M' : 'F',
+        genoMap: Object.fromEntries(activeTraits.map(tr => [tr.key, child[tr.key]?.geno || ''])),
+        offspringIdx: i,
+      };
+    });
+
+    return {
+      generation: currentGeneration,
+      father,
+      mother,
+      children,
+      traitKey: pedTraitKey,
+      trait: t,
+      activeTraits,
+    };
+  }
+
+  /* ── renderPedigree ──────────────────────────────────
+     Draws the SVG family tree for the current snapshot
+     and pedigree trait selection.
+  */
+  function renderPedigree() {
+    const snap = pedHistory[pedViewGen];
+    if (!snap) return;
+
+    const svg     = document.getElementById('pedigreeSvg');
+    const tooltip = document.getElementById('pedTooltip');
+    if (!svg) return;
+
+    // Layout constants
+    const NODE_R  = 26;   // radius / half-size of nodes
+    const PAD     = 40;   // horizontal padding
+    const COL_GAP = 72;   // horizontal gap between children
+    const GEN1_Y  = 60;   // centre-y of parent row
+    const GEN2_Y  = 190;  // centre-y of children row
+
+    const numChildren = snap.children.length;
+    const childSpacing = Math.max(COL_GAP, NODE_R * 2 + 12);
+    const totalChildW  = Math.max(0, (numChildren - 1) * childSpacing);
+    const svgW = Math.max(400, totalChildW + PAD * 2 + NODE_R * 2);
+    const svgH = GEN2_Y + NODE_R + 60;
+
+    // Parent centres
+    const fatherX = svgW / 2 - 70;
+    const motherX = svgW / 2 + 70;
+    const parentY = GEN1_Y;
+
+    // Children centres
+    const childStartX = svgW / 2 - totalChildW / 2;
+    const childY = GEN2_Y;
+
+    svg.setAttribute('width',  svgW);
+    svg.setAttribute('height', svgH);
+    svg.innerHTML = ''; // clear
+
+    // ── Defs: glow filter ──
+    const defs = svgEl('defs');
+    const filter = svgEl('filter', { id: 'glow', x: '-30%', y: '-30%', width: '160%', height: '160%' });
+    const feGauss = svgEl('feGaussianBlur', { stdDeviation: '3', result: 'blur' });
+    const feMerge = svgEl('feMerge');
+    const n1 = svgEl('feMergeNode', { in: 'blur' });
+    const n2 = svgEl('feMergeNode', { in: 'SourceGraphic' });
+    feMerge.append(n1, n2);
+    filter.append(feGauss, feMerge);
+    defs.append(filter);
+    svg.append(defs);
+
+    // ── Connecting lines ──
+
+    // Horizontal marriage bar between parents
+    const midX = (fatherX + motherX) / 2;
+    svg.append(svgEl('line', {
+      x1: fatherX + NODE_R, y1: parentY,
+      x2: motherX - NODE_R, y2: parentY,
+      stroke: '#3a4060', 'stroke-width': '2'
+    }));
+
+    // Vertical drop from midpoint
+    svg.append(svgEl('line', {
+      x1: midX, y1: parentY,
+      x2: midX, y2: parentY + 50,
+      stroke: '#3a4060', 'stroke-width': '2'
+    }));
+
+    // Horizontal bar above children
+    if (numChildren > 1) {
+      svg.append(svgEl('line', {
+        x1: childStartX, y1: parentY + 50,
+        x2: childStartX + totalChildW, y2: parentY + 50,
+        stroke: '#3a4060', 'stroke-width': '2'
+      }));
+    }
+
+    // Vertical drops to each child
+    snap.children.forEach((child, i) => {
+      const cx = childStartX + i * childSpacing;
+      svg.append(svgEl('line', {
+        x1: cx, y1: parentY + 50,
+        x2: cx, y2: childY - NODE_R,
+        stroke: '#3a4060', 'stroke-width': '2'
+      }));
+    });
+
+    // ── Generation labels ──
+    function genLabel(x, y, text) {
+      const el = svgEl('text', {
+        x, y, fill: '#4a5280',
+        'font-size': '10',
+        'font-family': 'Space Mono, monospace',
+        'text-anchor': 'middle',
+      });
+      el.textContent = text;
+      svg.append(el);
+    }
+    genLabel(20, parentY + 4, `G${snap.generation}`);
+    genLabel(20, childY + 4,  `G${snap.generation + 1}`);
+
+    // ── Draw a person node ──
+    function drawNode(person, cx, cy, label, offspringIdx) {
+      const t       = snap.trait;
+      const isSel   = offspringIdx !== undefined && selectedOffspring.includes(offspringIdx);
+      const color   = person.sex === 'M' ? '#6c8ef5' : '#a78bfa';
+      const filled  = person.isDominant;
+      const fillCol = filled ? color : 'none';
+      const strokeW = isSel ? '3' : '2';
+      const strokeC = isSel ? '#fbbf24' : color;
+
+      const g = svgEl('g', {
+        cursor: offspringIdx !== undefined ? 'pointer' : 'default',
+        style: 'transition: transform .15s',
+      });
+
+      // Shape: square = male, circle = female
+      let shape;
+      if (person.sex === 'M') {
+        shape = svgEl('rect', {
+          x: cx - NODE_R, y: cy - NODE_R,
+          width: NODE_R * 2, height: NODE_R * 2,
+          rx: '5',
+          fill: fillCol,
+          stroke: strokeC,
+          'stroke-width': strokeW,
+          'stroke-dasharray': isSel ? '5 3' : 'none',
+          filter: isSel ? 'url(#glow)' : '',
+        });
+      } else {
+        shape = svgEl('circle', {
+          cx, cy, r: NODE_R,
+          fill: fillCol,
+          stroke: strokeC,
+          'stroke-width': strokeW,
+          'stroke-dasharray': isSel ? '5 3' : 'none',
+          filter: isSel ? 'url(#glow)' : '',
+        });
+      }
+      g.append(shape);
+
+      // Carrier dot: heterozygous dominant (one dom + one rec) → small dot
+      if (filled && person.genotype && person.genotype.length === 2) {
+        const D = t.domLetter;
+        const upperCount = [...person.genotype].filter(c => c === c.toUpperCase() && c !== c.toLowerCase()).length;
+        if (upperCount === 1) {
+          // carrier indicator: small white dot in centre
+          const dot = svgEl('circle', { cx, cy, r: '5', fill: 'rgba(255,255,255,.25)' });
+          g.append(dot);
+        }
+      }
+
+      // Genotype label below node
+      const gLabel = svgEl('text', {
+        x: cx, y: cy + NODE_R + 16,
+        fill: '#6b7280',
+        'font-size': '10',
+        'font-family': 'Space Mono, monospace',
+        'text-anchor': 'middle',
+      });
+      gLabel.textContent = person.genotype || '--';
+      g.append(gLabel);
+
+      // Role label
+      const rLabel = svgEl('text', {
+        x: cx, y: cy + NODE_R + 28,
+        fill: isSel ? '#fbbf24' : '#4a5280',
+        'font-size': '9',
+        'font-family': 'DM Sans, sans-serif',
+        'text-anchor': 'middle',
+      });
+      rLabel.textContent = label;
+      g.append(rLabel);
+
+      // ── Hover tooltip ──
+      g.addEventListener('mouseenter', e => {
+        const activeTraits = snap.activeTraits;
+        const genoMap = person.genoMap || {};
+        let tipHtml = `<strong>${label}</strong>`;
+        tipHtml += `<div style="color:var(--muted);margin-top:4px;">`;
+        // Show info for all active traits if available
+        if (Object.keys(genoMap).length > 0) {
+          for (const tr of activeTraits) {
+            const g = normalizeGeno(genoMap[tr.key] || '');
+            const dom = g ? isDominant(g, tr) : null;
+            if (g) {
+              tipHtml += `<div>${tr.icon} <span style="color:${dom ? '#4ade80':'#f87171'}">${capitalize(dom ? tr.dominant : tr.recessive)}</span> <span style="color:#4a5280">(${g})</span></div>`;
+            }
+          }
+        } else {
+          // Fallback: single trait
+          tipHtml += `<div>${t.icon} ${capitalize(person.phenotype || '')} (${person.genotype || '--'})</div>`;
+        }
+        tipHtml += `</div>`;
+        if (offspringIdx !== undefined) {
+          tipHtml += `<div style="margin-top:6px;font-size:.72rem;color:${isSel ? '#fbbf24' : '#6c8ef5'}">${isSel ? '✔ Selected for next gen' : 'Click to select'}</div>`;
+        }
+        if (tooltip) {
+          tooltip.innerHTML = tipHtml;
+          tooltip.classList.add('visible');
+          moveTip(e);
+        }
+      });
+      g.addEventListener('mousemove', moveTip);
+      g.addEventListener('mouseleave', () => {
+        if (tooltip) tooltip.classList.remove('visible');
+      });
+
+      // Click to toggle offspring selection
+      if (offspringIdx !== undefined) {
+        g.addEventListener('click', () => {
+          toggleOffspringSelect(offspringIdx);
+          renderPedigree(); // re-draw to update selection highlight
+        });
+        // Hover lift effect
+        g.addEventListener('mouseenter', () => g.setAttribute('transform', `translate(0,-3)`));
+        g.addEventListener('mouseleave', () => g.setAttribute('transform', ``));
+      }
+
+      svg.append(g);
+    }
+
+    function moveTip(e) {
+      const tt = document.getElementById('pedTooltip');
+      if (tt) {
+        tt.style.left = (e.clientX + 16) + 'px';
+        tt.style.top  = (e.clientY - 10) + 'px';
+      }
+    }
+
+    // ── Draw parents ──
+    drawNode(snap.father, fatherX, parentY, 'Father');
+    drawNode(snap.mother, motherX, parentY, 'Mother');
+
+    // ── Draw children ──
+    snap.children.forEach((child, i) => {
+      const cx = childStartX + i * childSpacing;
+      const label = `Child ${i + 1}`;
+      drawNode(child, cx, childY, label, child.offspringIdx);
+    });
+  }
+
+  /* ── updatePedigreeTraitTabs ─────────────────────────
+     Renders the trait selector tabs inside the pedigree card.
+  */
+  function updatePedigreeTraitTabs() {
+    const snap = pedHistory[pedViewGen];
+    if (!snap) return;
+    const container = document.getElementById('pedTraitTabs');
+    if (!container) return;
+    container.innerHTML = snap.activeTraits.map(t =>
+      `<button class="tab ${t.key === pedTraitKey ? 'active' : ''}"
+        onclick="switchPedTrait('${t.key}')">${t.icon} ${t.label}</button>`
+    ).join('');
+  }
+
+  /* ── switchPedTrait ──────────────────────────────────*/
+  function switchPedTrait(key) {
+    pedTraitKey = key;
+    // Rebuild snapshot with new trait key and re-render
+    if (pedHistory.length > 0) {
+      pedHistory[pedViewGen] = createPedigreeSnapshot();
+    }
+    updatePedigreeTraitTabs();
+    renderPedigree();
+  }
+
+  /* ── updateGenHistory ────────────────────────────────
+     Renders the generation history chips.
+  */
+  function updateGenHistory() {
+    const container = document.getElementById('genHistory');
+    if (!container) return;
+    if (pedHistory.length <= 1) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = pedHistory.map((snap, i) =>
+      `<button class="gen-chip ${i === pedViewGen ? 'active' : ''}"
+        onclick="viewPedGen(${i})">Gen ${snap.generation}</button>`
+    ).join('');
+  }
+
+  /* ── viewPedGen ──────────────────────────────────────*/
+  function viewPedGen(idx) {
+    pedViewGen = idx;
+    updateGenHistory();
+    updatePedigreeTraitTabs();
+    renderPedigree();
+  }
+
+  /* ── refreshPedigree ─────────────────────────────────
+     Called after every simulate(). Creates a new snapshot,
+     appends it to history, and re-renders.
+  */
+  function refreshPedigree() {
+    const snap = createPedigreeSnapshot();
+    if (!snap) return;
+
+    // If this is a new generation, push; otherwise replace current
+    if (pedHistory.length === 0 || snap.generation > pedHistory[pedHistory.length - 1].generation) {
+      pedHistory.push(snap);
+      pedViewGen = pedHistory.length - 1;
+    } else {
+      pedHistory[pedViewGen] = snap;
+    }
+
+    const pedigreeCard = document.getElementById('pedigreeCard');
+    if (pedigreeCard) pedigreeCard.classList.remove('hidden');
+    updatePedigreeTraitTabs();
+    updateGenHistory();
+    renderPedigree();
+  }
+
+  /* ══════════════════════════════════════════════════════
+     CASE STUDY SYSTEM
+     ══════════════════════════════════════════════════════
+
+     Allows users to simulate inheritance of common human
+     traits (baldness, dimples, widow's peak, etc.) with
+     the ability to dynamically add custom traits.
+  ══════════════════════════════════════════════════════ */
+
+  // Predefined case study traits
+  const CS_TRAITS = [
+    { key: 'dimples',    label: 'Dimples',    icon: '😊', dom: 'Dimples',    rec: 'No dimples',    letter: 'D' },
+    { key: 'widowpeak',  label: "Widow's Peak", icon: '💇', dom: "Widow's peak", rec: 'Straight',      letter: 'W' },
+    { key: 'earlobe',    label: 'Earlobes',     icon: '👂', dom: 'Free',         rec: 'Attached',      letter: 'E' },
+    { key: 'tongue',     label: 'Tongue Roll',  icon: '👅', dom: 'Can roll',     rec: 'Cannot roll',   letter: 'R' },
+    { key: 'freckles',   label: 'Freckles',     icon: '✨', dom: 'Freckles',     rec: 'No freckles',   letter: 'F' },
+    { key: 'cleftchin',  label: 'Cleft Chin',   icon: '👤', dom: 'Cleft',        rec: 'No cleft',      letter: 'C' },
+    { key: 'thumb',      label: 'Hitchhiker Thumb', icon: '👍', dom: 'Straight', rec: 'Hitchhiker',    letter: 'T' },
+    { key: 'baldness',   label: 'Pattern Baldness', icon: '👨‍🦲', dom: 'Baldness', rec: 'Normal hair',   letter: 'B' },
+    { key: 'fingerhair', label: 'Finger Hair',  icon: '✋', dom: 'Hair present', rec: 'No hair',       letter: 'H' },
+    { key: 'ptc',        label: 'PTC Tasting',  icon: '🔬', dom: 'Taster',       rec: 'Non-taster',    letter: 'P' },
+  ];
+
+  let csActiveTraits = [];   // traits currently selected for simulation
+  let csCustomTraits = [];   // user-added custom traits
+  let csOffspring = [];      // current offspring results
+  let csPunnettIdx = 0;      // active punnett tab
+
+  // Initialize case study UI
+  function initCaseStudy() {
+    renderCSTraitSelectors();
+    populateCustomOptions();
+  }
+
+  // Render trait selector rows for both parents
+  function renderCSTraitSelectors() {
+    const allTraits = [...CS_TRAITS, ...csCustomTraits];
+    const p1Div = document.getElementById('csParent1Traits');
+    const p2Div = document.getElementById('csParent2Traits');
+    if (!p1Div || !p2Div) return;
+
+    let html1 = '', html2 = '';
+    for (const t of allTraits) {
+      const domOpt = `<option value="dom">${t.dom} (dominant)</option>`;
+      const recOpt = `<option value="rec">${t.rec} (recessive)</option>`;
+      const noneOpt = `<option value="none" selected>— None —</option>`;
+
+      html1 += `
+        <div class="trait-row" data-cs-key="${t.key}">
+          <span class="trait-icon">${t.icon}</span>
+          <label>${t.label}</label>
+          <select id="csP1_${t.key}" onchange="csOnTraitChange()">
+            ${noneOpt}${domOpt}${recOpt}
+          </select>
+        </div>`;
+      html2 += `
+        <div class="trait-row" data-cs-key="${t.key}">
+          <span class="trait-icon">${t.icon}</span>
+          <label>${t.label}</label>
+          <select id="csP2_${t.key}" onchange="csOnTraitChange()">
+            ${noneOpt}${domOpt}${recOpt}
+          </select>
+        </div>`;
+    }
+    p1Div.innerHTML = html1;
+    p2Div.innerHTML = html2;
+  }
+
+  // Populate the custom trait dropdowns with available phenotypes
+  function populateCustomOptions() {
+    const domSel = document.getElementById('csCustomDom');
+    const recSel = document.getElementById('csCustomRec');
+    if (!domSel || !recSel) return;
+
+    // Collect all unique phenotypes from predefined traits
+    const allPhenos = new Set();
+    for (const t of CS_TRAITS) {
+      allPhenos.add(t.dom);
+      allPhenos.add(t.rec);
+    }
+
+    const options = Array.from(allPhenos).sort().map(p =>
+      `<option value="${p}">${p}</option>`
+    ).join('');
+
+    domSel.innerHTML = '<option value="">Select dominant phenotype...</option>' + options;
+    recSel.innerHTML = '<option value="">Select recessive phenotype...</option>' + options;
+  }
+
+  // Called when any trait selector changes
+  function csOnTraitChange() {
+    // Could add real-time preview here if desired
+  }
+
+  // Add a custom trait
+  function csAddCustomTrait() {
+    const nameInput = document.getElementById('csCustomName');
+    const domSel = document.getElementById('csCustomDom');
+    const recSel = document.getElementById('csCustomRec');
+
+    const name = (nameInput?.value || '').trim();
+    const domPheno = domSel?.value || '';
+    const recPheno = recSel?.value || '';
+
+    if (!name) {
+      alert('Please enter a trait name.');
+      return;
+    }
+    if (!domPheno || !recPheno) {
+      alert('Please select both dominant and recessive phenotypes.');
+      return;
+    }
+    if (domPheno === recPheno) {
+      alert('Dominant and recessive phenotypes must be different.');
+      return;
+    }
+
+    // Generate a unique key
+    const key = 'custom_' + Date.now();
+    const letter = String.fromCharCode(65 + csCustomTraits.length % 26); // A-Z
+
+    csCustomTraits.push({
+      key, label: name, icon: '🔬',
+      dom: domPheno, rec: recPheno, letter
+    });
+
+    // Re-render
+    renderCSTraitSelectors();
+
+    // Clear inputs
+    if (nameInput) nameInput.value = '';
+    if (domSel) domSel.value = '';
+    if (recSel) recSel.value = '';
+
+    // Show confirmation
+    alert(`Custom trait "${name}" added successfully!`);
+  }
+
+  // Read case study parents
+  function csReadParents() {
+    const allTraits = [...CS_TRAITS, ...csCustomTraits];
+    const p1 = {}, p2 = {};
+    const active = [];
+
+    for (const t of allTraits) {
+      const s1 = document.getElementById('csP1_' + t.key);
+      const s2 = document.getElementById('csP2_' + t.key);
+      const v1 = s1 ? s1.value : 'none';
+      const v2 = s2 ? s2.value : 'none';
+      p1[t.key] = v1;
+      p2[t.key] = v2;
+      if (v1 !== 'none' && v2 !== 'none') {
+        active.push(t);
+      }
+    }
+    return { p1, p2, active };
+  }
+
+  // Convert phenotype to genotype for case study
+  function csPhenoToGeno(phenotype, trait) {
+    const D = trait.letter;
+    const r = D.toLowerCase();
+    if (phenotype === 'rec') return r + r;
+    return Math.random() < 0.5 ? D + D : D + r;
+  }
+
+  // Simulate case study cross
+  function csSimulate() {
+    const { p1, p2, active } = csReadParents();
+
+    if (active.length === 0) {
+      alert('Please select at least one trait for both parents before simulating.');
+      return;
+    }
+
+    csActiveTraits = active;
+
+    // Generate genotypes
+    const geno1 = {}, geno2 = {};
+    for (const t of active) {
+      geno1[t.key] = csPhenoToGeno(p1[t.key], t);
+      geno2[t.key] = csPhenoToGeno(p2[t.key], t);
+    }
+
+    // Cross each trait
+    const traitOffspring = {};
+    for (const t of active) {
+      traitOffspring[t.key] = crossGeno(geno1[t.key], geno2[t.key]);
+    }
+
+    // Build combined offspring
+    csOffspring = [];
+    for (let i = 0; i < 4; i++) {
+      const child = {};
+      for (const t of active) {
+        const g = normalizeGeno(traitOffspring[t.key][i]);
+        child[t.key] = {
+          geno: g,
+          pheno: isDominant(g, { domLetter: t.letter }) ? t.dom : t.rec,
+          dom: isDominant(g, { domLetter: t.letter })
+        };
+      }
+      csOffspring.push(child);
+    }
+
+    // Store for rendering
+    window._csGeno1 = geno1;
+    window._csGeno2 = geno2;
+    window._csTraitOffspring = traitOffspring;
+
+    csRenderResults();
+    csRenderPunnett(0);
+    csRenderVisual();
+    csRenderExplanation();
+
+    ['csResultsCard', 'csPunnettCard', 'csVisualCard', 'csExplanationCard']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+      });
+
+    setTimeout(() => {
+      const rc = document.getElementById('csResultsCard');
+      if (rc) rc.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 100);
+  }
+
+  // Render case study results table
+  function csRenderResults() {
+    const tbody = [];
+    for (const t of csActiveTraits) {
+      const counts = { dom: 0, rec: 0 };
+      for (const child of csOffspring) {
+        if (child[t.key]) {
+          child[t.key].dom ? counts.dom++ : counts.rec++;
+        }
+      }
+      const domPct = Math.round((counts.dom / 4) * 100);
+      const recPct = 100 - domPct;
+
+      tbody.push(`
+        <tr>
+          <td>${t.icon} <strong>${t.label}</strong></td>
+          <td>
+            <span class="geno-pill">${window._csGeno1[t.key] || '--'}</span>
+            <span style="color:var(--muted);margin:0 4px">×</span>
+            <span class="geno-pill">${window._csGeno2[t.key] || '--'}</span>
+          </td>
+          <td>
+            ${domPct > 0 ? `<span class="geno-pill dominant-pill">${t.dom} ${domPct}%</span> ` : ''}
+            ${recPct > 0 ? `<span class="geno-pill recessive-pill">${t.rec} ${recPct}%</span>` : ''}
+          </td>
+          <td>
+            <div class="pct-bar-wrap">
+              <div class="pct-bar"><div class="pct-bar-fill" style="width:${domPct}%"></div></div>
+              <span class="pct-label">${domPct}%</span>
+            </div>
+          </td>
+        </tr>
+      `);
+    }
+
+    const wrap = document.getElementById('csResultsTableWrap');
+    if (wrap) {
+      wrap.innerHTML = `
+        <table class="results-table">
+          <thead><tr>
+            <th>Trait</th>
+            <th>Parent Cross</th>
+            <th>Phenotypes</th>
+            <th>Dom. Ratio</th>
+          </tr></thead>
+          <tbody>${tbody.join('')}</tbody>
+        </table>
+      `;
+    }
+  }
+
+  // Render case study punnett square
+  function csRenderPunnett(traitIdx) {
+    traitIdx = Math.min(traitIdx, csActiveTraits.length - 1);
+    csPunnettIdx = traitIdx;
+    const t = csActiveTraits[traitIdx];
+    const g1 = window._csGeno1[t.key] || '--';
+    const g2 = window._csGeno2[t.key] || '--';
+    const cols = [g1[0] || '-', g1[1] || '-'];
+    const rows = [g2[0] || '-', g2[1] || '-'];
+
+    const tabsHtml = csActiveTraits.map((tr, i) =>
+      `<button class="tab ${i === traitIdx ? 'active' : ''}" onclick="csRenderPunnett(${i})">${tr.icon} ${tr.label}</button>`
+    ).join('');
+    const tabsEl = document.getElementById('csPunnettTabs');
+    if (tabsEl) tabsEl.innerHTML = tabsHtml;
+
+    const grid = document.getElementById('csPunnettGrid');
+    if (!grid) return;
+    grid.style.gridTemplateColumns = `repeat(3, auto)`;
+
+    let html = '';
+    html += `<div class="punnett-cell punnett-corner"></div>`;
+    for (const c of cols) {
+      html += `<div class="punnett-cell punnett-header">${c}</div>`;
+    }
+    for (const r of rows) {
+      html += `<div class="punnett-cell punnett-header">${r}</div>`;
+      for (const c of cols) {
+        const combo = normalizeGeno(c + r);
+        const dom = isDominant(combo, { domLetter: t.letter });
+        const pheno = dom ? t.dom : t.rec;
+        const color = dom ? 'var(--green)' : 'var(--red)';
+        html += `
+          <div class="punnett-cell punnett-result" title="${pheno}" style="border-color:${color}22">
+            <span style="color:${color}">${combo}</span>
+          </div>`;
+      }
+    }
+    grid.innerHTML = html;
+  }
+
+  // Render case study visual offspring
+  function csRenderVisual() {
+    const grid = document.getElementById('csVisualGrid');
+    if (!grid) return;
+
+    grid.innerHTML = csOffspring.map((child, i) => {
+      // Use first trait for main emoji
+      const firstTrait = csActiveTraits[0];
+      const mainEmoji = firstTrait ? firstTrait.icon : '🧬';
+
+      let traitLines = '';
+      for (const t of csActiveTraits) {
+        const pheno = child[t.key]?.pheno || '';
+        const color = child[t.key]?.dom ? 'var(--green)' : 'var(--red)';
+        traitLines += `<div style="color:${color};font-size:0.75rem;">${t.icon} <strong>${pheno}</strong></div>`;
+      }
+
+      const genoStr = csActiveTraits.map(t => child[t.key]?.geno || '').join('');
+
+      return `
+        <div class="cs-result-card">
+          <span class="cs-result-emoji">${mainEmoji}</span>
+          <div class="cs-result-label">Offspring ${i + 1}</div>
+          <div class="cs-result-geno">${genoStr}</div>
+          <div style="margin-top:8px;text-align:left;">${traitLines}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Render case study explanation
+  function csRenderExplanation() {
+    const lines = [];
+    for (const t of csActiveTraits) {
+      const g1 = window._csGeno1[t.key] || '--';
+      const g2 = window._csGeno2[t.key] || '--';
+      const D = t.letter;
+      const r = D.toLowerCase();
+
+      const combos = crossGeno(g1, g2).map(normalizeGeno);
+      const domCount = combos.filter(c => isDominant(c, { domLetter: t.letter })).length;
+
+      if (domCount === 4) {
+        lines.push(`${t.icon} <strong>${t.dom}</strong>: All offspring inherit at least one dominant allele (${D}), so ${t.dom} appears 100% of the time.`);
+      } else if (domCount === 3) {
+        lines.push(`${t.icon} <strong>${t.dom}</strong>: The dominant allele (${D}) appears in 3 out of 4 offspring (75%).`);
+      } else if (domCount === 2) {
+        lines.push(`${t.icon} <strong>${t.label}</strong>: A classic 50/50 split — ${t.dom} and ${t.rec} each appear in 2 of 4 offspring.`);
+      } else if (domCount === 1) {
+        lines.push(`${t.icon} <strong>${t.rec}</strong>: The recessive trait appears in 3 out of 4 offspring.`);
+      } else {
+        lines.push(`${t.icon} <strong>${t.rec}</strong>: Both parents are homozygous recessive (${r}${r}), so all offspring show ${t.rec}.`);
+      }
+    }
+
+    lines.push(`🔬 <strong>Dominant vs Recessive</strong>: A dominant allele (uppercase) masks a recessive allele (lowercase). Two copies of a recessive allele are needed to express the recessive phenotype.`);
+
+    const box = document.getElementById('csExplanationBox');
+    if (box) box.innerHTML = lines.map(l => `<p>${l}</p>`).join('');
+  }
+
+  // Initialize case study on page load
+  document.addEventListener('DOMContentLoaded', initCaseStudy);
+
+  /* ══════════════════════════════════════════════════════
+     GENETIC DISORDERS SYSTEM
+     ══════════════════════════════════════════════════════
+
+     Simulates inheritance of genetic disorders including
+     X-linked recessive (hemophilia, color blindness, G6PD
+     deficiency) and autosomal recessive (cystic fibrosis,
+     sickle cell anemia) conditions.
+  ══════════════════════════════════════════════════════ */
+
+  // Disorder definitions
+  const GD_DISORDERS = [
+    {
+      key: 'hemophilia',
+      name: 'Hemophilia A',
+      icon: '🩸',
+      type: 'xlinked_recessive',
+      description: 'A bleeding disorder caused by deficiency of clotting Factor VIII. X-linked recessive — primarily affects males. Female carriers may show mild symptoms.',
+      gene: 'F8',
+      normal: 'Normal clotting',
+      affected: 'Hemophilia',
+      carrier: 'Carrier (mild)',
+    },
+    {
+      key: 'colorblind',
+      name: 'Red-Green Color Blindness',
+      icon: '👁️',
+      type: 'xlinked_recessive',
+      description: 'Inability to distinguish red and green shades. X-linked recessive — much more common in males. Female carriers typically have normal vision.',
+      gene: 'OPN1LW/OPN1MW',
+      normal: 'Normal vision',
+      affected: 'Color blind',
+      carrier: 'Carrier (normal)',
+    },
+    {
+      key: 'g6pd',
+      name: 'G6PD Deficiency',
+      icon: '🔴',
+      type: 'xlinked_recessive',
+      description: 'Glucose-6-phosphate dehydrogenase deficiency causes red blood cell breakdown under oxidative stress. X-linked recessive. Female carriers are partially deficient.',
+      gene: 'G6PD',
+      normal: 'Normal enzyme',
+      affected: 'G6PD deficient',
+      carrier: 'Partial deficiency',
+    },
+    {
+      key: 'cysticfibrosis',
+      name: 'Cystic Fibrosis',
+      icon: '🫁',
+      type: 'autosomal_recessive',
+      description: 'Affects lungs and digestive system due to defective CFTR protein. Autosomal recessive — both parents must be carriers for child to be affected.',
+      gene: 'CFTR',
+      normal: 'Normal',
+      affected: 'Cystic fibrosis',
+      carrier: 'Carrier (healthy)',
+    },
+    {
+      key: 'sicklecell',
+      name: 'Sickle Cell Anemia',
+      icon: '🩸',
+      type: 'autosomal_recessive',
+      description: 'Abnormal hemoglobin causes sickle-shaped red blood cells. Autosomal recessive. Carriers have sickle cell trait with mild protection against malaria.',
+      gene: 'HBB',
+      normal: 'Normal hemoglobin',
+      affected: 'Sickle cell disease',
+      carrier: 'Sickle cell trait',
+    },
+    {
+      key: 'taysachs',
+      name: "Tay-Sachs Disease",
+      icon: '🧠',
+      type: 'autosomal_recessive',
+      description: 'Fatal neurodegenerative disorder due to HEXA enzyme deficiency. Autosomal recessive. Most common in Ashkenazi Jewish, French Canadian, and Cajun populations.',
+      gene: 'HEXA',
+      normal: 'Normal',
+      affected: 'Tay-Sachs',
+      carrier: 'Carrier (healthy)',
+    },
+    {
+      key: 'huntington',
+      name: "Huntington's Disease",
+      icon: '🧠',
+      type: 'autosomal_dominant',
+      description: 'Neurodegenerative disorder causing uncontrolled movements and cognitive decline. Autosomal dominant — only one mutated copy needed for disease.',
+      gene: 'HTT',
+      normal: 'Normal',
+      affected: "Huntington's",
+      carrier: 'N/A (dominant)',
+    },
+    {
+      key: 'marfan',
+      name: 'Marfan Syndrome',
+      icon: '💪',
+      type: 'autosomal_dominant',
+      description: 'Connective tissue disorder affecting heart, eyes, and skeleton. Autosomal dominant. Affected individuals have 50% chance of passing it to each child.',
+      gene: 'FBN1',
+      normal: 'Normal',
+      affected: 'Marfan syndrome',
+      carrier: 'N/A (dominant)',
+    },
+  ];
+
+  let gdSelectedDisorder = null;
+  let gdCurrentOffspring = [];
+
+  // Initialize disorders UI
+  function initDisorders() {
+    renderDisorderList();
+  }
+
+  // Render disorder selection cards
+  function renderDisorderList() {
+    const container = document.getElementById('gdDisorderList');
+    if (!container) return;
+
+    container.innerHTML = GD_DISORDERS.map(d => `
+      <div class="gd-disorder-card ${gdSelectedDisorder?.key === d.key ? 'selected' : ''}"
+           onclick="gdSelectDisorder('${d.key}')">
+        <div class="gd-disorder-name">${d.icon} ${d.name}</div>
+        <div class="gd-disorder-info">
+          <strong>Inheritance:</strong> ${d.type === 'xlinked_recessive' ? 'X-linked Recessive' :
+            d.type === 'autosomal_recessive' ? 'Autosomal Recessive' : 'Autosomal Dominant'}<br>
+          <strong>Gene:</strong> ${d.gene}<br>
+          ${d.description}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Select a disorder
+  function gdSelectDisorder(key) {
+    gdSelectedDisorder = GD_DISORDERS.find(d => d.key === key) || null;
+    renderDisorderList();
+
+    const parentCard = document.getElementById('gdParentCard');
+    if (parentCard) parentCard.classList.remove('hidden');
+
+    // Reset results
+    ['gdResultsCard', 'gdPunnettCard', 'gdOutcomesCard', 'gdExplanationCard'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    });
+
+    gdUpdateParentOptions();
+  }
+
+  // Update parent genotype options based on disorder type and sex
+  function gdUpdateParentOptions() {
+    if (!gdSelectedDisorder) return;
+
+    const p1Sex = document.getElementById('gdP1Sex');
+    const p2Sex = document.getElementById('gdP2Sex');
+    const p1Geno = document.getElementById('gdP1Geno');
+    const p2Geno = document.getElementById('gdP2Geno');
+    const p1Status = document.getElementById('gdP1Status');
+    const p2Status = document.getElementById('gdP2Status');
+
+    if (!p1Geno || !p2Geno) return;
+
+    const d = gdSelectedDisorder;
+    let p1Options = '', p2Options = '';
+
+    if (d.type === 'xlinked_recessive') {
+      // X-linked: males are XY, females are XX
+      // Male genotypes: X^N Y (normal), X^d Y (affected)
+      // Female genotypes: X^N X^N (normal), X^N X^d (carrier), X^d X^d (affected)
+      if (p1Sex?.value === 'male') {
+        p1Options = `
+          <option value="XN_Y">X<sup>N</sup>Y — ${d.normal}</option>
+          <option value="Xd_Y">X<sup>d</sup>Y — ${d.affected}</option>
+        `;
+      } else {
+        p1Options = `
+          <option value="XN_XN">X<sup>N</sup>X<sup>N</sup> — ${d.normal}</option>
+          <option value="XN_Xd">X<sup>N</sup>X<sup>d</sup> — ${d.carrier}</option>
+          <option value="Xd_Xd">X<sup>d</sup>X<sup>d</sup> — ${d.affected}</option>
+        `;
+      }
+
+      if (p2Sex?.value === 'male') {
+        p2Options = `
+          <option value="XN_Y">X<sup>N</sup>Y — ${d.normal}</option>
+          <option value="Xd_Y">X<sup>d</sup>Y — ${d.affected}</option>
+        `;
+      } else {
+        p2Options = `
+          <option value="XN_XN">X<sup>N</sup>X<sup>N</sup> — ${d.normal}</option>
+          <option value="XN_Xd">X<sup>N</sup>X<sup>d</sup> — ${d.carrier}</option>
+          <option value="Xd_Xd">X<sup>d</sup>X<sup>d</sup> — ${d.affected}</option>
+        `;
+      }
+    } else if (d.type === 'autosomal_recessive') {
+      // Autosomal recessive: NN (normal), Nn (carrier), nn (affected)
+      p1Options = `
+        <option value="NN">NN — ${d.normal}</option>
+        <option value="Nn">Nn — ${d.carrier}</option>
+        <option value="nn">nn — ${d.affected}</option>
+      `;
+      p2Options = `
+        <option value="NN">NN — ${d.normal}</option>
+        <option value="Nn">Nn — ${d.carrier}</option>
+        <option value="nn">nn — ${d.affected}</option>
+      `;
+    } else if (d.type === 'autosomal_dominant') {
+      // Autosomal dominant: NN (affected), Nn (affected), nn (normal)
+      p1Options = `
+        <option value="NN">NN — ${d.affected}</option>
+        <option value="Nn">Nn — ${d.affected}</option>
+        <option value="nn">nn — ${d.normal}</option>
+      `;
+      p2Options = `
+        <option value="NN">NN — ${d.affected}</option>
+        <option value="Nn">Nn — ${d.affected}</option>
+        <option value="nn">nn — ${d.normal}</option>
+      `;
+    }
+
+    p1Geno.innerHTML = p1Options;
+    p2Geno.innerHTML = p2Options;
+
+    // Update status display
+    gdUpdateStatusDisplay();
+
+    // Add listeners for status updates
+    p1Geno.onchange = gdUpdateStatusDisplay;
+    p2Geno.onchange = gdUpdateStatusDisplay;
+  }
+
+  function gdUpdateStatusDisplay() {
+    const p1Geno = document.getElementById('gdP1Geno');
+    const p2Geno = document.getElementById('gdP2Geno');
+    const p1Status = document.getElementById('gdP1Status');
+    const p2Status = document.getElementById('gdP2Status');
+    const d = gdSelectedDisorder;
+    if (!d || !p1Geno || !p2Geno) return;
+
+    function getStatus(val) {
+      if (d.type === 'xlinked_recessive') {
+        if (val === 'XN_Y' || val === 'XN_XN') return `<span class="geno-pill dominant-pill">${d.normal}</span>`;
+        if (val === 'Xd_Y' || val === 'Xd_Xd') return `<span class="geno-pill recessive-pill">${d.affected}</span>`;
+        if (val === 'XN_Xd') return `<span class="geno-pill" style="background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--yellow)">${d.carrier}</span>`;
+      } else if (d.type === 'autosomal_recessive') {
+        if (val === 'NN') return `<span class="geno-pill dominant-pill">${d.normal}</span>`;
+        if (val === 'Nn') return `<span class="geno-pill" style="background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:var(--yellow)">${d.carrier}</span>`;
+        if (val === 'nn') return `<span class="geno-pill recessive-pill">${d.affected}</span>`;
+      } else if (d.type === 'autosomal_dominant') {
+        if (val === 'NN' || val === 'Nn') return `<span class="geno-pill recessive-pill">${d.affected}</span>`;
+        if (val === 'nn') return `<span class="geno-pill dominant-pill">${d.normal}</span>`;
+      }
+      return '—';
+    }
+
+    if (p1Status) p1Status.innerHTML = getStatus(p1Geno.value);
+    if (p2Status) p2Status.innerHTML = getStatus(p2Geno.value);
+  }
+
+  // Simulate disorder inheritance
+  function gdSimulate() {
+    if (!gdSelectedDisorder) {
+      alert('Please select a disorder first.');
+      return;
+    }
+
+    const p1Sex = document.getElementById('gdP1Sex')?.value || 'male';
+    const p2Sex = document.getElementById('gdP2Sex')?.value || 'female';
+    const p1Geno = document.getElementById('gdP1Geno')?.value || '';
+    const p2Geno = document.getElementById('gdP2Geno')?.value || '';
+
+    if (!p1Geno || !p2Geno) {
+      alert('Please select genotypes for both parents.');
+      return;
+    }
+
+    const d = gdSelectedDisorder;
+    let offspring = [];
+
+    if (d.type === 'xlinked_recessive') {
+      offspring = gdCrossXLinked(p1Sex, p1Geno, p2Sex, p2Geno, d);
+    } else if (d.type === 'autosomal_recessive') {
+      offspring = gdCrossAutosomal(p1Geno, p2Geno, d, 'recessive');
+    } else if (d.type === 'autosomal_dominant') {
+      offspring = gdCrossAutosomal(p1Geno, p2Geno, d, 'dominant');
+    }
+
+    gdCurrentOffspring = offspring;
+
+    gdRenderResults(offspring);
+    gdRenderPunnett(p1Sex, p1Geno, p2Sex, p2Geno, offspring);
+    gdRenderOutcomes(offspring);
+    gdRenderExplanation(offspring);
+
+    ['gdResultsCard', 'gdPunnettCard', 'gdOutcomesCard', 'gdExplanationCard']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('hidden');
+      });
+
+    setTimeout(() => {
+      const rc = document.getElementById('gdResultsCard');
+      if (rc) rc.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 100);
+  }
+
+  // Cross X-linked recessive
+  function gdCrossXLinked(p1Sex, p1Geno, p2Sex, p2Geno, d) {
+    // Determine gametes from each parent
+    function getGametes(sex, geno) {
+      if (sex === 'male') {
+        // Male: XY, gametes are X or Y
+        if (geno === 'XN_Y') return [{ type: 'X', allele: 'N' }, { type: 'Y', allele: '' }];
+        if (geno === 'Xd_Y') return [{ type: 'X', allele: 'd' }, { type: 'Y', allele: '' }];
+      } else {
+        // Female: XX, gametes are X with one allele
+        if (geno === 'XN_XN') return [{ type: 'X', allele: 'N' }, { type: 'X', allele: 'N' }];
+        if (geno === 'XN_Xd') return [{ type: 'X', allele: 'N' }, { type: 'X', allele: 'd' }];
+        if (geno === 'Xd_Xd') return [{ type: 'X', allele: 'd' }, { type: 'X', allele: 'd' }];
+      }
+      return [];
+    }
+
+    const g1 = getGametes(p1Sex, p1Geno);
+    const g2 = getGametes(p2Sex, p2Geno);
+    const results = [];
+
+    for (const a of g1) {
+      for (const b of g2) {
+        // Determine offspring sex and genotype
+        const isMale = (a.type === 'Y') || (b.type === 'Y');
+        const sex = isMale ? 'Male' : 'Female';
+
+        // Get X alleles
+        let xAlleles = [];
+        if (a.type === 'X') xAlleles.push(a.allele);
+        if (b.type === 'X') xAlleles.push(b.allele);
+
+        let status, genoStr;
+        if (isMale) {
+          // Male: one X from mother, Y from father
+          // Actually, if father contributes Y, child is male and gets X from mother
+          // If father contributes X, child is female
+          const maternalX = a.type === 'X' ? a.allele : b.allele;
+          genoStr = `X<sup>${maternalX}</sup>Y`;
+          status = maternalX === 'd' ? d.affected : d.normal;
+        } else {
+          // Female: two X chromosomes
+          const x1 = a.allele;
+          const x2 = b.allele;
+          genoStr = `X<sup>${x1}</sup>X<sup>${x2}</sup>`;
+          if (x1 === 'd' && x2 === 'd') status = d.affected;
+          else if (x1 === 'd' || x2 === 'd') status = d.carrier;
+          else status = d.normal;
+        }
+
+        results.push({ sex, geno: genoStr, status, isAffected: status === d.affected });
+      }
+    }
+    return results;
+  }
+
+  // Cross autosomal (recessive or dominant)
+  function gdCrossAutosomal(p1Geno, p2Geno, d, mode) {
+    const a1 = p1Geno.split('');
+    const a2 = p2Geno.split('');
+    const results = [];
+
+    for (const x of a1) {
+      for (const y of a2) {
+        const geno = x + y;
+        let status;
+        if (mode === 'recessive') {
+          if (geno === 'NN') status = d.normal;
+          else if (geno === 'Nn' || geno === 'nN') status = d.carrier;
+          else status = d.affected;
+        } else {
+          // dominant
+          if (geno === 'NN' || geno === 'Nn' || geno === 'nN') status = d.affected;
+          else status = d.normal;
+        }
+        // Sex is random 50/50 for autosomal
+        const sex = Math.random() < 0.5 ? 'Male' : 'Female';
+        results.push({ sex, geno, status, isAffected: status === d.affected });
+      }
+    }
+    return results;
+  }
+
+  // Render disorder results summary
+  function gdRenderResults(offspring) {
+    const d = gdSelectedDisorder;
+    if (!d) return;
+
+    const affected = offspring.filter(o => o.isAffected).length;
+    const carriers = offspring.filter(o => o.status === d.carrier).length;
+    const normal = offspring.filter(o => o.status === d.normal).length;
+    const total = offspring.length;
+
+    const content = document.getElementById('gdResultsContent');
+    if (!content) return;
+
+    let html = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+          <div style="font-family:var(--mono);font-size:1.5rem;color:var(--green);">${normal}</div>
+          <div style="font-size:0.78rem;color:var(--muted);">${d.normal}</div>
+        </div>
+    `;
+
+    if (d.type !== 'autosomal_dominant') {
+      html += `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+          <div style="font-family:var(--mono);font-size:1.5rem;color:var(--yellow);">${carriers}</div>
+          <div style="font-size:0.78rem;color:var(--muted);">${d.carrier}</div>
+        </div>
+      `;
+    }
+
+    html += `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;">
+          <div style="font-family:var(--mono);font-size:1.5rem;color:var(--red);">${affected}</div>
+          <div style="font-size:0.78rem;color:var(--muted);">${d.affected}</div>
+        </div>
+      </div>
+      <div style="font-size:0.85rem;color:var(--muted);">
+        Based on a ${total}-outcome Punnett square for <strong>${d.name}</strong> 
+        (${d.type === 'xlinked_recessive' ? 'X-linked Recessive' : d.type === 'autosomal_recessive' ? 'Autosomal Recessive' : 'Autosomal Dominant'}).
+      </div>
+    `;
+
+    content.innerHTML = html;
+  }
+
+  // Render disorder Punnett square
+  function gdRenderPunnett(p1Sex, p1Geno, p2Sex, p2Geno, offspring) {
+    const d = gdSelectedDisorder;
+    if (!d) return;
+
+    const grid = document.getElementById('gdPunnettGrid');
+    if (!grid) return;
+
+    let html = '';
+
+    if (d.type === 'xlinked_recessive') {
+      // X-linked: show sex chromosomes
+      function getGametes(sex, geno) {
+        if (sex === 'male') {
+          if (geno === 'XN_Y') return ['X<sup>N</sup>', 'Y'];
+          if (geno === 'Xd_Y') return ['X<sup>d</sup>', 'Y'];
+        } else {
+          if (geno === 'XN_XN') return ['X<sup>N</sup>', 'X<sup>N</sup>'];
+          if (geno === 'XN_Xd') return ['X<sup>N</sup>', 'X<sup>d</sup>'];
+          if (geno === 'Xd_Xd') return ['X<sup>d</sup>', 'X<sup>d</sup>'];
+        }
+        return ['?', '?'];
+      }
+
+      const g1 = getGametes(p1Sex, p1Geno);
+      const g2 = getGametes(p2Sex, p2Geno);
+
+      grid.style.gridTemplateColumns = `repeat(3, auto)`;
+
+      html += `<div class="gd-cell header"></div>`;
+      for (const c of g2) {
+        html += `<div class="gd-cell header">${c}</div>`;
+      }
+
+      let idx = 0;
+      for (const r of g1) {
+        html += `<div class="gd-cell header">${r}</div>`;
+        for (const c of g2) {
+          const child = offspring[idx++];
+          const color = child.isAffected ? 'var(--red)' : child.status === d.carrier ? 'var(--yellow)' : 'var(--green)';
+          html += `
+            <div class="gd-cell result" style="border-color:${color}44">
+              <span style="color:${color}">${child.geno}</span>
+              <span class="gd-cell-sex">${child.sex}</span>
+              <span class="gd-cell-status" style="color:${color}">${child.status}</span>
+            </div>
+          `;
+        }
+      }
+    } else {
+      // Autosomal
+      const a1 = p1Geno.split('');
+      const a2 = p2Geno.split('');
+
+      grid.style.gridTemplateColumns = `repeat(3, auto)`;
+
+      html += `<div class="gd-cell header"></div>`;
+      for (const c of a2) {
+        html += `<div class="gd-cell header">${c}</div>`;
+      }
+
+      let idx = 0;
+      for (const r of a1) {
+        html += `<div class="gd-cell header">${r}</div>`;
+        for (const c of a2) {
+          const child = offspring[idx++];
+          const color = child.isAffected ? 'var(--red)' : child.status === d.carrier ? 'var(--yellow)' : 'var(--green)';
+          html += `
+            <div class="gd-cell result" style="border-color:${color}44">
+              <span style="color:${color}">${child.geno}</span>
+              <span class="gd-cell-sex">${child.sex}</span>
+              <span class="gd-cell-status" style="color:${color}">${child.status}</span>
+            </div>
+          `;
+        }
+      }
+    }
+
+    grid.innerHTML = html;
+  }
+
+  // Render outcome probability bars
+  function gdRenderOutcomes(offspring) {
+    const d = gdSelectedDisorder;
+    if (!d) return;
+
+    const total = offspring.length;
+    const counts = {};
+    for (const o of offspring) {
+      counts[o.status] = (counts[o.status] || 0) + 1;
+    }
+
+    const content = document.getElementById('gdOutcomesContent');
+    if (!content) return;
+
+    let html = '';
+    const statusOrder = [d.normal, d.carrier, d.affected].filter(s => counts[s]);
+
+    for (const status of statusOrder) {
+      const count = counts[status] || 0;
+      const pct = Math.round((count / total) * 100);
+      const color = status === d.affected ? 'var(--red)' : status === d.carrier ? 'var(--yellow)' : 'var(--green)';
+
+      html += `
+        <div class="gd-outcome-bar">
+          <span style="font-size:0.85rem;color:var(--text);min-width:120px;">${status}</span>
+          <div class="gd-bar-track"><div class="gd-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+          <span class="gd-bar-label">${pct}%</span>
+        </div>
+      `;
+    }
+
+    // Breakdown by sex
+    html += `<div style="margin-top:16px;font-family:var(--mono);font-size:0.72rem;color:var(--accent);letter-spacing:1px;text-transform:uppercase;">By Sex</div>`;
+
+    const maleOffspring = offspring.filter(o => o.sex === 'Male');
+    const femaleOffspring = offspring.filter(o => o.sex === 'Female');
+
+    for (const [label, group] of [['Male', maleOffspring], ['Female', femaleOffspring]]) {
+      if (group.length === 0) continue;
+      const affectedInGroup = group.filter(o => o.isAffected).length;
+      const pct = Math.round((affectedInGroup / group.length) * 100);
+      html += `
+        <div class="gd-outcome-bar">
+          <span style="font-size:0.85rem;color:var(--text);min-width:120px;">${label} — ${d.affected}</span>
+          <div class="gd-bar-track"><div class="gd-bar-fill" style="width:${pct}%;background:var(--red)"></div></div>
+          <span class="gd-bar-label">${pct}%</span>
+        </div>
+      `;
+    }
+
+    content.innerHTML = html;
+  }
+
+  // Render disorder explanation
+  function gdRenderExplanation(offspring) {
+    const d = gdSelectedDisorder;
+    if (!d) return;
+
+    const lines = [];
+
+    if (d.type === 'xlinked_recessive') {
+      lines.push(`🧬 <strong>X-linked Recessive Inheritance</strong>: The gene for ${d.name} is located on the X chromosome. Males (XY) have only one X, so a single affected allele causes the disorder. Females (XX) need two affected alleles to show symptoms; with one, they are carriers.`);
+      lines.push(`♂️ <strong>Male Offspring</strong>: Inherit their X from their mother and Y from their father. If the mother is a carrier or affected, sons have a 50% chance of inheriting the disorder.`);
+      lines.push(`♀️ <strong>Female Offspring</strong>: Inherit one X from each parent. Daughters of affected fathers are always carriers. Daughters of carrier mothers have a 50% chance of being carriers.`);
+    } else if (d.type === 'autosomal_recessive') {
+      lines.push(`🧬 <strong>Autosomal Recessive Inheritance</strong>: ${d.name} requires two copies of the mutated gene (one from each parent) for a child to be affected. Carriers have one copy and are typically healthy.`);
+      lines.push(`👨‍👩‍👧‍👦 <strong>Carrier Parents</strong>: If both parents are carriers (Nn), each child has a 25% chance of being affected (nn), 50% chance of being a carrier (Nn), and 25% chance of being unaffected (NN).`);
+    } else if (d.type === 'autosomal_dominant') {
+      lines.push(`🧬 <strong>Autosomal Dominant Inheritance</strong>: ${d.name} requires only one copy of the mutated gene for a person to be affected. Each child of an affected parent has a 50% chance of inheriting the disorder.`);
+      lines.push(`⚠️ <strong>No Carriers</strong>: In dominant disorders, there are no "carriers" — individuals either have the disorder or they don't. Affected individuals can pass the gene to sons and daughters equally.`);
+    }
+
+    // Add specific outcome summary
+    const affected = offspring.filter(o => o.isAffected).length;
+    const total = offspring.length;
+    const affectedPct = Math.round((affected / total) * 100);
+    lines.push(`📊 <strong>Outcome Summary</strong>: In this simulation, ${affected} out of ${total} possible offspring (${affectedPct}%) would be affected with ${d.name}.`);
+
+    const box = document.getElementById('gdExplanationBox');
+    if (box) box.innerHTML = lines.map(l => `<p>${l}</p>`).join('');
+  }
+
+  // Initialize disorders on page load
+  document.addEventListener('DOMContentLoaded', initDisorders);
+
+</script>
+</body>
+</html>
