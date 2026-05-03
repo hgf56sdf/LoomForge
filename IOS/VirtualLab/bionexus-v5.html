@@ -3,173 +3,209 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BioNexus Synthesis Lab v5.0</title>
+<title>BioNexus Synthesis Node 5.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg0:#050505;--bg1:#0a0a0a;--bg2:#111111;--bg3:#151515;
+  --bg0:#020202;--bg1:#080808;--bg2:#111;--bg3:#0d0d0d;
   --border:rgba(255,255,255,0.05);--border2:rgba(255,255,255,0.10);
   --text:#e2e8f0;--muted:#64748b;--dim:#334155;--dim2:#475569;
-  --emerald:#10b981;--emerald-bg:rgba(16,185,129,0.05);--emerald-border:rgba(16,185,129,0.2);--emerald-border2:rgba(16,185,129,0.4);
-  --amber:#f59e0b;--amber-bg:rgba(245,158,11,0.10);--amber-border:rgba(245,158,11,0.3);
-  --red:#ef4444;--red-bg:rgba(239,68,68,0.05);--red-border:rgba(239,68,68,0.20);
-  --indigo:#818cf8;--indigo-bg:rgba(129,140,248,0.1);
+  --emerald:#10b981;--em-bg:rgba(16,185,129,0.10);--em-border:rgba(16,185,129,0.40);
+  --amber:#f59e0b;--am-bg:rgba(245,158,11,0.02);--am-border:rgba(245,158,11,0.10);
+  --red:#ef4444;--re-bg:rgba(239,68,68,0.03);--re-border:rgba(239,68,68,0.10);
+  --indigo:#818cf8;--in-bg:rgba(129,140,248,0.03);--in-border:rgba(129,140,248,0.10);
   --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
 }
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg0);color:var(--text);font-family:var(--sans);display:flex;flex-direction:column;height:100vh}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#1e293b;border-radius:99px}
 
-/* HEADER */
-header{height:56px;border-bottom:1px solid var(--border);background:var(--bg1);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;box-shadow:0 2px 20px rgba(0,0,0,.5)}
-.hdr-left{display:flex;align-items:center;gap:12px}
-.logo-box{background:#059669;padding:7px;border-radius:6px;box-shadow:0 0 15px rgba(16,185,129,.35);display:flex;align-items:center;justify-content:center;color:#fff}
-.hdr-title{font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}
-.hdr-sub{color:var(--muted);font-weight:400;font-size:10px;margin-left:6px}
-.hdr-right{display:flex;align-items:center;gap:24px}
-.challenge-wrap{display:flex;align-items:center;gap:8px}
-.challenge-label{font-size:10px;font-weight:800;letter-spacing:-.02em;color:var(--dim)}
-.challenge-label.on{color:var(--amber)}
-.toggle{width:32px;height:16px;border-radius:99px;background:#1e293b;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
-.toggle.on{background:var(--amber)}
-.toggle-knob{position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .2s}
-.toggle.on .toggle-knob{left:18px}
-.vdiv{width:1px;height:24px;background:var(--border2)}
-.btn-run{display:flex;align-items:center;gap:8px;padding:6px 24px;border-radius:6px;font-size:11px;font-weight:800;font-family:var(--sans);letter-spacing:.05em;border:1px solid transparent;cursor:pointer;transition:all .2s;text-transform:uppercase}
-.btn-run.start{background:var(--emerald);color:#fff;border-color:var(--emerald);box-shadow:0 4px 20px rgba(16,185,129,.25)}
-.btn-run.start:hover{transform:scale(1.04)}
-.btn-run.stop{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.5)}
+/* ── HEADER ── */
+header{height:64px;border-bottom:1px solid var(--border);background:rgba(8,8,8,.8);backdrop-filter:blur(20px);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50;position:sticky;top:0}
+.hdr-brand{display:flex;align-items:center;gap:16px}
+.hdr-logo{width:40px;height:40px;background:#059669;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(16,185,129,.2);color:#fff}
+.hdr-title{font-size:13px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin-bottom:3px}
+.hdr-sub{color:var(--muted);font-weight:400;font-size:11px;margin-left:8px}
+.hdr-status{display:flex;align-items:center;gap:6px}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hdr-status-text{font-family:var(--mono);font-size:9px;color:rgba(16,185,129,.8);letter-spacing:-.02em}
+.hdr-right{display:flex;align-items:center;gap:32px}
+.challenge-block{display:flex;align-items:center;gap:12px}
+.challenge-labels{text-align:right}
+.challenge-sync{font-size:9px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase;color:var(--dim)}
+.challenge-sync.on{color:var(--amber)}
+.challenge-val{font-family:var(--mono);font-size:10px;color:#94a3b8}
+.toggle{width:40px;height:20px;border-radius:99px;background:#1e293b;border:none;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0}
+.toggle.on{background:var(--amber);box-shadow:0 0 10px rgba(245,158,11,.3)}
+.toggle-knob{position:absolute;top:4px;left:4px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .3s}
+.toggle.on .toggle-knob{left:24px}
+.vdiv{width:1px;height:32px;background:var(--border)}
+.btn-run{display:flex;align-items:center;gap:12px;padding:0 32px;height:40px;border-radius:10px;font-size:12px;font-weight:800;font-family:var(--sans);letter-spacing:.05em;border:1px solid transparent;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn-run.start{background:var(--emerald);color:#fff;border-color:var(--emerald);box-shadow:0 8px 24px rgba(16,185,129,.3)}
+.btn-run.start:hover{background:#059669}
+.btn-run.start:active,.btn-run.stop:active{transform:scale(.96)}
+.btn-run.stop{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
 
-/* BODY */
+/* ── BODY ── */
 .app-body{display:flex;flex:1;overflow:hidden;position:relative}
 
-/* SIDEBAR */
-aside{width:280px;border-right:1px solid var(--border);background:var(--bg1);padding:16px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;flex-shrink:0}
-.sec-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.25em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+/* ── LEFT SIDEBAR ── */
+aside.left{width:320px;border-right:1px solid var(--border);background:var(--bg1);padding:20px;display:flex;flex-direction:column;gap:24px;overflow-y:auto;flex-shrink:0}
+.sec-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.25em;display:flex;align-items:center;gap:8px}
 .sec-label.amber{color:rgba(245,158,11,.7)}
 .sec-label.red{color:var(--red)}
+.sec-label.em{color:var(--emerald)}
+.sec-label.ind{color:var(--indigo)}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 
-.enzyme-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:6px;background:none;border:none;text-align:left;cursor:pointer;transition:all .15s;font-family:var(--sans);color:var(--muted)}
-.enzyme-btn:hover{color:#cbd5e1}
-.enzyme-btn.active{background:rgba(255,255,255,.05);color:var(--emerald)}
-.enzyme-name{font-size:12px;font-weight:700}
-.enzyme-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+/* Enzyme list */
+.enzyme-btn{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:none;border:none;text-align:left;cursor:pointer;transition:all .15s;color:var(--muted);margin-bottom:4px}
+.enzyme-btn:hover{background:rgba(255,255,255,.02);color:#cbd5e1}
+.enzyme-btn.active{background:rgba(255,255,255,.03);outline:1px solid rgba(255,255,255,.1);color:var(--text)}
+.enzyme-stripe{width:4px;height:24px;border-radius:99px;flex-shrink:0}
+.enzyme-info{flex:1}
+.enzyme-name{font-size:11px;font-weight:700;margin-bottom:2px}
+.enzyme-opt{font-size:9px;color:#475569;font-weight:500}
+.enzyme-chevron{color:var(--emerald);flex-shrink:0;display:none}
+.enzyme-btn.active .enzyme-chevron{display:block}
 
-.mutation-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:6px;background:none;border:none;text-align:left;cursor:pointer;transition:all .15s;font-size:10px;font-family:var(--sans);color:#475569}
+/* Gen variant */
+.gen-box{background:var(--am-bg);border:1px solid var(--am-border);border-radius:16px;padding:16px}
+.gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.mutation-btn{padding:10px 12px;border-radius:12px;font-size:10px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:all .15s;text-align:center;border:1px solid var(--border);background:rgba(0,0,0,.4);color:#475569}
 .mutation-btn:hover{color:#94a3b8}
-.mutation-btn.active{background:var(--amber-bg);color:var(--amber)}
+.mutation-btn.active{background:var(--am-bg);border-color:rgba(245,158,11,.4);color:var(--amber)}
 
-.inhibit-box{background:var(--red-bg);border:1px solid var(--red-border);border-radius:12px;padding:12px}
-.inhibit-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
-.inhibit-row-label{font-size:10px;font-weight:700;color:#94a3b8;transition:color .2s}
-.inhibit-row:hover .inhibit-row-label{color:var(--text)}
-.inhibit-note{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#7f1d1d;margin-top:4px}
-input[type=checkbox]{accent-color:var(--red)}
+/* Sliders */
+.slider-section{display:flex;flex-direction:column;gap:20px;padding:8px 0}
+.slider-block{display:flex;flex-direction:column;gap:12px}
+.slider-header{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:-.02em}
+.slider-label{display:flex;align-items:center;gap:6px}
+.slider-val-pill{font-family:var(--mono);font-size:10px;color:#cbd5e1}
+input[type=range]{width:100%;height:6px;border-radius:99px;-webkit-appearance:none;background:#1e293b;cursor:pointer;outline:none}
+input[type=range].em::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px rgba(16,185,129,.5)}
+input[type=range].ind::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--indigo);box-shadow:0 0 8px rgba(129,140,248,.5)}
 
-.recipe-card{padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .2s;margin-bottom:6px}
-.recipe-card:hover{border-color:rgba(16,185,129,.3)}
-.recipe-card.selected{background:var(--emerald-bg);border-color:var(--emerald-border2)}
-.recipe-hdr{display:flex;justify-content:space-between;align-items:center}
-.recipe-title{font-size:10px;font-weight:700;color:#cbd5e1;transition:color .2s}
-.recipe-card.selected .recipe-title,.recipe-card:hover .recipe-title{color:var(--emerald)}
+/* Inhibit */
+.inhibit-box{background:var(--re-bg);border:1px solid var(--re-border);border-radius:16px;padding:16px}
+.inhibit-row{display:flex;align-items:center;justify-content:space-between}
+.inhibit-text{display:flex;flex-direction:column;gap:3px}
+.inhibit-label{font-size:10px;font-weight:800;color:rgba(239,68,68,.8);text-transform:uppercase;letter-spacing:.1em}
+.inhibit-sub{font-size:9px;color:#475569;font-weight:500}
+.toggle.red.on{background:var(--red);box-shadow:0 0 10px rgba(239,68,68,.3)}
 
-/* MAIN */
+/* ── CENTER ── */
 main{flex:1;padding:24px;background:var(--bg0);display:flex;flex-direction:column;gap:20px;overflow:hidden;min-width:0}
-.tele-row{display:grid;grid-template-columns:1fr 1fr 2fr;gap:16px;flex-shrink:0}
-.tele-card{background:var(--bg1);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:0 4px 20px rgba(0,0,0,.3);position:relative;overflow:hidden}
-.tele-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.2em;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.tele-rate{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--emerald);letter-spacing:-.05em;line-height:1}
-.challenge-bar-wrap{margin-top:8px;display:flex;align-items:center;gap:8px}
-.challenge-bar-track{flex:1;height:4px;background:#1e293b;border-radius:99px;overflow:hidden}
-.challenge-bar-fill{height:100%;background:var(--amber);transition:width 1s;border-radius:99px}
-.challenge-goal{font-size:10px;font-weight:800;color:var(--amber);white-space:nowrap}
-.tele-conf{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--emerald);transition:color .3s}
-.tele-conf.denatured{color:var(--red);animation:blink .8s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-.env-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
-.slider-row{display:flex;align-items:center;gap:8px}
-input[type=range]{flex:1;height:3px;border-radius:99px;-webkit-appearance:none;background:#1e293b;cursor:pointer;outline:none}
-input[type=range].em::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px rgba(16,185,129,.5)}
-input[type=range].ind::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--indigo);box-shadow:0 0 8px rgba(129,140,248,.5)}
-.slider-val{font-family:var(--mono);font-size:10px;color:#94a3b8;width:36px;text-align:right;white-space:nowrap}
 
-/* CANVAS AREA */
-.canvas-area{flex:1;display:grid;grid-template-columns:2fr 1fr;gap:20px;min-height:0}
-.canvas-col{display:flex;flex-direction:column;gap:16px;min-height:0}
+.viewport{flex:1;background:var(--bg1);border-radius:24px;border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.6)}
+.vp-grid{position:absolute;inset:0;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:60px 60px;opacity:.03;pointer-events:none}
+#molLayer{position:absolute;inset:0;padding:40px;pointer-events:none;z-index:10}
+.molecule{position:absolute;transition:color .5s}
+.mol-product{position:relative;width:16px;height:16px;display:flex;align-items:center;justify-content:center}
+.mol-glow{position:absolute;inset:0;border-radius:50%;opacity:.3;filter:blur(5px);animation:mpulse 1.5s infinite}
+@keyframes mpulse{0%,100%{opacity:.3}50%{opacity:.6}}
+.mol-check{position:relative;width:16px;height:16px;border-radius:50%;border:2px solid currentColor}
+.mol-sub{display:flex;align-items:center;gap:3px}
+.mol-sub-bar{width:12px;height:4px;border-radius:99px;background:currentColor}
+.mol-sub-dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5}
 
-.viewport{flex:1;background:var(--bg1);border-radius:24px;border:1px solid var(--border);position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.5)}
-.grid-bg{position:absolute;inset:0;background-image:linear-gradient(#111 1px,transparent 1px),linear-gradient(90deg,#111 1px,transparent 1px);background-size:40px 40px;opacity:.05}
-.molecule{position:absolute;pointer-events:none;display:flex;align-items:center;justify-content:center}
-.mol-product{position:relative;width:12px;height:12px}
-.mol-glow{position:absolute;inset:0;border-radius:50%;opacity:.35;filter:blur(4px)}
-.mol-dot-product{position:relative;width:8px;height:8px;border-radius:50%;border:1.5px solid currentColor}
-.mol-substrate{width:10px;height:4px;border-radius:99px;background:currentColor}
-.mol-denatured{width:16px;height:2px;border-radius:99px;background:#334155;opacity:.5}
+.vp-badges{position:absolute;top:24px;left:24px;z-index:20;display:flex;gap:10px}
+.vp-badge{background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border:1px solid var(--border2);padding:8px 16px;border-radius:12px;display:flex;align-items:center;gap:10px}
+.vp-badge-dot{width:8px;height:8px;border-radius:50%;background:var(--emerald)}
+.vp-badge-text{font-family:var(--mono);font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:-.02em}
+.denat-badge{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);display:none}
+.denat-badge.show{display:flex;animation:blink .8s infinite}
+.denat-badge-icon{color:var(--red)}
+.denat-badge-text{font-size:10px;font-weight:800;color:var(--red);text-transform:uppercase;letter-spacing:.1em}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
 
-.vp-badges{position:absolute;top:20px;left:20px;display:flex;align-items:center;gap:10px;z-index:5}
-.session-badge{font-family:var(--mono);font-size:10px;color:#94a3b8;background:rgba(0,0,0,.8);padding:4px 12px;border-radius:99px;border:1px solid var(--border2);backdrop-filter:blur(8px)}
-.denat-badge{padding:4px 12px;border-radius:99px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red);font-size:9px;font-weight:800;animation:blink .8s infinite;display:none}
-.denat-badge.show{display:block}
+/* Bottom telemetry overlay */
+.vp-bottom{position:absolute;bottom:24px;left:24px;right:24px;z-index:20;display:grid;grid-template-columns:1fr 1fr 2fr;gap:16px}
+.tele-chip{background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border:1px solid var(--border2);border-radius:16px;padding:16px}
+.tele-chip-label{font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.tele-rate{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--emerald);line-height:1}
+.eff-bar-track{height:8px;background:#1e293b;border-radius:99px;margin-top:8px;overflow:hidden}
+.eff-bar-fill{height:100%;background:var(--emerald);border-radius:99px;transition:width .5s}
+.tele-chip-challenge{display:flex;align-items:center;justify-content:space-between}
+.challenge-desc{font-size:11px;font-weight:700;color:#cbd5e1}
+.target-ring{width:32px;height:32px;border-radius:50%;border:2px solid #334155;display:flex;align-items:center;justify-content:center;color:#334155;transition:all .3s}
+.target-ring.hit{border-color:var(--emerald);color:var(--emerald)}
 
-.idle-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);z-index:10;pointer-events:none;transition:opacity .3s}
-.idle-overlay.hidden{opacity:0}
-.idle-content{text-align:center;opacity:.4}
-.idle-icon{width:40px;height:40px;margin:0 auto 16px;color:#94a3b8;animation:spin 10s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.idle-text{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3em;color:#94a3b8}
+/* Insight panel */
+.insight-panel{background:var(--in-bg);border:1px solid var(--in-border);border-radius:16px;padding:20px;display:flex;gap:20px;flex-shrink:0}
+.insight-icon-wrap{width:40px;height:40px;border-radius:12px;background:rgba(129,140,248,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--indigo)}
+.insight-title{font-size:11px;font-weight:800;color:#a5b4fc;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.insight-text{font-size:11px;color:#94a3b8;line-height:1.65;max-width:640px}
+.insight-close{background:none;border:none;color:var(--muted);cursor:pointer;transition:color .2s;align-self:flex-start;padding:2px}
+.insight-close:hover{color:var(--text)}
 
-/* INSIGHT PANEL */
-.insight-panel{background:var(--emerald-bg);border:1px solid var(--emerald-border);border-radius:16px;padding:16px;display:flex;gap:12px;overflow:hidden;max-height:0;opacity:0;transition:max-height .4s ease,opacity .4s ease;flex-shrink:0}
-.insight-panel.show{max-height:120px;opacity:1}
-.insight-icon{color:var(--emerald);flex-shrink:0;margin-top:2px}
-.insight-inner{flex:1;overflow-y:auto;padding-right:4px}
-.insight-text{font-size:11px;color:#94a3b8;line-height:1.65;font-style:italic}
+/* ── RIGHT SIDEBAR ── */
+aside.right{width:320px;border-left:1px solid var(--border);background:var(--bg1);padding:20px;display:flex;flex-direction:column;gap:24px;overflow-y:auto;flex-shrink:0}
+.btn-snapshot{font-size:10px;font-weight:700;color:var(--emerald);background:var(--em-bg);border:none;padding:5px 10px;border-radius:8px;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.btn-snapshot:hover{background:rgba(16,185,129,.2)}
+.log-empty{padding:40px 20px;text-align:center;border:1px dashed var(--border);border-radius:16px}
+.log-empty-icon{color:#1e293b;margin:0 auto 8px}
+.log-empty-text{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#334155}
+.log-entries{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;padding-right:4px}
+.log-entry{padding:12px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(8px);opacity:0}to{transform:translateX(0);opacity:1}}
+.log-row1{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.log-enzyme{font-size:11px;font-weight:700;color:var(--text)}
+.log-rate-ok{font-family:var(--mono);font-size:10px;color:var(--emerald)}
+.log-rate-bad{font-family:var(--mono);font-size:10px;color:var(--red)}
+.log-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-family:var(--mono);font-size:9px;color:#475569;text-transform:uppercase}
+.log-right{text-align:right}
 
-/* LOG PANEL */
-.log-panel{background:var(--bg1);border-radius:24px;border:1px solid var(--border);padding:20px;display:flex;flex-direction:column;box-shadow:0 4px 30px rgba(0,0,0,.4)}
-.log-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.btn-snapshot{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:#94a3b8;padding:6px;border-radius:8px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
-.btn-snapshot:hover{background:rgba(16,185,129,.2);color:var(--emerald)}
-.log-entries{flex:1;overflow-y:auto;padding-right:4px;min-height:0}
-.log-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--dim);gap:8px;padding:16px}
-.log-empty-text{font-size:10px;line-height:1.5;color:#334155}
-.log-entry{padding:12px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;animation:slideIn .3s ease}
-@keyframes slideIn{from{transform:translateX(10px);opacity:0}to{transform:translateX(0);opacity:1}}
-.log-row1{display:flex;justify-content:space-between;font-weight:700;font-size:10px;margin-bottom:4px}
-.log-enzyme{color:var(--emerald)}
-.log-rate-denat{color:var(--red)}
-.log-rate-ok{color:#94a3b8}
-.log-row2{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;color:#475569;text-transform:uppercase}
+/* Recipes */
+.recipe-btn{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:rgba(0,0,0,.4);text-align:left;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;margin-bottom:8px}
+.recipe-btn:hover{border-color:var(--border2)}
+.recipe-btn.selected{background:var(--in-bg);border-color:rgba(129,140,248,.4);box-shadow:0 4px 20px rgba(99,102,241,.1)}
+.recipe-btn-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.recipe-btn-title{font-size:10px;font-weight:800;letter-spacing:.05em;color:#94a3b8;transition:color .2s}
+.recipe-btn:hover .recipe-btn-title{color:var(--text)}
+.recipe-btn.selected .recipe-btn-title{color:#a5b4fc}
+.recipe-btn-goal{font-size:9px;color:#334155;font-weight:500;transition:color .2s}
+.recipe-btn:hover .recipe-btn-goal{color:#475569}
 
-.data-toggle-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--bg2);border:none;border-radius:12px;cursor:pointer;transition:background .2s;margin-top:16px;border-top:1px solid var(--border);padding-top:16px}
-.data-toggle-btn:hover{background:var(--bg3)}
-.data-toggle-inner{display:flex;align-items:center;gap:8px}
-.data-toggle-label{font-size:10px;font-weight:800;color:#94a3b8;font-family:var(--sans)}
-.data-toggle-btn:hover .data-toggle-label{color:var(--text)}
-.chevron{color:var(--muted);transition:transform .3s}
-.chevron.open{transform:rotate(90deg)}
+/* Master tele button */
+.tele-btn{width:100%;display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;background:#4f46e5;border:none;border-radius:12px;cursor:pointer;color:#fff;transition:all .2s}
+.tele-btn:hover{background:#6366f1}
+.tele-btn:active{transform:scale(.97)}
+.tele-btn-inner{display:flex;align-items:center;gap:12px}
+.tele-btn-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;font-family:var(--sans)}
+.tele-chevron{transition:transform .3s}
+.tele-chevron.open{transform:rotate(-90deg)}
 
-/* DATA TRAY */
-.data-tray{position:absolute;bottom:0;left:0;right:0;background:var(--bg1);border-top:1px solid var(--border2);z-index:100;height:0;overflow:hidden;transition:height .4s ease}
-.data-tray.open{height:240px}
-.data-tray-inner{padding:24px}
-.tray-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.tray-title{font-size:10px;font-weight:800;color:var(--indigo);text-transform:uppercase;letter-spacing:.2em;display:flex;align-items:center;gap:8px}
-.tray-close{background:none;border:none;color:var(--muted);cursor:pointer;transition:color .2s;padding:2px}
-.tray-close:hover{color:var(--text)}
-.tray-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.tray-stat{padding:16px;background:rgba(255,255,255,.05);border-radius:16px;border:1px solid var(--border)}
-.tray-stat-label{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted)}
-.tray-stat-val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text);margin-top:4px}
+/* ── DATA TRAY ── */
+.data-tray{position:absolute;bottom:0;left:0;right:0;background:rgba(8,8,8,.95);backdrop-filter:blur(24px);border-top:1px solid var(--border2);z-index:100;height:0;overflow:hidden;transition:height .4s ease}
+.data-tray.open{height:320px}
+.data-tray-inner{padding:32px;max-width:1400px;margin:0 auto;height:100%;display:flex;flex-direction:column}
+.tray-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:32px}
+.tray-brand{display:flex;align-items:center;gap:16px}
+.tray-icon-wrap{width:48px;height:48px;border-radius:16px;background:var(--in-bg);display:flex;align-items:center;justify-content:center;color:var(--indigo)}
+.tray-title{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.2em;margin-bottom:3px}
+.tray-node{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase}
+.tray-close{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.05);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:all .2s}
+.tray-close:hover{background:rgba(255,255,255,.1);color:var(--text)}
+.tray-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;flex:1}
+.tray-stat{padding:24px;background:rgba(255,255,255,.02);border-radius:24px;border:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between;transition:background .2s;cursor:default}
+.tray-stat:hover{background:rgba(255,255,255,.04)}
+.tray-stat-top{display:flex;justify-content:space-between;align-items:flex-start}
+.tray-stat-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.tray-stat-icon{color:#334155;transition:color .2s}
+.tray-stat:hover .tray-stat-icon{color:var(--muted)}
+.tray-stat-val{font-family:var(--mono);font-size:28px;font-weight:700;line-height:1;margin-top:8px}
 
-/* FOOTER */
-footer{height:32px;border-top:1px solid var(--border);background:var(--bg1);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);flex-shrink:0}
-.footer-left{display:flex;gap:32px}
-.footer-right{display:flex;align-items:center;gap:8px}
-.status-dot{width:6px;height:6px;border-radius:50%;background:#1e293b;transition:background .3s}
-.status-dot.on{background:var(--emerald);animation:ping 1s infinite}
-@keyframes ping{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+/* ── FOOTER ── */
+footer{height:40px;border-top:1px solid var(--border);background:var(--bg1);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);flex-shrink:0}
+.foot-left{display:flex;gap:40px;align-items:center}
+.foot-engine{display:flex;align-items:center;gap:8px}
+.foot-dot{width:6px;height:6px;border-radius:50%;background:var(--emerald)}
+.foot-right{display:flex;align-items:center;gap:16px}
+.foot-divider{width:1px;height:16px;background:var(--border)}
+.foot-nominal{color:rgba(16,185,129,.5)}
 
 svg{display:block}
 </style>
@@ -178,195 +214,256 @@ svg{display:block}
 
 <!-- HEADER -->
 <header>
-  <div class="hdr-left">
-    <div class="logo-box">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <div class="hdr-brand">
+    <div class="hdr-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M2 13a5 5 0 0 0 5 5h10a5 5 0 0 0 5-5V9a5 5 0 0 0-5-5H7a5 5 0 0 0-5 5Z"/><path d="m7 16 4-4-4-4"/><path d="m14 8 3 4-3 4"/>
       </svg>
     </div>
-    <h1 class="hdr-title">BioNexus <span class="hdr-sub">Synthesis Lab v5.0</span></h1>
+    <div>
+      <div class="hdr-title">BioNexus <span class="hdr-sub">Synthesis Node 5.0</span></div>
+      <div class="hdr-status">
+        <div class="pulse-dot"></div>
+        <span class="hdr-status-text">SYSTEM READY // LATENCY 4MS</span>
+      </div>
+    </div>
   </div>
+
   <div class="hdr-right">
-    <div class="challenge-wrap">
-      <span class="challenge-label" id="challengeLabel">CHALLENGE MODE</span>
+    <div class="challenge-block">
+      <div class="challenge-labels">
+        <div class="challenge-sync" id="challengeSyncLabel">CHALLENGE_SYNC</div>
+        <div class="challenge-val" id="challengeValLabel">OFFLINE</div>
+      </div>
       <button class="toggle" id="challengeToggle" onclick="toggleChallenge()">
         <div class="toggle-knob"></div>
       </button>
     </div>
     <div class="vdiv"></div>
     <button class="btn-run start" id="btnRun" onclick="toggleRun()">
-      <svg id="runIcon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-      <span id="runLabel">INITIATE REACTION</span>
+      <svg id="runIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span id="runLabel">EXECUTE KINETICS</span>
     </button>
   </div>
 </header>
 
 <div class="app-body">
 
-  <!-- SIDEBAR -->
-  <aside>
-    <!-- Catalyst -->
+  <!-- LEFT SIDEBAR -->
+  <aside class="left">
+    <!-- Catalyst Matrix -->
     <section>
-      <div class="sec-label">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M16 22c-1.764-2.077-2.799-4.042-3.149-5.998"/><path d="m5 8 2-1"/><path d="m19 8-2-1"/><path d="m5 16 2 1"/><path d="m19 16-2 1"/><path d="m12 1 0 2"/><path d="m12 21 0 2"/></svg>
-        Catalyst Selection
+      <div class="sec-hdr">
+        <div class="sec-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M16 22c-1.764-2.077-2.799-4.042-3.149-5.998"/></svg>
+          Catalyst Matrix
+        </div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>
       </div>
       <div id="enzymeList"></div>
     </section>
 
-    <!-- Genetic Variation -->
+    <!-- Gen Variant -->
     <section>
-      <div class="sec-label amber">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        Genetic Variation
+      <div class="gen-box">
+        <div class="sec-label amber">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Gen-Variant
+        </div>
+        <div class="gen-grid" id="mutationList"></div>
       </div>
-      <div id="mutationList"></div>
+    </section>
+
+    <!-- Environmental Controls -->
+    <section class="slider-section" id="sliderSection">
+      <div class="slider-block">
+        <div class="slider-header">
+          <div class="slider-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+            Thermal_Index
+          </div>
+          <span class="slider-val-pill" id="tempVal">37°C</span>
+        </div>
+        <input type="range" class="em" id="sliderTemp" min="10" max="90" value="37" oninput="setTemp(+this.value)"/>
+      </div>
+      <div class="slider-block">
+        <div class="slider-header">
+          <div class="slider-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+            pH_Level
+          </div>
+          <span class="slider-val-pill" id="phVal">7.0</span>
+        </div>
+        <input type="range" class="ind" id="sliderPh" min="0" max="14" step="0.1" value="7" oninput="setPh(+this.value)"/>
+      </div>
+      <div class="slider-block">
+        <div class="slider-header">
+          <div class="slider-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            Concentration
+          </div>
+          <span class="slider-val-pill" id="concVal">60%</span>
+        </div>
+        <input type="range" class="em" id="sliderConc" min="10" max="100" value="60" oninput="setConc(+this.value)"/>
+      </div>
     </section>
 
     <!-- Inhibition -->
-    <section>
+    <section style="margin-top:auto">
       <div class="inhibit-box">
-        <div class="sec-label red" style="margin-bottom:8px">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-          Inhibition Assay
+        <div class="inhibit-row">
+          <div class="inhibit-text">
+            <span class="inhibit-label">Inhibition</span>
+            <span class="inhibit-sub">Competitive Blocking</span>
+          </div>
+          <button class="toggle red" id="inhibitToggle" onclick="toggleInhibit()">
+            <div class="toggle-knob"></div>
+          </button>
         </div>
-        <label class="inhibit-row">
-          <span class="inhibit-row-label">Apply Competitive Inhibitor</span>
-          <input type="checkbox" id="inhibitCheck" onchange="toggleInhibit()"/>
-        </label>
-        <p class="inhibit-note">Reduced active sites available</p>
+      </div>
+    </section>
+  </aside>
+
+  <!-- CENTER MAIN -->
+  <main>
+    <div class="viewport" id="viewport">
+      <div class="vp-grid"></div>
+      <div id="molLayer"></div>
+
+      <div class="vp-badges">
+        <div class="vp-badge">
+          <div class="vp-badge-dot"></div>
+          <span class="vp-badge-text" id="liveFeedLabel">Live_Feed :: amylase</span>
+        </div>
+        <div class="vp-badge denat-badge" id="denatBadge">
+          <svg class="denat-badge-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          <span class="denat-badge-text">Denaturation_Warning</span>
+        </div>
+      </div>
+
+      <div class="vp-bottom">
+        <div class="tele-chip">
+          <div class="tele-chip-label">Kinetic Rate</div>
+          <div class="tele-rate" id="rateDisplay">0.00%</div>
+        </div>
+        <div class="tele-chip">
+          <div class="tele-chip-label">Efficiency</div>
+          <div class="eff-bar-track"><div class="eff-bar-fill" id="effBar" style="width:0%"></div></div>
+        </div>
+        <div class="tele-chip tele-chip-challenge">
+          <div>
+            <div class="tele-chip-label">Challenge_Progress</div>
+            <div class="challenge-desc" id="challengeDesc">Standard Operation</div>
+          </div>
+          <div class="target-ring" id="targetRing">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insight panel (hidden by default) -->
+    <div class="insight-panel" id="insightPanel" style="display:none">
+      <div class="insight-icon-wrap">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+      </div>
+      <div style="flex:1">
+        <div class="insight-title" id="insightTitle"></div>
+        <p class="insight-text" id="insightText"></p>
+      </div>
+      <button class="insight-close" onclick="closeInsight()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="right">
+    <!-- Analysis Log -->
+    <section>
+      <div class="sec-hdr">
+        <div class="sec-label em">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          Analysis Log
+        </div>
+        <button class="btn-snapshot" onclick="logSnapshot()">SNAPSHOT</button>
+      </div>
+      <div id="logArea">
+        <div class="log-empty" id="logEmpty">
+          <svg class="log-empty-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="6" height="6"/><rect x="9" y="3" width="6" height="6"/><rect x="16" y="3" width="6" height="6"/><rect x="2" y="10" width="6" height="6"/><rect x="9" y="10" width="6" height="6"/><rect x="16" y="10" width="6" height="6"/></svg>
+          <div class="log-empty-text">No Data Recorded</div>
+        </div>
+        <div class="log-entries" id="logEntries" style="display:none"></div>
       </div>
     </section>
 
     <!-- Recipes -->
-    <section style="margin-top:auto">
-      <div class="sec-label">
+    <section>
+      <div class="sec-label" style="color:rgba(251,191,36,.7);margin-bottom:16px">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        Study Recipes
+        Pre-Configured Assays
       </div>
       <div id="recipeList"></div>
     </section>
+
+    <!-- Master Telemetry -->
+    <section style="margin-top:auto">
+      <button class="tele-btn" onclick="toggleDataTray()">
+        <div class="tele-btn-inner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+          <span class="tele-btn-label">Master Telemetry</span>
+        </div>
+        <svg class="tele-chevron" id="teleChevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </section>
   </aside>
-
-  <!-- MAIN -->
-  <main>
-    <!-- Telemetry -->
-    <div class="tele-row">
-      <div class="tele-card">
-        <div class="tele-label">Kinetic Rate</div>
-        <div class="tele-rate" id="rateDisplay">0.00%</div>
-        <div class="challenge-bar-wrap" id="challengeBarWrap" style="display:none">
-          <div class="challenge-bar-track"><div class="challenge-bar-fill" id="challengeBarFill" style="width:0%"></div></div>
-          <span class="challenge-goal" id="challengeGoalLabel">GOAL: 85%</span>
-        </div>
-      </div>
-
-      <div class="tele-card">
-        <div class="tele-label">
-          Conformation
-          <svg id="conformIcon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--emerald)"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 19.8a2 2 0 0 0 1.8 2.8h10.96a2 2 0 0 0 1.8-2.8l-5.069-9.377A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
-        </div>
-        <div class="tele-conf" id="conformStatus">NATIVE FOLDING</div>
-      </div>
-
-      <div class="tele-card">
-        <div class="tele-label">Environment Tuning</div>
-        <div class="env-grid">
-          <div class="slider-row">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dim2)" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
-            <input type="range" class="em" id="sliderTemp" min="0" max="100" value="37" oninput="setTemp(+this.value)"/>
-            <span class="slider-val" id="tempVal">37°</span>
-          </div>
-          <div class="slider-row">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--dim2)" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>
-            <input type="range" class="ind" id="sliderPh" min="0" max="14" step="0.1" value="7" oninput="setPh(+this.value)"/>
-            <span class="slider-val" id="phVal">7.0</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Canvas + Log -->
-    <div class="canvas-area">
-      <div class="canvas-col">
-        <!-- Viewport -->
-        <div class="viewport" id="viewport">
-          <div class="grid-bg"></div>
-          <div id="molContainer" style="position:absolute;inset:0;pointer-events:none"></div>
-          <div class="vp-badges">
-            <span class="session-badge" id="sessionBadge">SESSION_RUN: AMYLASE</span>
-            <span class="denat-badge" id="denatBadge">HYDROGEN BONDS FAILING</span>
-          </div>
-          <div class="idle-overlay" id="idleOverlay">
-            <div class="idle-content">
-              <svg class="idle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
-              </svg>
-              <p class="idle-text">Configure Experiment Parameters</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Insight Panel -->
-        <div class="insight-panel" id="insightPanel">
-          <div class="insight-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
-          </div>
-          <div class="insight-inner">
-            <p class="insight-text" id="insightText"></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Log Panel -->
-      <div class="log-panel">
-        <div class="log-hdr">
-          <div class="sec-label" style="margin-bottom:0">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
-            Analysis Log
-          </div>
-          <button class="btn-snapshot" onclick="logSnapshot()" title="Record Snapshot">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
-          </button>
-        </div>
-
-        <div class="log-entries" id="logEntries">
-          <div class="log-empty" id="logEmpty">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-            <p class="log-empty-text">No snapshots yet. Click the clipboard icon to record a data point.</p>
-          </div>
-        </div>
-
-        <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px">
-          <button class="data-toggle-btn" onclick="toggleDataTray()" style="background:var(--bg2);border:none;width:100%;cursor:pointer">
-            <div class="data-toggle-inner">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
-              <span class="data-toggle-label">RAW DATA FEED</span>
-            </div>
-            <svg class="chevron" id="chevronIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </main>
 
   <!-- DATA TRAY -->
   <div class="data-tray" id="dataTray">
     <div class="data-tray-inner">
       <div class="tray-hdr">
-        <div class="tray-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          Real-Time Telemetry Stream
+        <div class="tray-brand">
+          <div class="tray-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div>
+            <div class="tray-title">Kinetic Telemetry Stream</div>
+            <div class="tray-node">Node_ID: BIO-SYNTH-8892-X</div>
+          </div>
         </div>
         <button class="tray-close" onclick="toggleDataTray()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="tray-grid">
-        <div class="tray-stat"><div class="tray-stat-label">Kinetic Efficiency</div><div class="tray-stat-val" id="trayRate">0%</div></div>
-        <div class="tray-stat"><div class="tray-stat-label">Thermal Stability</div><div class="tray-stat-val" id="trayTherm">0%</div></div>
-        <div class="tray-stat"><div class="tray-stat-label">Ionic Balance</div><div class="tray-stat-val" id="trayIonic">0%</div></div>
-        <div class="tray-stat"><div class="tray-stat-label">Active Sites</div><div class="tray-stat-val" id="trayActive">100% Free</div></div>
+      <div class="tray-stats">
+        <div class="tray-stat">
+          <div class="tray-stat-top">
+            <div class="tray-stat-label">Substrate Efficiency</div>
+            <svg class="tray-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div class="tray-stat-val" id="tS1" style="color:var(--emerald)">0%</div>
+        </div>
+        <div class="tray-stat">
+          <div class="tray-stat-top">
+            <div class="tray-stat-label">Collision Frequency</div>
+            <svg class="tray-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="tray-stat-val" id="tS2" style="color:var(--indigo)">0/ms</div>
+        </div>
+        <div class="tray-stat">
+          <div class="tray-stat-top">
+            <div class="tray-stat-label">Thermal Distortion</div>
+            <svg class="tray-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+          </div>
+          <div class="tray-stat-val" id="tS3" style="color:var(--amber)">0λ</div>
+        </div>
+        <div class="tray-stat">
+          <div class="tray-stat-top">
+            <div class="tray-stat-label">Binding Stability</div>
+            <svg class="tray-stat-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+          </div>
+          <div class="tray-stat-val" id="tS4" style="color:var(--emerald)">NOMINAL</div>
+        </div>
       </div>
     </div>
   </div>
@@ -375,19 +472,21 @@ svg{display:block}
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-left">
-    <span>Simulation Engine: Kinetic-V5.0</span>
-    <span id="footerChallenge">Challenge: DISABLED</span>
-    <span>Buffer: HEPES / 0.15M NaCl</span>
+  <div class="foot-left">
+    <span class="foot-engine"><div class="foot-dot"></div> Engine: V-Kinetics 5.0</span>
+    <span>Buffer: Tris-HCl 50mM / pH 7.5</span>
+    <span>Workspace: Global_Bio_Node</span>
   </div>
-  <div class="footer-right">
-    <div class="status-dot" id="statusDot"></div>
-    SECURE INTERFACE : 0X1492_B Nexus
+  <div class="foot-right">
+    <span style="color:#334155">Auth_Token:</span>
+    <span style="font-family:var(--mono);color:var(--muted)">0x8892...B2F</span>
+    <div class="foot-divider"></div>
+    <span class="foot-nominal">System Nominal</span>
   </div>
 </footer>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────────────────────────
+// ── DATA ──────────────────────────────────────────────────────────────────────
 const ENZYMES = [
   { id:'amylase', name:'Amylase',  color:'#10b981', optimalPh:7, optimalTemp:37 },
   { id:'pepsin',  name:'Pepsin',   color:'#6366f1', optimalPh:2, optimalTemp:37 },
@@ -395,328 +494,253 @@ const ENZYMES = [
   { id:'lactase', name:'Lactase',  color:'#ec4899', optimalPh:6, optimalTemp:37 },
   { id:'lipase',  name:'Lipase',   color:'#06b6d4', optimalPh:8, optimalTemp:40 }
 ];
-
 const MUTATIONS = [
-  { id:'wild',   name:'Wild Type',        phMod:0,    tempMod:0,  rateMod:1.0, desc:'Original genetic sequence with standard properties.' },
-  { id:'thermo', name:'Thermo-Stable',    phMod:0,    tempMod:15, rateMod:0.8, desc:'Increased heat resistance but slightly slower kinetics.' },
-  { id:'acidic', name:'Acid-Base Shift',  phMod:-2.5, tempMod:0,  rateMod:1.0, desc:'Modified active site. Optimal pH shifted -2.5.' },
-  { id:'hyper',  name:'Hyper-Catalytic',  phMod:0,    tempMod:-5, rateMod:1.5, desc:'50% faster reaction, but highly sensitive to temp.' }
+  { id:'wild',   name:'Wild Type',       phMod:0,    tempMod:0,  rateMod:1.0 },
+  { id:'thermo', name:'Thermo-Stable',   phMod:0,    tempMod:15, rateMod:0.8 },
+  { id:'acidic', name:'Acid-Base Shift', phMod:-2.5, tempMod:0,  rateMod:1.0 },
+  { id:'hyper',  name:'Hyper-Catalytic', phMod:0,    tempMod:-5, rateMod:1.5 }
 ];
-
 const RECIPES = [
-  { title:'Stomach Digestion', enzyme:'pepsin',  temp:37, ph:2.0, explanation:'The stomach secretes Hydrochloric Acid (HCl) to lower pH to ~2.0. This low pH is essential for Pepsin because it unfolds proteins (denaturation) making them easier to cut, and maintains the specific ionic charges needed at Pepsin\'s active site. In neutral pH, Pepsin becomes inactive.' },
-  { title:'Lactose Digestion', enzyme:'lactase', temp:37, ph:6.5, explanation:'Lactase works in the small intestine where the environment is slightly acidic to neutral. It breaks down the disaccharide Lactose into simple sugars (Glucose + Galactose). Lactose intolerance occurs when the body doesn\'t produce enough of this enzyme, leading to undigested sugars causing GI distress.' },
-  { title:'Industrial Lipase', enzyme:'lipase',  temp:55, ph:9.0, explanation:'Biotechnology companies engineer extremophile-derived lipases that can withstand high laundry temperatures (50°C+) and alkaline detergents (pH 9-11). These enzymes break down non-polar grease and oil stains into water-soluble components that can be washed away.' },
-  { title:'Fever Effect',      enzyme:'amylase', temp:45, ph:7.0, explanation:'Enzymes are proteins held together by delicate hydrogen bonds. When temperature rises significantly above the optimum (like a high fever of 42°C+), these bonds vibrate and break. The enzyme "unfolds" (Denatures), losing the specific 3D shape of its active site. Once denatured, the substrate can no longer fit, and the reaction stops permanently.' }
+  { title:'Stomach Digestion', enzyme:'pepsin',  temp:37, ph:2.0, goal:'Maximum protein breakdown',
+    explanation:"The stomach secretes Hydrochloric Acid (HCl) to lower pH to ~2.0. This low pH is essential for Pepsin because it unfolds proteins (denaturation) making them easier to cut, and maintains the specific ionic charges needed at Pepsin's active site. In neutral pH, Pepsin becomes inactive." },
+  { title:'Lactose Digestion', enzyme:'lactase', temp:37, ph:6.5, goal:'Simulate dairy breakdown',
+    explanation:"Lactase works in the small intestine where the environment is slightly acidic to neutral. It breaks down the disaccharide Lactose into simple sugars (Glucose + Galactose). Lactose intolerance occurs when the body doesn't produce enough of this enzyme, leading to undigested sugars causing GI distress." },
+  { title:'Industrial Lipase', enzyme:'lipase',  temp:55, ph:9.0, goal:'Detergent simulation',
+    explanation:"Biotechnology companies engineer extremophile-derived lipases that can withstand high laundry temperatures (50°C+) and alkaline detergents (pH 9-11). These enzymes break down non-polar grease and oil stains into water-soluble components that can be washed away." },
+  { title:'Fever Effect',      enzyme:'amylase', temp:45, ph:7.0, goal:'Observe denaturation',
+    explanation:"Enzymes are proteins held together by delicate hydrogen bonds. When temperature rises significantly above the optimum (like a high fever of 42°C+), these bonds vibrate and break. The enzyme 'unfolds' (Denatures), losing the specific 3D shape of its active site. Once denatured, the substrate can no longer fit, and the reaction stops permanently." }
 ];
 
-// ─── STATE ──────────────────────────────────────────────────────────────────
-let isRunning = false;
-let temp = 37, ph = 7, concentration = 50;
-let activeEnzyme = ENZYMES[0];
-let mutation = MUTATIONS[0];
-let isInhibited = false;
-let targetMode = false, targetRate = 85;
-let reactionRate = 0;
-let molecules = [];
-let history = [];
-let labLogs = [];
-let selectedRecipe = null;
-let isDataTrayOpen = false;
-let simTimer = null;
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let isRunning=false, temp=37, ph=7, concentration=60;
+let activeEnzyme=ENZYMES[0], mutation=MUTATIONS[0];
+let isInhibited=false, targetMode=false, targetRate=85;
+let reactionRate=0, molecules=[], labLogs=[], selectedRecipe=null;
+let isDataTrayOpen=false, simTimer=null;
 
-// derived
-const getEffOptPh   = () => activeEnzyme.optimalPh   + mutation.phMod;
-const getEffOptTemp = () => activeEnzyme.optimalTemp  + mutation.tempMod;
-const getDenatured  = () => temp > getEffOptTemp() + 12;
+const getEffPh   = () => activeEnzyme.optimalPh   + mutation.phMod;
+const getEffTemp = () => activeEnzyme.optimalTemp  + mutation.tempMod;
+const isDen      = () => temp > getEffTemp() + 12;
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
-function init() {
-  buildEnzymeList();
-  buildMutationList();
-  buildRecipeList();
-  updateUI();
-}
+// ── BUILD UI ──────────────────────────────────────────────────────────────────
+function buildAll(){ buildEnzymes(); buildMutations(); buildRecipes(); }
 
-function buildEnzymeList() {
-  const el = document.getElementById('enzymeList');
-  el.innerHTML = ENZYMES.map(e => `
+function buildEnzymes(){
+  document.getElementById('enzymeList').innerHTML = ENZYMES.map(e=>`
     <button class="enzyme-btn ${e.id===activeEnzyme.id?'active':''}" onclick="selectEnzyme('${e.id}')">
-      <span class="enzyme-name">${e.name}</span>
-      <div class="enzyme-dot" style="background:${e.color}"></div>
+      <div class="enzyme-stripe" style="background:${e.color}"></div>
+      <div class="enzyme-info">
+        <div class="enzyme-name">${e.name}</div>
+        <div class="enzyme-opt">Optimum: ${e.optimalTemp}°C / pH ${e.optimalPh}</div>
+      </div>
+      <svg class="enzyme-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </button>`).join('');
 }
 
-function buildMutationList() {
-  const el = document.getElementById('mutationList');
-  el.innerHTML = MUTATIONS.map(m => `
-    <button class="mutation-btn ${m.id===mutation.id?'active':''}" onclick="selectMutation('${m.id}')">
-      <span>${m.name}</span>
-      ${m.id===mutation.id ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>' : ''}
+function buildMutations(){
+  document.getElementById('mutationList').innerHTML = MUTATIONS.map(m=>`
+    <button class="mutation-btn ${m.id===mutation.id?'active':''}" onclick="selectMutation('${m.id}')">${m.name}</button>`).join('');
+}
+
+function buildRecipes(){
+  document.getElementById('recipeList').innerHTML = RECIPES.map((r,i)=>`
+    <button class="recipe-btn ${selectedRecipe&&selectedRecipe.title===r.title?'selected':''}" onclick="applyRecipe(${i})">
+      <div class="recipe-btn-hdr">
+        <span class="recipe-btn-title">${r.title}</span>
+        ${selectedRecipe&&selectedRecipe.title===r.title?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>':''}
+      </div>
+      <div class="recipe-btn-goal">${r.goal}</div>
     </button>`).join('');
 }
 
-function buildRecipeList() {
-  const el = document.getElementById('recipeList');
-  el.innerHTML = RECIPES.map((r,i) => `
-    <div class="recipe-card ${selectedRecipe&&selectedRecipe.title===r.title?'selected':''}" onclick="applyRecipe(${i})">
-      <div class="recipe-hdr">
-        <span class="recipe-title">${r.title}</span>
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:${selectedRecipe&&selectedRecipe.title===r.title?'var(--emerald)':'var(--dim)'}"><polyline points="20 6 9 17 4 12"/></svg>
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+function selectEnzyme(id){ activeEnzyme=ENZYMES.find(e=>e.id===id); buildEnzymes(); refresh(); }
+function selectMutation(id){ mutation=MUTATIONS.find(m=>m.id===id); buildMutations(); refresh(); }
+function setTemp(v){ temp=v; document.getElementById('tempVal').textContent=v+'°C'; refresh(); }
+function setPh(v){   ph=v;   document.getElementById('phVal').textContent=parseFloat(v).toFixed(1); refresh(); }
+function setConc(v){ concentration=v; document.getElementById('concVal').textContent=v+'%'; }
+
+function toggleInhibit(){
+  isInhibited=!isInhibited;
+  const t=document.getElementById('inhibitToggle');
+  t.classList.toggle('on',isInhibited);
+}
+
+function applyRecipe(idx){
+  const r=RECIPES[idx]; selectedRecipe=r;
+  activeEnzyme=ENZYMES.find(e=>e.id===r.enzyme);
+  temp=r.temp; ph=r.ph; mutation=MUTATIONS[0]; isInhibited=false;
+  document.getElementById('sliderTemp').value=temp;
+  document.getElementById('sliderPh').value=ph;
+  document.getElementById('tempVal').textContent=temp+'°C';
+  document.getElementById('phVal').textContent=parseFloat(ph).toFixed(1);
+  document.getElementById('inhibitToggle').classList.remove('on');
+  buildAll(); refresh();
+  // show insight
+  document.getElementById('insightTitle').textContent=r.title+' Scientific Summary';
+  document.getElementById('insightText').textContent=r.explanation;
+  document.getElementById('insightPanel').style.display='flex';
+}
+
+function closeInsight(){ document.getElementById('insightPanel').style.display='none'; selectedRecipe=null; buildRecipes(); }
+
+function logSnapshot(){
+  if(!isRunning) return;
+  const log={id:Date.now(),enzyme:activeEnzyme.name,rate:reactionRate,temp,ph,mutation:mutation.name,status:isDen()?'DENATURED':'STABLE'};
+  labLogs.unshift(log); if(labLogs.length>10) labLogs.pop();
+  renderLogs();
+}
+
+function toggleChallenge(){
+  targetMode=!targetMode;
+  if(targetMode) targetRate=Math.floor(Math.random()*50)+40;
+  const t=document.getElementById('challengeToggle');
+  const l=document.getElementById('challengeSyncLabel');
+  const v=document.getElementById('challengeValLabel');
+  t.classList.toggle('on',targetMode);
+  l.classList.toggle('on',targetMode);
+  v.textContent=targetMode?`TARGET: ${targetRate}%`:'OFFLINE';
+}
+
+function toggleDataTray(){
+  isDataTrayOpen=!isDataTrayOpen;
+  document.getElementById('dataTray').classList.toggle('open',isDataTrayOpen);
+  document.getElementById('teleChevron').classList.toggle('open',isDataTrayOpen);
+}
+
+function toggleRun(){
+  isRunning=!isRunning;
+  const btn=document.getElementById('btnRun');
+  const icon=document.getElementById('runIcon');
+  const lbl=document.getElementById('runLabel');
+  if(isRunning){
+    btn.className='btn-run stop';
+    icon.innerHTML='<rect x="3" y="3" width="18" height="18" rx="2"/>';
+    lbl.textContent='ABORT ASSAY';
+    startSim();
+  } else {
+    btn.className='btn-run start';
+    icon.innerHTML='<polygon points="5 3 19 12 5 21 5 3"/>';
+    lbl.textContent='EXECUTE KINETICS';
+    stopSim();
+    reactionRate=0; molecules=[];
+    renderFrame(); renderMolecules();
+  }
+}
+
+// ── SIMULATION ────────────────────────────────────────────────────────────────
+function startSim(){ simTimer=setInterval(tick,40); }
+function stopSim(){ clearInterval(simTimer); simTimer=null; }
+
+function tick(){
+  const effPh=getEffPh(), effTemp=getEffTemp(), denatured=isDen();
+  const tempEffect=Math.exp(-Math.pow(temp-effTemp,2)/180);
+  const phEffect  =Math.exp(-Math.pow(ph-effPh,2)/3.0);
+  const concEffect=concentration/100;
+  const inhibEffect=isInhibited?0.25:1.0;
+  let rate=tempEffect*phEffect*concEffect*mutation.rateMod*inhibEffect*100;
+  if(denatured) rate*=0.02;
+  reactionRate=parseFloat(rate.toFixed(2));
+
+  // Molecules
+  const targetCount=Math.floor(concentration/1.5)+12;
+  while(molecules.length<targetCount){
+    molecules.push({id:Math.random().toString(36).slice(2),x:Math.random()*90+5,y:Math.random()*85+5,
+      vx:(Math.random()-.5)*1.5,vy:(Math.random()-.5)*1.5,type:Math.random()>.4?'substrate':'product',rot:Math.random()*360});
+  }
+  while(molecules.length>targetCount) molecules.pop();
+  const kSpeed=(rate/15)+0.4;
+  molecules=molecules.map(m=>{
+    const nx=(m.x+m.vx*kSpeed+100)%100, ny=(m.y+m.vy*kSpeed+100)%100;
+    let nType=m.type;
+    if(m.type==='substrate'&&Math.random()<(rate/1200)) nType='product';
+    else if(m.type==='product'&&Math.random()<0.01) nType='substrate';
+    return{...m,x:nx,y:ny,rot:m.rot+kSpeed*2,type:nType};
+  });
+
+  renderFrame(); renderMolecules();
+}
+
+function refresh(){
+  const effPh=getEffPh(), effTemp=getEffTemp();
+  document.getElementById('liveFeedLabel').textContent=`Live_Feed :: ${activeEnzyme.id}`;
+  document.getElementById('denatBadge').classList.toggle('show',isDen());
+  // tray stats (live even if running)
+  const td=Math.max(0,(temp-effTemp)*1.5);
+  document.getElementById('tS3').textContent=td.toFixed(1)+'λ';
+}
+
+function renderFrame(){
+  const effPh=getEffPh(), effTemp=getEffTemp(), denatured=isDen();
+  document.getElementById('rateDisplay').textContent=reactionRate.toFixed(2)+'%';
+  document.getElementById('effBar').style.width=reactionRate+'%';
+
+  // challenge
+  if(targetMode){
+    document.getElementById('challengeDesc').textContent=`Approaching Target: ${targetRate}%`;
+    const hit=Math.abs(reactionRate-targetRate)<5;
+    document.getElementById('targetRing').classList.toggle('hit',hit);
+  } else {
+    document.getElementById('challengeDesc').textContent='Standard Operation';
+    document.getElementById('targetRing').classList.remove('hit');
+  }
+
+  // tray
+  document.getElementById('tS1').textContent=reactionRate.toFixed(2)+'%';
+  document.getElementById('tS2').textContent=(reactionRate*2.4).toFixed(1)+'/ms';
+  const td=Math.max(0,(temp-effTemp)*1.5);
+  document.getElementById('tS3').textContent=td.toFixed(1)+'λ';
+  const bs=isInhibited?'INTERRUPTED':'NOMINAL';
+  const s4=document.getElementById('tS4');
+  s4.textContent=bs; s4.style.color=isInhibited?'var(--red)':'var(--emerald)';
+
+  document.getElementById('denatBadge').classList.toggle('show',denatured);
+}
+
+function renderMolecules(){
+  const layer=document.getElementById('molLayer');
+  const denatured=isDen();
+  const color=activeEnzyme.color;
+  const existing=layer.querySelectorAll('.molecule');
+  const needed=molecules.length;
+  for(let i=existing.length-1;i>=needed;i--) existing[i].remove();
+  molecules.forEach((mol,i)=>{
+    let el=existing[i];
+    if(!el){ el=document.createElement('div'); el.className='molecule'; layer.appendChild(el); }
+    el.style.left=mol.x+'%';
+    el.style.top=mol.y+'%';
+    el.style.transform=`rotate(${mol.rot}deg) scale(${denatured?.8:1})`;
+    el.style.color=denatured?'#334155':(mol.type==='product'?color:'#64748b');
+    el.style.opacity=(denatured&&mol.type==='substrate')?.3:1;
+    if(mol.type==='product'){
+      el.innerHTML=`<div class="mol-product"><div class="mol-glow" style="background:${color}"></div><div class="mol-check"></div></div>`;
+    } else {
+      el.innerHTML=`<div class="${denatured?'mol-sub':'mol-sub'}"><div class="mol-sub-bar"></div><div class="mol-sub-dot"></div></div>`;
+    }
+  });
+}
+
+function renderLogs(){
+  const empty=document.getElementById('logEmpty');
+  const entries=document.getElementById('logEntries');
+  if(labLogs.length===0){ empty.style.display='block'; entries.style.display='none'; return; }
+  empty.style.display='none'; entries.style.display='flex';
+  entries.innerHTML=labLogs.map(log=>`
+    <div class="log-entry">
+      <div class="log-row1">
+        <span class="log-enzyme">${log.enzyme}</span>
+        <span class="${log.status==='DENATURED'?'log-rate-bad':'log-rate-ok'}">${log.rate}%</span>
+      </div>
+      <div class="log-row2">
+        <span>T: ${log.temp}°C | pH: ${log.ph}</span>
+        <span class="log-right">${log.mutation}</span>
       </div>
     </div>`).join('');
 }
 
-// ─── ACTIONS ─────────────────────────────────────────────────────────────────
-function selectEnzyme(id) {
-  activeEnzyme = ENZYMES.find(e => e.id === id);
-  buildEnzymeList();
-  updateUI();
-}
-
-function selectMutation(id) {
-  mutation = MUTATIONS.find(m => m.id === id);
-  buildMutationList();
-  updateUI();
-}
-
-function toggleInhibit() {
-  isInhibited = document.getElementById('inhibitCheck').checked;
-}
-
-function applyRecipe(idx) {
-  const r = RECIPES[idx];
-  selectedRecipe = r;
-  activeEnzyme = ENZYMES.find(e => e.id === r.enzyme);
-  temp = r.temp; ph = r.ph;
-  mutation = MUTATIONS[0];
-  isInhibited = false;
-  document.getElementById('sliderTemp').value = temp;
-  document.getElementById('sliderPh').value = ph;
-  document.getElementById('inhibitCheck').checked = false;
-  buildEnzymeList();
-  buildMutationList();
-  buildRecipeList();
-  updateUI();
-
-  // show insight
-  const panel = document.getElementById('insightPanel');
-  document.getElementById('insightText').textContent = `"${r.explanation}"`;
-  panel.classList.add('show');
-}
-
-function logSnapshot() {
-  if (!isRunning) return;
-  const log = {
-    id: Date.now(),
-    enzyme: activeEnzyme.name,
-    rate: reactionRate,
-    temp, ph,
-    mutation: mutation.name,
-    status: getDenatured() ? 'DENATURED' : 'STABLE'
-  };
-  labLogs.unshift(log);
-  if (labLogs.length > 8) labLogs.pop();
-  renderLogs();
-}
-
-function toggleChallenge() {
-  targetMode = !targetMode;
-  if (targetMode) targetRate = Math.floor(Math.random() * 60) + 30;
-  const toggle = document.getElementById('challengeToggle');
-  const label  = document.getElementById('challengeLabel');
-  toggle.classList.toggle('on', targetMode);
-  label.classList.toggle('on', targetMode);
-  document.getElementById('challengeBarWrap').style.display = targetMode ? 'flex' : 'none';
-  document.getElementById('challengeGoalLabel').textContent = `GOAL: ${targetRate}%`;
-  document.getElementById('footerChallenge').textContent = targetMode ? `Challenge: ACTIVE (Goal: ${targetRate}%)` : 'Challenge: DISABLED';
-}
-
-function toggleDataTray() {
-  isDataTrayOpen = !isDataTrayOpen;
-  document.getElementById('dataTray').classList.toggle('open', isDataTrayOpen);
-  document.getElementById('chevronIcon').classList.toggle('open', isDataTrayOpen);
-}
-
-function toggleRun() {
-  isRunning = !isRunning;
-  const btn = document.getElementById('btnRun');
-  const icon = document.getElementById('runIcon');
-  const label = document.getElementById('runLabel');
-  if (isRunning) {
-    btn.className = 'btn-run stop';
-    icon.innerHTML = '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>';
-    label.textContent = 'STOP ASSAY';
-    document.getElementById('idleOverlay').classList.add('hidden');
-    document.getElementById('statusDot').classList.add('on');
-    startSim();
-  } else {
-    btn.className = 'btn-run start';
-    icon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
-    label.textContent = 'INITIATE REACTION';
-    document.getElementById('idleOverlay').classList.remove('hidden');
-    document.getElementById('statusDot').classList.remove('on');
-    stopSim();
-    reactionRate = 0;
-    molecules = [];
-    history = [];
-    renderMolecules();
-    document.getElementById('rateDisplay').textContent = '0.00%';
-  }
-}
-
-// ─── SETTERS ─────────────────────────────────────────────────────────────────
-function setTemp(v) { temp = v; document.getElementById('tempVal').textContent = v+'°'; updateUI(); }
-function setPh(v)   { ph = v;   document.getElementById('phVal').textContent = parseFloat(v).toFixed(1); updateUI(); }
-
-// ─── UI UPDATE ────────────────────────────────────────────────────────────────
-function updateUI() {
-  const denatured = getDenatured();
-  const effPh   = getEffOptPh();
-  const effTemp = getEffOptTemp();
-
-  // conformation card
-  const conf = document.getElementById('conformStatus');
-  if (denatured) { conf.textContent = 'CRITICAL DENATURATION'; conf.className = 'tele-conf denatured'; }
-  else           { conf.textContent = 'NATIVE FOLDING';        conf.className = 'tele-conf'; }
-
-  // session badge
-  document.getElementById('sessionBadge').textContent = `SESSION_RUN: ${activeEnzyme.id.toUpperCase()}`;
-  document.getElementById('denatBadge').classList.toggle('show', denatured);
-}
-
-// ─── SIMULATION ───────────────────────────────────────────────────────────────
-function startSim() {
-  simTimer = setInterval(tick, 50);
-}
-function stopSim() {
-  clearInterval(simTimer);
-  simTimer = null;
-}
-
-function tick() {
-  const effPh   = getEffOptPh();
-  const effTemp = getEffOptTemp();
-  const denatured = getDenatured();
-
-  const tempEffect = Math.exp(-Math.pow(temp - effTemp, 2) / 140);
-  const phEffect   = Math.exp(-Math.pow(ph   - effPh,   2) / 2.5);
-  const concEffect = concentration / 100;
-  const inhibEffect = isInhibited ? 0.3 : 1.0;
-
-  let rate = tempEffect * phEffect * concEffect * mutation.rateMod * inhibEffect * 100;
-  if (denatured) rate *= 0.05;
-  reactionRate = parseFloat(rate.toFixed(2));
-
-  history.push(rate);
-  if (history.length > 60) history.shift();
-
-  // molecules
-  const targetCount = Math.floor(concentration / 2) + 10;
-  while (molecules.length < targetCount) {
-    molecules.push({
-      id: Math.random().toString(36).slice(2),
-      x: Math.random() * 92 + 4, y: Math.random() * 88 + 4,
-      vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2,
-      type: Math.random() > 0.4 ? 'substrate' : 'product',
-      rot: Math.random() * 360
-    });
-  }
-  while (molecules.length > targetCount) molecules.pop();
-
-  const speed = (rate / 20) + 0.5;
-  molecules = molecules.map(m => ({
-    ...m,
-    x: (m.x + m.vx * speed + 100) % 100,
-    y: (m.y + m.vy * speed + 100) % 100,
-    rot: m.rot + speed,
-    type: (m.type === 'substrate' && Math.random() < (rate / 800)) ? 'product' : m.type
-  }));
-
-  renderFrame(rate, effPh, effTemp, denatured);
-}
-
-function renderFrame(rate, effPh, effTemp, denatured) {
-  // rate display
-  document.getElementById('rateDisplay').textContent = rate.toFixed(2) + '%';
-
-  // challenge bar
-  if (targetMode) {
-    const pct = Math.min(100, (rate / targetRate) * 100);
-    document.getElementById('challengeBarFill').style.width = pct + '%';
-  }
-
-  // tray stats
-  document.getElementById('trayRate').textContent   = rate.toFixed(2) + '%';
-  document.getElementById('trayTherm').textContent  = Math.max(0, 100 - Math.abs(temp - effTemp) * 2).toFixed(0) + '%';
-  document.getElementById('trayIonic').textContent  = Math.max(0, 100 - Math.abs(ph - effPh) * 15).toFixed(0) + '%';
-  document.getElementById('trayActive').textContent = isInhibited ? '30% Bound' : '100% Free';
-
-  renderMolecules(denatured);
-  updateUI();
-}
-
-function renderMolecules(denatured) {
-  const container = document.getElementById('molContainer');
-  const color = activeEnzyme.color;
-
-  // reuse / create DOM nodes
-  const existing = container.querySelectorAll('.molecule');
-  const needed = molecules.length;
-
-  // remove excess
-  for (let i = existing.length - 1; i >= needed; i--) existing[i].remove();
-
-  molecules.forEach((mol, i) => {
-    let el = existing[i];
-    if (!el) {
-      el = document.createElement('div');
-      el.className = 'molecule';
-      container.appendChild(el);
-    }
-    el.style.left = mol.x + '%';
-    el.style.top  = mol.y + '%';
-    el.style.transform = `rotate(${mol.rot}deg)`;
-
-    if (denatured) {
-      el.style.color = '#334155';
-      el.innerHTML = '<div class="mol-denatured"></div>';
-    } else if (mol.type === 'product') {
-      el.style.color = color;
-      el.innerHTML = `<div class="mol-product"><div class="mol-glow" style="background:${color}"></div><div class="mol-dot-product"></div></div>`;
-    } else {
-      el.style.color = '#475569';
-      el.innerHTML = '<div class="mol-substrate"></div>';
-    }
-  });
-}
-
-function renderLogs() {
-  const el = document.getElementById('logEntries');
-  const empty = document.getElementById('logEmpty');
-  if (labLogs.length === 0) { empty.style.display='flex'; el.querySelectorAll('.log-entry').forEach(e=>e.remove()); return; }
-  empty.style.display = 'none';
-
-  // Remove old entries
-  el.querySelectorAll('.log-entry').forEach(e => e.remove());
-
-  labLogs.forEach(log => {
-    const div = document.createElement('div');
-    div.className = 'log-entry';
-    div.innerHTML = `
-      <div class="log-row1">
-        <span class="log-enzyme">${log.enzyme}</span>
-        <span class="${log.status==='DENATURED'?'log-rate-denat':'log-rate-ok'}">${log.rate}%</span>
-      </div>
-      <div class="log-row2">
-        <span>${log.temp}°C | pH ${log.ph}</span>
-        <span>${log.status}</span>
-      </div>`;
-    el.appendChild(div);
-  });
-}
-
-init();
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildAll();
+refresh();
 </script>
 </body>
 </html>
