@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bio-Kinetic Reactor Suite – Professional Edition</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#04080f;--bg2:#080f1a;--bg3:#0d1824;--bg4:#111f30;
+  --border:#1a3050;--border2:#1e3d63;
+  --text:#c8ddf0;--text2:#7ba8cc;--text3:#4a7499;
+  --cyan:#00d4ff;--cyan2:#0099bb;--cyan3:#005577;
+  --green:#00ff88;--green2:#00bb66;--green3:#005533;
+  --amber:#ffaa00;--amber2:#cc8800;--amber3:#664400;
+  --red:#ff4455;--red2:#cc3344;--red3:#661122;
+  --purple:#aa55ff;--purple2:#8833cc;--purple3:#441166;
+  --font-head:'Syne',sans-serif;--font-mono:'Space Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-mono);font-size:13px;min-height:100vh;overflow-x:hidden}
+.app{display:flex;flex-direction:column;min-height:100vh}
+ 
+/* ── HEADER ── */
+.header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.header-logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:32px;height:32px;border:1px solid var(--cyan);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.logo-icon::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--cyan3)20%,transparent)}
+.logo-hex{font-size:14px;color:var(--cyan);font-weight:700}
+.logo-text{font-family:var(--font-head);font-size:15px;font-weight:800;letter-spacing:.5px;color:var(--text)}
+.logo-sub{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
+.header-status{display:flex;align-items:center;gap:16px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.status-text{font-size:11px;color:var(--text3);letter-spacing:1px}
+ 
+/* ── TABS ── */
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px}
+.tab{padding:12px 20px;font-family:var(--font-head);font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;position:relative}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab-number{font-size:9px;color:var(--text3);margin-right:6px}
+.tab.active .tab-number{color:var(--cyan2)}
+ 
+/* ── MAIN CONTENT ── */
+.content{flex:1;padding:20px 24px;display:none}
+.content.active{display:block}
+ 
+/* ── GRID LAYOUTS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+ 
+/* ── PANELS ── */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:16px}
+.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.panel-title{font-family:var(--font-head);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2)}
+.panel-badge{font-size:9px;padding:2px 8px;border-radius:2px;letter-spacing:1px}
+.badge-cyan{background:var(--cyan3);color:var(--cyan);border:1px solid var(--cyan2)}
+.badge-green{background:var(--green3);color:var(--green);border:1px solid var(--green2)}
+.badge-amber{background:var(--amber3);color:var(--amber);border:1px solid var(--amber2)}
+.badge-red{background:var(--red3);color:var(--red);border:1px solid var(--red2)}
+.badge-purple{background:var(--purple3);color:var(--purple);border:1px solid var(--purple2)}
+ 
+/* ── CONTROLS ── */
+.ctrl-group{margin-bottom:14px}
+.ctrl-label{display:flex;justify-content:space-between;margin-bottom:6px;font-size:11px}
+.ctrl-name{color:var(--text2)}
+.ctrl-val{color:var(--cyan);font-weight:700}
+input[type=range]{width:100%;-webkit-appearance:none;height:3px;background:var(--bg4);outline:none;border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--cyan);border-radius:50%;cursor:pointer;box-shadow:0 0 8px var(--cyan2)}
+select{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:6px 10px;font-family:var(--font-mono);font-size:12px;border-radius:3px;width:100%;cursor:pointer}
+select:focus{outline:none;border-color:var(--cyan2)}
+ 
+/* ── BUTTONS ── */
+.btn{padding:8px 16px;border-radius:3px;font-family:var(--font-mono);font-size:12px;cursor:pointer;transition:all .2s;letter-spacing:.5px;border:1px solid}
+.btn-cyan{background:var(--cyan3);color:var(--cyan);border-color:var(--cyan2)}
+.btn-cyan:hover{background:var(--cyan2);color:#000}
+.btn-green{background:var(--green3);color:var(--green);border-color:var(--green2)}
+.btn-green:hover{background:var(--green2);color:#000}
+.btn-amber{background:var(--amber3);color:var(--amber);border-color:var(--amber2)}
+.btn-amber:hover{background:var(--amber2);color:#000}
+.btn-red{background:var(--red3);color:var(--red);border-color:var(--red2)}
+.btn-red:hover{background:var(--red2);color:#fff}
+.btn-ghost{background:transparent;color:var(--text2);border-color:var(--border2)}
+.btn-ghost:hover{background:var(--bg4);color:var(--text)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+ 
+/* ── METRICS ── */
+.metric{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:12px}
+.metric-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.metric-val{font-size:20px;font-family:var(--font-head);font-weight:800;color:var(--cyan)}
+.metric-unit{font-size:10px;color:var(--text3);margin-left:3px}
+.metric-sub{font-size:10px;color:var(--text3);margin-top:3px}
+ 
+/* ── CANVAS ── */
+canvas{display:block;border-radius:3px;background:var(--bg)}
+ 
+/* ── PROGRESS ── */
+.progress-bar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s ease}
+ 
+/* ── EQUATION ── */
+.equation{background:var(--bg3);border:1px solid var(--border);padding:10px 14px;border-radius:3px;font-size:12px;color:var(--cyan);text-align:center;margin:10px 0;letter-spacing:.5px}
+ 
+/* ── EXPLAIN PANEL ── */
+.explain-box{background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:12px;font-size:12px;line-height:1.7;color:var(--text);min-height:80px;position:relative}
+.explain-box .lbl{font-size:9px;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+ 
+/* ── PHASE INDICATOR ── */
+.phase-bar{display:flex;gap:4px;margin:10px 0}
+.phase-seg{flex:1;height:20px;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:1px;text-transform:uppercase;border-radius:2px;opacity:.3;transition:all .3s;cursor:default}
+.phase-seg.active{opacity:1}
+ 
+/* ── SCORE ── */
+.score-ring{width:60px;height:60px;position:relative;flex-shrink:0}
+.score-ring svg{transform:rotate(-90deg)}
+.score-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:800;font-size:16px;color:var(--cyan)}
+ 
+/* ── ENZYME CARDS ── */
+.enzyme-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.enzyme-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.enzyme-card.hydrolase::before{background:var(--cyan)}
+.enzyme-card.transferase::before{background:var(--purple)}
+.enzyme-card.oxidoreductase::before{background:var(--amber)}
+.enzyme-card.ligase::before{background:var(--green)}
+.enzyme-card.isomerase::before{background:var(--red)}
+.enzyme-card.lyase::before{background:var(--text2)}
+.enzyme-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.enzyme-card.selected{border-color:var(--cyan2);background:var(--bg3)}
+.enzyme-name{font-family:var(--font-head);font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px}
+.enzyme-class{font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.enzyme-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px}
+.enzyme-row span:first-child{color:var(--text3)}
+.enzyme-row span:last-child{color:var(--text2)}
+ 
+/* ── FILTER PILLS ── */
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.pill{padding:4px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:1px solid var(--border);color:var(--text3);transition:all .2s}
+.pill:hover{border-color:var(--border2);color:var(--text2)}
+.pill.active{border-color:var(--cyan);color:var(--cyan);background:var(--cyan3)}
+ 
+/* ── REACTION DIAGRAM ── */
+.rxn-diagram{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:14px;font-size:12px;margin:10px 0}
+.rxn-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0}
+.rxn-node{padding:4px 10px;border-radius:3px;font-size:11px}
+.rxn-arrow{color:var(--text3);font-size:16px}
+ 
+/* ── CLINICAL ── */
+.biomarker-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:8px;background:var(--bg3);border-radius:3px;border:1px solid var(--border)}
+.biomarker-name{width:120px;font-size:11px;color:var(--text2);flex-shrink:0}
+.biomarker-bar-wrap{flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden;position:relative}
+.biomarker-bar{height:100%;border-radius:4px;transition:width .5s}
+.biomarker-val{width:80px;text-align:right;font-size:11px;font-weight:700}
+.biomarker-status{width:60px;text-align:center;font-size:9px;padding:2px 6px;border-radius:2px;letter-spacing:.5px}
+.status-normal{color:var(--green);background:var(--green3)}
+.status-elevated{color:var(--amber);background:var(--amber3)}
+.status-critical{color:var(--red);background:var(--red3);animation:blink .8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+ 
+/* ── DIAGNOSIS ── */
+.diagnosis-option{padding:10px 14px;border:1px solid var(--border);border-radius:3px;margin-bottom:8px;cursor:pointer;font-size:12px;transition:all .2s;color:var(--text2)}
+.diagnosis-option:hover{border-color:var(--border2);background:var(--bg3)}
+.diagnosis-option.correct{border-color:var(--green);color:var(--green);background:var(--green3)}
+.diagnosis-option.wrong{border-color:var(--red);color:var(--red);background:var(--red3)}
+ 
+/* ── DIGESTION ── */
+.organ-block{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:14px;position:relative;transition:all .3s}
+.organ-block.active-organ{border-color:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,.1)}
+.organ-icon{font-size:24px;margin-bottom:8px}
+.organ-name{font-family:var(--font-head);font-weight:700;font-size:14px;margin-bottom:4px}
+.organ-ph{font-size:11px;color:var(--text3);margin-bottom:8px}
+.organ-enzymes{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.enzyme-tag{font-size:10px;padding:2px 8px;background:var(--bg4);border:1px solid var(--border);border-radius:2px;color:var(--text2)}
+.food-dot{width:10px;height:10px;background:var(--amber);border-radius:50%;display:inline-block;margin:2px}
+.breakdown-stat{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+ 
+/* ── AI TUTOR ── */
+.ai-tutor{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.tutor-btn{padding:10px 16px;background:var(--bg2);border:1px solid var(--cyan);border-radius:4px;color:var(--cyan);font-family:var(--font-mono);font-size:11px;cursor:pointer;letter-spacing:.5px;transition:all .2s}
+.tutor-btn:hover{background:var(--cyan3)}
+.tutor-panel{width:320px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;padding:14px;max-height:300px;overflow-y:auto;display:none}
+.tutor-panel.open{display:block}
+.tutor-title{font-size:10px;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.tutor-text{font-size:12px;line-height:1.7;color:var(--text)}
+ 
+/* ── HISTORY PANEL ── */
+.history-item{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:8px 12px;margin-bottom:6px;font-size:11px;display:flex;justify-content:space-between;align-items:center}
+.history-time{color:var(--text3);font-size:10px}
+ 
+/* ── CHALLENGE ── */
+.challenge-box{background:var(--bg2);border:1px solid var(--amber);border-radius:4px;padding:14px;margin-bottom:16px}
+.challenge-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+.challenge-goal{font-size:13px;color:var(--text);margin-bottom:8px}
+.challenge-progress{display:flex;align-items:center;gap:10px}
+ 
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+ 
+/* ── TOOLTIP ── */
+[data-tip]{position:relative}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg4);border:1px solid var(--border2);padding:4px 10px;border-radius:3px;font-size:11px;white-space:nowrap;color:var(--text);pointer-events:none;z-index:300}
+ 
+/* ── DOWNLOAD ── */
+.export-section{border-top:1px solid var(--border);padding-top:12px;margin-top:12px}
+ 
+/* ── LOG TABLE ── */
+.log-table{width:100%;border-collapse:collapse;font-size:11px}
+.log-table th{text-align:left;padding:6px 8px;color:var(--text3);border-bottom:1px solid var(--border);font-weight:400;letter-spacing:.5px}
+.log-table td{padding:6px 8px;border-bottom:1px solid var(--border);color:var(--text2)}
+.log-table tr:last-child td{border-bottom:none}
+ 
+/* ── RESPONSIVE GRID FOR ENZYME CARDS ── */
+.enzyme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+ 
+/* ── DETAIL PANE ── */
+.detail-pane{background:var(--bg2);border:1px solid var(--border2);border-radius:4px;padding:16px;position:sticky;top:70px}
+.detail-pane h3{font-family:var(--font-head);font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px}
+.detail-class{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.detail-section{margin-bottom:12px}
+.detail-label{font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.detail-value{font-size:12px;color:var(--text);line-height:1.6}
+ 
+/* ── PATIENT CARD ── */
+.patient-card{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.patient-avatar{width:48px;height:48px;background:var(--bg4);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.patient-name{font-family:var(--font-head);font-weight:700;font-size:14px;color:var(--text)}
+.patient-info{font-size:11px;color:var(--text3);margin-top:2px}
+ 
+/* ── FOOD PROGRESS ── */
+.food-progress{display:flex;height:20px;border-radius:3px;overflow:hidden;margin:8px 0}
+.food-carbs{background:var(--amber)}
+.food-protein{background:var(--cyan)}
+.food-fats{background:var(--purple)}
+ 
+/* ── ORGAN PIPELINE ── */
+.organ-pipeline{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.organ-pip{flex:1;text-align:center}
+.organ-pip-icon{font-size:28px;margin-bottom:4px}
+.organ-pip-name{font-size:10px;color:var(--text3);letter-spacing:1px}
+.pip-arrow{color:var(--text3);font-size:20px}
+.pip-connector{width:40px;height:2px;background:var(--border);position:relative;overflow:hidden}
+.pip-connector-fill{height:100%;background:var(--cyan);width:0;transition:width 1s linear}
+ 
+/* ── ORGAN TRANSIT ── */
+.food-transit{width:12px;height:12px;background:var(--amber);border-radius:50%;display:inline-block;position:relative}
+ 
+/* ── SYMPTOM LIST ── */
+.symptom-tag{display:inline-block;padding:3px 10px;background:var(--bg4);border:1px solid var(--red3);color:var(--red2);border-radius:2px;font-size:11px;margin:2px}
+</style>
+</head>
+<body>
+<div class="app">
+ 
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">
+    <div class="logo-icon"><span class="logo-hex">⬡</span></div>
+    <div>
+      <div class="logo-text">Bio-Kinetic Reactor Suite</div>
+      <div class="logo-sub">Professional Edition v2.0</div>
+    </div>
+  </div>
+  <div class="header-status">
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="status-dot"></div>
+      <span class="status-text">SIMULATION ACTIVE</span>
+    </div>
+    <div id="globalScore" style="font-family:var(--font-head);font-weight:800;font-size:16px;color:var(--cyan)">Score: 0</div>
+  </div>
+</header>
+ 
+<!-- TABS -->
+<nav class="tabs">
+  <div class="tab active" onclick="switchTab(0)"><span class="tab-number">01</span>BIO-KINETIC REACTOR</div>
+  <div class="tab" onclick="switchTab(1)"><span class="tab-number">02</span>MOLECULAR CLASSIFICATION</div>
+  <div class="tab" onclick="switchTab(2)"><span class="tab-number">03</span>CLINICAL PATHOLOGY</div>
+  <div class="tab" onclick="switchTab(3)"><span class="tab-number">04</span>DIGESTIVE MATRIX</div>
+</nav>
+ 
+<!-- ╔══════════════════════════════════════════╗
+     ║  TAB 1 — BIO-KINETIC REACTOR            ║
+     ╚══════════════════════════════════════════╝ -->
+<div class="content active" id="tab0">
+  <!-- Challenge Box -->
+  <div class="challenge-box">
+    <div class="challenge-title">⚡ ACTIVE CHALLENGE</div>
+    <div class="challenge-goal" id="challengeGoal">Loading challenge...</div>
+    <div class="challenge-progress">
+      <div style="flex:1;"><div class="progress-bar"><div class="progress-fill" id="challengeBar" style="background:var(--amber);width:0%"></div></div></div>
+      <span id="challengePct" style="font-size:11px;color:var(--amber);min-width:40px">0%</span>
+      <span id="challengeStatus" class="panel-badge badge-amber" style="font-size:9px">IN PROGRESS</span>
+    </div>
+  </div>
+ 
+  <div style="display:grid;grid-template-columns:280px 1fr 280px;gap:16px">
+ 
+    <!-- LEFT: CONTROLS -->
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Reactor Controls</span>
+          <span class="panel-badge badge-cyan">LIVE</span>
+        </div>
+ 
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Substrate [S]</span><span class="ctrl-val" id="subVal">50 mM</span></div>
+          <input type="range" id="subSlider" min="1" max="200" value="50" oninput="updateReactor()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Enzyme [E]</span><span class="ctrl-val" id="enzVal">30 nM</span></div>
+          <input type="range" id="enzSlider" min="1" max="100" value="30" oninput="updateReactor()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Temperature</span><span class="ctrl-val" id="tempVal">37°C</span></div>
+          <input type="range" id="tempSlider" min="4" max="80" value="37" oninput="updateReactor()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">pH Level</span><span class="ctrl-val" id="phVal">7.4</span></div>
+          <input type="range" id="phSlider" min="1" max="14" step="0.1" value="7.4" oninput="updateReactor()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Inhibition Mode</span></div>
+          <select id="inhibMode" onchange="updateReactor()">
+            <option value="none">No Inhibitor</option>
+            <option value="competitive">Competitive</option>
+            <option value="noncompetitive">Non-Competitive</option>
+            <option value="uncompetitive">Uncompetitive</option>
+          </select>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Inhibitor Conc.</span><span class="ctrl-val" id="inhVal">0 µM</span></div>
+          <input type="range" id="inhSlider" min="0" max="100" value="0" oninput="updateReactor()">
+        </div>
+ 
+        <div class="btn-row">
+          <button class="btn btn-green" onclick="startSim()" id="startBtn">▶ START</button>
+          <button class="btn btn-red" onclick="stopSim()" id="stopBtn">■ STOP</button>
+          <button class="btn btn-ghost" onclick="resetSim()">↺ RESET</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-amber" onclick="downloadReport()" style="width:100%">⬇ DOWNLOAD REPORT</button>
+        </div>
+      </div>
+ 
+      <!-- Score Panel -->
+      <div class="panel" style="margin-top:12px">
+        <div class="panel-header"><span class="panel-title">Score System</span></div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div class="score-ring">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="24" fill="none" stroke="var(--bg4)" stroke-width="4"/>
+              <circle cx="30" cy="30" r="24" fill="none" stroke="var(--cyan)" stroke-width="4" stroke-dasharray="150.8" id="scoreCircle" stroke-dashoffset="150.8" style="transition:stroke-dashoffset .5s" stroke-linecap="round"/>
+            </svg>
+            <div class="score-val" id="scoreDisp">0</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Stability Bonus</div>
+            <div style="font-size:16px;font-family:var(--font-head);font-weight:800;color:var(--green)" id="stabilityBonus">+0</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:6px">Speed Factor</div>
+            <div style="font-size:16px;font-family:var(--font-head);font-weight:800;color:var(--amber)" id="speedFactor">×1.0</div>
+          </div>
+        </div>
+        <div id="scoreMsg" style="font-size:11px;color:var(--text3);margin-top:8px;line-height:1.5"></div>
+      </div>
+ 
+      <!-- Experiment Log -->
+      <div class="panel" style="margin-top:12px">
+        <div class="panel-header">
+          <span class="panel-title">Experiment History</span>
+          <span id="logCount" class="panel-badge badge-cyan">0 runs</span>
+        </div>
+        <div id="historyLog" style="max-height:180px;overflow-y:auto">
+          <div style="font-size:11px;color:var(--text3);text-align:center;padding:20px 0">No experiments yet</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- CENTER: CANVAS + CHARTS -->
+    <div>
+      <!-- Main Canvas -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header">
+          <span class="panel-title">Reaction Chamber</span>
+          <span id="reactionPhase" class="panel-badge badge-cyan">LAG PHASE</span>
+        </div>
+        <canvas id="reactorCanvas" width="480" height="260"></canvas>
+      </div>
+ 
+      <!-- 4 metrics -->
+      <div class="grid-4" style="margin-bottom:12px">
+        <div class="metric"><div class="metric-label">Reaction Rate</div><div><span class="metric-val" id="mRate">0.00</span><span class="metric-unit">µM/s</span></div><div class="metric-sub" id="mRateSub">Calculating...</div></div>
+        <div class="metric"><div class="metric-label">Efficiency</div><div><span class="metric-val" id="mEff">0</span><span class="metric-unit">%</span></div><div class="progress-bar" style="margin-top:6px"><div class="progress-fill" id="effBar" style="background:var(--cyan);width:0%"></div></div></div>
+        <div class="metric"><div class="metric-label">Vmax</div><div><span class="metric-val" id="mVmax">—</span><span class="metric-unit">µM/s</span></div><div class="metric-sub">Theoretical max</div></div>
+        <div class="metric"><div class="metric-label">Km</div><div><span class="metric-val" id="mKm">—</span><span class="metric-unit">mM</span></div><div class="metric-sub">Half-saturation</div></div>
+      </div>
+ 
+      <!-- Rate vs Time Graph -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Reaction Rate vs Time</span><span class="panel-badge badge-cyan">REAL-TIME</span></div>
+        <div style="position:relative;height:140px"><canvas id="rateChart" role="img" aria-label="Reaction rate over time"></canvas></div>
+      </div>
+ 
+      <!-- Michaelis-Menten Curve -->
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Michaelis-Menten Curve</span><span class="panel-badge badge-green">V vs [S]</span></div>
+        <div style="position:relative;height:140px"><canvas id="mmChart" role="img" aria-label="Michaelis-Menten kinetics curve"></canvas></div>
+      </div>
+    </div>
+ 
+    <!-- RIGHT: INFO PANELS -->
+    <div>
+      <!-- Equation -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Michaelis-Menten Eq.</span></div>
+        <div class="equation" id="mmEquation">v = (Vmax × [S]) / (Km + [S])</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px;line-height:1.6" id="equationDetail">
+          Where Km is the half-saturation constant and Vmax is the theoretical maximum velocity.
+        </div>
+        <div style="margin-top:10px">
+          <div class="ctrl-label"><span class="ctrl-name">Apparent Km</span><span class="ctrl-val" id="apparentKm">—</span></div>
+          <div class="ctrl-label"><span class="ctrl-name">Apparent Vmax</span><span class="ctrl-val" id="apparentVmax">—</span></div>
+          <div class="ctrl-label"><span class="ctrl-name">Inhibitor Effect</span><span class="ctrl-val" id="inhibEffect">None</span></div>
+        </div>
+      </div>
+ 
+      <!-- Phase Indicator -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Reaction Phase</span></div>
+        <div class="phase-bar">
+          <div class="phase-seg" id="phaseLag" style="background:var(--bg4);color:var(--text3)">LAG</div>
+          <div class="phase-seg" id="phaseExp" style="background:var(--bg4);color:var(--text3)">EXP</div>
+          <div class="phase-seg" id="phaseSat" style="background:var(--bg4);color:var(--text3)">SAT</div>
+        </div>
+        <div id="phaseDescription" style="font-size:11px;color:var(--text3);line-height:1.5">
+          Start the reactor to observe phase transitions.
+        </div>
+      </div>
+ 
+      <!-- Live Efficiency Meter -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Live Efficiency</span></div>
+        <div style="text-align:center;padding:8px 0">
+          <div style="font-size:40px;font-family:var(--font-head);font-weight:800;color:var(--cyan)" id="bigEfficiency">0%</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px" id="effLabel">Reactor offline</div>
+        </div>
+        <div class="progress-bar" style="height:12px">
+          <div class="progress-fill" id="bigEffBar" style="background:linear-gradient(90deg,var(--cyan),var(--green));width:0%"></div>
+        </div>
+        <div id="denatureWarning" style="margin-top:8px;font-size:11px;color:var(--red);display:none;line-height:1.5">
+          ⚠ ENZYME DENATURATION: High temperature has disrupted tertiary protein structure, causing active site collapse.
+        </div>
+      </div>
+ 
+      <!-- Explain Panel -->
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">AI Explanation</span><span class="panel-badge badge-purple">AUTO</span></div>
+        <div class="explain-box">
+          <div class="lbl">CURRENT STATE</div>
+          <div id="explainText">Configure the reactor parameters and start the simulation to receive real-time biochemical explanations.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ╔══════════════════════════════════════════╗
+     ║  TAB 2 — MOLECULAR CLASSIFICATION       ║
+     ╚══════════════════════════════════════════╝ -->
+<div class="content" id="tab1">
+  <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;align-items:start">
+    <div>
+      <div class="filter-pills" id="classFilter">
+        <div class="pill active" onclick="filterEnzymes('all',this)">All Classes</div>
+        <div class="pill" onclick="filterEnzymes('hydrolase',this)" style="border-color:var(--cyan3);color:var(--cyan)">Hydrolase</div>
+        <div class="pill" onclick="filterEnzymes('transferase',this)" style="border-color:var(--purple3);color:var(--purple)">Transferase</div>
+        <div class="pill" onclick="filterEnzymes('oxidoreductase',this)" style="border-color:var(--amber3);color:var(--amber)">Oxidoreductase</div>
+        <div class="pill" onclick="filterEnzymes('ligase',this)" style="border-color:var(--green3);color:var(--green)">Ligase</div>
+        <div class="pill" onclick="filterEnzymes('isomerase',this)" style="border-color:var(--red3);color:var(--red)">Isomerase</div>
+        <div class="pill" onclick="filterEnzymes('lyase',this)" style="border-color:var(--border2);color:var(--text2)">Lyase</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <select id="organFilter" onchange="applyEnzymeFilters()" style="flex:1">
+          <option value="all">All Organs</option>
+          <option value="pancreas">Pancreas</option>
+          <option value="liver">Liver</option>
+          <option value="stomach">Stomach</option>
+          <option value="intestine">Small Intestine</option>
+          <option value="cells">All Cells</option>
+          <option value="mitochondria">Mitochondria</option>
+        </select>
+        <select id="phFilter" onchange="applyEnzymeFilters()" style="flex:1">
+          <option value="all">All pH ranges</option>
+          <option value="acidic">Acidic (pH 1-5)</option>
+          <option value="neutral">Neutral (pH 6-8)</option>
+          <option value="alkaline">Alkaline (pH 8-14)</option>
+        </select>
+      </div>
+      <div class="enzyme-grid" id="enzymeGrid"></div>
+    </div>
+    <div>
+      <div class="detail-pane" id="enzymeDetail">
+        <div style="font-size:11px;color:var(--text3);text-align:center;padding:30px 0">Select an enzyme card to view details</div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ╔══════════════════════════════════════════╗
+     ║  TAB 3 — CLINICAL PATHOLOGY             ║
+     ╚══════════════════════════════════════════╝ -->
+<div class="content" id="tab2">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <!-- Left: Case Selector + Patient -->
+    <div>
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Select Case</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px" id="caseButtons">
+          <button class="btn btn-cyan" onclick="loadCase('lactose')">Lactose Intolerance</button>
+          <button class="btn btn-ghost" onclick="loadCase('pancreatitis')">Pancreatitis</button>
+          <button class="btn btn-ghost" onclick="loadCase('gastric')">Gastric pH Imbalance</button>
+          <button class="btn btn-ghost" onclick="loadCase('deficiency')">Enzyme Deficiency</button>
+        </div>
+      </div>
+ 
+      <div class="patient-card" id="patientCard">
+        <div class="patient-avatar" id="patientAvatar">👤</div>
+        <div>
+          <div class="patient-name" id="patientName">Select a case to begin</div>
+          <div class="patient-info" id="patientInfo">—</div>
+        </div>
+        <div style="margin-left:auto">
+          <span id="severityBadge" class="panel-badge badge-cyan">—</span>
+        </div>
+      </div>
+ 
+      <!-- Biomarkers -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Biomarker Panel</span><span class="panel-badge badge-cyan">LIVE</span></div>
+        <div id="biomarkerList">
+          <div style="font-size:11px;color:var(--text3);text-align:center;padding:20px">No case loaded</div>
+        </div>
+      </div>
+ 
+      <!-- Symptoms -->
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Symptom Profile</span></div>
+        <div id="symptomList"><div style="font-size:11px;color:var(--text3)">No case loaded</div></div>
+      </div>
+    </div>
+ 
+    <!-- Right: Charts + Diagnosis -->
+    <div>
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Enzyme Level vs Normal</span></div>
+        <div style="position:relative;height:200px"><canvas id="clinicalChart" role="img" aria-label="Enzyme levels compared to normal reference ranges"></canvas></div>
+      </div>
+ 
+      <!-- Diagnosis Mode -->
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Diagnosis Mode</span><span class="panel-badge badge-amber">INTERACTIVE</span></div>
+        <div id="diagnosisQuestion" style="font-size:12px;color:var(--text);margin-bottom:12px;line-height:1.6">
+          Load a clinical case to begin the diagnostic challenge.
+        </div>
+        <div id="diagnosisOptions"></div>
+        <div id="diagnosisResult" style="display:none;margin-top:10px;padding:10px;border-radius:3px;font-size:12px;line-height:1.6"></div>
+      </div>
+ 
+      <!-- Case Explanation -->
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Pathophysiology</span></div>
+        <div class="explain-box">
+          <div class="lbl">EXPLANATION</div>
+          <div id="caseExplanation" style="font-size:12px;line-height:1.7;color:var(--text)">Select a case to read the pathophysiology.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ╔══════════════════════════════════════════╗
+     ║  TAB 4 — DIGESTIVE MATRIX               ║
+     ╚══════════════════════════════════════════╝ -->
+<div class="content" id="tab3">
+  <!-- Organ Pipeline -->
+  <div class="panel" style="margin-bottom:16px">
+    <div class="panel-header"><span class="panel-title">Digestion Pipeline</span><span id="digestPhaseLabel" class="panel-badge badge-cyan">READY</span></div>
+    <div class="organ-pipeline">
+      <div class="organ-pip" id="pip-mouth">
+        <div class="organ-pip-icon">👄</div>
+        <div class="organ-pip-name">MOUTH</div>
+        <div id="pip-mouth-prog" class="progress-bar" style="margin-top:4px"><div class="progress-fill" style="background:var(--cyan);width:0%" id="pip-mouth-fill"></div></div>
+      </div>
+      <div class="pip-arrow">→</div>
+      <div class="organ-pip" id="pip-stomach">
+        <div class="organ-pip-icon">🫃</div>
+        <div class="organ-pip-name">STOMACH</div>
+        <div id="pip-stomach-prog" class="progress-bar" style="margin-top:4px"><div class="progress-fill" style="background:var(--amber);width:0%" id="pip-stomach-fill"></div></div>
+      </div>
+      <div class="pip-arrow">→</div>
+      <div class="organ-pip" id="pip-intestine">
+        <div class="organ-pip-icon">🌀</div>
+        <div class="organ-pip-name">SMALL INT.</div>
+        <div id="pip-intestine-prog" class="progress-bar" style="margin-top:4px"><div class="progress-fill" style="background:var(--green);width:0%" id="pip-intestine-fill"></div></div>
+      </div>
+    </div>
+    <div id="digestNarrative" style="font-size:12px;color:var(--text3);line-height:1.6;padding:8px 0">Configure food composition and start digestion sequence.</div>
+  </div>
+ 
+  <div style="display:grid;grid-template-columns:260px 1fr 260px;gap:16px">
+ 
+    <!-- LEFT: Controls -->
+    <div>
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Food Composition</span></div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Carbohydrates</span><span class="ctrl-val" id="carbsVal">40%</span></div>
+          <input type="range" id="carbsSlider" min="0" max="100" value="40" oninput="updateFoodComp()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Proteins</span><span class="ctrl-val" id="proteinVal">30%</span></div>
+          <input type="range" id="proteinSlider" min="0" max="100" value="30" oninput="updateFoodComp()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Fats</span><span class="ctrl-val" id="fatsVal">30%</span></div>
+          <input type="range" id="fatsSlider" min="0" max="100" value="30" oninput="updateFoodComp()">
+        </div>
+        <div class="food-progress" id="foodCompBar">
+          <div class="food-carbs" style="width:40%"></div>
+          <div class="food-protein" style="width:30%"></div>
+          <div class="food-fats" style="width:30%"></div>
+        </div>
+        <div style="display:flex;gap:8px;font-size:10px;margin-top:4px">
+          <span style="color:var(--amber)">■ Carbs</span>
+          <span style="color:var(--cyan)">■ Protein</span>
+          <span style="color:var(--purple)">■ Fats</span>
+        </div>
+      </div>
+ 
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">pH Override</span></div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Mouth pH</span><span class="ctrl-val" id="mouthPhVal">6.8</span></div>
+          <input type="range" id="mouthPhSlider" min="5" max="8" step="0.1" value="6.8" oninput="updateOrganPh()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Stomach pH</span><span class="ctrl-val" id="stomPhVal">2.0</span></div>
+          <input type="range" id="stomPhSlider" min="1" max="6" step="0.1" value="2.0" oninput="updateOrganPh()">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label"><span class="ctrl-name">Intestine pH</span><span class="ctrl-val" id="intPhVal">7.5</span></div>
+          <input type="range" id="intPhSlider" min="6" max="9" step="0.1" value="7.5" oninput="updateOrganPh()">
+        </div>
+      </div>
+ 
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Enzyme Toggle</span></div>
+        <div id="enzymeToggles"></div>
+      </div>
+    </div>
+ 
+    <!-- CENTER: Organs -->
+    <div>
+      <div style="display:grid;grid-template-columns:1fr;gap:12px" id="organBlocks">
+        <!-- Mouth -->
+        <div class="organ-block" id="organ-mouth">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-size:24px">👄</span>
+            <div>
+              <div class="organ-name">Mouth (Oral Cavity)</div>
+              <div class="organ-ph" id="mouth-ph-display">pH: 6.8 | Duration: ~30 seconds</div>
+            </div>
+            <span id="mouth-status" class="panel-badge badge-cyan" style="margin-left:auto">STANDBY</span>
+          </div>
+          <div class="organ-enzymes">
+            <span class="enzyme-tag">Salivary Amylase</span>
+            <span class="enzyme-tag">Lingual Lipase</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px">
+            Mechanical breakdown + starch hydrolysis begins. Salivary amylase cleaves α-1,4 glycosidic bonds.
+          </div>
+          <div class="breakdown-stat"><span style="color:var(--text3)">Carbs processed</span><span id="mouth-carbs" style="color:var(--amber)">0%</span></div>
+          <div class="breakdown-stat"><span style="color:var(--text3)">Fats processed</span><span id="mouth-fats" style="color:var(--purple)">0%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="mouthBar" style="background:var(--cyan);width:0%"></div></div>
+        </div>
+ 
+        <!-- Stomach -->
+        <div class="organ-block" id="organ-stomach">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-size:24px">🫃</span>
+            <div>
+              <div class="organ-name">Stomach (Gastric)</div>
+              <div class="organ-ph" id="stom-ph-display">pH: 2.0 | Duration: 2-4 hours</div>
+            </div>
+            <span id="stomach-status" class="panel-badge badge-amber" style="margin-left:auto">STANDBY</span>
+          </div>
+          <div class="organ-enzymes">
+            <span class="enzyme-tag">Pepsin</span>
+            <span class="enzyme-tag">Gastric Lipase</span>
+            <span class="enzyme-tag">HCl</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px">
+            Acidic environment (pH 1.5-3.5) activates pepsinogen→pepsin. Proteins denatured and cleaved at aromatic residues.
+          </div>
+          <div class="breakdown-stat"><span style="color:var(--text3)">Proteins processed</span><span id="stom-protein" style="color:var(--cyan)">0%</span></div>
+          <div class="breakdown-stat"><span style="color:var(--text3)">Fats processed</span><span id="stom-fats" style="color:var(--purple)">0%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="stomBar" style="background:var(--amber);width:0%"></div></div>
+        </div>
+ 
+        <!-- Small Intestine -->
+        <div class="organ-block" id="organ-intestine">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <span style="font-size:24px">🌀</span>
+            <div>
+              <div class="organ-name">Small Intestine</div>
+              <div class="organ-ph" id="int-ph-display">pH: 7.5 | Duration: 4-8 hours</div>
+            </div>
+            <span id="intestine-status" class="panel-badge badge-green" style="margin-left:auto">STANDBY</span>
+          </div>
+          <div class="organ-enzymes">
+            <span class="enzyme-tag">Pancreatic Amylase</span>
+            <span class="enzyme-tag">Trypsin</span>
+            <span class="enzyme-tag">Chymotrypsin</span>
+            <span class="enzyme-tag">Lipase</span>
+            <span class="enzyme-tag">Lactase</span>
+            <span class="enzyme-tag">Bile Salts</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px">
+            Pancreatic juice neutralizes acid chyme. Maximum enzymatic activity across all macronutrients.
+          </div>
+          <div class="breakdown-stat"><span style="color:var(--text3)">Carbs processed</span><span id="int-carbs" style="color:var(--amber)">0%</span></div>
+          <div class="breakdown-stat"><span style="color:var(--text3)">Proteins processed</span><span id="int-protein" style="color:var(--cyan)">0%</span></div>
+          <div class="breakdown-stat"><span style="color:var(--text3)">Fats processed</span><span id="int-fats" style="color:var(--purple)">0%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="intestineBar" style="background:var(--green);width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- RIGHT: Results -->
+    <div>
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Breakdown Results</span></div>
+        <div style="position:relative;height:200px"><canvas id="digestChart" role="img" aria-label="Macronutrient breakdown percentages across digestive organs"></canvas></div>
+      </div>
+ 
+      <div class="panel" style="margin-bottom:12px">
+        <div class="panel-header"><span class="panel-title">Final Absorption</span></div>
+        <div class="metric" style="margin-bottom:8px"><div class="metric-label">Carbohydrates</div><div><span class="metric-val" id="finalCarbs" style="color:var(--amber)">0</span><span class="metric-unit">%</span></div><div class="progress-bar" style="margin-top:4px"><div class="progress-fill" id="finalCarbsBar" style="background:var(--amber);width:0%"></div></div></div>
+        <div class="metric" style="margin-bottom:8px"><div class="metric-label">Proteins</div><div><span class="metric-val" id="finalProtein" style="color:var(--cyan)">0</span><span class="metric-unit">%</span></div><div class="progress-bar" style="margin-top:4px"><div class="progress-fill" id="finalProteinBar" style="background:var(--cyan);width:0%"></div></div></div>
+        <div class="metric"><div class="metric-label">Fats</div><div><span class="metric-val" id="finalFats" style="color:var(--purple)">0</span><span class="metric-unit">%</span></div><div class="progress-bar" style="margin-top:4px"><div class="progress-fill" id="finalFatsBar" style="background:var(--purple);width:0%"></div></div></div>
+      </div>
+ 
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Digestion Controls</span></div>
+        <div class="btn-row" style="flex-direction:column">
+          <button class="btn btn-green" onclick="startDigestion()" style="width:100%">▶ START DIGESTION</button>
+          <button class="btn btn-ghost" onclick="resetDigestion()" style="width:100%">↺ RESET</button>
+        </div>
+        <div id="failureWarning" style="display:none;margin-top:10px;padding:10px;background:var(--red3);border:1px solid var(--red2);border-radius:3px;font-size:11px;color:var(--red);line-height:1.5"></div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+</div><!-- end .app -->
+ 
+<!-- FLOATING AI TUTOR -->
+<div class="ai-tutor">
+  <div class="tutor-panel" id="tutorPanel">
+    <div class="tutor-title">AI TUTOR — CURRENT STATE</div>
+    <div class="tutor-text" id="tutorText">Analyzing simulation state...</div>
+  </div>
+  <button class="tutor-btn" onclick="toggleTutor()">🧠 Explain Current State</button>
+  <button class="tutor-btn" onclick="newChallenge()" style="border-color:var(--amber);color:var(--amber)">🎯 New Challenge</button>
+</div>
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════
+// GLOBAL STATE
+// ══════════════════════════════════════════════════════════
+const state = {
+  // Reactor
+  running: false,
+  time: 0,
+  substrate: 50,
+  enzyme: 30,
+  temperature: 37,
+  ph: 7.4,
+  inhibMode: 'none',
+  inhibConc: 0,
+  rate: 0,
+  efficiency: 0,
+  vmax: 0,
+  km: 0,
+  score: 0,
+  stabilityBonus: 0,
+  speedFactor: 1,
+  stableFrames: 0,
+  rateHistory: [],
+  experimentLog: [],
+  // Challenge
+  challenge: null,
+  // Digest
+  digestRunning: false,
+  digestStep: 0,
+  organPh: {mouth:6.8, stomach:2.0, intestine:7.5},
+  foodComp: {carbs:40, protein:30, fats:30},
+  digestEnzymes: {amylase:true, pepsin:true, lipase:true, lactase:true, trypsin:true},
+  digestResults: {
+    mouth:{carbs:0, fats:0},
+    stomach:{protein:0, fats:0},
+    intestine:{carbs:0, protein:0, fats:0},
+    final:{carbs:0, protein:0, fats:0}
+  },
+  // Clinical
+  currentCase: null,
+  diagAnswered: false,
+  // Enzyme filter
+  enzymeFilter: 'all',
+  organFilterVal: 'all',
+  phFilterVal: 'all',
+  selectedEnzyme: null
+};
+ 
+// ══════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════════════════
+function switchTab(idx) {
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.content').forEach((c,i)=>c.classList.toggle('active',i===idx));
+  if(idx===1) renderEnzymeGrid();
+  if(idx===2) renderClinicalCharts();
+  if(idx===3) initDigestChart();
+}
+ 
+// ══════════════════════════════════════════════════════════
+// CANVAS — REACTOR PARTICLE ENGINE
+// ══════════════════════════════════════════════════════════
+const rCanvas = document.getElementById('reactorCanvas');
+const rCtx = rCanvas.getContext('2d');
+const particles = [];
+const MAX_PARTICLES = 120;
+ 
+class Particle {
+  constructor(type) {
+    this.type = type;
+    this.x = Math.random() * rCanvas.width;
+    this.y = Math.random() * rCanvas.height;
+    this.vx = (Math.random()-0.5)*1.5;
+    this.vy = (Math.random()-0.5)*1.5;
+    this.r = type==='enzyme' ? 6 : type==='substrate' ? 4 : 3;
+    this.alpha = 1;
+    this.reacting = false;
+    this.reactTimer = 0;
+    this.life = 1;
+  }
+  update(speed) {
+    this.x += this.vx * speed;
+    this.y += this.vy * speed;
+    if(this.x < this.r || this.x > rCanvas.width-this.r) this.vx *= -1;
+    if(this.y < this.r || this.y > rCanvas.height-this.r) this.vy *= -1;
+    if(this.reacting) {
+      this.reactTimer--;
+      if(this.reactTimer <= 0) this.reacting = false;
+    }
+  }
+  draw(ctx) {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    if(this.type === 'enzyme') {
+      const denatured = state.temperature > 65 || state.ph < 2 || state.ph > 11;
+      ctx.fillStyle = denatured ? '#ff4455' : (this.reacting ? '#00ff88' : '#00d4ff');
+      ctx.shadowBlur = this.reacting ? 12 : 4;
+      ctx.shadowColor = denatured ? '#ff4455' : '#00d4ff';
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y-this.r);
+      ctx.lineTo(this.x+this.r*0.7, this.y+this.r*0.4);
+      ctx.lineTo(this.x-this.r*0.7, this.y+this.r*0.4);
+      ctx.closePath();
+      ctx.fill();
+    } else if(this.type === 'substrate') {
+      ctx.fillStyle = this.reacting ? '#ffaa00' : '#aa55ff';
+      ctx.shadowBlur = this.reacting ? 10 : 2;
+      ctx.shadowColor = ctx.fillStyle;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = '#00ff8844';
+      ctx.strokeStyle = '#00ff88';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+}
+ 
+function initParticles() {
+  particles.length = 0;
+  const numEnz = Math.min(Math.round(state.enzyme/5), 20);
+  const numSub = Math.min(Math.round(state.substrate/5), 40);
+  for(let i=0;i<numEnz;i++) particles.push(new Particle('enzyme'));
+  for(let i=0;i<numSub;i++) particles.push(new Particle('substrate'));
+}
+ 
+function checkCollisions() {
+  const enzymes = particles.filter(p=>p.type==='enzyme');
+  const substrates = particles.filter(p=>p.type==='substrate');
+  let reactions = 0;
+  for(let e of enzymes) {
+    if(e.reacting) continue;
+    for(let s of substrates) {
+      if(s.reacting) continue;
+      const dx = e.x-s.x, dy = e.y-s.y;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist < e.r+s.r+4) {
+        e.reacting = true; e.reactTimer = 20;
+        s.reacting = true; s.reactTimer = 15;
+        reactions++;
+        if(Math.random() < 0.3) {
+          const prod = new Particle('product');
+          prod.x = s.x; prod.y = s.y;
+          prod.vx = (Math.random()-0.5)*2;
+          prod.vy = (Math.random()-0.5)*2;
+          if(particles.length < MAX_PARTICLES) particles.push(prod);
+        }
+        break;
+      }
+    }
+  }
+  return reactions;
+}
+ 
+// ══════════════════════════════════════════════════════════
+// MICHAELIS-MENTEN KINETICS ENGINE
+// ══════════════════════════════════════════════════════════
+function calcKinetics() {
+  const S = state.substrate;
+  const E = state.enzyme;
+  const T = state.temperature;
+  const pH = state.ph;
+  const I = state.inhibConc;
+  const mode = state.inhibMode;
+ 
+  // Base Km and Vmax
+  const baseKm = 15 + (30 - E) * 0.3;
+  const baseVmax = E * 0.8 * Math.min(1, 1.2 - Math.abs(T-37)/25) * Math.min(1, 1.2 - Math.abs(pH-7.4)/3);
+ 
+  // Inhibition modifiers
+  let apparentKm = baseKm;
+  let apparentVmax = baseVmax;
+  const Ki = 20;
+ 
+  if(mode === 'competitive') {
+    apparentKm = baseKm * (1 + I/Ki);
+  } else if(mode === 'noncompetitive') {
+    apparentVmax = baseVmax / (1 + I/Ki);
+  } else if(mode === 'uncompetitive') {
+    apparentKm = baseKm / (1 + I/Ki);
+    apparentVmax = baseVmax / (1 + I/Ki);
+  }
+ 
+  const v = (apparentVmax * S) / (apparentKm + S);
+  const efficiency = apparentVmax > 0 ? (v / apparentVmax) * 100 : 0;
+ 
+  return {v, apparentKm, apparentVmax, baseKm, baseVmax, efficiency};
+}
+ 
+// ══════════════════════════════════════════════════════════
+// CHART.JS CHARTS
+// ══════════════════════════════════════════════════════════
+let rateChart, mmChart, clinChart, digestChart;
+ 
+function initCharts() {
+  const chartDefaults = {
+    color: '#7ba8cc',
+    font: {family:"'Space Mono',monospace", size:10}
+  };
+  Chart.defaults.color = chartDefaults.color;
+  Chart.defaults.font = chartDefaults.font;
+ 
+  const gridColor = '#1a3050';
+  const baseOpts = {
+    responsive:true, maintainAspectRatio:false,
+    animation:{duration:0},
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:gridColor},ticks:{color:'#4a7499'}},
+      y:{grid:{color:gridColor},ticks:{color:'#4a7499'}}
+    }
+  };
+ 
+  rateChart = new Chart(document.getElementById('rateChart'), {
+    type:'line',
+    data:{
+      labels:[],
+      datasets:[{
+        label:'Rate',
+        data:[],
+        borderColor:'#00d4ff',
+        backgroundColor:'rgba(0,212,255,0.08)',
+        borderWidth:1.5,
+        pointRadius:0,
+        fill:true,
+        tension:0.4
+      }]
+    },
+    options:{...baseOpts,
+      scales:{
+        x:{...baseOpts.scales.x,title:{display:true,text:'Time (s)',color:'#4a7499'}},
+        y:{...baseOpts.scales.y,title:{display:true,text:'Rate (µM/s)',color:'#4a7499'}}
+      }
+    }
+  });
+ 
+  mmChart = new Chart(document.getElementById('mmChart'), {
+    type:'line',
+    data:{
+      labels:[],
+      datasets:[
+        {label:'MM Curve',data:[],borderColor:'#00d4ff',borderWidth:1.5,pointRadius:0,tension:0.4},
+        {label:'Current',data:[],borderColor:'#ffaa00',borderWidth:0,pointRadius:6,pointBackgroundColor:'#ffaa00',showLine:false}
+      ]
+    },
+    options:{...baseOpts,
+      scales:{
+        x:{...baseOpts.scales.x,title:{display:true,text:'[S] (mM)',color:'#4a7499'}},
+        y:{...baseOpts.scales.y,title:{display:true,text:'v (µM/s)',color:'#4a7499'}}
+      }
+    }
+  });
+}
+ 
+function updateMMChart() {
+  const kin = calcKinetics();
+  const labels = [];
+  const curveData = [];
+  for(let s=0;s<=200;s+=4) {
+    labels.push(s);
+    const v = (kin.apparentVmax * s) / (kin.apparentKm + s);
+    curveData.push(parseFloat(v.toFixed(2)));
+  }
+  mmChart.data.labels = labels;
+  mmChart.data.datasets[0].data = curveData;
+  mmChart.data.datasets[1].data = [{x:state.substrate, y:parseFloat(kin.v.toFixed(2))}];
+  mmChart.options.scales.x.type = 'linear';
+  mmChart.update('none');
+}
+ 
+function initDigestChart() {
+  if(digestChart) { digestChart.destroy(); digestChart=null; }
+  digestChart = new Chart(document.getElementById('digestChart'), {
+    type:'bar',
+    data:{
+      labels:['Carbs','Proteins','Fats'],
+      datasets:[
+        {label:'Mouth',data:[0,0,0],backgroundColor:'rgba(0,212,255,0.5)',borderColor:'#00d4ff',borderWidth:1},
+        {label:'Stomach',data:[0,0,0],backgroundColor:'rgba(255,170,0,0.5)',borderColor:'#ffaa00',borderWidth:1},
+        {label:'S. Intestine',data:[0,0,0],backgroundColor:'rgba(0,255,136,0.5)',borderColor:'#00ff88',borderWidth:1}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,animation:{duration:500},
+      plugins:{legend:{display:true,position:'bottom',labels:{color:'#7ba8cc',boxWidth:12,font:{size:10}}}},
+      scales:{
+        x:{grid:{color:'#1a3050'},ticks:{color:'#4a7499'},stacked:false},
+        y:{grid:{color:'#1a3050'},ticks:{color:'#4a7499'},max:100,title:{display:true,text:'% Processed',color:'#4a7499'}}
+      }
+    }
+  });
+}
+ 
+// ══════════════════════════════════════════════════════════
+// REACTOR SIMULATION LOOP
+// ══════════════════════════════════════════════════════════
+let simRAF = null;
+let lastTime = 0;
+ 
+function updateReactor() {
+  state.substrate = +document.getElementById('subSlider').value;
+  state.enzyme = +document.getElementById('enzSlider').value;
+  state.temperature = +document.getElementById('tempSlider').value;
+  state.ph = +document.getElementById('phSlider').value;
+  state.inhibMode = document.getElementById('inhibMode').value;
+  state.inhibConc = +document.getElementById('inhSlider').value;
+ 
+  document.getElementById('subVal').textContent = state.substrate + ' mM';
+  document.getElementById('enzVal').textContent = state.enzyme + ' nM';
+  document.getElementById('tempVal').textContent = state.temperature + '°C';
+  document.getElementById('phVal').textContent = state.ph.toFixed(1);
+  document.getElementById('inhVal').textContent = state.inhibConc + ' µM';
+ 
+  updateKineticsDisplay();
+  updateMMChart();
+  updateExplainPanel();
+  updateChallengeProgress();
+}
+ 
+function updateKineticsDisplay() {
+  const kin = calcKinetics();
+  state.rate = kin.v;
+  state.efficiency = kin.efficiency;
+  state.vmax = kin.apparentVmax;
+  state.km = kin.apparentKm;
+ 
+  document.getElementById('mRate').textContent = kin.v.toFixed(2);
+  document.getElementById('mEff').textContent = Math.round(kin.efficiency);
+  document.getElementById('mVmax').textContent = kin.apparentVmax.toFixed(1);
+  document.getElementById('mKm').textContent = kin.apparentKm.toFixed(1);
+  document.getElementById('effBar').style.width = kin.efficiency.toFixed(0) + '%';
+  document.getElementById('bigEfficiency').textContent = Math.round(kin.efficiency) + '%';
+  document.getElementById('apparentKm').textContent = kin.apparentKm.toFixed(2) + ' mM';
+  document.getElementById('apparentVmax').textContent = kin.apparentVmax.toFixed(2) + ' µM/s';
+ 
+  const inhibText = {none:'None',competitive:'↑Km (Km×'+(1+state.inhibConc/20).toFixed(1)+')',noncompetitive:'↓Vmax ('+((1/(1+state.inhibConc/20))*100).toFixed(0)+'%)',uncompetitive:'↓Both'};
+  document.getElementById('inhibEffect').textContent = inhibText[state.inhibMode] || 'None';
+ 
+  // MM Equation
+  let eq;
+  if(state.inhibMode==='none') eq = `v = (${kin.apparentVmax.toFixed(1)} × [S]) / (${kin.apparentKm.toFixed(1)} + [S])`;
+  else if(state.inhibMode==='competitive') eq = `v = Vmax × [S] / (αKm + [S])\nα = 1 + [I]/Ki = ${(1+state.inhibConc/20).toFixed(2)}`;
+  else if(state.inhibMode==='noncompetitive') eq = `v = (Vmax/α) × [S] / (Km + [S])\nα = ${(1+state.inhibConc/20).toFixed(2)}`;
+  else eq = `v = (Vmax/α') × [S] / (Km/α' + [S])`;
+  document.getElementById('mmEquation').textContent = eq;
+ 
+  // Phase
+  const pct = kin.efficiency;
+  let phase;
+  if(pct < 20) phase = 'lag';
+  else if(pct < 75) phase = 'exp';
+  else phase = 'sat';
+  document.getElementById('phaseLag').classList.toggle('active', phase==='lag');
+  document.getElementById('phaseExp').classList.toggle('active', phase==='exp');
+  document.getElementById('phaseSat').classList.toggle('active', phase==='sat');
+  document.getElementById('phaseLag').style.background = phase==='lag'?'var(--red3)':'var(--bg4)';
+  document.getElementById('phaseExp').style.background = phase==='exp'?'var(--amber3)':'var(--bg4)';
+  document.getElementById('phaseSat').style.background = phase==='sat'?'var(--green3)':'var(--bg4)';
+ 
+  const phaseDescs = {
+    lag:'Lag Phase: Enzyme-substrate complexes forming slowly. Rate below 20% max capacity. System equilibrating.',
+    exp:'Exponential Phase: Active complex formation. Rate increasing rapidly. Substrate being consumed.',
+    sat:'Saturation Phase: Enzyme active sites near-saturated. Rate approaching Vmax. First-order kinetics.'
+  };
+  document.getElementById('phaseDescription').textContent = phaseDescs[phase];
+  document.getElementById('reactionPhase').textContent = phase.toUpperCase() + ' PHASE';
+ 
+  const reactionBadgeColors = {lag:'badge-red',exp:'badge-amber',sat:'badge-green'};
+  document.getElementById('reactionPhase').className = 'panel-badge ' + reactionBadgeColors[phase];
+ 
+  // Denaturation
+  const denatured = state.temperature > 65 || state.ph < 2 || state.ph > 11;
+  document.getElementById('denatureWarning').style.display = denatured ? 'block' : 'none';
+  document.getElementById('bigEfficiency').style.color = denatured ? 'var(--red)' : 'var(--cyan)';
+  document.getElementById('effLabel').textContent = denatured ? '⚠ ENZYME DENATURED' : (state.running?'Reactor active':'Reactor offline');
+}
+ 
+function startSim() {
+  if(state.running) return;
+  state.running = true;
+  state.time = 0;
+  state.rateHistory = [];
+  logExperiment();
+  initParticles();
+  simLoop(0);
+}
+ 
+function stopSim() {
+  state.running = false;
+  if(simRAF) cancelAnimationFrame(simRAF);
+}
+ 
+function resetSim() {
+  stopSim();
+  state.time = 0;
+  state.rateHistory = [];
+  state.score = 0;
+  state.stabilityBonus = 0;
+  state.stableFrames = 0;
+  rateChart.data.labels = [];
+  rateChart.data.datasets[0].data = [];
+  rateChart.update('none');
+  updateScoreDisplay();
+  initParticles();
+}
+ 
+function simLoop(ts) {
+  if(!state.running) return;
+  const dt = Math.min(ts - lastTime, 50);
+  lastTime = ts;
+ 
+  state.time += 0.1;
+ 
+  // Calculate kinetics
+  updateKineticsDisplay();
+ 
+  // Speed factor based on temp and efficiency
+  const speedFactor = Math.min(2, state.efficiency/50) * (state.temperature > 65 ? 0.1 : 1);
+  state.speedFactor = speedFactor;
+ 
+  // Update particles
+  for(const p of particles) p.update(speedFactor + 0.3);
+  const reactions = checkCollisions();
+ 
+  // Draw
+  drawReactor(reactions);
+ 
+  // Rate history
+  if(state.time % 0.5 < 0.1) {
+    const noise = (Math.random()-0.5) * 0.5;
+    state.rateHistory.push({t:parseFloat(state.time.toFixed(1)), v:parseFloat((state.rate+noise).toFixed(2))});
+    if(state.rateHistory.length > 60) state.rateHistory.shift();
+    rateChart.data.labels = state.rateHistory.map(r=>r.t);
+    rateChart.data.datasets[0].data = state.rateHistory.map(r=>r.v);
+    rateChart.update('none');
+  }
+ 
+  // Score
+  updateScore(reactions);
+  updateChallengeProgress();
+ 
+  simRAF = requestAnimationFrame(simLoop);
+}
+ 
+function drawReactor(reactions) {
+  rCtx.clearRect(0, 0, rCanvas.width, rCanvas.height);
+ 
+  // Background grid
+  rCtx.strokeStyle = 'rgba(26,48,80,0.5)';
+  rCtx.lineWidth = 0.5;
+  for(let x=0;x<rCanvas.width;x+=40){rCtx.beginPath();rCtx.moveTo(x,0);rCtx.lineTo(x,rCanvas.height);rCtx.stroke();}
+  for(let y=0;y<rCanvas.height;y+=40){rCtx.beginPath();rCtx.moveTo(0,y);rCtx.lineTo(rCanvas.width,y);rCtx.stroke();}
+ 
+  // Reaction flashes
+  if(reactions > 0) {
+    rCtx.fillStyle = 'rgba(0,255,136,0.04)';
+    rCtx.fillRect(0,0,rCanvas.width,rCanvas.height);
+  }
+ 
+  for(const p of particles) p.draw(rCtx);
+ 
+  // HUD overlay
+  rCtx.font = '10px Space Mono';
+  rCtx.fillStyle = '#4a7499';
+  rCtx.fillText('t = '+state.time.toFixed(1)+'s', 8, 20);
+  rCtx.fillText('rxn/frame: '+reactions, 8, 34);
+  rCtx.fillText('particles: '+particles.length, 8, 48);
+}
+ 
+// ══════════════════════════════════════════════════════════
+// SCORE SYSTEM
+// ══════════════════════════════════════════════════════════
+function updateScore(reactions) {
+  if(state.efficiency > 70 && !document.getElementById('denatureWarning').style.display) {
+    state.stableFrames++;
+    if(state.stableFrames % 60 === 0) {
+      state.stabilityBonus += 5;
+      state.score += 5;
+    }
+  } else {
+    state.stableFrames = Math.max(0, state.stableFrames-1);
+  }
+  state.score += reactions * 0.1 * state.speedFactor;
+  updateScoreDisplay();
+}
+ 
+function updateScoreDisplay() {
+  const s = Math.round(state.score);
+  document.getElementById('scoreDisp').textContent = s;
+  document.getElementById('globalScore').textContent = 'Score: '+s;
+  document.getElementById('stabilityBonus').textContent = '+'+state.stabilityBonus;
+  document.getElementById('speedFactor').textContent = '×'+state.speedFactor.toFixed(1);
+  const pct = Math.min(100, s/500*100);
+  document.getElementById('scoreCircle').style.strokeDashoffset = 150.8*(1-pct/100);
+  document.getElementById('scoreMsg').textContent = s < 50 ? 'Just starting!' : s < 200 ? 'Good progress! Optimize conditions.' : s < 500 ? 'Excellent! Approaching mastery.' : '🏆 MASTER BIOCHEMIST!';
+}
+ 
+// ══════════════════════════════════════════════════════════
+// CHALLENGE SYSTEM
+// ══════════════════════════════════════════════════════════
+const CHALLENGES = [
+  {goal:'Achieve ≥ 90% reaction efficiency', check:()=>state.efficiency>=90, hint:'Maximize substrate at optimal pH/temp'},
+  {goal:'Maintain Vmax above 40 µM/s', check:()=>state.vmax>=40, hint:'Increase enzyme concentration'},
+  {goal:'Keep Km below 10 mM', check:()=>state.km<10, hint:'Increase enzyme, reduce competitive inhibition'},
+  {goal:'Score 200 points', check:()=>state.score>=200, hint:'Run the reactor at high efficiency'},
+  {goal:'Reach saturation phase', check:()=>state.efficiency>=75, hint:'Increase substrate concentration significantly'},
+  {goal:'Demonstrate non-competitive inhibition effects', check:()=>state.inhibMode==='noncompetitive'&&state.inhibConc>30, hint:'Select non-competitive, raise inhibitor to 30+'}
+];
+ 
+function newChallenge() {
+  state.challenge = CHALLENGES[Math.floor(Math.random()*CHALLENGES.length)];
+  document.getElementById('challengeGoal').textContent = '🎯 ' + state.challenge.goal;
+  document.getElementById('challengeStatus').textContent = 'IN PROGRESS';
+  document.getElementById('challengeStatus').className = 'panel-badge badge-amber';
+  document.getElementById('challengeBar').style.width = '0%';
+  document.getElementById('challengePct').textContent = '0%';
+}
+ 
+function updateChallengeProgress() {
+  if(!state.challenge) return;
+  const done = state.challenge.check();
+  if(done) {
+    document.getElementById('challengeStatus').textContent = 'COMPLETE!';
+    document.getElementById('challengeStatus').className = 'panel-badge badge-green';
+    document.getElementById('challengeBar').style.width = '100%';
+    document.getElementById('challengePct').textContent = '100%';
+    state.score += 100;
+  }
+}
+ 
+// ══════════════════════════════════════════════════════════
+// EXPLAIN PANEL
+// ══════════════════════════════════════════════════════════
+function updateExplainPanel() {
+  const kin = calcKinetics();
+  const denatured = state.temperature > 65 || state.ph < 2 || state.ph > 11;
+  let text;
+  if(denatured) {
+    text = `⚠ DENATURATION: ${state.temperature>65?'Thermal disruption (T='+state.temperature+'°C) has broken hydrogen bonds':'pH='+ state.ph+' has ionized critical residues'}, collapsing the active site's 3D structure. Enzyme activity is irreversibly lost. Km → ∞, v → 0.`;
+  } else if(state.inhibMode==='competitive') {
+    text = `Competitive inhibitor (${state.inhibConc}µM) competes with substrate for the active site. Km increases to ${kin.apparentKm.toFixed(1)} mM (${((kin.apparentKm/kin.baseKm-1)*100).toFixed(0)}% above normal). Effect reversible by adding excess substrate. Vmax unchanged.`;
+  } else if(state.inhibMode==='noncompetitive') {
+    text = `Non-competitive inhibitor binds allosteric site, altering enzyme conformation. Vmax reduced to ${kin.apparentVmax.toFixed(1)} µM/s regardless of substrate amount. Km unchanged. Adding more substrate cannot overcome this inhibition.`;
+  } else if(state.inhibMode==='uncompetitive') {
+    text = `Uncompetitive inhibitor binds enzyme-substrate complex only. Both Km and Vmax decrease equally. Line-weaver Burk shows parallel lines. Current efficiency: ${kin.efficiency.toFixed(0)}%.`;
+  } else {
+    const optTemp = Math.abs(state.temperature-37) < 5;
+    const optPh = Math.abs(state.ph-7.4) < 0.5;
+    text = `At [S]=${state.substrate}mM and [E]=${state.enzyme}nM, reaction rate is ${kin.v.toFixed(2)} µM/s (${kin.efficiency.toFixed(0)}% of Vmax). ${!optTemp?'Temperature '+state.temperature+'°C is '+Math.round(Math.abs(state.temperature-37))+'° from optimal. ':''} ${!optPh?'pH '+state.ph+' deviates from optimal 7.4. ':''} Km = ${kin.apparentKm.toFixed(1)} mM represents half-saturation concentration.`;
+  }
+  document.getElementById('explainText').textContent = text;
+}
+ 
+// ══════════════════════════════════════════════════════════
+// AI TUTOR
+// ══════════════════════════════════════════════════════════
+function toggleTutor() {
+  const panel = document.getElementById('tutorPanel');
+  const isOpen = panel.classList.toggle('open');
+  if(isOpen) generateTutorText();
+}
+ 
+function generateTutorText() {
+  const kin = calcKinetics();
+  const tab = [...document.querySelectorAll('.tab')].findIndex(t=>t.classList.contains('active'));
+  const texts = {
+    0: `Current Reactor Status:\n\n• Enzyme: ${state.enzyme} nM, Substrate: ${state.substrate} mM\n• Temp: ${state.temperature}°C, pH: ${state.ph}\n• Rate: ${kin.v.toFixed(2)} µM/s (${kin.efficiency.toFixed(0)}% of Vmax)\n• Inhibition: ${state.inhibMode}\n\n${state.inhibMode!=='none'?'Inhibitor modifies kinetics per the selected mechanism. '+['Competitive inhibition raises apparent Km without affecting Vmax — more substrate can compete it out.','Non-competitive inhibitor reduces Vmax by binding allosteric site regardless of substrate. Cannot be overcome.','Uncompetitive inhibition reduces both Km and Vmax proportionally — effective only when ES complex forms.'][['competitive','noncompetitive','uncompetitive'].indexOf(state.inhibMode)]:'No inhibitor active. Reaction follows classic Michaelis-Menten kinetics.'}\n\nOptimization tip: ${kin.efficiency<50?'Increase substrate concentration or raise enzyme levels. Check temperature is near 37°C and pH near 7.4.':kin.efficiency<85?'Good efficiency! Fine-tune pH closer to 7.4 for maximum activity.':'Excellent conditions! Maintain stability for score bonuses.'}`,
+    1: 'Enzyme Classification Explorer is active. Enzymes are classified by the reaction they catalyze, not their structure. The 6 EC classes (Oxidoreductases, Transferases, Hydrolases, Lyases, Isomerases, Ligases) form a hierarchical nomenclature system. Use filters to explore by organ location or optimal pH range.',
+    2: state.currentCase ? `Clinical Case: ${state.currentCase.name}\n\nPathophysiology: ${state.currentCase.explanation}\n\nKey biomarker: ${state.currentCase.biomarkers[0].name} is ${state.currentCase.biomarkers[0].status} (${state.currentCase.biomarkers[0].value} ${state.currentCase.biomarkers[0].unit}).\n\nClinical significance: Enzyme levels in blood indicate tissue damage — enzymes leak from disrupted cells into circulation.` : 'Load a clinical case to analyze pathological enzyme patterns.',
+    3: `Digestive System Status:\n\nFood: Carbs ${state.foodComp.carbs}% / Protein ${state.foodComp.protein}% / Fats ${state.foodComp.fats}%\n\nOrgan pH:\n• Mouth: ${state.organPh.mouth} (salivary amylase optimal)\n• Stomach: ${state.organPh.stomach} (pepsin optimal at pH 2)\n• Intestine: ${state.organPh.intestine} (pancreatic enzymes optimal)\n\n${state.organPh.stomach>4?'⚠ Stomach pH too high! Pepsin (optimum pH 2) will be inactive. Protein digestion severely impaired.':'Gastric conditions are appropriate for protease activity.'}`
+  };
+  document.getElementById('tutorText').textContent = texts[tab] || 'Select a tab to get context-aware explanations.';
+}
+ 
+// ══════════════════════════════════════════════════════════
+// EXPERIMENT LOG
+// ══════════════════════════════════════════════════════════
+function logExperiment() {
+  const kin = calcKinetics();
+  const entry = {
+    time: new Date().toLocaleTimeString(),
+    sub: state.substrate,
+    enz: state.enzyme,
+    temp: state.temperature,
+    ph: state.ph.toFixed(1),
+    rate: kin.v.toFixed(2),
+    eff: Math.round(kin.efficiency),
+    inhib: state.inhibMode
+  };
+  state.experimentLog.unshift(entry);
+  if(state.experimentLog.length > 10) state.experimentLog.pop();
+  renderLog();
+}
+ 
+function renderLog() {
+  const cnt = state.experimentLog.length;
+  document.getElementById('logCount').textContent = cnt + ' run'+(cnt!==1?'s':'');
+  if(cnt===0){document.getElementById('historyLog').innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;padding:20px 0">No experiments yet</div>';return;}
+  document.getElementById('historyLog').innerHTML = state.experimentLog.map(e=>`
+    <div class="history-item">
+      <div>
+        <div>[S]=${e.sub}mM [E]=${e.enz}nM T=${e.temp}°C pH=${e.ph}</div>
+        <div style="color:var(--cyan);margin-top:2px">${e.rate}µM/s · ${e.eff}% eff · ${e.inhib}</div>
+      </div>
+      <div class="history-time">${e.time}</div>
+    </div>
+  `).join('');
+}
+ 
+// ══════════════════════════════════════════════════════════
+// DOWNLOAD REPORT
+// ══════════════════════════════════════════════════════════
+function downloadReport() {
+  const kin = calcKinetics();
+  const lines = [
+    '══════════════════════════════════════════════',
+    '  BIO-KINETIC REACTOR SUITE — EXPERIMENT REPORT',
+    '══════════════════════════════════════════════',
+    'Generated: ' + new Date().toLocaleString(),
+    '',
+    '── CURRENT CONDITIONS ──',
+    `Substrate [S]: ${state.substrate} mM`,
+    `Enzyme [E]: ${state.enzyme} nM`,
+    `Temperature: ${state.temperature}°C`,
+    `pH: ${state.ph.toFixed(1)}`,
+    `Inhibition: ${state.inhibMode} (${state.inhibConc} µM)`,
+    '',
+    '── KINETICS RESULTS ──',
+    `Reaction Rate (v): ${kin.v.toFixed(3)} µM/s`,
+    `Apparent Vmax: ${kin.apparentVmax.toFixed(3)} µM/s`,
+    `Apparent Km: ${kin.apparentKm.toFixed(3)} mM`,
+    `Efficiency: ${kin.efficiency.toFixed(1)}%`,
+    '',
+    '── SCORE ──',
+    `Total Score: ${Math.round(state.score)}`,
+    `Stability Bonus: ${state.stabilityBonus}`,
+    '',
+    '── EXPERIMENT HISTORY ──',
+    ...state.experimentLog.map((e,i)=>`[${i+1}] ${e.time} | [S]=${e.sub} [E]=${e.enz} T=${e.temp} pH=${e.ph} → rate=${e.rate} eff=${e.eff}% inh=${e.inhib}`),
+    '',
+    '══════════════════════════════════════════════'
+  ].join('\n');
+  const blob = new Blob([lines], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bio_kinetic_report_'+Date.now()+'.txt';
+  a.click();
+}
+ 
+// ══════════════════════════════════════════════════════════
+// ENZYME DATABASE (TAB 2)
+// ══════════════════════════════════════════════════════════
+const ENZYMES = [
+  {name:'Salivary Amylase',class:'hydrolase',substrate:'Starch (amylose)',product:'Maltose + dextrins',bond:'α-1,4 glycosidic',rxnType:'Hydrolysis',optPh:'6.8',optTemp:'37°C',organ:'mouth',phRange:'neutral',why:'Breaks α-1,4 bonds with water addition — defines hydrolase class.',diagram:{left:'Starch',arrow:'H₂O',right:'Maltose + Dextrins'},clinical:'Low activity → starch maldigestion in mouth. Pancreatic amylase compensates.'},
+  {name:'Pepsin',class:'hydrolase',substrate:'Proteins',product:'Peptide fragments',bond:'Peptide bonds (aromatic)',rxnType:'Proteolysis',optPh:'2.0',optTemp:'37°C',organ:'stomach',phRange:'acidic',why:'Hydrolyzes peptide bonds — a protease subclass of hydrolases. Requires extreme acid for activation.',diagram:{left:'Protein',arrow:'H₂O',right:'Polypeptides'},clinical:'Absent in achlorhydria (no HCl). Zollinger-Ellison syndrome causes peptic ulcers.'},
+  {name:'Pancreatic Lipase',class:'hydrolase',substrate:'Triglycerides',product:'Fatty acids + glycerol',bond:'Ester bonds',rxnType:'Esterolysis',optPh:'7.0',optTemp:'37°C',organ:'intestine',phRange:'neutral',why:'Cleaves ester bonds between glycerol and fatty acids using water as nucleophile.',diagram:{left:'TG',arrow:'H₂O + bile',right:'2-MG + FA'},clinical:'Deficient in cystic fibrosis and pancreatitis. Causes steatorrhea.'},
+  {name:'Lactase',class:'hydrolase',substrate:'Lactose',product:'Glucose + Galactose',bond:'β-1,4 glycosidic',rxnType:'Hydrolysis',optPh:'6.5',optTemp:'37°C',organ:'intestine',phRange:'neutral',why:'Specifically cleaves β-galactosidic bond — a substrate-specific hydrolase.',diagram:{left:'Lactose',arrow:'H₂O',right:'Glucose + Galactose'},clinical:'Deficiency → lactose intolerance. Lactose fermented by colon bacteria → bloating, diarrhea.'},
+  {name:'Trypsin',class:'hydrolase',substrate:'Proteins/polypeptides',product:'Smaller peptides',bond:'Arg/Lys peptide bonds',rxnType:'Proteolysis',optPh:'8.0',optTemp:'37°C',organ:'intestine',phRange:'alkaline',why:'Serine protease that hydrolyzes after basic residues (Arg, Lys). Activated from trypsinogen by enterokinase.',diagram:{left:'Polypeptide',arrow:'H₂O',right:'Peptides'},clinical:'Acute pancreatitis: premature trypsin activation within pancreas causes autodigestion.'},
+  {name:'ALT (Alanine Aminotransferase)',class:'transferase',substrate:'Alanine + α-ketoglutarate',product:'Pyruvate + glutamate',bond:'Amino group transfer',rxnType:'Transamination',optPh:'7.4',optTemp:'37°C',organ:'liver',phRange:'neutral',why:'Transfers amino group between molecules — defining characteristic of transferases.',diagram:{left:'Ala + α-KG',arrow:'PLP',right:'Pyr + Glu'},clinical:'Elevated in hepatitis, NAFLD, liver damage. Gold standard liver enzyme.'},
+  {name:'Creatine Kinase',class:'transferase',substrate:'Creatine + ATP',product:'Phosphocreatine + ADP',bond:'Phosphate group',rxnType:'Phosphotransfer',optPh:'7.4',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Transfers high-energy phosphate group from ATP to creatine for energy storage.',diagram:{left:'Creatine+ATP',arrow:'Mg²⁺',right:'PCr+ADP'},clinical:'CK-MB isoform elevated in myocardial infarction within 4-6 hours.'},
+  {name:'Hexokinase',class:'transferase',substrate:'Glucose + ATP',product:'G-6-P + ADP',bond:'Phosphate group',rxnType:'Phosphorylation',optPh:'7.5',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Phosphorylates glucose at C6 — first step of glycolysis. Transferase acting on hexoses.',diagram:{left:'Glucose+ATP',arrow:'Mg²⁺',right:'G6P+ADP'},clinical:'Reduced in some glucose-6-phosphate dehydrogenase deficiencies.'},
+  {name:'Lactate Dehydrogenase',class:'oxidoreductase',substrate:'Lactate + NAD⁺',product:'Pyruvate + NADH',bond:'C-H oxidation',rxnType:'Oxidoreduction',optPh:'7.4',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Catalyzes oxidation-reduction — electrons transferred from lactate to NAD⁺.',diagram:{left:'Lactate+NAD⁺',arrow:'⇌',right:'Pyruvate+NADH'},clinical:'LDH-1 elevated in MI, LDH-5 in liver disease. Increased in any tissue necrosis.'},
+  {name:'Cytochrome P450',class:'oxidoreductase',substrate:'Drugs/steroids + O₂',product:'Hydroxylated + H₂O',bond:'C-H (monooxygenation)',rxnType:'Hydroxylation',optPh:'7.4',optTemp:'37°C',organ:'liver',phRange:'neutral',why:'Oxidoreductase using molecular oxygen. Key in drug metabolism — adds -OH to lipophilic compounds.',diagram:{left:'Drug + NADPH',arrow:'O₂',right:'Drug-OH + NADP⁺'},clinical:'CYP2D6 polymorphisms affect drug metabolism (codeine, tamoxifen).'},
+  {name:'DNA Ligase',class:'ligase',substrate:'DNA with nick',product:'Sealed DNA',bond:'Phosphodiester bond',rxnType:'Ligation (ATP-driven)',optPh:'7.5',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Forms covalent bonds using energy from ATP hydrolysis — characteristic of ligases.',diagram:{left:'Nick + ATP',arrow:'Mg²⁺',right:'Sealed+AMP+PPi'},clinical:'Bloom syndrome: DNA ligase I defect → chromosomal instability, cancer predisposition.'},
+  {name:'Acetyl-CoA Carboxylase',class:'ligase',substrate:'Acetyl-CoA + CO₂',product:'Malonyl-CoA',bond:'C-C bond (carboxylation)',rxnType:'Carboxylation',optPh:'7.5',optTemp:'37°C',organ:'liver',phRange:'neutral',why:'Forms C-C bond using ATP and CO₂ — biotin-dependent ligase (carboxylase subclass).',diagram:{left:'Acetyl-CoA+CO₂',arrow:'ATP',right:'Malonyl-CoA+ADP'},clinical:'Rate-limiting step in fatty acid synthesis. Inhibited by fasting (glucagon pathway).'},
+  {name:'Phosphoglucose Isomerase',class:'isomerase',substrate:'Glucose-6-phosphate',product:'Fructose-6-phosphate',bond:'None (isomerization)',rxnType:'Isomerization',optPh:'7.5',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Interconverts structural isomers without breaking bonds — no external cofactor needed.',diagram:{left:'G-6-P',arrow:'⇌',right:'F-6-P'},clinical:'Deficiency causes hemolytic anemia — RBCs depend on glycolysis for ATP.'},
+  {name:'Mutarotase',class:'isomerase',substrate:'α-glucose',product:'β-glucose',bond:'Anomeric C1',rxnType:'Mutarotation',optPh:'7.4',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Interconverts anomeric forms of sugars — a specific subclass of isomerases.',diagram:{left:'α-Glucose',arrow:'⇌',right:'β-Glucose'},clinical:'Relevant in diabetes monitoring — glucometers measure specific glucose isomers.'},
+  {name:'Pyruvate Decarboxylase',class:'lyase',substrate:'Pyruvate',product:'Acetaldehyde + CO₂',bond:'C-C bond cleavage',rxnType:'Decarboxylation',optPh:'6.0',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Cleaves C-C bond without hydrolysis or oxidation — defining lyase characteristic.',diagram:{left:'Pyruvate',arrow:'TPP',right:'Acetaldehyde+CO₂'},clinical:'Used in yeast fermentation. Not present in humans — we use pyruvate dehydrogenase.'},
+  {name:'Carbonic Anhydrase',class:'lyase',substrate:'H₂CO₃',product:'CO₂ + H₂O',bond:'C-O bond',rxnType:'Hydration/Dehydration',optPh:'7.2',optTemp:'37°C',organ:'cells',phRange:'neutral',why:'Lyase that cleaves C-O bond without water addition. Fastest known enzyme (~10⁶ cycles/sec).',diagram:{left:'CO₂+H₂O',arrow:'Zn²⁺',right:'H₂CO₃ ⇌ H⁺+HCO₃⁻'},clinical:'Acetazolamide inhibits it — used for glaucoma, altitude sickness, epilepsy.'},
+  {name:'Gastric Lipase',class:'hydrolase',substrate:'Triglycerides (short-chain)',product:'Diglycerides + FFA',bond:'sn-3 ester bond',rxnType:'Lipolysis',optPh:'4.0',optTemp:'37°C',organ:'stomach',phRange:'acidic',why:'Acid-stable lipase (unlike pancreatic) — hydrolyzes short-chain fats in gastric acid.',diagram:{left:'TG (short)',arrow:'H₂O',right:'DG + FA'},clinical:'Important in neonates with immature pancreas. Partially compensates for pancreatic lipase deficiency.'},
+  {name:'Sucrase-Isomaltase',class:'hydrolase',substrate:'Sucrose + Isomaltose',product:'Glucose + Fructose',bond:'α-1,2 and α-1,6 glycosidic',rxnType:'Hydrolysis',optPh:'6.0',optTemp:'37°C',organ:'intestine',phRange:'neutral',why:'Bifunctional hydrolase in intestinal brush border. Cleaves two distinct glycosidic bond types.',diagram:{left:'Sucrose',arrow:'H₂O',right:'Glucose+Fructose'},clinical:'Congenital sucrase-isomaltase deficiency causes osmotic diarrhea after sucrose ingestion.'}
+];
+ 
+let selectedEnzymeIdx = null;
+ 
+function renderEnzymeGrid() {
+  const grid = document.getElementById('enzymeGrid');
+  const filtered = ENZYMES.filter(e=>{
+    const classMatch = state.enzymeFilter==='all' || e.class===state.enzymeFilter;
+    const organMatch = state.organFilterVal==='all' || e.organ===state.organFilterVal;
+    let phMatch = true;
+    if(state.phFilterVal!=='all'){
+      const ph = parseFloat(e.optPh);
+      if(state.phFilterVal==='acidic') phMatch = ph<6;
+      if(state.phFilterVal==='neutral') phMatch = ph>=6&&ph<=8;
+      if(state.phFilterVal==='alkaline') phMatch = ph>8;
+    }
+    return classMatch && organMatch && phMatch;
+  });
+ 
+  const classColors = {hydrolase:'var(--cyan)',transferase:'var(--purple)',oxidoreductase:'var(--amber)',ligase:'var(--green)',isomerase:'var(--red)',lyase:'var(--text2)'};
+ 
+  grid.innerHTML = filtered.map((e,i)=>`
+    <div class="enzyme-card ${e.class}" onclick="selectEnzyme(${ENZYMES.indexOf(e)})" ${selectedEnzymeIdx===ENZYMES.indexOf(e)?'style="border-color:var(--cyan)"':''}>
+      <div class="enzyme-name">${e.name}</div>
+      <div class="enzyme-class" style="color:${classColors[e.class]}">${e.class.toUpperCase()}</div>
+      <div class="enzyme-row"><span>Substrate</span><span>${e.substrate}</span></div>
+      <div class="enzyme-row"><span>Product</span><span>${e.product}</span></div>
+      <div class="enzyme-row"><span>Optimal pH</span><span>${e.optPh}</span></div>
+      <div class="enzyme-row"><span>Organ</span><span>${e.organ}</span></div>
+    </div>
+  `).join('');
+ 
+  if(filtered.length === 0) {
+    grid.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;grid-column:1/-1">No enzymes match current filters.</div>';
+  }
+}
+ 
+function selectEnzyme(idx) {
+  selectedEnzymeIdx = idx;
+  const e = ENZYMES[idx];
+  const classColors = {hydrolase:'var(--cyan)',transferase:'var(--purple)',oxidoreductase:'var(--amber)',ligase:'var(--green)',isomerase:'var(--red)',lyase:'var(--text2)'};
+  document.getElementById('enzymeDetail').innerHTML = `
+    <h3>${e.name}</h3>
+    <div class="detail-class" style="color:${classColors[e.class]}">${e.class.toUpperCase()} · EC Class ${['oxidoreductase','transferase','hydrolase','lyase','isomerase','ligase'].indexOf(e.class)+1}</div>
+    <div class="detail-section">
+      <div class="detail-label">Reaction Diagram</div>
+      <div class="rxn-diagram">
+        <div class="rxn-flow">
+          <div class="rxn-node" style="background:var(--bg4);border:1px solid var(--border);color:var(--text)">${e.diagram.left}</div>
+          <div class="rxn-arrow">→</div>
+          <div style="font-size:10px;color:var(--text3);text-align:center">[${e.name}]<br>${e.diagram.arrow}</div>
+          <div class="rxn-arrow">→</div>
+          <div class="rxn-node" style="background:var(--green3);border:1px solid var(--green2);color:var(--green)">${e.diagram.right}</div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Substrate</div><div class="detail-value">${e.substrate}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Product</div><div class="detail-value">${e.product}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Bond Cleaved/Formed</div><div class="detail-value">${e.bond}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Reaction Type</div><div class="detail-value">${e.rxnType}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Optimal Conditions</div>
+      <div class="detail-value">pH ${e.optPh} · ${e.optTemp} · Location: ${e.organ}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Why This Classification</div>
+      <div class="explain-box" style="margin-top:6px"><div class="lbl">RATIONALE</div>${e.why}</div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-label">Clinical Significance</div>
+      <div style="font-size:11px;color:var(--text3);line-height:1.6;padding:8px;background:var(--bg4);border-radius:3px">${e.clinical}</div>
+    </div>
+  `;
+  renderEnzymeGrid();
+}
+ 
+function filterEnzymes(cls, el) {
+  state.enzymeFilter = cls;
+  document.querySelectorAll('#classFilter .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  applyEnzymeFilters();
+}
+ 
+function applyEnzymeFilters() {
+  state.organFilterVal = document.getElementById('organFilter').value;
+  state.phFilterVal = document.getElementById('phFilter').value;
+  renderEnzymeGrid();
+}
+ 
+// ══════════════════════════════════════════════════════════
+// CLINICAL PATHOLOGY (TAB 3)
+// ══════════════════════════════════════════════════════════
+const CASES = {
+  lactose: {
+    name:'Sarah, 26 — Lactose Intolerance',
+    avatar:'👩',
+    info:'F, 26 | Presents with bloating and diarrhea after dairy',
+    severity:'MODERATE',
+    sevClass:'badge-amber',
+    biomarkers:[
+      {name:'Lactase Activity',value:12,unit:'U/L',normal:80,max:120,status:'critical'},
+      {name:'Hydrogen Breath',value:28,unit:'ppm',normal:10,max:50,status:'elevated'},
+      {name:'Fecal pH',value:5.2,unit:'',normal:6.5,max:8,status:'critical'},
+      {name:'Serum Glucose',value:95,unit:'mg/dL',normal:100,max:140,status:'normal'},
+      {name:'Stool Osmolarity',value:340,unit:'mOsm/kg',normal:290,max:400,status:'elevated'},
+      {name:'Calprotectin',value:45,unit:'µg/g',normal:50,max:200,status:'normal'}
+    ],
+    symptoms:['Bloating post-dairy','Flatulence','Osmotic diarrhea','Nausea','Abdominal cramping'],
+    question:'Which enzyme deficiency causes this clinical picture?',
+    options:['Lactase deficiency','Sucrase deficiency','Amylase deficiency','Lipase deficiency'],
+    correct:0,
+    explanation:'Lactase deficiency prevents β-galactosidic bond cleavage in lactose → undigested lactose → osmotic diarrhea + bacterial fermentation → H₂ production. Fecal pH drops due to short-chain fatty acid production. Diagnosis confirmed by hydrogen breath test and fecal pH.'
+  },
+  pancreatitis: {
+    name:'James, 52 — Acute Pancreatitis',
+    avatar:'👨',
+    info:'M, 52 | Severe epigastric pain, alcohol history',
+    severity:'CRITICAL',
+    sevClass:'badge-red',
+    biomarkers:[
+      {name:'Serum Amylase',value:2400,unit:'U/L',normal:100,max:3000,status:'critical'},
+      {name:'Serum Lipase',value:3800,unit:'U/L',normal:60,max:4000,status:'critical'},
+      {name:'WBC',value:18.5,unit:'×10³',normal:7.5,max:20,status:'elevated'},
+      {name:'CRP',value:210,unit:'mg/L',normal:5,max:300,status:'critical'},
+      {name:'Glucose',value:285,unit:'mg/dL',normal:100,max:400,status:'elevated'},
+      {name:'Calcium',value:7.2,unit:'mg/dL',normal:9.5,max:11,status:'critical'}
+    ],
+    symptoms:['Severe epigastric pain','Pain radiating to back','Nausea/vomiting','Grey Turner sign','Cullen sign','Fever'],
+    question:'Which enzyme values confirm acute pancreatitis?',
+    options:['Amylase >3× + Lipase >3× normal','Only elevated WBC','Elevated glucose alone','Low calcium alone'],
+    correct:0,
+    explanation:'Acute pancreatitis diagnosed when amylase and/or lipase exceed 3× upper normal limit. Premature trypsin activation causes pancreatic autodigestion. Lipase is more specific (stays elevated longer). Hypocalcemia occurs due to saponification of peripancreatic fat by activated lipase.'
+  },
+  gastric: {
+    name:'Elena, 44 — Gastric pH Imbalance',
+    avatar:'👩‍🦰',
+    info:'F, 44 | Chronic GERD, PPI therapy failure',
+    severity:'ELEVATED',
+    sevClass:'badge-amber',
+    biomarkers:[
+      {name:'Gastric pH',value:6.8,unit:'',normal:2.0,max:8,status:'critical'},
+      {name:'Pepsin Activity',value:8,unit:'U/mL',normal:45,max:60,status:'critical'},
+      {name:'Gastrin',value:880,unit:'pg/mL',normal:80,max:150,status:'critical'},
+      {name:'H.pylori IgG',value:1.8,unit:'ratio',normal:0.9,max:2,status:'elevated'},
+      {name:'Intrinsic Factor',value:18,unit:'pmol/L',normal:60,max:100,status:'elevated'},
+      {name:'B12 Level',value:162,unit:'pg/mL',normal:300,max:900,status:'elevated'}
+    ],
+    symptoms:['Regurgitation','Dysphagia','Heartburn','B12 deficiency signs','Megaloblastic anemia risk'],
+    question:'Extremely elevated gastrin with high gastric pH suggests?',
+    options:['Zollinger-Ellison Syndrome','Simple GERD','H.pylori only','Vitamin B12 deficiency only'],
+    correct:0,
+    explanation:'Zollinger-Ellison: gastrin-secreting tumor (gastrinoma) paradoxically over-stimulates acid production. However, if pH is elevated, it may reflect PPI over-suppression or achlorhydria. Elevated gastrin + low acid = negative feedback failure. Intrinsic factor (IF) requires acid environment — achlorhydria → IF loss → B12 malabsorption → pernicious anemia.'
+  },
+  deficiency: {
+    name:'Noah, 8m — Enzyme Deficiency Syndrome',
+    avatar:'👶',
+    info:'M, 8 months | Failure to thrive, steatorrhea',
+    severity:'CRITICAL',
+    sevClass:'badge-red',
+    biomarkers:[
+      {name:'Pancreatic Elastase',value:98,unit:'µg/g',normal:500,max:700,status:'critical'},
+      {name:'Fecal Fat',value:18,unit:'g/24h',normal:2,max:25,status:'critical'},
+      {name:'Fat-Soluble Vit D',value:12,unit:'ng/mL',normal:40,max:80,status:'critical'},
+      {name:'INR (Vit K)',value:2.8,unit:'',normal:1.1,max:4,status:'critical'},
+      {name:'Sweat Chloride',value:92,unit:'mEq/L',normal:40,max:120,status:'critical'},
+      {name:'IRT (Neonatal)',value:98,unit:'ng/mL',normal:30,max:70,status:'critical'}
+    ],
+    symptoms:['Bulky oily stools','Failure to thrive','Recurrent lung infections','Salty-tasting skin','Malnutrition','Vitamin ADEK deficiency'],
+    question:'Steatorrhea + low fecal elastase + elevated sweat chloride → diagnosis?',
+    options:['Cystic Fibrosis','Celiac Disease','Crohn\'s Disease','Simple lactase deficiency'],
+    correct:0,
+    explanation:'Cystic Fibrosis: CFTR gene mutation → thick mucus blocks pancreatic ducts → exocrine pancreatic insufficiency → severely reduced lipase/amylase/elastase → fat malabsorption (steatorrhea), fat-soluble vitamin ADEK deficiencies. Sweat chloride >60 mEq/L confirms diagnosis. Pancreatic enzyme replacement therapy (PERT) is cornerstone of treatment.'
+  }
+};
+ 
+let clinicalChartInstance = null;
+ 
+function loadCase(caseId) {
+  state.currentCase = CASES[caseId];
+  state.diagAnswered = false;
+  const c = state.currentCase;
+ 
+  document.getElementById('patientName').textContent = c.name;
+  document.getElementById('patientInfo').textContent = c.info;
+  document.getElementById('patientAvatar').textContent = c.avatar;
+  document.getElementById('severityBadge').textContent = c.severity;
+  document.getElementById('severityBadge').className = 'panel-badge '+c.sevClass;
+ 
+  // Biomarkers
+  document.getElementById('biomarkerList').innerHTML = c.biomarkers.map(b=>{
+    const pct = Math.min(100, (b.value/b.max)*100);
+    const barColor = {normal:'var(--green)',elevated:'var(--amber)',critical:'var(--red)'}[b.status];
+    return `
+      <div class="biomarker-row">
+        <div class="biomarker-name">${b.name}</div>
+        <div class="biomarker-bar-wrap"><div class="biomarker-bar" style="width:${pct}%;background:${barColor}"></div></div>
+        <div class="biomarker-val" style="color:${barColor}">${b.value} <span style="font-size:9px;color:var(--text3)">${b.unit}</span></div>
+        <div class="biomarker-status status-${b.status}">${b.status.toUpperCase()}</div>
+      </div>
+    `;
+  }).join('');
+ 
+  // Symptoms
+  document.getElementById('symptomList').innerHTML = c.symptoms.map(s=>`<span class="symptom-tag">${s}</span>`).join('');
+ 
+  // Diagnosis
+  document.getElementById('diagnosisQuestion').textContent = c.question;
+  document.getElementById('diagnosisOptions').innerHTML = c.options.map((o,i)=>`
+    <div class="diagnosis-option" onclick="checkDiagnosis(${i})">${String.fromCharCode(65+i)}. ${o}</div>
+  `).join('');
+  document.getElementById('diagnosisResult').style.display = 'none';
+ 
+  // Explanation
+  document.getElementById('caseExplanation').textContent = c.explanation;
+ 
+  // Buttons
+  document.querySelectorAll('#caseButtons button').forEach(b=>b.className='btn btn-ghost');
+  event.target.className = 'btn btn-cyan';
+ 
+  renderClinicalCharts();
+}
+ 
+function checkDiagnosis(idx) {
+  if(state.diagAnswered) return;
+  state.diagAnswered = true;
+  const c = state.currentCase;
+  const opts = document.querySelectorAll('.diagnosis-option');
+  opts.forEach((o,i)=>{
+    if(i===c.correct) o.classList.add('correct');
+    else if(i===idx && idx!==c.correct) o.classList.add('wrong');
+  });
+  const result = document.getElementById('diagnosisResult');
+  result.style.display = 'block';
+  if(idx===c.correct) {
+    result.style.background='var(--green3)';result.style.border='1px solid var(--green2)';result.style.color='var(--green)';
+    result.textContent = '✓ Correct! ' + c.explanation;
+    state.score += 50;
+    updateScoreDisplay();
+  } else {
+    result.style.background='var(--red3)';result.style.border='1px solid var(--red2)';result.style.color='var(--red)';
+    result.textContent = '✗ Incorrect. Correct answer: ' + c.options[c.correct] + '. ' + c.explanation;
+  }
+}
+ 
+function renderClinicalCharts() {
+  if(!state.currentCase) return;
+  if(clinicalChartInstance) {clinicalChartInstance.destroy();clinicalChartInstance=null;}
+  const c = state.currentCase;
+  const names = c.biomarkers.map(b=>b.name);
+  const vals = c.biomarkers.map(b=>b.value);
+  const normals = c.biomarkers.map(b=>b.normal);
+  const max = c.biomarkers.map(b=>b.max);
+  const barColors = c.biomarkers.map(b=>({normal:'rgba(0,255,136,0.6)',elevated:'rgba(255,170,0,0.6)',critical:'rgba(255,68,85,0.6)'}[b.status]));
+ 
+  clinicalChartInstance = new Chart(document.getElementById('clinicalChart'), {
+    type:'bar',
+    data:{
+      labels:names,
+      datasets:[
+        {label:'Patient Value',data:vals,backgroundColor:barColors,borderColor:barColors.map(c=>c.replace('0.6','1')),borderWidth:1},
+        {label:'Normal Range',data:normals,backgroundColor:'rgba(0,212,255,0.15)',borderColor:'#00d4ff',borderWidth:1,type:'bar'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'top',labels:{color:'#7ba8cc',boxWidth:12,font:{size:10}}}},
+      scales:{
+        x:{grid:{color:'#1a3050'},ticks:{color:'#4a7499',font:{size:9},maxRotation:45}},
+        y:{grid:{color:'#1a3050'},ticks:{color:'#4a7499'}}
+      }
+    }
+  });
+}
+ 
+// ══════════════════════════════════════════════════════════
+// DIGESTIVE MATRIX (TAB 4)
+// ══════════════════════════════════════════════════════════
+let digestInterval = null;
+let digestStepCount = 0;
+ 
+function updateFoodComp() {
+  const c = +document.getElementById('carbsSlider').value;
+  const p = +document.getElementById('proteinSlider').value;
+  const f = +document.getElementById('fatsSlider').value;
+  const total = c+p+f || 1;
+  state.foodComp = {carbs:Math.round(c/total*100), protein:Math.round(p/total*100), fats:Math.round(f/total*100)};
+  document.getElementById('carbsVal').textContent = state.foodComp.carbs + '%';
+  document.getElementById('proteinVal').textContent = state.foodComp.protein + '%';
+  document.getElementById('fatsVal').textContent = state.foodComp.fats + '%';
+  const bar = document.getElementById('foodCompBar');
+  bar.innerHTML = `
+    <div class="food-carbs" style="width:${state.foodComp.carbs}%"></div>
+    <div class="food-protein" style="width:${state.foodComp.protein}%"></div>
+    <div class="food-fats" style="width:${state.foodComp.fats}%"></div>
+  `;
+}
+ 
+function updateOrganPh() {
+  state.organPh.mouth = +document.getElementById('mouthPhSlider').value;
+  state.organPh.stomach = +document.getElementById('stomPhSlider').value;
+  state.organPh.intestine = +document.getElementById('intPhSlider').value;
+  document.getElementById('mouthPhVal').textContent = state.organPh.mouth.toFixed(1);
+  document.getElementById('stomPhVal').textContent = state.organPh.stomach.toFixed(1);
+  document.getElementById('intPhVal').textContent = state.organPh.intestine.toFixed(1);
+  document.getElementById('mouth-ph-display').textContent = `pH: ${state.organPh.mouth.toFixed(1)} | Duration: ~30 seconds`;
+  document.getElementById('stom-ph-display').textContent = `pH: ${state.organPh.stomach.toFixed(1)} | Duration: 2-4 hours`;
+  document.getElementById('int-ph-display').textContent = `pH: ${state.organPh.intestine.toFixed(1)} | Duration: 4-8 hours`;
+}
+ 
+function initEnzymeToggles() {
+  const enzymes = [
+    {key:'amylase',label:'Amylase',organ:'Mouth/Intestine'},
+    {key:'pepsin',label:'Pepsin',organ:'Stomach'},
+    {key:'lipase',label:'Lipase',organ:'Intestine'},
+    {key:'lactase',label:'Lactase',organ:'Intestine'},
+    {key:'trypsin',label:'Trypsin',organ:'Intestine'}
+  ];
+  document.getElementById('enzymeToggles').innerHTML = enzymes.map(e=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:12px;color:var(--text)">${e.label}</div>
+        <div style="font-size:10px;color:var(--text3)">${e.organ}</div>
+      </div>
+      <label style="cursor:pointer;display:flex;align-items:center;gap:6px">
+        <input type="checkbox" id="tog-${e.key}" checked onchange="toggleDigestEnzyme('${e.key}',this.checked)" style="width:14px;height:14px;cursor:pointer">
+        <span style="font-size:10px;color:var(--text3)">ON</span>
+      </label>
+    </div>
+  `).join('');
+}
+ 
+function toggleDigestEnzyme(key, val) {
+  state.digestEnzymes[key] = val;
+}
+ 
+function startDigestion() {
+  if(state.digestRunning) return;
+  state.digestRunning = true;
+  resetDigestDisplay();
+  digestStepCount = 0;
+ 
+  const steps = [
+    ()=>runMouthDigestion(),
+    ()=>runStomachDigestion(),
+    ()=>runIntestineDigestion(),
+    ()=>finalizeDigestion()
+  ];
+ 
+  let step = 0;
+  function runStep() {
+    if(step < steps.length) {
+      steps[step]();
+      step++;
+      setTimeout(runStep, 3000);
+    } else {
+      state.digestRunning = false;
+    }
+  }
+  runStep();
+}
+ 
+function resetDigestDisplay() {
+  ['mouth','stomach','intestine'].forEach(o=>{
+    document.getElementById(`organ-${o}`).classList.remove('active-organ');
+    document.getElementById(`${o}-status`||`pip-${o}-fill`);
+    const fills = ['mouthBar','stomBar','intestineBar','pip-mouth-fill','pip-stomach-fill','pip-intestine-fill'];
+    fills.forEach(id=>{const el=document.getElementById(id);if(el)el.style.width='0%';});
+    document.getElementById('mouth-carbs').textContent='0%';
+    document.getElementById('mouth-fats').textContent='0%';
+    document.getElementById('stom-protein').textContent='0%';
+    document.getElementById('stom-fats').textContent='0%';
+    document.getElementById('int-carbs').textContent='0%';
+    document.getElementById('int-protein').textContent='0%';
+    document.getElementById('int-fats').textContent='0%';
+  });
+  document.getElementById('failureWarning').style.display='none';
+  updateDigestChart();
+}
+ 
+function resetDigestion() {
+  state.digestRunning = false;
+  state.digestResults = {mouth:{carbs:0,fats:0},stomach:{protein:0,fats:0},intestine:{carbs:0,protein:0,fats:0},final:{carbs:0,protein:0,fats:0}};
+  resetDigestDisplay();
+  document.getElementById('digestPhaseLabel').textContent='READY';
+  document.getElementById('digestPhaseLabel').className='panel-badge badge-cyan';
+  document.getElementById('digestNarrative').textContent='Configure food composition and start digestion sequence.';
+}
+ 
+function runMouthDigestion() {
+  document.getElementById('organ-mouth').classList.add('active-organ');
+  document.getElementById('mouth-status').textContent = 'ACTIVE';
+  document.getElementById('digestPhaseLabel').textContent = 'ORAL PHASE';
+  document.getElementById('digestNarrative').textContent = 'Oral cavity: Salivary amylase (optimal pH 6.8) cleaves α-1,4 glycosidic bonds in starch. Lingual lipase begins preliminary fat hydrolysis. Mechanical mastication increases surface area.';
+  document.getElementById('pip-mouth-fill').style.width='100%';
+ 
+  const amylaseActive = state.digestEnzymes.amylase && Math.abs(state.organPh.mouth-6.8)<1.5;
+  const mouthCarbs = amylaseActive ? Math.min(30, state.foodComp.carbs * 0.3) : 2;
+  const mouthFats = Math.min(5, state.foodComp.fats * 0.05);
+ 
+  state.digestResults.mouth = {carbs:mouthCarbs, fats:mouthFats};
+ 
+  animateBar('mouthBar', mouthCarbs/100*100);
+  document.getElementById('mouth-carbs').textContent = mouthCarbs.toFixed(0)+'%';
+  document.getElementById('mouth-fats').textContent = mouthFats.toFixed(0)+'%';
+ 
+  if(!amylaseActive) showFailureWarning('Mouth: Amylase inactive at pH '+state.organPh.mouth.toFixed(1)+'. Optimal: pH 6.0-7.5. Starch digestion impaired.');
+ 
+  updateDigestChart();
+}
+ 
+function runStomachDigestion() {
+  document.getElementById('organ-mouth').classList.remove('active-organ');
+  document.getElementById('organ-stomach').classList.add('active-organ');
+  document.getElementById('stomach-status').textContent = 'ACTIVE';
+  document.getElementById('digestPhaseLabel').textContent = 'GASTRIC PHASE';
+  document.getElementById('digestNarrative').textContent = 'Stomach: Hydrochloric acid (pH 1.5-3.5) denatures proteins and activates pepsinogen → pepsin. Gastric motility churns food into chyme. Pepsin cleaves peptide bonds at Phe, Trp, Tyr residues.';
+  document.getElementById('pip-stomach-fill').style.width='100%';
+ 
+  const pepsinActive = state.digestEnzymes.pepsin && state.organPh.stomach < 4;
+  const stomProtein = pepsinActive ? Math.min(40, state.foodComp.protein * 0.35) : 3;
+  const stomFats = Math.min(10, state.foodComp.fats * 0.1);
+ 
+  state.digestResults.stomach = {protein:stomProtein, fats:stomFats};
+ 
+  animateBar('stomBar', stomProtein/100*100);
+  document.getElementById('stom-protein').textContent = stomProtein.toFixed(0)+'%';
+  document.getElementById('stom-fats').textContent = stomFats.toFixed(0)+'%';
+ 
+  if(!pepsinActive) showFailureWarning('Stomach: Pepsin requires pH<4. Current pH='+state.organPh.stomach.toFixed(1)+'. Protein digestion severely impaired — risk of protein malnutrition.');
+ 
+  updateDigestChart();
+}
+ 
+function runIntestineDigestion() {
+  document.getElementById('organ-stomach').classList.remove('active-organ');
+  document.getElementById('organ-intestine').classList.add('active-organ');
+  document.getElementById('intestine-status').textContent = 'ACTIVE';
+  document.getElementById('digestPhaseLabel').textContent = 'INTESTINAL PHASE';
+  document.getElementById('digestNarrative').textContent = 'Small intestine: Pancreatic juice neutralizes acid chyme (pH 7-8). Pancreatic amylase, trypsin, chymotrypsin, lipase + bile salts emulsify fats. Maximum enzymatic activity — 90%+ absorption occurs here.';
+  document.getElementById('pip-intestine-fill').style.width='100%';
+ 
+  const amylaseGut = state.digestEnzymes.amylase && Math.abs(state.organPh.intestine-7.5)<1.5;
+  const trypsinActive = state.digestEnzymes.trypsin && Math.abs(state.organPh.intestine-8.0)<1.5;
+  const lipaseActive = state.digestEnzymes.lipase && Math.abs(state.organPh.intestine-7.0)<1.5;
+  const lactaseActive = state.digestEnzymes.lactase;
+ 
+  const remainCarbs = state.foodComp.carbs - state.digestResults.mouth.carbs;
+  const remainProtein = state.foodComp.protein - state.digestResults.stomach.protein;
+  const remainFats = state.foodComp.fats - state.digestResults.mouth.fats - state.digestResults.stomach.fats;
+ 
+  const intCarbs = amylaseGut ? Math.min(remainCarbs, remainCarbs * 0.95 * (lactaseActive?1:0.8)) : remainCarbs*0.1;
+  const intProtein = trypsinActive ? Math.min(remainProtein, remainProtein * 0.95) : remainProtein*0.15;
+  const intFats = lipaseActive ? Math.min(remainFats, remainFats * 0.92) : remainFats*0.1;
+ 
+  state.digestResults.intestine = {carbs:intCarbs, protein:intProtein, fats:intFats};
+ 
+  animateBar('intestineBar', (intCarbs+intProtein+intFats)/(state.foodComp.carbs+state.foodComp.protein+state.foodComp.fats)*100);
+  document.getElementById('int-carbs').textContent = intCarbs.toFixed(0)+'%';
+  document.getElementById('int-protein').textContent = intProtein.toFixed(0)+'%';
+  document.getElementById('int-fats').textContent = intFats.toFixed(0)+'%';
+ 
+  const failures = [];
+  if(!amylaseGut) failures.push('Amylase');
+  if(!trypsinActive) failures.push('Trypsin');
+  if(!lipaseActive) failures.push('Lipase');
+  if(failures.length) showFailureWarning('Intestine: '+failures.join(', ')+' inactive at pH '+state.organPh.intestine.toFixed(1)+'. Macronutrient malabsorption will occur.');
+ 
+  updateDigestChart();
+}
+ 
+function finalizeDigestion() {
+  document.getElementById('organ-intestine').classList.remove('active-organ');
+  document.getElementById('digestPhaseLabel').textContent = 'COMPLETE';
+  document.getElementById('digestPhaseLabel').className = 'panel-badge badge-green';
+ 
+  const r = state.digestResults;
+  const fc = state.foodComp;
+ 
+  const finalCarbs = Math.min(100, ((r.mouth.carbs + r.intestine.carbs) / (fc.carbs||1)) * 100);
+  const finalProtein = Math.min(100, ((r.stomach.protein + r.intestine.protein) / (fc.protein||1)) * 100);
+  const finalFats = Math.min(100, ((r.mouth.fats + r.stomach.fats + r.intestine.fats) / (fc.fats||1)) * 100);
+ 
+  state.digestResults.final = {carbs:finalCarbs, protein:finalProtein, fats:finalFats};
+ 
+  document.getElementById('finalCarbs').textContent = finalCarbs.toFixed(0);
+  document.getElementById('finalProtein').textContent = finalProtein.toFixed(0);
+  document.getElementById('finalFats').textContent = finalFats.toFixed(0);
+  document.getElementById('finalCarbsBar').style.width = finalCarbs.toFixed(0)+'%';
+  document.getElementById('finalProteinBar').style.width = finalProtein.toFixed(0)+'%';
+  document.getElementById('finalFatsBar').style.width = finalFats.toFixed(0)+'%';
+ 
+  const avg = (finalCarbs+finalProtein+finalFats)/3;
+  document.getElementById('digestNarrative').textContent = `Digestion complete. Overall absorption efficiency: ${avg.toFixed(0)}%. ${avg>85?'Excellent digestive function.':avg>60?'Moderate malabsorption detected.':'Severe malabsorption — enzyme therapy recommended.'} Nutrients enter portal circulation via intestinal villi for hepatic processing.`;
+ 
+  updateDigestChart();
+}
+ 
+function animateBar(id, targetPct) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  let cur = 0;
+  const interval = setInterval(()=>{
+    cur = Math.min(cur+2, targetPct);
+    el.style.width = cur+'%';
+    if(cur >= targetPct) clearInterval(interval);
+  }, 30);
+}
+ 
+function showFailureWarning(msg) {
+  const el = document.getElementById('failureWarning');
+  el.style.display = 'block';
+  el.textContent = '⚠ ' + msg;
+}
+ 
+function updateDigestChart() {
+  if(!digestChart) return;
+  const r = state.digestResults;
+  digestChart.data.datasets[0].data = [r.mouth.carbs||0, 0, r.mouth.fats||0];
+  digestChart.data.datasets[1].data = [0, r.stomach.protein||0, r.stomach.fats||0];
+  digestChart.data.datasets[2].data = [r.intestine.carbs||0, r.intestine.protein||0, r.intestine.fats||0];
+  digestChart.update();
+}
+ 
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  initCharts();
+  initParticles();
+  initEnzymeToggles();
+  updateReactor();
+  updateMMChart();
+  newChallenge();
+ 
+  // Default MM chart labels
+  const mmLabels = Array.from({length:51},(_,i)=>i*4);
+  mmChart.data.labels = mmLabels;
+  mmChart.update('none');
+ 
+  // Start draw loop even before sim starts
+  function idleDraw() {
+    if(!state.running) {
+      for(const p of particles) p.update(0.2);
+      drawReactor(0);
+    }
+    requestAnimationFrame(idleDraw);
+  }
+  idleDraw();
+});
+</script>
+</body>
+</html>
