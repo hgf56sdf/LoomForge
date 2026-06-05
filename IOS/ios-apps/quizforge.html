@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QuizForge</title>
+<meta name="description" content="Build and take quizzes with QuizForge.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Source+Serif+4:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --font-ui:'DM Sans',system-ui,sans-serif;
+  --font-display:'Source Serif 4',Georgia,serif;
+  --r-sm:8px;--r-md:12px;--r-lg:16px;
+  --fast:150ms ease;--base:250ms ease;--slow:350ms cubic-bezier(.4,0,.2,1);
+  --sh-sm:0 1px 3px rgba(0,0,0,.06);--sh-md:0 4px 16px rgba(0,0,0,.1);--sh-lg:0 12px 40px rgba(0,0,0,.18);
+  --accent:#d4a54a;--accent-tx:#1a1608;--accent-m:rgba(212,165,74,0.1);
+}
+[data-theme="dark"]{
+  --bg:#111113;--bg-el:#19191d;--bg-sf:#212126;--bg-hv:#28282e;
+  --tx:#e8e7e3;--tx2:#9d9b95;--tx3:#6a6862;
+  --bd:#2c2c32;--bd2:#232328;
+  --overlay:rgba(0,0,0,.55);
+  --ok:#5ba87a;--ok-m:rgba(91,168,122,.1);
+  --err:#c75050;--err-m:rgba(199,80,80,.1);
+  --info:#5b8fc7;--info-m:rgba(91,143,199,.1);
+  --logo-red:#ff4d4d;--logo-red-glow:rgba(255,77,77,.35);
+  --logo-blue:#4d9fff;--logo-blue-glow:rgba(77,159,255,.35);
+}
+[data-theme="light"]{
+  --bg:#f5f4f0;--bg-el:#ffffff;--bg-sf:#eceae5;--bg-hv:#e3e1dc;
+  --tx:#1a1a18;--tx2:#6b6962;--tx3:#9e9c96;
+  --bd:#d8d6d0;--bd2:#e6e4df;
+  --overlay:rgba(26,26,24,.35);
+  --ok:#3d8b5e;--ok-m:rgba(61,139,94,.08);
+  --err:#c0463a;--err-m:rgba(192,70,58,.08);
+  --info:#4a7fb5;--info-m:rgba(74,127,181,.08);
+  --logo-red:#e03e3e;--logo-red-glow:rgba(224,62,62,.25);
+  --logo-blue:#3a85e0;--logo-blue-glow:rgba(58,133,224,.25);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{min-height:100%;font-family:var(--font-ui);background:var(--bg);color:var(--tx);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+
+#app{flex:1;display:flex;flex-direction:column;min-height:0}
+.screen{position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity var(--slow),transform var(--slow),visibility var(--slow);background:var(--bg);display:flex;flex-direction:column}
+.screen.active{opacity:1;visibility:visible;transform:translateY(0)}
+.screen-body{flex:1;max-width:720px;width:100%;margin:0 auto;padding:20px;padding-bottom:120px}
+
+.app-footer{flex-shrink:0;padding:14px 20px;border-top:1px solid var(--bd2);background:var(--bg);text-align:center;font-size:.73rem;color:var(--tx3);transition:background var(--slow),border var(--slow);width:100%}
+
+/* ── Logo ── */
+.logo{display:flex;align-items:baseline;gap:1px;font-family:var(--font-display);font-size:1.25rem;font-weight:800;letter-spacing:-.02em;user-select:none}
+.logo-red{color:var(--logo-red);text-shadow:0 0 8px var(--logo-red-glow),0 0 20px var(--logo-red-glow)}
+.logo-blue{color:var(--logo-blue);text-shadow:0 0 8px var(--logo-blue-glow),0 0 20px var(--logo-blue-glow)}
+
+/* ── Header ── */
+.header{padding:14px 20px;background:var(--bg);border-bottom:1px solid var(--bd2);position:sticky;top:0;z-index:100;transition:background var(--slow)}
+.header-in{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.hdr-c{font-size:.85rem;font-weight:600;color:var(--tx2);position:absolute;left:50%;transform:translateX(-50%)}
+.spacer{width:40px}
+
+/* ── Buttons ── */
+.btn{padding:10px 18px;border-radius:var(--r-sm);border:none;font-family:var(--font-ui);font-size:.85rem;font-weight:600;cursor:pointer;transition:all var(--fast);display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.3;white-space:nowrap}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn-p{background:var(--accent);color:var(--accent-tx)}
+.btn-p:hover{filter:brightness(.9);box-shadow:var(--sh-md)}
+.btn-s{background:var(--bg-sf);color:var(--tx);border:1px solid var(--bd)}
+.btn-s:hover{background:var(--bg-hv)}
+.btn-ghost{width:40px;height:40px;padding:0;border-radius:var(--r-sm);background:var(--bg-sf);border:1px solid var(--bd);color:var(--tx);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}
+.btn-ghost:hover{background:var(--bg-hv)}
+.btn-ghost:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn-xs{width:30px;height:30px;padding:0;border-radius:var(--r-sm);background:transparent;border:1px solid transparent;color:var(--tx3);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--fast)}
+.btn-xs:hover{background:var(--err-m);border-color:var(--err);color:var(--err)}
+.btn-danger-o{width:100%;padding:10px;background:transparent;border:1px solid var(--bd);border-radius:var(--r-sm);color:var(--err);font-family:var(--font-ui);font-size:.82rem;font-weight:500;cursor:pointer;transition:all var(--fast)}
+.btn-danger-o:hover{background:var(--err-m);border-color:var(--err)}
+
+/* ── Hero ── */
+.hero{text-align:center;padding:28px 16px 18px}
+.hero h1{font-family:var(--font-display);font-size:2rem;font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-bottom:6px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{color:var(--tx2);font-size:.86rem;max-width:420px;margin:0 auto}
+
+/* ── Mode cards ── */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+.mode-card{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-lg);padding:22px 16px;cursor:pointer;transition:all var(--base);text-align:center}
+.mode-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--sh-md)}
+.mc-icon{width:42px;height:42px;border-radius:var(--r-md);background:var(--accent-m);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;margin:0 auto 12px}
+.mc-title{font-size:.92rem;font-weight:700;margin-bottom:4px}
+.mc-desc{font-size:.78rem;color:var(--tx2);line-height:1.5}
+
+/* ── Section labels ── */
+.slbl{font-size:.67rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);margin-bottom:8px}
+
+/* ── Folder list ── */
+.folder-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.folder-row{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-md);padding:12px 14px;cursor:pointer;transition:all var(--fast);display:flex;align-items:center;gap:11px}
+.folder-row:hover{background:var(--bg-sf)}
+.folder-row.open{border-color:var(--accent);background:var(--bg-sf)}
+.fr-icon{width:34px;height:34px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all var(--fast)}
+.fr-icon.closed{background:var(--accent-m);color:var(--accent)}
+.fr-icon.opened{background:var(--ok-m);color:var(--ok)}
+.fr-body{flex:1;min-width:0}
+.fr-name{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-meta{font-size:.72rem;color:var(--tx3)}
+.fr-actions{display:flex;gap:4px;opacity:0;transition:opacity var(--fast)}
+.folder-row:hover .fr-actions{opacity:1}
+
+.quiz-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px 18px;padding-left:14px;border-left:2px solid var(--bd2)}
+.quiz-card{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-md);padding:12px 14px;cursor:pointer;transition:all var(--fast);display:flex;align-items:center;gap:11px}
+.quiz-card:hover{background:var(--bg-sf)}
+.qc-ind{width:3px;height:26px;border-radius:2px;background:var(--accent);opacity:0;transition:opacity var(--fast);flex-shrink:0}
+.quiz-card:hover .qc-ind{opacity:1}
+.qc-icon{width:34px;height:34px;border-radius:var(--r-sm);background:var(--bg-sf);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:13px;flex-shrink:0}
+.qc-body{flex:1;min-width:0}
+.qc-title{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qc-meta{font-size:.72rem;color:var(--tx3);display:flex;align-items:center;gap:6px}
+.badge-sm{padding:1px 5px;border-radius:3px;font-size:.58rem;font-weight:700;text-transform:uppercase;background:var(--info-m);color:var(--info)}
+.qc-actions{display:flex;gap:4px;opacity:0;transition:opacity var(--fast)}
+.quiz-card:hover .qc-actions{opacity:1}
+
+.inline-input-row{display:flex;gap:8px;margin-bottom:10px}
+.create-folder-btn{width:100%;padding:11px;background:transparent;border:1.5px dashed var(--bd);border-radius:var(--r-md);color:var(--tx3);font-family:var(--font-ui);font-size:.84rem;font-weight:500;cursor:pointer;transition:all var(--fast);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.create-folder-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-m)}
+.empty{text-align:center;padding:32px 16px}
+.empty-icon{width:52px;height:52px;border-radius:50%;background:var(--bg-sf);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--tx3);font-size:20px}
+.empty-t{font-size:.95rem;font-weight:700;margin-bottom:3px}
+.empty-d{color:var(--tx2);font-size:.82rem;max-width:260px;margin:0 auto}
+
+/* ── Quiz action menu ── */
+.quiz-action-overlay{position:fixed;inset:0;background:var(--overlay);z-index:150;opacity:0;visibility:hidden;transition:opacity var(--base),visibility var(--base)}
+.quiz-action-overlay.open{opacity:1;visibility:visible}
+.quiz-action-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--bg-el);border-top:1px solid var(--bd);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:8px 20px 28px;z-index:151;transform:translateY(100%);transition:transform var(--slow)}
+.quiz-action-sheet.open{transform:translateY(0)}
+.qas-handle{width:36px;height:4px;border-radius:2px;background:var(--bd);margin:0 auto 16px}
+.qas-title{font-size:1rem;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qas-meta{font-size:.78rem;color:var(--tx3);margin-bottom:16px}
+.qas-btn{width:100%;padding:13px 16px;background:var(--bg-sf);border:1px solid var(--bd);border-radius:var(--r-md);color:var(--tx);font-family:var(--font-ui);font-size:.9rem;font-weight:600;cursor:pointer;transition:all var(--fast);display:flex;align-items:center;gap:12px;margin-bottom:8px;text-align:left}
+.qas-btn:hover{background:var(--bg-hv)}
+.qas-btn i{width:20px;text-align:center;font-size:15px}
+.qas-btn.primary{background:var(--accent);color:var(--accent-tx);border-color:var(--accent)}
+.qas-btn.primary:hover{filter:brightness(.9)}
+.qas-btn.danger{color:var(--err)}
+.qas-btn.danger:hover{background:var(--err-m)}
+.qas-cancel{width:100%;padding:12px;background:transparent;border:none;color:var(--tx3);font-family:var(--font-ui);font-size:.85rem;font-weight:500;cursor:pointer;margin-top:4px}
+.qas-cancel:hover{color:var(--tx2)}
+
+/* ── Forms ── */
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:.7rem;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.fi,.fta{width:100%;padding:10px 12px;background:var(--bg-sf);border:1px solid var(--bd);border-radius:var(--r-sm);color:var(--tx);font-family:var(--font-ui);font-size:.85rem;transition:border-color var(--fast)}
+.fi:focus,.fta:focus{outline:none;border-color:var(--accent)}
+.fi::placeholder,.fta::placeholder{color:var(--tx3)}
+select.fi{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239d9b95' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.fta{min-height:220px;resize:vertical;line-height:1.7;font-size:.8rem;font-family:'SF Mono','Fira Code',monospace}
+
+.help-box{background:var(--accent-m);border:1px solid var(--bd);border-radius:var(--r-md);padding:14px;margin-bottom:16px}
+.hb-t{font-size:.76rem;font-weight:700;color:var(--accent);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.hb-p{font-size:.78rem;color:var(--tx2);line-height:1.6}
+.hb-p strong{color:var(--tx)}
+.hb-ex{background:var(--bg);border-radius:var(--r-sm);padding:10px;margin-top:10px;font-family:monospace;font-size:.7rem;color:var(--tx2);overflow-x:auto;white-space:pre;line-height:1.7;border:1px solid var(--bd2)}
+.hb-prompt{background:var(--bg-sf);border-radius:var(--r-sm);padding:12px;margin-top:10px;border:1px solid var(--bd2)}
+.hb-prompt-title{font-size:.72rem;font-weight:600;color:var(--accent);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.hb-prompt-text{font-family:monospace;font-size:.7rem;color:var(--tx2);line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:120px;overflow-y:auto}
+.copy-prompt-btn{margin-top:8px;padding:6px 12px;background:var(--accent);color:var(--accent-tx);border:none;border-radius:var(--r-sm);font-size:.72rem;font-weight:600;cursor:pointer;transition:all var(--fast)}
+.copy-prompt-btn:hover{filter:brightness(.9)}
+
+.ps{border-radius:var(--r-sm);padding:10px 12px;margin-bottom:14px;display:none}
+.ps.vis{display:block}
+.ps.ok{background:var(--ok-m);border:1px solid rgba(91,168,122,.2)}
+.ps.err{background:var(--err-m);border:1px solid rgba(199,80,80,.2)}
+.ps-t{font-size:.8rem;font-weight:600;margin-bottom:1px}
+.ps.ok .ps-t{color:var(--ok)}.ps.err .ps-t{color:var(--err)}
+.ps-d{font-size:.76rem;color:var(--tx2)}
+
+.pvs{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-md);padding:14px;margin-bottom:14px;display:none}
+.pvs.vis{display:block}
+.pv-i{padding:7px 10px;margin-bottom:4px;border-radius:var(--r-sm);background:var(--bg-sf);font-size:.78rem;border-left:3px solid var(--tx3)}
+.pv-i.ok{border-left-color:var(--ok)}.pv-i.bad{border-left-color:var(--err)}
+.pv-i b{display:block;margin-bottom:1px}.pv-i small{color:var(--tx3);font-size:.68rem}
+
+/* ── Question editor ── */
+.qe{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-md);padding:16px;margin-bottom:10px}
+.qe-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.qe-n{font-size:.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt-f{display:flex;align-items:center;gap:6px}
+.opt-l{width:24px;height:24px;border-radius:5px;background:var(--bg-sf);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.7rem;color:var(--tx3);flex-shrink:0;transition:all var(--fast)}
+.opt-f.ic .opt-l{background:var(--ok);color:#fff}
+.ap{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd2);align-items:center}
+.ap-lbl{font-size:.76rem;color:var(--tx3);margin-right:2px}
+.ap-btn{width:30px;height:30px;border-radius:var(--r-sm);background:var(--bg-sf);border:2px solid transparent;color:var(--tx3);font-weight:700;font-size:.76rem;cursor:pointer;font-family:var(--font-ui);transition:all var(--fast)}
+.ap-btn:hover{background:var(--bg-hv);color:var(--tx)}
+.ap-btn.sel{background:var(--ok);border-color:var(--ok);color:#fff}
+.add-q{width:100%;padding:12px;background:transparent;border:2px dashed var(--bd);border-radius:var(--r-md);color:var(--tx3);font-family:var(--font-ui);font-size:.84rem;font-weight:500;cursor:pointer;transition:all var(--fast);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:80px}
+.add-q:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-m)}
+
+/* ── Quiz taking ── */
+.prog-t{height:3px;background:var(--bg-sf);border-radius:2px;margin-bottom:22px;overflow:hidden}
+.prog-f{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+.qq-lbl{font-size:.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.qq-txt{font-family:var(--font-display);font-size:1.2rem;font-weight:700;line-height:1.4;letter-spacing:-.01em;margin-bottom:20px}
+.al{display:flex;flex-direction:column;gap:8px}
+.ac{display:flex;align-items:center;gap:11px;padding:13px 15px;background:var(--bg-el);border:2px solid var(--bd);border-radius:var(--r-md);cursor:pointer;transition:all var(--fast)}
+.ac:hover:not(.lk){border-color:var(--accent);background:var(--bg-sf)}
+.ac.ic{background:var(--ok-m);border-color:var(--ok)}
+.ac.iw{background:var(--err-m);border-color:var(--err)}
+.ac.id{opacity:.35;pointer-events:none}
+.ac-l{width:32px;height:32px;border-radius:var(--r-sm);background:var(--bg-sf);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0;transition:all var(--fast)}
+.ac.ic .ac-l{background:var(--ok);border-color:var(--ok);color:#fff}
+.ac.iw .ac-l{background:var(--err);border-color:var(--err);color:#fff}
+.ac-t{font-size:.9rem;flex:1}
+.fb{margin-top:14px;padding:11px 14px;border-radius:var(--r-sm);font-size:.84rem;font-weight:500;display:none}
+.fb.vis{display:block}
+.fb.ok{background:var(--ok-m);border:1px solid rgba(91,168,122,.2);color:var(--ok)}
+.fb.no{background:var(--err-m);border:1px solid rgba(199,80,80,.2);color:var(--err)}
+
+/* ── Results ── */
+.res-h{text-align:center;padding:28px 16px}
+.sr{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--bg-sf) 0);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative}
+.sr::before{content:'';position:absolute;inset:9px;background:var(--bg);border-radius:50%}
+.sr-i{position:relative;z-index:1}
+.sr-v{font-family:var(--font-display);font-size:1.7rem;font-weight:800;line-height:1}
+.sr-l{font-size:.7rem;color:var(--tx3);margin-top:1px}
+.res-t{font-family:var(--font-display);font-size:1.3rem;font-weight:800;margin-bottom:4px}
+.res-d{color:var(--tx2);font-size:.86rem}
+.stats-r{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+.st-b{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-md);padding:14px;text-align:center}
+.st-v{font-family:var(--font-display);font-size:1.7rem;font-weight:800;line-height:1;margin-bottom:2px}
+.st-v.ok{color:var(--ok)}.st-v.no{color:var(--err)}
+.st-l{font-size:.66rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em}
+.rv-list{display:flex;flex-direction:column;gap:7px}
+.rv-i{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-md);padding:12px 14px}
+.rv-q{font-weight:600;font-size:.86rem;margin-bottom:7px;line-height:1.4}
+.rv-a{display:flex;align-items:center;gap:6px;font-size:.78rem;margin-bottom:3px}
+.bdg{padding:2px 6px;border-radius:3px;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.bdg-ok{background:var(--ok-m);color:var(--ok)}
+.bdg-no{background:var(--err-m);color:var(--err)}
+.bdg-ans{background:var(--accent-m);color:var(--accent)}
+
+/* ── Attempts list ── */
+.attempt-list{display:flex;flex-direction:column;gap:8px}
+.attempt-card{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:all var(--fast)}
+.attempt-card:hover{background:var(--bg-sf)}
+.at-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.at-title{font-size:.88rem;font-weight:600}
+.at-score{font-size:.8rem;font-weight:700;padding:2px 9px;border-radius:100px}
+.at-score.ok{background:var(--ok-m);color:var(--ok)}
+.at-score.no{background:var(--err-m);color:var(--err)}
+.at-meta{font-size:.72rem;color:var(--tx3)}
+
+/* ── Settings ── */
+.s-backdrop{position:fixed;inset:0;background:var(--overlay);z-index:200;opacity:0;visibility:hidden;transition:opacity var(--base),visibility var(--base)}
+.s-backdrop.open{opacity:1;visibility:visible}
+.s-drawer{position:fixed;top:0;right:0;bottom:0;width:340px;max-width:88vw;background:var(--bg-el);border-left:1px solid var(--bd);z-index:201;transform:translateX(100%);transition:transform var(--slow);display:flex;flex-direction:column}
+.s-drawer.open{transform:translateX(0)}
+.s-dh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd2)}
+.s-dh h2{font-size:.9rem;font-weight:700}
+.s-db{flex:1;padding:16px;overflow-y:auto}
+.s-grp{margin-bottom:20px}.s-grp:last-child{margin-bottom:0}
+.s-grp-l{font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);margin-bottom:9px}
+.s-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0}
+.s-row-l{font-size:.84rem;color:var(--tx)}
+.s-row-d{font-size:.7rem;color:var(--tx3);margin-top:1px}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-t{position:absolute;inset:0;background:var(--bg-sf);border:1px solid var(--bd);border-radius:100px;cursor:pointer;transition:all var(--fast)}
+.toggle-t::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:var(--tx3);border-radius:50%;transition:all var(--fast)}
+.toggle input:checked+.toggle-t{background:var(--accent);border-color:var(--accent)}
+.toggle input:checked+.toggle-t::after{transform:translateX(18px);background:var(--accent-tx)}
+.toggle input:focus-visible+.toggle-t{outline:2px solid var(--accent);outline-offset:2px}
+.color-grid{display:flex;flex-wrap:wrap;gap:9px;padding:2px 0}
+.color-sw{width:34px;height:34px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all var(--fast);position:relative}
+.color-sw:hover{transform:scale(1.12)}
+.color-sw.active{border-color:var(--tx);box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--tx)}
+.color-sw.active::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.storage-warn{background:var(--err-m);border:1px solid rgba(199,80,80,.2);border-radius:var(--r-sm);padding:10px 12px;margin-top:10px;font-size:.78rem;color:var(--err);display:none}
+.storage-warn.vis{display:block}
+
+/* ── Confirm modal ── */
+.c-backdrop{position:fixed;inset:0;background:var(--overlay);z-index:250;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity var(--base),visibility var(--base);padding:20px}
+.c-backdrop.open{opacity:1;visibility:visible}
+.c-dialog{background:var(--bg-el);border:1px solid var(--bd);border-radius:var(--r-lg);padding:20px;max-width:360px;width:100%;box-shadow:var(--sh-lg);transform:scale(.95);transition:transform var(--base)}
+.c-backdrop.open .c-dialog{transform:scale(1)}
+.c-d-t{font-size:.95rem;font-weight:700;margin-bottom:5px}
+.c-d-p{font-size:.84rem;color:var(--tx2);margin-bottom:16px;line-height:1.5}
+.c-d-a{display:flex;gap:8px;justify-content:flex-end}
+.c-d-a .btn{min-width:70px}
+
+.bbar{position:fixed;bottom:0;left:0;right:0;padding:14px 20px 26px;background:linear-gradient(to top,var(--bg) 75%,transparent);display:flex;gap:9px;justify-content:center;z-index:50;transition:background var(--slow)}
+.bbar .btn{flex:1;max-width:200px}
+
+.toast-s{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.toast{background:var(--bg-el);border:1px solid var(--bd);color:var(--tx);padding:9px 16px;border-radius:var(--r-sm);font-size:.82rem;font-weight:500;box-shadow:var(--sh-lg);white-space:nowrap;animation:ti var(--base) forwards;pointer-events:auto;display:flex;align-items:center;gap:8px}
+.toast.rm{animation:to var(--base) forwards}
+.toast.te{border-color:var(--err);color:var(--err)}
+.toast.ts{border-color:var(--ok);color:var(--ok)}
+@keyframes ti{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes to{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--tx3)}
+@media(max-width:600px){.mode-grid{grid-template-columns:1fr}.opts-grid{grid-template-columns:1fr}.hero h1{font-size:1.6rem}.qq-txt{font-size:1.05rem}.quiz-list{margin-left:10px;padding-left:10px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div class="toast-s" id="toastS" aria-live="polite"></div>
+
+  <div class="c-backdrop" id="cBack"><div class="c-dialog" role="dialog"><div class="c-d-t" id="cTitle"></div><div class="c-d-p" id="cText"></div><div class="c-d-a"><button class="btn btn-s" id="cNo">Cancel</button><button class="btn btn-p" id="cYes">Confirm</button></div></div></div>
+
+  <!-- Quiz action sheet -->
+  <div class="quiz-action-overlay" id="qasOverlay"></div>
+  <div class="quiz-action-sheet" id="qasSheet">
+    <div class="qas-handle"></div>
+    <div class="qas-title" id="qasTitle"></div>
+    <div class="qas-meta" id="qasMeta"></div>
+    <div id="qasButtons"></div>
+    <button class="qas-cancel" id="qasCancel">Cancel</button>
+  </div>
+
+  <div class="s-backdrop" id="sBack" aria-hidden="true"></div>
+  <aside class="s-drawer" id="sDraw" role="dialog" aria-label="Settings">
+    <div class="s-dh"><h2>Settings</h2><button class="btn-ghost" id="sClose" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="s-db">
+      <div class="s-grp"><div class="s-grp-l">Appearance</div><div class="s-row"><div><div class="s-row-l">Light Mode</div><div class="s-row-d">Switch color scheme</div></div><label class="toggle"><input type="checkbox" id="tTheme"><span class="toggle-t"></span></label></div></div>
+      <div class="s-grp"><div class="s-grp-l">Accent Color</div><div class="color-grid" id="colorGrid"></div></div>
+      <div class="s-grp"><div class="s-grp-l">Quiz</div><div class="s-row"><div><div class="s-row-l">Instant Feedback</div><div class="s-row-d">Show answer after each question</div></div><label class="toggle"><input type="checkbox" id="tFb" checked><span class="toggle-t"></span></label></div></div>
+      <div class="s-grp"><div class="s-grp-l">Data</div><div class="s-row" style="flex-direction:column;align-items:stretch;gap:6px"><div class="s-row-l">Storage</div><div style="font-size:.76rem;color:var(--tx3)" id="storageInfo">—</div></div><div class="storage-warn" id="storageWarn"><i class="fa-solid fa-triangle-exclamation"></i> Storage nearly full. Clear attempts to free space.</div><div style="margin-top:8px"><button class="btn-danger-o" id="btnClearAtt">Clear All Attempts</button></div><div style="margin-top:6px"><button class="btn-danger-o" id="btnClearAll">Delete Everything</button></div></div>
+    </div>
+  </aside>
+
+  <!-- HOME -->
+  <section id="sHome" class="screen active">
+    <header class="header"><div class="header-in"><div class="logo"><span class="logo-red">Quiz</span><span class="logo-blue">Forge</span></div><button class="btn-ghost" id="btnSet" aria-label="Settings"><i class="fa-solid fa-gear"></i></button></div></header>
+    <div class="screen-body">
+      <div class="hero"><h1>Build & Take <em>Quizzes</em></h1><p>Create visually or import from text — organized in folders.</p></div>
+      <div class="mode-grid">
+        <div class="mode-card" data-act="visual" tabindex="0" role="button"><div class="mc-icon"><i class="fa-solid fa-pen-to-square"></i></div><div class="mc-title">Visual Editor</div><div class="mc-desc">Build quizzes step by step.</div></div>
+        <div class="mode-card" data-act="import" tabindex="0" role="button"><div class="mc-icon"><i class="fa-solid fa-file-import"></i></div><div class="mc-title">Quick Import</div><div class="mc-desc">Paste formatted quiz text.</div></div>
+      </div>
+      <div id="folderArea"></div>
+    </div>
+  </section>
+
+  <!-- EDITOR -->
+  <section id="sEdit" class="screen">
+    <header class="header"><div class="header-in"><button class="btn-ghost" data-nav="home" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button><span class="hdr-c">Visual Editor</span><div class="spacer"></div></div></header>
+    <div class="screen-body">
+      <div class="fg"><label class="fl" for="eTitle">Quiz Title *</label><input type="text" class="fi" id="eTitle" placeholder="e.g., Biology Midterm"></div>
+      <div class="fg"><label class="fl" for="eFolder">Folder</label><div class="inline-input-row"><select class="fi" id="eFolder"></select><button class="btn btn-s" id="btnNewFld" style="padding:9px 12px;white-space:nowrap" title="New folder"><i class="fa-solid fa-folder-plus"></i></button></div></div>
+      <div id="eQs"></div>
+      <button class="add-q" id="btnAddQ"><i class="fa-solid fa-plus"></i> Add Question</button>
+      <div class="bbar"><button class="btn btn-s" data-nav="home">Cancel</button><button class="btn btn-p" id="btnSaveQ">Save Quiz</button></div>
+    </div>
+  </section>
+
+  <!-- IMPORT -->
+  <section id="sImp" class="screen">
+    <header class="header"><div class="header-in"><button class="btn-ghost" data-nav="home" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button><span class="hdr-c">Quick Import</span><div class="spacer"></div></div></header>
+    <div class="screen-body">
+      <div class="help-box">
+        <div class="hb-t"><i class="fa-solid fa-circle-info"></i> Format</div>
+        <div class="hb-p">Use <strong>QUIZ:</strong> for title, <strong>Q:</strong> for questions, <strong>A: B: C: D:</strong> for options, <strong>ANS:</strong> for the correct letter.</div>
+        <div class="hb-ex">QUIZ: Ecology Quiz
+
+Q: How do ecologists benefit from models?
+A: Biotic factors can be ignored.
+B: Random factors have a greater effect.
+C: Abiotic factors can be ignored.
+D: Variables can be controlled.
+ANS: D</div>
+        <div class="hb-prompt">
+          <div class="hb-prompt-title"><i class="fa-solid fa-robot"></i> AI Prompt (Click to Copy)</div>
+          <div class="hb-prompt-text" id="aiPromptText"></div>
+          <button class="copy-prompt-btn" id="btnCopyPrompt"><i class="fa-solid fa-copy"></i> Copy Prompt</button>
+        </div>
+      </div>
+      <div class="fg"><label class="fl" for="impFolder">Save to Folder</label><select class="fi" id="impFolder"></select></div>
+      <div class="fg"><label class="fl" for="impTa">Paste Quiz Text *</label><textarea class="fta" id="impTa" placeholder="Paste your quiz here..."></textarea></div>
+      <div class="ps" id="psBox"><div class="ps-t" id="psT"></div><div class="ps-d" id="psD"></div></div>
+      <div class="pvs" id="pvBox"><div class="slbl">Preview</div><div id="pvC"></div></div>
+      <div class="bbar"><button class="btn btn-s" data-nav="home">Cancel</button><button class="btn btn-p" id="btnImpQ">Import Quiz</button></div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="sQuiz" class="screen">
+    <header class="header"><div class="header-in"><button class="btn-ghost" id="btnQuit" aria-label="Quit"><i class="fa-solid fa-arrow-left"></i></button><span class="hdr-c" id="qTitle">Quiz</span><div class="spacer"></div></div></header>
+    <div class="screen-body">
+      <div class="prog-t"><div class="prog-f" id="progF" style="width:0%"></div></div>
+      <div id="qArea"></div>
+      <div class="bbar" id="qBar" style="display:none"><button class="btn btn-p" id="btnNext">Next Question</button></div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="sRes" class="screen">
+    <header class="header"><div class="header-in"><button class="btn-ghost" data-nav="home" aria-label="Home"><i class="fa-solid fa-arrow-left"></i></button><span class="hdr-c">Results</span><div class="spacer"></div></div></header>
+    <div class="screen-body">
+      <div class="res-h"><div class="sr" id="srRing" style="--p:0"><div class="sr-i"><div class="sr-v" id="srVal">0%</div><div class="sr-l">Score</div></div></div><div class="res-t" id="resT"></div><div class="res-d" id="resD"></div></div>
+      <div class="stats-r"><div class="st-b"><div class="st-v ok" id="stOk">0</div><div class="st-l">Correct</div></div><div class="st-b"><div class="st-v no" id="stNo">0</div><div class="st-l">Wrong</div></div></div>
+      <div class="slbl">Question Review</div><div class="rv-list" id="rvList"></div>
+      <div class="bbar"><button class="btn btn-s" id="btnRetry">Try Again</button><button class="btn btn-p" data-nav="home">Done</button></div>
+    </div>
+  </section>
+
+  <!-- ATTEMPTS -->
+  <section id="sAtt" class="screen">
+    <header class="header"><div class="header-in"><button class="btn-ghost" data-nav="home" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button><span class="hdr-c" id="attHdr">Attempts</span><div class="spacer"></div></div></header>
+    <div class="screen-body"><div id="attList"></div></div>
+  </section>
+
+  <!-- ATTEMPT DETAIL -->
+  <section id="sAttD" class="screen">
+    <header class="header"><div class="header-in"><button class="btn-ghost" id="btnAttBack" aria-label="Back"><i class="fa-solid fa-arrow-left"></i></button><span class="hdr-c" id="attDHdr">Attempt</span><div class="spacer"></div></div></header>
+    <div class="screen-body"><div id="attDetail"></div></div>
+  </section>
+
+  <footer class="app-footer">Built with QuizForge — Your quizzes stay on your device.</footer>
+</div>
+
+<script>
+/* ═══ Accent palette ═══ */
+const ACCENTS=[
+  {n:'Amber',h:'#d4a54a',dt:'#1a1608',lt:'#fff'},
+  {n:'Coral',h:'#c97058',dt:'#1c1210',lt:'#fff'},
+  {n:'Rose',h:'#c46b7c',dt:'#1c1014',lt:'#fff'},
+  {n:'Sage',h:'#6b9e7a',dt:'#0f1a13',lt:'#fff'},
+  {n:'Teal',h:'#5a9e9e',dt:'#0f1a1a',lt:'#fff'},
+  {n:'Sky',h:'#5b8fc7',dt:'#0f1520',lt:'#fff'},
+  {n:'Slate',h:'#7a8ba5',dt:'#12151a',lt:'#fff'},
+  {n:'Mauve',h:'#9a7bb5',dt:'#16121c',lt:'#fff'},
+  {n:'Sand',h:'#b8a080',dt:'#1a1610',lt:'#1a1a18'},
+  {n:'Olive',h:'#8a9a50',dt:'#161a0f',lt:'#fff'},
+  {n:'Clay',h:'#a88070',dt:'#1a1412',lt:'#fff'},
+  {n:'Steel',h:'#8a919e',dt:'#141618',lt:'#fff'},
+];
+
+/* ═══ AI Quiz Generation Prompt ═══ */
+const AI_QUIZ_PROMPT = `Generate a quiz in the following EXACT format. Follow these rules strictly:
+
+FORMAT RULES:
+1. Start with "QUIZ: " followed by the quiz title
+2. Each question starts with "Q: " followed by the question text
+3. Each option starts with a letter (A-D) followed by ": " and the option text
+4. After each question's options, add "ANS: " followed by the correct letter (A, B, C, or D)
+5. Leave one blank line between questions
+6. Provide EXACTLY 4 options (A, B, C, D) for each question
+7. Ensure the correct answer index matches the ANS letter (A=0, B=1, C=2, D=3)
+
+EXAMPLE:
+QUIZ: World Capitals
+
+Q: What is the capital of France?
+A: London
+B: Berlin
+C: Paris
+D: Madrid
+ANS: C
+
+Q: What is the capital of Japan?
+A: Beijing
+B: Seoul
+C: Bangkok
+D: Tokyo
+ANS: D
+
+Now generate a quiz about: [INSERT YOUR TOPIC HERE]`;
+
+/* ═══ Storage ═══ */
+const K_Q='qf_q',K_F='qf_f',K_A='qf_a',K_P='qf_p';
+const STORAGE_LIMIT=4.5*1024*1024;
+
+function storageUsed(){
+  let t=0;for(let i=0;i<localStorage.length;i++)t+=(localStorage.getItem(localStorage.key(i))||'').length*2;return t;
+}
+function storagePct(){return Math.round(storageUsed()/STORAGE_LIMIT*100)}
+function dbLoad(k,fb){
+  try{
+    const d=localStorage.getItem(k);
+    if(!d) return fb;
+    const parsed=JSON.parse(d);
+    // Validate parsed data type matches fallback
+    if(Array.isArray(fb)&&!Array.isArray(parsed)) return fb;
+    if(!Array.isArray(fb)&&typeof fb==='object'&&Array.isArray(parsed)) return fb;
+    return parsed;
+  }catch(e){
+    console.error('Storage load error for',k,e);
+    return fb;
+  }
+}
+function dbSave(k,v){
+  try{
+    const s=JSON.stringify(v),sz=s.length*2;
+    if(storageUsed()+sz>STORAGE_LIMIT){toast('Storage nearly full — clear attempts','te');return false}
+    localStorage.setItem(k,s);return true;
+  }catch(e){
+    console.error('Storage save error for',k,e);
+    toast(e.name==='QuotaExceededError'?'Storage full':'Could not save','te');
+    return false;
+  }
+}
+
+/* ═══ State ═══ */
+const prefs={theme:'dark',accent:0,feedback:true};
+const state={
+  quizzes:[],
+  folders:[],
+  attempts:{},
+  editId:null,
+  activeQuiz:null,
+  qIdx:0,
+  answers:[],
+  openFolders:new Set(),
+  viewingQuizId:null,
+  currentQasQuizId:null
+};
+
+/* ═══ Helpers ═══ */
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+const esc=s=>{const e=document.createElement('span');e.textContent=s;return e.innerHTML};
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const L=['A','B','C','D'];
+const QICONS=['fa-flask','fa-book-open','fa-brain','fa-microscope','fa-globe','fa-lightbulb','fa-calculator','fa-code'];
+
+/* ═══ Accent ═══ */
+function applyAccent(i){
+  const c=ACCENTS[i]||ACCENTS[0],r=document.documentElement.style;
+  r.setProperty('--accent',c.h);r.setProperty('--accent-tx',prefs.theme==='light'?c.lt:c.dt);r.setProperty('--accent-m',c.h+'18');
+  prefs.accent=i;dbSave(K_P,prefs);$$('#colorGrid .color-sw').forEach((s,j)=>s.classList.toggle('active',j===i));
+}
+function buildColorGrid(){
+  $('#colorGrid').innerHTML=ACCENTS.map((c,i)=>`<div class="color-sw${i===prefs.accent?' active':''}" data-ci="${i}" style="background:${c.h}" title="${c.n}"></div>`).join('');
+  $$('#colorGrid .color-sw').forEach(s=>s.onclick=()=>applyAccent(parseInt(s.dataset.ci)));
+}
+
+/* ═══ Navigation ═══ */
+function nav(id){$$('.screen').forEach(s=>s.classList.remove('active'));$(`#${id}`).classList.add('active');$(`#${id}`).scrollTop=0}
+function goHome(){
+  state.editId=null;
+  state.viewingQuizId=null;
+  state.activeQuiz=null;
+  state.currentQasQuizId=null;
+  nav('sHome');
+  renderHome();
+}
+
+/* ═══ Toast ═══ */
+function toast(m,c=''){
+  const e=document.createElement('div');e.className=`toast${c?' '+c:''}`;
+  e.innerHTML=`<i class="fa-solid ${c==='ts'?'fa-circle-check':c==='te'?'fa-circle-exclamation':'fa-circle-info'}"></i> ${esc(m)}`;
+  $('#toastS').appendChild(e);setTimeout(()=>{e.classList.add('rm');e.addEventListener('animationend',()=>e.remove())},2800);
+}
+
+/* ═══ Confirm ═══ */
+let _cr=null;
+function confirm2(t,p){return new Promise(r=>{_cr=r;$('#cTitle').textContent=t;$('#cText').textContent=p;$('#cBack').classList.add('open')})}
+$('#cNo').onclick=()=>{$('#cBack').classList.remove('open');_cr?.(false);_cr=null};
+$('#cYes').onclick=()=>{$('#cBack').classList.remove('open');_cr?.(true);_cr=null};
+$('#cBack').onclick=e=>{if(e.target===$('#cBack')){$('#cBack').classList.remove('open');_cr?.(false);_cr=null}};
+
+/* ═══ Quiz Action Sheet ═══ */
+let _qasResolver=null;
+
+function showQuizActions(quizId){
+  // Validate quiz exists
+  const q=state.quizzes.find(x=>x.id===quizId);
+  if(!q){
+    toast('Quiz not found','te');
+    return Promise.resolve(null);
+  }
+  
+  // Store current quiz ID for action handlers
+  state.currentQasQuizId=quizId;
+  
+  const attempts=state.attempts[quizId]||[];
+  const bestPct=attempts.length?Math.round(Math.max(...attempts.map(a=>a.correct/a.total))*100):null;
+
+  $('#qasTitle').textContent=q.title;
+  let meta=`${q.questions.length} question${q.questions.length!==1?'s':''}`;
+  if(attempts.length) meta+=` · ${attempts.length} attempt${attempts.length!==1?'s':''}`;
+  if(bestPct!==null) meta+=` · Best: ${bestPct}%`;
+  $('#qasMeta').textContent=meta;
+
+  let btns=`<button class="qas-btn primary" data-qas="start"><i class="fa-solid fa-play"></i> ${attempts.length?'Try Again':'Start Quiz'}</button>`;
+  if(attempts.length) btns+=`<button class="qas-btn" data-qas="attempts"><i class="fa-solid fa-clock-rotate-left"></i> See Attempts (${attempts.length})</button>`;
+  btns+=`<button class="qas-btn" data-qas="edit"><i class="fa-solid fa-pen"></i> Edit Quiz</button>`;
+  btns+=`<button class="qas-btn danger" data-qas="delete"><i class="fa-solid fa-trash"></i> Delete Quiz</button>`;
+  $('#qasButtons').innerHTML=btns;
+
+  $('#qasOverlay').classList.add('open');
+  $('#qasSheet').classList.add('open');
+
+  return new Promise(resolve=>{_qasResolver=resolve});
+}
+
+function closeQAS(){
+  _qasResolver=null;
+  state.currentQasQuizId=null;
+  $('#qasOverlay').classList.remove('open');
+  $('#qasSheet').classList.remove('open');
+}
+
+$('#qasCancel').onclick=()=>closeQAS();
+$('#qasOverlay').onclick=()=>closeQAS();
+
+$('#qasButtons').onclick=e=>{
+  const btn=e.target.closest('[data-qas]');
+  if(!btn) return;
+  
+  const action=btn.dataset.qas;
+  const quizId=state.currentQasQuizId;
+  
+  closeQAS();
+  
+  if(!quizId){
+    toast('Error: Quiz ID not found','te');
+    return;
+  }
+  
+  if(_qasResolver){
+    _qasResolver({action,quizId});
+    _qasResolver=null;
+  }
+};
+
+/* ═══ Inline prompt ═══ */
+function promptInline(ph=''){
+  return new Promise(resolve=>{
+    const row=document.createElement('div');row.className='inline-input-row';
+    row.innerHTML=`<input type="text" class="fi" placeholder="${esc(ph)}"><button class="btn btn-p" style="padding:9px 12px"><i class="fa-solid fa-check"></i></button><button class="btn btn-s" style="padding:9px 12px"><i class="fa-solid fa-xmark"></i></button>`;
+    const inp=row.querySelector('input'),[ok,no]=row.querySelectorAll('button');
+    const done=v=>{row.remove();resolve(v)};
+    ok.onclick=()=>done(inp.value.trim()||null);no.onclick=()=>done(null);
+    inp.onkeydown=e=>{if(e.key==='Enter')done(inp.value.trim()||null);if(e.key==='Escape')done(null)};
+    $('#folderArea').parentElement.insertBefore(row,$('#folderArea'));inp.focus();
+  });
+}
+
+/* ═══ Settings ═══ */
+function openSet(){$('#sDraw').classList.add('open');$('#sBack').classList.add('open');updStorage()}
+function closeSet(){$('#sDraw').classList.remove('open');$('#sBack').classList.remove('open')}
+$('#btnSet').onclick=openSet;$('#sClose').onclick=closeSet;$('#sBack').onclick=closeSet;
+
+function applyTheme(t){prefs.theme=t;document.documentElement.setAttribute('data-theme',t);$('#tTheme').checked=t==='light';applyAccent(prefs.accent);dbSave(K_P,prefs)}
+$('#tTheme').onchange=e=>applyTheme(e.target.checked?'light':'dark');
+$('#tFb').onchange=e=>{prefs.feedback=e.target.checked;dbSave(K_P,prefs)};
+
+$('#btnClearAtt').onclick=async()=>{
+  if(await confirm2('Clear All Attempts','Remove all past quiz attempts? Quizzes and folders will be kept.')){
+    state.attempts={};dbSave(K_A,{});renderHome();updStorage();toast('Attempts cleared','ts');
+  }
+};
+$('#btnClearAll').onclick=async()=>{
+  if(await confirm2('Delete Everything','Remove all quizzes, folders, and attempts.')){
+    state.quizzes=[];state.folders=[];state.attempts={};
+    dbSave(K_Q,[]);dbSave(K_F,[]);dbSave(K_A,{});renderHome();updStorage();toast('All data deleted','ts');closeSet();
+  }
+};
+
+function updStorage(){
+  const pct=storagePct(),kb=(storageUsed()/1024).toFixed(1);
+  const totalAttempts=Object.values(state.attempts).reduce((s,a)=>s+(Array.isArray(a)?a.length:0),0);
+  $('#storageInfo').textContent=`${state.quizzes.length} quizzes, ${state.folders.length} folders, ${totalAttempts} attempts · ${kb} KB (${pct}%)`;
+  $('#storageWarn').classList.toggle('vis',pct>=75);
+}
+
+document.onkeydown=e=>{
+  if(e.key!=='Escape') return;
+  if($('#cBack').classList.contains('open')){$('#cBack').classList.remove('open');_cr?.(false);_cr=null}
+  else if($('#qasOverlay').classList.contains('open')) closeQAS();
+  else if($('#sDraw').classList.contains('open')) closeSet();
+};
+
+/* ═══ Folder helpers ═══ */
+function folderCount(id){return state.quizzes.filter(q=>q.folderId===id).length}
+function bestPctFor(qid){
+  const a=state.attempts[qid];
+  if(!a||!Array.isArray(a)||!a.length) return null;
+  return Math.round(Math.max(...a.map(r=>r.correct/r.total))*100);
+}
+function renderFolderSelect(sel,el){
+  $(el).innerHTML=`<option value="">Uncategorized</option>`+state.folders.map(f=>`<option value="${f.id}"${f.id===sel?' selected':''}>${esc(f.name)}</option>`).join('');
+}
+
+/* ═══ Home ═══ */
+function renderHome(){
+  const fa=$('#folderArea');
+  const hasFolders=state.folders.length>0,hasUncat=state.quizzes.some(q=>!q.folderId);
+
+  if(!hasFolders&&!hasUncat){
+    fa.innerHTML=`<button class="create-folder-btn" id="btnCFH"><i class="fa-solid fa-folder-plus"></i> Create Folder</button><div class="empty" style="padding:16px 0"><div class="empty-icon" style="width:44px;height:44px;font-size:16px"><i class="fa-solid fa-folder-open"></i></div><div class="empty-t" style="font-size:.88rem">No quizzes yet</div><div class="empty-d">Create a folder or quiz to get started.</div></div>`;
+    $('#btnCFH').onclick=()=>createFolderInline();
+    return;
+  }
+
+  let h=`<button class="create-folder-btn" id="btnCFH"><i class="fa-solid fa-folder-plus"></i> Create Folder</button><div class="folder-list">`;
+
+  state.folders.forEach(f=>{
+    const open=state.openFolders.has(f.id),cnt=folderCount(f.id);
+    h+=`<div class="folder-row${open?' open':''}" data-fid="${f.id}"><div class="fr-icon ${open?'opened':'closed'}"><i class="fa-solid fa-folder${open?'-open':''}"></i></div><div class="fr-body"><div class="fr-name">${esc(f.name)}</div><div class="fr-meta">${cnt} quiz${cnt!==1?'zes':''}</div></div><div class="fr-actions"><button class="btn-xs" data-rf="${f.id}" title="Rename"><i class="fa-solid fa-pen"></i></button><button class="btn-xs" data-df="${f.id}" title="Delete"><i class="fa-solid fa-trash"></i></button></div></div>`;
+    if(open){
+      const qs=state.quizzes.filter(q=>q.folderId===f.id);
+      h+='<div class="quiz-list">';
+      if(!qs.length) h+='<div style="padding:10px 0;font-size:.8rem;color:var(--tx3)">Empty folder</div>';
+      qs.forEach((q,i)=>h+=quizHtml(q,i));
+      h+='</div>';
+    }
+  });
+
+  if(hasUncat){
+    const uncat=state.quizzes.filter(q=>!q.folderId),open=state.openFolders.has('_none');
+    h+=`<div class="folder-row${open?' open':''}" data-fid="_none"><div class="fr-icon ${open?'opened':'closed'}"><i class="fa-solid fa-folder${open?'-open':''}"></i></div><div class="fr-body"><div class="fr-name">Uncategorized</div><div class="fr-meta">${uncat.length} quiz${uncat.length!==1?'zes':''}</div></div></div>`;
+    if(open){h+='<div class="quiz-list">';uncat.forEach((q,i)=>h+=quizHtml(q,i));h+='</div>'}
+  }
+
+  h+='</div>';fa.innerHTML=h;
+  $('#btnCFH').onclick=()=>createFolderInline();
+  wireFolderEvents();
+}
+
+function quizHtml(q,i){
+  const bp=bestPctFor(q.id);
+  const badge=bp!==null?`<span class="badge-sm">Best: ${bp}%</span>`:'';
+  return `<div class="quiz-card" data-qid="${q.id}" tabindex="0" role="button"><div class="qc-ind"></div><div class="qc-icon"><i class="fa-solid ${QICONS[i%QICONS.length]}"></i></div><div class="qc-body"><div class="qc-title">${esc(q.title)}</div><div class="qc-meta">${q.questions.length} question${q.questions.length!==1?'s':''} ${badge}</div></div></div>`;
+}
+
+async function createFolderInline(){
+  const name=await promptInline('Folder name');if(!name) return;
+  if(state.folders.some(f=>f.name.toLowerCase()===name.toLowerCase())){toast('Folder already exists','te');return}
+  state.folders.push({id:uid(),name});
+  if(dbSave(K_F,state.folders)){toast('Folder created','ts');renderHome()}
+}
+
+function wireFolderEvents(){
+  $$('.folder-row[data-fid]').forEach(row=>{
+    row.onclick=e=>{
+      if(e.target.closest('[data-rf]')||e.target.closest('[data-df]')) return;
+      const fid=row.dataset.fid;state.openFolders.has(fid)?state.openFolders.delete(fid):state.openFolders.add(fid);renderHome();
+    };
+  });
+  $$('[data-rf]').forEach(async btn=>{btn.onclick=async e=>{e.stopPropagation();const f=state.folders.find(x=>x.id===btn.dataset.rf);if(!f) return;const n=await promptInline(f.name);if(n&&n!==f.name){if(state.folders.some(x=>x.id!==f.id&&x.name.toLowerCase()===n.toLowerCase())){toast('Folder already exists','te');return}f.name=n;dbSave(K_F,state.folders);renderHome();toast('Renamed','ts')}};});
+  $$('[data-df]').forEach(async btn=>{btn.onclick=async e=>{e.stopPropagation();const fid=btn.dataset.df,f=state.folders.find(x=>x.id===fid);if(!f) return;const cnt=folderCount(fid);if(await confirm2('Delete Folder',cnt>0?`"${f.name}" has ${cnt} quiz${cnt!==1?'zes':''}. They will move to Uncategorized.`:`Delete empty folder?`)){state.quizzes.forEach(q=>{if(q.folderId===fid)q.folderId=null});state.folders=state.folders.filter(x=>x.id!==fid);state.openFolders.delete(fid);dbSave(K_Q,state.quizzes);dbSave(K_F,state.folders);renderHome();toast('Deleted','ts')}};});
+
+  $$('.quiz-card[data-qid]').forEach(card=>{
+    const go=()=>handleQuizClick(card.dataset.qid);
+    card.onclick=go;card.onkeydown=e=>{if(e.key==='Enter')go()};
+  });
+}
+
+async function handleQuizClick(quizId){
+  // Validate quiz exists
+  const quiz=state.quizzes.find(x=>x.id===quizId);
+  if(!quiz){
+    toast('Quiz not found','te');
+    return;
+  }
+  
+  const result=await showQuizActions(quizId);
+  if(!result) return;
+  
+  const {action}=result;
+  
+  if(action==='start'){
+    startQuiz(quizId);
+  }else if(action==='attempts'){
+    showAttempts(quizId);
+  }else if(action==='edit'){
+    openEditor(quizId);
+  }else if(action==='delete'){
+    if(await confirm2('Delete Quiz',`Remove "${quiz.title}" and all its attempts? This cannot be undone.`)){
+      state.quizzes=state.quizzes.filter(x=>x.id!==quizId);
+      delete state.attempts[quizId];
+      dbSave(K_Q,state.quizzes);
+      dbSave(K_A,state.attempts);
+      renderHome();
+      toast('Quiz deleted','ts');
+    }
+  }
+}
+
+/* ═══ Visual Editor ═══ */
+function openEditor(qid=null){
+  state.editId=qid;
+  $('#eQs').innerHTML='';
+  renderFolderSelect('','#eFolder');
+  
+  if(qid){
+    const q=state.quizzes.find(x=>x.id===qid);
+    if(!q){
+      toast('Quiz not found','te');
+      goHome();
+      return;
+    }
+    $('#eTitle').value=q.title;
+    renderFolderSelect(q.folderId,'#eFolder');
+    q.questions.forEach(qu=>appendQCard(qu));
+  }else{
+    $('#eTitle').value='';
+    appendQCard();
+  }
+  nav('sEdit');
+}
+
+$('#btnNewFld').onclick=async()=>{
+  const n=await promptInline('New folder name');if(!n) return;
+  if(state.folders.some(f=>f.name.toLowerCase()===n.toLowerCase())){toast('Folder exists','te');return}
+  const f={id:uid(),name:n};state.folders.push(f);dbSave(K_F,state.folders);
+  renderFolderSelect('','#eFolder');$('#eFolder').value=f.id;toast('Created','ts');
+};
+
+function appendQCard(data=null){
+  const c=$('#eQs'),idx=c.children.length,opts=data?data.options:['','','',''],sel=data?data.correct:-1;
+  const card=document.createElement('div');card.className='qe';
+  card.innerHTML=`<div class="qe-h"><span class="qe-n">Question ${idx+1}</span><button class="btn-xs" data-rmq aria-label="Remove"><i class="fa-solid fa-xmark"></i></button></div><div class="fg"><input type="text" class="fi" data-f="text" placeholder="Enter your question..." value="${data?esc(data.text):''}"></div><div class="opts-grid">${L.map((l,i)=>`<div class="opt-f${sel===i?' ic':''}" data-oi="${i}"><div class="opt-l">${l}</div><input type="text" class="fi" data-f="opt" placeholder="Option ${l}" value="${esc(opts[i]||'')}"></div>`).join('')}</div><div class="ap"><span class="ap-lbl">Correct:</span>${L.map((l,i)=>`<button class="ap-btn${sel===i?' sel':''}" data-pa="${i}">${l}</button>`).join('')}</div>`;
+  card.querySelectorAll('[data-pa]').forEach(b=>{b.onclick=()=>{const i=parseInt(b.dataset.pa);card.querySelectorAll('.ap-btn').forEach(x=>x.classList.remove('sel'));card.querySelectorAll('.opt-f').forEach(x=>x.classList.remove('ic'));b.classList.add('sel');card.querySelector(`.opt-f[data-oi="${i}"]`).classList.add('ic')}});
+  card.querySelector('[data-rmq]').onclick=()=>{card.remove();$$('#eQs .qe').forEach((c,i)=>c.querySelector('.qe-n').textContent=`Question ${i+1}`)};
+  c.appendChild(card);card.scrollIntoView({behavior:'smooth',block:'center'});
+}
+$('#btnAddQ').onclick=()=>appendQCard();
+
+$('#btnSaveQ').onclick=()=>{
+  const title=$('#eTitle').value.trim();
+  if(!title){toast('Enter a quiz title','te');$('#eTitle').focus();return}
+  if(title.length>100){toast('Title must be under 100 characters','te');$('#eTitle').focus();return}
+  
+  const cards=$$('#eQs .qe'),questions=[];
+  for(let i=0;i<cards.length;i++){
+    const card=cards[i];
+    const text=card.querySelector('[data-f="text"]').value.trim();
+    if(!text){
+      toast(`Question ${i+1} is empty — add text or remove it`,'te');
+      card.querySelector('[data-f="text"]').focus();
+      return;
+    }
+    const options=Array.from(card.querySelectorAll('[data-f="opt"]')).map(inp=>inp.value.trim());
+    const filledOpts=options.filter(o=>o);
+    if(filledOpts.length<2){toast(`Question ${i+1} needs at least 2 options`,'te');return}
+    const sel=card.querySelector('.ap-btn.sel');
+    if(!sel){toast(`Select correct answer for Question ${i+1}`,'te');return}
+    const correctIndex=parseInt(sel.dataset.pa);
+    if(!options[correctIndex]){toast(`Correct answer for Question ${i+1} has no text`,'te');return}
+    questions.push({text,options,correct:correctIndex});
+  }
+  if(!questions.length){toast('Add at least one question','te');return}
+  if(questions.length>100){toast('Maximum 100 questions allowed','te');return}
+  
+  const folderId=$('#eFolder').value||null;
+  
+  if(state.editId){
+    const idx=state.quizzes.findIndex(q=>q.id===state.editId);
+    if(idx!==-1){
+      state.quizzes[idx]={...state.quizzes[idx],title,questions,folderId,updated:Date.now()};
+    }else{
+      toast('Quiz not found','te');
+      return;
+    }
+  }else{
+    state.quizzes.push({id:uid(),title,questions,folderId,created:Date.now()});
+  }
+  if(dbSave(K_Q,state.quizzes)){toast('Quiz saved','ts');goHome()}
+};
+
+/* ═══ Parser — shared ═══ */
+function parseQuiz(raw){
+  const lines=raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n').map(l=>l.trim());
+  let title='',qs=[],cur=null;
+  for(const ln of lines){
+    if(!ln) continue;
+    if(/^QUIZ:/i.test(ln)){title=ln.substring(5).trim();continue}
+    if(/^Q:/i.test(ln)){if(cur&&cur.text)qs.push(cur);cur={text:ln.substring(2).trim(),options:['','','',''],correct:0};continue}
+    if(cur&&/^[A-D]:/i.test(ln)){const i=ln.charCodeAt(0)-65;if(i>=0&&i<4)cur.options[i]=ln.substring(2).trim();continue}
+    if(cur&&/^ANS:/i.test(ln)){const a=ln.substring(4).trim().toUpperCase();if(a>='A'&&a<='D')cur.correct=a.charCodeAt(0)-65;continue}
+  }
+  if(cur&&cur.text) qs.push(cur);
+  return {title:title||'Untitled Quiz',questions:qs};
+}
+
+function validateParsed(p){
+  const e=[];
+  if(!p.title||!p.title.trim()) e.push('Missing quiz title');
+  if(!p.questions.length) e.push('No questions found');
+  if(p.questions.length>100) e.push('Maximum 100 questions exceeded');
+  p.questions.forEach((q,i)=>{
+    const filledOpts=q.options.filter(o=>o&&o.trim()).length;
+    if(filledOpts<2) e.push(`Q${i+1}: need at least 2 options`);
+    if(!q.options[q.correct]||!q.options[q.correct].trim()) e.push(`Q${i+1}: correct answer is empty`);
+    if(q.text.length>500) e.push(`Q${i+1}: question too long (max 500 chars)`);
+  });
+  return e;
+}
+
+function showPs(p,err,sEl,tEl,dEl){
+  if(err.length){sEl.className='ps vis err';tEl.textContent='Issues Found';dEl.textContent=err.join('. ');return false}
+  if(p.questions.length){sEl.className='ps vis ok';tEl.textContent='Valid Quiz';dEl.textContent=`"${p.title}" — ${p.questions.length} question${p.questions.length>1?'s':''}`;return true}
+  sEl.className='ps';return false;
+}
+
+/* ═══ Import ═══ */
+$('#impTa').oninput=function(){
+  if(this.value.trim().length<10){$('#psBox').className='ps';$('#pvBox').classList.remove('vis');return}
+  const p=parseQuiz(this.value),err=validateParsed(p);showPs(p,err,$('#psBox'),$('#psT'),$('#psD'));
+  if(!err.length&&p.questions.length){
+    $('#pvC').innerHTML=p.questions.map((q,i)=>{const f=q.options.filter(o=>o).length,ha=q.options[q.correct]?.trim();return `<div class="pv-i ${ha?'ok':'bad'}"><b>Q${i+1}: ${esc(q.text.substring(0,60))}${q.text.length>60?'...':''}</b><small>${f} options${ha?'':' — no answer'}</small></div>`}).join('');
+    $('#pvBox').classList.add('vis');
+  }else $('#pvBox').classList.remove('vis');
+};
+
+$('#btnImpQ').onclick=()=>{
+  const text=$('#impTa').value.trim();
+  if(!text){toast('Paste quiz text first','te');return}
+  const p=parseQuiz(text),err=validateParsed(p);
+  if(err.length){toast(err[0],'te');return}
+  if(!p.questions.length){toast('No valid questions','te');return}
+  const folderId=$('#impFolder').value||null;
+  state.quizzes.push({id:uid(),title:p.title,questions:p.questions,folderId,created:Date.now()});
+  if(dbSave(K_Q,state.quizzes)){toast(`Imported "${p.title}"`,'ts');goHome()}
+};
+
+/* ═══ AI Prompt Copy ═══ */
+$('#aiPromptText').textContent=AI_QUIZ_PROMPT;
+$('#btnCopyPrompt').onclick=()=>{
+  navigator.clipboard.writeText(AI_QUIZ_PROMPT).then(()=>{
+    toast('Prompt copied to clipboard','ts');
+  }).catch(()=>{
+    // Fallback for browsers without clipboard API
+    const ta=document.createElement('textarea');
+    ta.value=AI_QUIZ_PROMPT;
+    ta.style.position='fixed';
+    ta.style.opacity='0';
+    document.body.appendChild(ta);
+    ta.select();
+    try{
+      document.execCommand('copy');
+      toast('Prompt copied to clipboard','ts');
+    }catch{
+      toast('Could not copy prompt','te');
+    }
+    document.body.removeChild(ta);
+  });
+};
+
+/* ═══ Quiz Taking ═══ */
+function startQuiz(qid){
+  const q=state.quizzes.find(x=>x.id===qid);
+  if(!q){
+    toast('Quiz not found','te');
+    return;
+  }
+  if(!q.questions.length){
+    toast('This quiz has no questions','te');
+    return;
+  }
+  state.activeQuiz=q;
+  state.qIdx=0;
+  state.answers=[];
+  $('#qTitle').textContent=q.title;
+  nav('sQuiz');
+  renderQ();
+}
+
+function renderQ(){
+  const quiz=state.activeQuiz,idx=state.qIdx,q=quiz.questions[idx],total=quiz.questions.length;
+  $('#progF').style.width=`${(idx/total)*100}%`;
+  $('#qBar').style.display='none';
+  const area=$('#qArea');
+  area.innerHTML=`<div class="qq-lbl">Question ${idx+1} of ${total}</div><div class="qq-txt">${esc(q.text)}</div><div class="al" id="aList"></div><div class="fb" id="fbBar"></div>`;
+  const list=$('#aList');
+  q.options.forEach((opt,i)=>{
+    if(!opt.trim()) return;
+    const c=document.createElement('div');c.className='ac';c.tabIndex=0;c.setAttribute('role','button');
+    c.innerHTML=`<div class="ac-l">${L[i]}</div><div class="ac-t">${esc(opt)}</div>`;
+    const h=()=>pickAns(i);c.onclick=h;c.onkeydown=e=>{if(e.key==='Enter')h()};list.appendChild(c);
+  });
+  $('#btnNext').textContent=idx===total-1?'See Results':'Next Question';
+}
+
+function pickAns(si){
+  const q=state.activeQuiz.questions[state.qIdx],ok=si===q.correct;
+  state.answers[state.qIdx]=si;
+  $$('#aList .ac').forEach((c,ci)=>{
+    c.classList.add('lk');c.style.pointerEvents='none';
+    if(ci===q.correct) c.classList.add('ic');else if(ci===si&&!ok) c.classList.add('iw');else c.classList.add('id');
+  });
+  if(prefs.feedback){
+    const bar=$('#fbBar');
+    if(ok){bar.className='fb vis ok';bar.textContent='Correct!'}
+    else{bar.className='fb vis no';bar.textContent=`Incorrect — answer is ${L[q.correct]}: ${q.options[q.correct]}`}
+  }
+  $('#qBar').style.display='flex';
+}
+
+$('#btnNext').onclick=()=>{
+  state.qIdx++;
+  if(state.qIdx>=state.activeQuiz.questions.length){
+    finishQuiz();
+  }else{
+    renderQ();
+  }
+};
+
+$('#btnQuit').onclick=async()=>{
+  if(await confirm2('Quit Quiz','Progress will be lost. Are you sure?')){
+    state.activeQuiz=null;
+    goHome();
+  }
+};
+
+/* ═══ Results + Save Attempt ═══ */
+function finishQuiz(){
+  const quiz=state.activeQuiz;
+  if(!quiz){
+    toast('Error: No active quiz','te');
+    goHome();
+    return;
+  }
+  
+  const total=quiz.questions.length;
+  const correct=state.answers.reduce((s,a,i)=>s+(a===quiz.questions[i].correct?1:0),0);
+  const pct=Math.round(correct/total*100);
+
+  // Save attempt per-quiz with validation
+  if(!state.attempts[quiz.id]||!Array.isArray(state.attempts[quiz.id])){
+    state.attempts[quiz.id]=[];
+  }
+  
+  const attempt={
+    id:uid(),
+    date:Date.now(),
+    answers:[...state.answers],
+    correct,
+    total,
+    quizTitle:quiz.title
+  };
+  
+  state.attempts[quiz.id].push(attempt);
+  
+  // Keep last 50 attempts per quiz to prevent unbounded growth
+  if(state.attempts[quiz.id].length>50){
+    state.attempts[quiz.id]=state.attempts[quiz.id].slice(-50);
+  }
+  
+  dbSave(K_A,state.attempts);
+
+  const ring=$('#srRing');ring.style.setProperty('--p','0');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>ring.style.setProperty('--p',String(pct))));
+  $('#srVal').textContent=pct+'%';
+  $('#stOk').textContent=correct;
+  $('#stNo').textContent=total-correct;
+
+  const tiers=[[80,'Excellent!','Outstanding performance!'],[60,'Good Job!','Solid work.'],[40,'Not Bad','Room to improve.'],[0,'Keep Trying','Review and retry.']];
+  const [,t,d]=tiers.find(([th])=>pct>=th);
+  $('#resT').textContent=t;
+  $('#resD').textContent=d;
+
+  const rv=$('#rvList');rv.innerHTML='';
+  quiz.questions.forEach((q,i)=>{
+    const ua=state.answers[i];
+    const ok=ua===q.correct;
+    const el=document.createElement('div');el.className='rv-i';
+    el.innerHTML=`<div class="rv-q">${i+1}. ${esc(q.text)}</div><div class="rv-a"><span class="bdg ${ok?'bdg-ok':'bdg-no'}">${ok?'Correct':'Your Answer'}</span><span>${ua!==undefined?`${L[ua]}: ${esc(q.options[ua]||'—')}`:'Skipped'}</span></div>${!ok?`<div class="rv-a"><span class="bdg bdg-ans">Correct Answer</span><span>${L[q.correct]}: ${esc(q.options[q.correct])}</span></div>`:''}`;
+    rv.appendChild(el);
+  });
+  nav('sRes');
+}
+
+$('#btnRetry').onclick=()=>{
+  if(state.activeQuiz){
+    startQuiz(state.activeQuiz.id);
+  }else{
+    toast('No quiz to retry','te');
+  }
+};
+
+/* ═══ Attempts List ═══ */
+function showAttempts(qid){
+  state.viewingQuizId=qid;
+  const q=state.quizzes.find(x=>x.id===qid);
+  if(!q){
+    $('#attList').innerHTML='<div class="empty"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="empty-t">Quiz not found</div><div class="empty-d">This quiz may have been deleted.</div></div>';
+    $('#attHdr').textContent='Attempts';
+    nav('sAtt');
+    return;
+  }
+  
+  const attempts=(state.attempts[qid]||[]).slice().reverse();
+  $('#attHdr').textContent=q.title;
+
+  if(!attempts.length){
+    $('#attList').innerHTML='<div class="empty"><div class="empty-icon"><i class="fa-solid fa-clipboard-list"></i></div><div class="empty-t">No attempts yet</div><div class="empty-d">Take the quiz to see your results here.</div></div>';
+    nav('sAtt');
+    return;
+  }
+
+  $('#attList').innerHTML='<div class="attempt-list">'+attempts.map((a,idx)=>{
+    const pct=Math.round(a.correct/a.total*100);
+    const d=new Date(a.date);
+    const ds=d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    const attemptNum=attempts.length-idx;
+    return `<div class="attempt-card" data-aid="${a.id}"><div class="at-top"><div class="at-title">Attempt #${attemptNum} — ${ds}</div><div class="at-score ${pct>=60?'ok':'no'}">${pct}%</div></div><div class="at-meta">${a.correct} of ${a.total} correct</div></div>`;
+  }).join('')+'</div>';
+
+  $('#attList').querySelectorAll('.attempt-card').forEach(c=>{
+    c.onclick=()=>showAttemptDetail(qid,c.dataset.aid);
+  });
+  nav('sAtt');
+}
+
+$('#btnAttBack').onclick=()=>{
+  if(state.viewingQuizId){
+    showAttempts(state.viewingQuizId);
+  }else{
+    goHome();
+  }
+};
+
+/* ═══ Attempt Detail ═══ */
+function showAttemptDetail(qid,aid){
+  const q=state.quizzes.find(x=>x.id===qid);
+  if(!q){
+    toast('Quiz no longer exists','te');
+    showAttempts(qid);
+    return;
+  }
+  
+  const quizAttempts=state.attempts[qid];
+  if(!Array.isArray(quizAttempts)){
+    toast('No attempts found','te');
+    showAttempts(qid);
+    return;
+  }
+  
+  const a=quizAttempts.find(x=>x.id===aid);
+  if(!a){
+    toast('Attempt not found','te');
+    showAttempts(qid);
+    return;
+  }
+  
+  const pct=Math.round(a.correct/a.total*100);
+  const d=new Date(a.date);
+  const ds=d.toLocaleDateString(undefined,{weekday:'short',month:'long',day:'numeric',year:'numeric'})+' at '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+
+  $('#attDHdr').textContent=q.title;
+  const el=$('#attDetail');
+  el.innerHTML=`<div style="text-align:center;padding:16px 0 20px"><div style="font-size:.8rem;color:var(--tx3);margin-bottom:6px">${ds}</div><div style="font-family:var(--font-display);font-size:2.2rem;font-weight:800;color:${pct>=60?'var(--ok)':'var(--err)'}">${pct}%</div><div style="font-size:.8rem;color:var(--tx2);margin-top:3px">${a.correct} of ${a.total} correct</div></div><div class="slbl">Answers</div><div class="rv-list" id="attRvList"></div>`;
+  
+  const list=$('#attRvList');
+  q.questions.forEach((q,i)=>{
+    const ua=a.answers[i];
+    const ok=ua===q.correct;
+    const item=document.createElement('div');item.className='rv-i';
+    item.innerHTML=`<div class="rv-q">${i+1}. ${esc(q.text)}</div><div class="rv-a"><span class="bdg ${ok?'bdg-ok':'bdg-no'}">${ok?'Correct':'Your Answer'}</span><span>${ua!==undefined?`${L[ua]}: ${esc(q.options[ua]||'—')}`:'Skipped'}</span></div>${!ok?`<div class="rv-a"><span class="bdg bdg-ans">Correct Answer</span><span>${L[q.correct]}: ${esc(q.options[q.correct])}</span></div>`:''}`;
+    list.appendChild(item);
+  });
+  nav('sAttD');
+}
+
+/* ═══ Delegated nav ═══ */
+document.onclick=e=>{
+  const a=e.target.closest('[data-nav]');
+  if(a&&a.dataset.nav==='home'){
+    goHome();
+    return;
+  }
+  
+  const mc=e.target.closest('.mode-card[data-act]');
+  if(mc){
+    if(mc.dataset.act==='visual'){
+      openEditor();
+    }else{
+      renderFolderSelect('','#impFolder');
+      $('#impTa').value='';
+      $('#psBox').className='ps';
+      $('#pvBox').classList.remove('vis');
+      nav('sImp');
+    }
+  }
+};
+
+/* ═══ Init ═══ */
+(function(){
+  const stored=dbLoad(K_P,null);
+  if(stored) Object.assign(prefs,stored);
+  
+  state.quizzes=dbLoad(K_Q,[]);
+  state.folders=dbLoad(K_F,[]);
+  state.attempts=dbLoad(K_A,{});
+  
+  // Validate and repair corrupted data
+  if(!Array.isArray(state.quizzes)) state.quizzes=[];
+  if(!Array.isArray(state.folders)) state.folders=[];
+  if(!state.attempts||typeof state.attempts!=='object'||Array.isArray(state.attempts)) state.attempts={};
+  
+  // Ensure each quiz has valid structure
+  state.quizzes=state.quizzes.filter(q=>q&&q.id&&Array.isArray(q.questions));
+  
+  // Clean up orphaned attempts
+  const quizIds=new Set(state.quizzes.map(q=>q.id));
+  Object.keys(state.attempts).forEach(key=>{
+    if(!quizIds.has(key)){
+      delete state.attempts[key];
+    }else if(!Array.isArray(state.attempts[key])){
+      state.attempts[key]=[];
+    }
+  });
+
+  applyTheme(prefs.theme);
+  buildColorGrid();
+  applyAccent(prefs.accent);
+  $('#tFb').checked=prefs.feedback;
+  renderHome();
+  
+  console.log('QuizForge initialized:',{
+    quizzes:state.quizzes.length,
+    folders:state.folders.length,
+    attempts:Object.keys(state.attempts).length
+  });
+})();
+</script>
+</body>
+</html>
