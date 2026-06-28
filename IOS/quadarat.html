@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة التعلم الكمي</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --primary:#0F4C75;--primary-light:#1B6CA8;--primary-dark:#0A3252;
+  --accent:#D4A843;--accent-light:#E8C875;--accent-dark:#B8891E;
+  --bg:#F7F9FC;--surface:#FFFFFF;--surface-2:#EEF2F7;--surface-3:#E0E8F0;
+  --border:#CBD5E1;--text:#1A2332;--text-2:#4A5568;--text-3:#718096;
+  --success:#22863A;--success-bg:#E6F4EA;
+  --error:#C53030;--error-bg:#FEE2E2;
+  --warning:#D97706;--warning-bg:#FEF3C7;
+  --info:#2B6CB0;--info-bg:#EBF4FF;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08);
+  --shadow:0 4px 12px rgba(0,0,0,.1);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.15);
+  --shadow-xl:0 20px 60px rgba(0,0,0,.2);
+  --font-ar:'Segoe UI','Tahoma','Arial',sans-serif;
+  --radius:12px;--radius-sm:8px;--radius-lg:16px;
+  --transition:0.22s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"]{
+  --bg:#0D1117;--surface:#161B22;--surface-2:#1C2333;--surface-3:#242D3D;
+  --border:#30363D;--text:#E6EDF3;--text-2:#8B949E;--text-3:#6E7681;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.4);
+  --shadow:0 4px 12px rgba(0,0,0,.5);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.6);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction:rtl;
+  min-height:100vh;transition:background var(--transition),color var(--transition);line-height:1.6;overflow-x:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ─── PAGES ─── */
+.page{display:none;min-height:100vh}
+.page.active{display:flex;flex-direction:column}
+#page-app{display:none;flex-direction:row}
+#page-app.active{display:flex}
+#page-quiz{display:none;min-height:100vh;flex-direction:column;background:var(--bg)}
+#page-quiz.active{display:flex}
+#page-results{display:none;min-height:100vh;align-items:center;justify-content:center;padding:2rem;background:var(--bg)}
+#page-results.active{display:flex}
+
+/* ─── LANDING ─── */
+#page-landing{background:linear-gradient(135deg,var(--primary-dark),var(--primary),var(--primary-light));
+  align-items:center;justify-content:center;position:relative;overflow:hidden}
+#page-landing::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;
+  background:rgba(212,168,67,.08);top:-150px;left:-150px;animation:float 8s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{box-shadow:0 8px 32px rgba(212,168,67,.4)}50%{box-shadow:0 8px 48px rgba(212,168,67,.7)}}
+.landing-content{text-align:center;z-index:1;padding:2rem;animation:fadeInUp .8s ease both}
+.landing-logo{width:90px;height:90px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+  border-radius:24px;margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;animation:pulse 3s ease-in-out infinite}
+.landing-title{font-size:clamp(1.8rem,5vw,3rem);font-weight:800;color:#fff;margin-bottom:.5rem}
+.landing-subtitle{font-size:1.1rem;color:rgba(255,255,255,.7);margin-bottom:3rem}
+.landing-question{font-size:clamp(1.2rem,3vw,1.6rem);color:var(--accent-light);font-weight:700;margin-bottom:2rem}
+.landing-choices{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.choice-card{width:220px;padding:2rem 1.5rem;border-radius:var(--radius-lg);cursor:pointer;
+  transition:transform var(--transition),box-shadow var(--transition);text-align:center;position:relative}
+.choice-card.enabled{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);backdrop-filter:blur(10px);color:#fff}
+.choice-card.enabled:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 20px 50px rgba(0,0,0,.3);border-color:var(--accent)}
+.choice-card.disabled{background:rgba(255,255,255,.05);border:2px dashed rgba(255,255,255,.2);color:rgba(255,255,255,.4);cursor:not-allowed}
+.choice-icon{font-size:2.8rem;margin-bottom:1rem;display:block}
+.choice-name{font-size:1.5rem;font-weight:800;margin-bottom:.4rem}
+.choice-desc{font-size:.85rem;opacity:.75}
+.disabled-badge{display:inline-block;background:rgba(255,255,255,.15);padding:.2rem .6rem;border-radius:20px;font-size:.7rem;margin-top:.5rem}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:260px;min-height:100vh;background:var(--surface);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;position:fixed;top:0;right:0;z-index:100;
+  transition:transform var(--transition);box-shadow:var(--shadow)}
+.sidebar-header{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem}
+.sidebar-logo{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.sidebar-title{font-weight:800;font-size:1rem;color:var(--text);line-height:1.2}
+.sidebar-sub{font-size:.72rem;color:var(--text-3)}
+.sidebar-nav{flex:1;padding:1rem 0;overflow-y:auto}
+.nav-section-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--text-3);padding:.5rem 1.5rem .3rem}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.5rem;cursor:pointer;
+  transition:all var(--transition);border-right:3px solid transparent;color:var(--text-2);font-size:.9rem;font-weight:500}
+.nav-item:hover{background:var(--surface-2);color:var(--primary)}
+.nav-item.active{background:linear-gradient(to left,rgba(15,76,117,.12),transparent);
+  border-right-color:var(--primary);color:var(--primary);font-weight:700}
+.nav-icon{font-size:1.1rem;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-right:auto;background:var(--primary);color:#fff;font-size:.68rem;
+  padding:.1rem .5rem;border-radius:20px;min-width:20px;text-align:center}
+.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between}
+.theme-toggle{display:flex;align-items:center;gap:.5rem;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:20px;padding:.4rem .8rem;cursor:pointer;
+  font-size:.8rem;color:var(--text-2);transition:all var(--transition)}
+.theme-toggle:hover{background:var(--surface-3)}
+.back-btn{background:none;border:none;color:var(--text-3);cursor:pointer;font-size:.8rem;
+  display:flex;align-items:center;gap:.3rem;transition:color var(--transition)}
+.back-btn:hover{color:var(--primary)}
+.main-content{margin-right:260px;flex:1;min-height:100vh;background:var(--bg);transition:background var(--transition)}
+.mobile-header{display:none;background:var(--surface);border-bottom:1px solid var(--border);
+  padding:1rem 1.5rem;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.hamburger{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90}
+
+/* ─── VIEWS ─── */
+.view{display:none;padding:2rem}
+.view.active{display:block}
+.view-header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.view-title{font-size:1.7rem;font-weight:800;color:var(--text);margin-bottom:.4rem}
+.view-subtitle{font-size:.9rem;color:var(--text-3)}
+
+/* ─── CARDS ─── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.5rem;box-shadow:var(--shadow-sm);transition:box-shadow var(--transition)}
+.card:hover{box-shadow:var(--shadow)}
+
+/* ─── STAT CARDS ─── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow-sm);transition:all var(--transition)}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat-icon{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.stat-icon.blue{background:var(--info-bg)}.stat-icon.green{background:var(--success-bg)}
+.stat-icon.gold{background:var(--warning-bg)}.stat-icon.red{background:var(--error-bg)}
+.stat-value{font-size:1.8rem;font-weight:800;color:var(--text);line-height:1}
+.stat-label{font-size:.8rem;color:var(--text-3);margin-top:.25rem}
+
+/* ─── QUIZ TYPE TABS ─── */
+.quiz-type-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;background:var(--surface-2);
+  padding:.4rem;border-radius:var(--radius);border:1px solid var(--border)}
+.quiz-type-tab{flex:1;padding:.6rem 1rem;border-radius:var(--radius-sm);font-size:.85rem;font-weight:700;
+  cursor:pointer;text-align:center;transition:all var(--transition);border:none;background:transparent;
+  color:var(--text-3);font-family:var(--font-ar)}
+.quiz-type-tab.active{background:var(--primary);color:#fff;box-shadow:var(--shadow-sm)}
+.quiz-type-tab:disabled{cursor:not-allowed;opacity:.5}
+.quiz-type-tab:not(.active):not(:disabled):hover{background:var(--surface-3);color:var(--text)}
+.coming-soon-badge{font-size:.6rem;background:var(--accent);color:#fff;padding:.1rem .35rem;
+  border-radius:8px;margin-right:.3rem;vertical-align:middle}
+
+/* ─── PROGRESS PLAN (exam date tracker) ─── */
+.progress-plan{background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+  border-radius:var(--radius-lg);padding:1.5rem;color:#fff;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.progress-plan::after{content:'';position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;
+  border-radius:50%;background:rgba(255,255,255,.06)}
+.plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.plan-title{font-size:1rem;font-weight:800}
+.plan-edit-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
+  border-radius:var(--radius-sm);padding:.3rem .75rem;font-size:.75rem;cursor:pointer;font-family:var(--font-ar)}
+.plan-edit-btn:hover{background:rgba(255,255,255,.25)}
+.plan-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.75rem;margin-bottom:1rem}
+.plan-stat{background:rgba(255,255,255,.1);border-radius:var(--radius-sm);padding:.75rem;text-align:center}
+.plan-stat-value{font-size:1.5rem;font-weight:800}
+.plan-stat-label{font-size:.7rem;opacity:.75;margin-top:.1rem}
+.plan-progress-bar{height:8px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin-bottom:.5rem}
+.plan-progress-fill{height:100%;background:linear-gradient(to left,var(--accent),var(--accent-light));
+  border-radius:4px;transition:width .5s ease}
+.plan-progress-label{font-size:.75rem;opacity:.8}
+
+/* ─── QUIZ CARDS ─── */
+.quiz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;transition:all var(--transition);box-shadow:var(--shadow-sm)}
+.quiz-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary-light)}
+.quiz-card-header{background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  padding:1.25rem;position:relative;overflow:hidden}
+.quiz-card-header::after{content:'';position:absolute;bottom:-30px;left:-30px;width:100px;height:100px;
+  border-radius:50%;background:rgba(255,255,255,.08)}
+.quiz-number-label{font-size:.75rem;color:rgba(255,255,255,.7);font-weight:600;margin-bottom:.3rem}
+.quiz-title-text{font-size:1.2rem;font-weight:800;color:#fff}
+.quiz-video-strip{display:flex;align-items:center;gap:.75rem;padding:.85rem 1.25rem;
+  border-bottom:1px solid var(--border);background:var(--surface-2);cursor:pointer;transition:background var(--transition)}
+.quiz-video-strip:hover{background:var(--surface-3)}
+.qvs-thumb{width:76px;height:48px;border-radius:6px;overflow:hidden;flex-shrink:0;background:#000;position:relative;display:flex;align-items:center;justify-content:center}
+.qvs-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.qvs-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1a1a2e,#16213e);color:rgba(255,255,255,.5);font-size:1.4rem}
+.qvs-play-overlay{position:absolute;inset:0;background:rgba(0,0,0,.3);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;opacity:0;transition:opacity var(--transition)}
+.quiz-video-strip:hover .qvs-play-overlay{opacity:1}
+.qvs-info{flex:1;min-width:0}
+.qvs-title{font-size:.78rem;font-weight:700;color:var(--text);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.qvs-sub{font-size:.68rem;color:var(--text-3);margin-top:.1rem}
+.qvs-btn{font-size:.7rem;background:#FF0000;color:#fff;border:none;border-radius:20px;
+  padding:.25rem .65rem;cursor:pointer;white-space:nowrap;font-weight:700;flex-shrink:0}
+.no-video-strip{padding:.75rem 1.25rem;font-size:.75rem;color:var(--text-3);
+  background:var(--surface-2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem}
+.quiz-card-body{padding:1rem 1.25rem}
+.quiz-meta{display:flex;gap:1rem;margin-bottom:.75rem;flex-wrap:wrap}
+.quiz-meta-item{display:flex;align-items:center;gap:.3rem;font-size:.78rem;color:var(--text-3)}
+.quiz-progress-bar{height:5px;background:var(--surface-3);border-radius:3px;margin-bottom:.85rem;overflow:hidden}
+.quiz-progress-fill{height:100%;border-radius:3px;background:linear-gradient(to left,var(--primary),var(--accent));transition:width .5s ease}
+.quiz-actions{display:flex;gap:.6rem}
+.quiz-status-badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.7rem;font-weight:600;padding:.2rem .55rem;border-radius:20px}
+.badge-new{background:var(--info-bg);color:var(--info)}
+.badge-done{background:var(--success-bg);color:var(--success)}
+
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;padding:.6rem 1.2rem;
+  border-radius:var(--radius-sm);font-family:var(--font-ar);font-size:.88rem;font-weight:600;
+  cursor:pointer;transition:all var(--transition);border:none;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(15,76,117,.3)}
+.btn-primary:hover{background:var(--primary-light);transform:translateY(-1px)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-dark);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text-2)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:var(--info-bg)}
+.btn-danger{background:var(--error);color:#fff}
+.btn-danger:hover{background:#9B2C2C}
+.btn-ghost{background:transparent;color:var(--text-3)}
+.btn-ghost:hover{background:var(--surface-2);color:var(--text)}
+.btn-sm{padding:.4rem .8rem;font-size:.78rem}
+.btn-lg{padding:.85rem 1.8rem;font-size:1rem}
+.btn-full{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+/* ─── UPLOAD ─── */
+.upload-zone{border:2.5px dashed var(--border);border-radius:var(--radius-lg);padding:3rem 2rem;
+  text-align:center;cursor:pointer;transition:all var(--transition);background:var(--surface);position:relative}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--primary);background:var(--info-bg)}
+.upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:3rem;margin-bottom:1rem;color:var(--text-3)}
+.upload-title{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.upload-desc{font-size:.85rem;color:var(--text-3)}
+.upload-list{margin-top:1.5rem;display:flex;flex-direction:column;gap:.75rem}
+.upload-item{display:flex;align-items:flex-start;gap:1rem;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem}
+.upload-item-name{font-size:.85rem;font-weight:600;color:var(--text)}
+.upload-item-size{font-size:.72rem;color:var(--text-3);margin-top:.1rem}
+.status-processing{color:var(--warning);font-size:.75rem;font-weight:600}
+.status-done{color:var(--success);font-size:.75rem;font-weight:600}
+.status-error{color:var(--error);font-size:.75rem;font-weight:600}
+.pdf-progress-wrap{margin-top:.6rem;width:100%}
+.pdf-progress-track{height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden}
+.pdf-progress-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .25s ease;width:0%}
+.pdf-progress-label{font-size:.68rem;color:var(--text-3);margin-top:.3rem}
+
+/* ─── YOUTUBE ─── */
+.yt-input-group{display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}
+.yt-input{flex:1;min-width:200px;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--text);font-family:var(--font-ar);font-size:.88rem;transition:border-color var(--transition)}
+.yt-input:focus{outline:none;border-color:var(--primary)}
+.yt-stats-bar{display:flex;gap:1rem;padding:.7rem 1rem;background:var(--surface-2);
+  border-radius:var(--radius-sm);margin-bottom:1rem;font-size:.82rem;color:var(--text-2);align-items:center;flex-wrap:wrap}
+.yt-video-list{display:flex;flex-direction:column;gap:.7rem}
+.yt-video-item{display:flex;align-items:center;gap:.85rem;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;transition:all var(--transition)}
+.yt-video-item:hover{border-color:var(--primary-light);background:var(--surface-2)}
+.yt-thumb-wrap{width:100px;height:62px;border-radius:6px;overflow:hidden;flex-shrink:0;background:#000;position:relative}
+.yt-thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.yt-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1a1a2e,#16213e);color:rgba(255,255,255,.45);font-size:1.5rem}
+.yt-play-badge{position:absolute;inset:0;background:rgba(0,0,0,.3);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;opacity:0;transition:opacity var(--transition)}
+.yt-video-item:hover .yt-play-badge{opacity:1}
+.yt-video-meta{flex:1;min-width:0}
+.yt-video-index{font-size:.68rem;font-weight:700;color:var(--text-3);margin-bottom:.2rem}
+.yt-video-title-text{font-size:.84rem;font-weight:700;color:var(--text);overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.yt-quiz-badge{font-size:.68rem;background:var(--primary);color:#fff;padding:.15rem .45rem;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.manual-badge{font-size:.62rem;background:var(--accent);color:#fff;padding:.1rem .35rem;border-radius:10px;margin-right:.3rem}
+
+/* ─── VIDEO MODAL ─── */
+.video-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:500;
+  align-items:center;justify-content:center;flex-direction:column;padding:1.25rem}
+.video-modal-overlay.active{display:flex}
+.video-modal-inner{width:100%;max-width:920px}
+.video-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;gap:1rem}
+.video-modal-title{color:#fff;font-weight:700;font-size:.95rem;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.video-modal-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;
+  border-radius:50%;font-size:1.1rem;cursor:pointer;transition:background var(--transition);flex-shrink:0}
+.video-modal-close:hover{background:rgba(255,255,255,.3)}
+.video-modal-player{position:relative;padding-top:56.25%;background:#000;border-radius:10px;overflow:hidden}
+.video-modal-player iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+.video-modal-nav{display:flex;gap:.75rem;margin-top:1rem;justify-content:center;flex-wrap:wrap;align-items:center}
+.video-modal-counter{font-size:.8rem;color:rgba(255,255,255,.6);padding:.4rem .8rem;display:flex;align-items:center}
+
+/* ─── QUIZ PAGE ─── */
+.quiz-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;
+  display:flex;align-items:center;gap:.75rem;position:sticky;top:0;z-index:50;box-shadow:var(--shadow-sm);flex-wrap:wrap}
+.quiz-topbar-title{font-weight:800;font-size:.95rem;color:var(--text);flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.timer-display{display:flex;align-items:center;gap:.4rem;background:var(--surface-2);
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .9rem;
+  font-size:1.1rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--text);transition:all var(--transition);flex-shrink:0}
+.timer-display.warning{border-color:var(--warning);color:var(--warning);background:var(--warning-bg);animation:timerPulse 1s infinite}
+.timer-display.critical{border-color:var(--error);color:var(--error);background:var(--error-bg);animation:timerPulse .5s infinite}
+@keyframes timerPulse{0%,100%{opacity:1}50%{opacity:.6}}
+.quiz-progress-top{height:4px;background:var(--surface-3)}
+.quiz-progress-top-fill{height:100%;background:linear-gradient(to left,var(--primary),var(--accent));transition:width .3s ease}
+.quiz-layout{display:flex;flex:1;min-height:0;overflow:hidden}
+.quiz-navigator{width:230px;background:var(--surface);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;padding:.85rem;overflow-y:auto;flex-shrink:0}
+.nav-section-title{font-size:.75rem;font-weight:700;color:var(--text);margin-bottom:.6rem}
+.nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-bottom:.85rem}
+.nav-btn{aspect-ratio:1;border-radius:5px;border:1.5px solid var(--border);background:var(--surface);
+  color:var(--text-2);font-size:.65rem;font-weight:700;cursor:pointer;transition:all var(--transition);
+  display:flex;align-items:center;justify-content:center}
+.nav-btn:hover{border-color:var(--primary);color:var(--primary)}
+.nav-btn.answered{background:var(--primary);border-color:var(--primary);color:#fff}
+.nav-btn.current{border-color:var(--accent);box-shadow:0 0 0 2px rgba(212,168,67,.4)}
+.nav-legend{display:flex;flex-direction:column;gap:.35rem;font-size:.68rem;color:var(--text-3);border-top:1px solid var(--border);padding-top:.75rem}
+.legend-item{display:flex;align-items:center;gap:.45rem}
+.legend-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.ld-none{background:var(--surface-3);border:1.5px solid var(--border)}
+.ld-ans{background:var(--primary)}
+.ld-cur{background:var(--accent)}
+.quiz-main{flex:1;padding:1.5rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.25rem}
+.sections-indicator{display:flex;gap:.4rem;flex-wrap:wrap}
+.section-dot{padding:.28rem .65rem;border-radius:20px;font-size:.7rem;font-weight:700;
+  border:1.5px solid var(--border);color:var(--text-3);cursor:pointer;transition:all var(--transition)}
+.section-dot.current{background:var(--primary);border-color:var(--primary);color:#fff}
+.section-dot.completed{background:var(--success-bg);border-color:var(--success);color:var(--success)}
+.quiz-video-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.quiz-video-panel-header{display:flex;align-items:center;gap:.6rem;padding:.85rem 1rem;border-bottom:1px solid var(--border)}
+.quiz-video-panel-title{font-weight:700;font-size:.85rem;color:var(--text);flex:1}
+.quiz-video-panel-embed{position:relative;padding-top:56.25%;background:#000}
+.quiz-video-panel-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+
+/* ─── QUESTION CARD ─── */
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;box-shadow:var(--shadow-sm);animation:slideIn .2s ease}
+.question-header{padding:.85rem 1.25rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;background:var(--surface-2)}
+.question-number-badge{font-size:.75rem;font-weight:700;color:var(--text-3)}
+.question-section-badge{font-size:.7rem;background:var(--info-bg);color:var(--info);padding:.2rem .55rem;border-radius:20px;font-weight:700}
+.question-image-area{padding:1rem 1.25rem;display:flex;align-items:flex-start;justify-content:center;
+  min-height:180px;background:var(--bg);position:relative}
+.question-img{max-width:100%;border-radius:6px;cursor:zoom-in;display:block;box-shadow:var(--shadow-sm);transition:transform .2s ease}
+.question-img.zoomed{transform:scale(1.6);cursor:zoom-out;z-index:20;position:relative}
+.question-img-loading{display:flex;align-items:center;justify-content:center;flex-direction:column;
+  gap:.75rem;color:var(--text-3);font-size:.85rem;padding:2.5rem;width:100%}
+.question-img-error{color:var(--text-3);font-size:.82rem;text-align:center;padding:1.5rem;width:100%}
+.question-zoom-hint{font-size:.68rem;color:var(--text-3);text-align:center;
+  padding:.3rem;border-top:1px solid var(--border);background:var(--surface-2)}
+.choices-area{padding:1rem 1.25rem 1.25rem;border-top:1px solid var(--border)}
+.choices-label{font-size:.75rem;font-weight:700;color:var(--text-3);margin-bottom:.75rem}
+.choices-list{display:flex;flex-direction:column;gap:.6rem}
+.choice-item{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;
+  transition:all var(--transition);background:var(--surface)}
+.choice-item:hover{border-color:var(--primary-light);background:var(--info-bg)}
+.choice-item.selected{border-color:var(--primary);background:linear-gradient(to left,var(--info-bg),rgba(15,76,117,.04))}
+.choice-item.correct{border-color:var(--success);background:var(--success-bg)}
+.choice-item.incorrect{border-color:var(--error);background:var(--error-bg)}
+.choice-letter{width:34px;height:34px;border-radius:50%;background:var(--surface-2);
+  border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.95rem;flex-shrink:0;transition:all var(--transition)}
+.choice-item.selected .choice-letter{background:var(--primary);border-color:var(--primary);color:#fff}
+.choice-item.correct .choice-letter{background:var(--success);border-color:var(--success);color:#fff}
+.choice-item.incorrect .choice-letter{background:var(--error);border-color:var(--error);color:#fff}
+.choice-text{font-size:.9rem;color:var(--text);font-weight:600}
+.quiz-bottombar{background:var(--surface);border-top:1px solid var(--border);padding:1rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;box-shadow:0 -4px 12px rgba(0,0,0,.05)}
+.answered-counter{font-size:.82rem;color:var(--text-3);text-align:center}
+
+/* ─── RESULTS ─── */
+.results-container{max-width:800px;width:100%;animation:fadeInUp .5s ease}
+.results-hero{background:linear-gradient(135deg,var(--primary-dark),var(--primary-light));
+  border-radius:var(--radius-lg);padding:2.5rem;text-align:center;color:#fff;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.results-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(212,168,67,.15),transparent 60%)}
+.results-score-ring{width:130px;height:130px;border-radius:50%;border:6px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 1.5rem;position:relative;z-index:1}
+.results-score-ring::before{content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:6px solid transparent;border-top-color:var(--accent);border-right-color:var(--accent);
+  animation:spinOnce .8s ease forwards}
+@keyframes spinOnce{from{transform:rotate(0)}to{transform:rotate(var(--score-deg,0deg))}}
+.results-pct{font-size:2.4rem;font-weight:800}
+.results-pct-label{font-size:.72rem;opacity:.7}
+.results-title{font-size:1.5rem;font-weight:800;margin-bottom:.5rem;position:relative;z-index:1}
+.results-subtitle{opacity:.8;font-size:.9rem;position:relative;z-index:1}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+.result-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
+.result-item-value{font-size:2rem;font-weight:800;color:var(--primary)}
+.result-item-label{font-size:.75rem;color:var(--text-3);margin-top:.3rem}
+
+/* ─── REVIEW ─── */
+.filter-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.filter-tab{padding:.45rem .9rem;border-radius:20px;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text-2);font-size:.8rem;font-weight:600;cursor:pointer;transition:all var(--transition)}
+.filter-tab.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.filter-tab:hover:not(.active){border-color:var(--primary);color:var(--primary)}
+.review-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.25rem;margin-bottom:1rem;box-shadow:var(--shadow-sm);border-right:4px solid var(--error)}
+.review-q-image{max-width:100%;border-radius:6px;margin-bottom:.85rem;border:1px solid var(--border);display:block}
+.review-answers{display:flex;flex-direction:column;gap:.45rem;margin-bottom:.85rem}
+.review-answer{display:flex;align-items:flex-start;gap:.6rem;padding:.55rem .85rem;border-radius:var(--radius-sm);font-size:.83rem}
+.review-answer.user-wrong{background:var(--error-bg);color:var(--error);border:1px solid var(--error)}
+.review-answer.correct-ans{background:var(--success-bg);color:var(--success);border:1px solid var(--success)}
+.review-meta{display:flex;gap:1rem;flex-wrap:wrap;font-size:.72rem;color:var(--text-3);
+  padding-top:.65rem;border-top:1px solid var(--border)}
+
+/* ─── CHARTS ─── */
+.charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.25rem;margin-top:1.5rem}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow-sm)}
+.chart-title{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:1.25rem}
+
+/* ─── COMPLETED ─── */
+.completed-quiz-row{display:flex;align-items:center;gap:1rem;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;
+  margin-bottom:.75rem;transition:all var(--transition);cursor:pointer}
+.completed-quiz-row:hover{box-shadow:var(--shadow);border-color:var(--primary-light)}
+.cqr-score{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-direction:column;font-weight:800;font-size:.82rem;flex-shrink:0}
+.score-high{background:var(--success-bg);color:var(--success)}
+.score-mid{background:var(--warning-bg);color:var(--warning)}
+.score-low{background:var(--error-bg);color:var(--error)}
+.cqr-info{flex:1}
+.cqr-name{font-weight:700;color:var(--text);font-size:.92rem}
+.cqr-meta{font-size:.72rem;color:var(--text-3);margin-top:.2rem}
+
+/* ─── MODALS ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;
+  align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:2rem;max-width:520px;
+  width:100%;box-shadow:var(--shadow-xl);animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-title{font-size:1.2rem;font-weight:800;margin-bottom:1rem}
+.modal-body{color:var(--text-2);font-size:.9rem;margin-bottom:1.5rem;line-height:1.6}
+.modal-actions{display:flex;gap:.75rem;justify-content:flex-end}
+.submit-review-list{max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:1.25rem}
+.submit-review-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;
+  border-bottom:1px solid var(--border);font-size:.8rem;color:var(--text-2)}
+.submit-review-item:last-child{border-bottom:none}
+.submit-review-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ─── PLAN MODAL ─── */
+.plan-modal-body label{display:block;font-size:.82rem;font-weight:700;color:var(--text-2);margin-bottom:.35rem;margin-top:.85rem}
+.plan-modal-body input[type="date"],.plan-modal-body input[type="number"]{
+  width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--text);font-family:var(--font-ar);font-size:.9rem}
+.plan-modal-body input:focus{outline:none;border-color:var(--primary)}
+
+/* ─── TOASTS ─── */
+.toast-container{position:fixed;bottom:1.5rem;left:1.5rem;z-index:9999;display:flex;flex-direction:column-reverse;gap:.75rem}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:.85rem 1.25rem;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;
+  font-size:.83rem;font-weight:600;min-width:260px;max-width:380px;animation:toastIn .3s ease;border-right:4px solid var(--primary)}
+@keyframes toastIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.toast.success{border-right-color:var(--success)}.toast.error{border-right-color:var(--error)}.toast.warning{border-right-color:var(--warning)}
+.toast-icon{font-size:1.1rem;flex-shrink:0}
+
+/* ─── UTILS ─── */
+.spinner{width:36px;height:36px;border:3px solid var(--surface-3);border-top-color:var(--primary);border-radius:50%;animation:rotate .8s linear infinite;margin:0 auto}
+@keyframes rotate{to{transform:rotate(360deg)}}
+.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;color:var(--text-3);font-size:.88rem;gap:.75rem}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text-3)}
+.empty-icon{font-size:3.5rem;margin-bottom:1rem}
+.empty-title{font-size:1.1rem;font-weight:700;color:var(--text-2);margin-bottom:.5rem}
+.empty-desc{font-size:.83rem}
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
+.gap-1{gap:.5rem}.gap-2{gap:1rem}.mt-1{margin-top:.5rem}.mt-2{margin-top:1rem}
+.mt-3{margin-top:1.5rem}.mb-1{margin-bottom:.5rem}.mb-2{margin-bottom:1rem}
+.text-sm{font-size:.85rem}.text-xs{font-size:.72rem}.text-muted{color:var(--text-3)}
+.font-bold{font-weight:700}.hidden{display:none!important}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(100%);width:280px}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{display:block;opacity:0;pointer-events:none;transition:opacity var(--transition)}
+  .sidebar-overlay.active{opacity:1;pointer-events:all}
+  .main-content{margin-right:0}
+  .mobile-header{display:flex}
+  .quiz-navigator{display:none}
+  .quiz-main{padding:1rem}
+  .quiz-bottombar{padding:.85rem 1rem}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-grid{grid-template-columns:1fr}
+  .quiz-grid{grid-template-columns:1fr}
+  .results-grid{grid-template-columns:repeat(2,1fr)}
+  .grid-2{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr}
+  .view{padding:1rem}
+  .landing-choices{flex-direction:column;align-items:center}
+  .choice-card{width:90%}
+}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="page-landing" class="page active">
+  <div class="landing-content">
+    <div class="landing-logo">🎓</div>
+    <h1 class="landing-title">منصة التعلم الكمي</h1>
+    <p class="landing-subtitle">اختبر نفسك وتحسّن يومًا بعد يوم</p>
+    <p class="landing-question">ماذا تريد أن تتعلم؟</p>
+    <div class="landing-choices">
+      <div class="choice-card enabled" onclick="App.navigate('dashboard')">
+        <span class="choice-icon">📐</span><div class="choice-name">كمي</div>
+        <div class="choice-desc">رياضيات وأسئلة كمية</div>
+      </div>
+      <div class="choice-card disabled">
+        <span class="choice-icon">📚</span><div class="choice-name">لفظي</div>
+        <div class="choice-desc">اللغة والمفردات</div><span class="disabled-badge">قريبًا</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div id="page-app" class="page">
+  <div class="mobile-header">
+    <span style="font-weight:800;color:var(--text)">منصة التعلم الكمي</span>
+    <button class="hamburger" onclick="App.toggleSidebar()">☰</button>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="App.closeSidebar()"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">🎓</div>
+      <div><div class="sidebar-title">التعلم الكمي</div><div class="sidebar-sub">منصة الاختبارات</div></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">الرئيسية</div>
+      <div class="nav-item active" data-view="overview" onclick="App.showView('overview')"><span class="nav-icon">🏠</span>لوحة التحكم</div>
+      <div class="nav-section-label">الاختبارات</div>
+      <div class="nav-item" data-view="quizzes" onclick="App.showView('quizzes')"><span class="nav-icon">📋</span>بنوك الأسئلة<span class="nav-badge" id="quizCountBadge">0</span></div>
+      <div class="nav-item" data-view="completed" onclick="App.showView('completed')"><span class="nav-icon">✅</span>الاختبارات المكتملة<span class="nav-badge" id="completedCountBadge">0</span></div>
+      <div class="nav-section-label">المحتوى</div>
+      <div class="nav-item" data-view="upload" onclick="App.showView('upload')"><span class="nav-icon">📤</span>رفع ملفات PDF</div>
+      <div class="nav-item" data-view="youtube" onclick="App.showView('youtube')"><span class="nav-icon">🎬</span>ربط يوتيوب<span class="nav-badge" id="ytCountBadge">0</span></div>
+      <div class="nav-section-label">التحليل</div>
+      <div class="nav-item" data-view="stats" onclick="App.showView('stats')"><span class="nav-icon">📊</span>الإحصائيات</div>
+      <div class="nav-item" data-view="review" onclick="App.showView('review')"><span class="nav-icon">🔴</span>مراجعة الأخطاء</div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="back-btn" onclick="App.navigate('landing')">↩ الرئيسية</button>
+      <button class="theme-toggle" onclick="App.toggleTheme()" id="themeBtn">🌙 مظلم</button>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <!-- OVERVIEW -->
+    <div class="view active" id="view-overview">
+      <div class="view-header"><h1 class="view-title">لوحة التحكم</h1><p class="view-subtitle">مرحبًا! هنا ملخص نشاطك وأدائك</p></div>
+      <!-- Exam Date Plan -->
+      <div class="progress-plan" id="planWidget">
+        <div class="plan-header">
+          <div class="plan-title">📅 خطة الاستعداد للاختبار</div>
+          <button class="plan-edit-btn" onclick="PlanManager.openModal()">✏️ تعديل</button>
+        </div>
+        <div class="plan-stats" id="planStats">
+          <div class="plan-stat"><div class="plan-stat-value" id="planDaysLeft">—</div><div class="plan-stat-label">يوم متبقي</div></div>
+          <div class="plan-stat"><div class="plan-stat-value" id="planDoneCount">0</div><div class="plan-stat-label">اختبار أنجزت</div></div>
+          <div class="plan-stat"><div class="plan-stat-value" id="planTotalTarget">0</div><div class="plan-stat-label">الهدف الكلي</div></div>
+          <div class="plan-stat"><div class="plan-stat-value" id="planPerDay">—</div><div class="plan-stat-label">اختبار/يوم مطلوب</div></div>
+        </div>
+        <div class="plan-progress-bar"><div class="plan-progress-fill" id="planProgressFill" style="width:0%"></div></div>
+        <div class="plan-progress-label" id="planProgressLabel">حدد تاريخ الاختبار والهدف لتتبع تقدمك</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon blue">📋</div><div><div class="stat-value" id="totalQuizzesVal">0</div><div class="stat-label">إجمالي الاختبارات</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-value" id="completedQuizzesVal">0</div><div class="stat-label">مكتملة</div></div></div>
+        <div class="stat-card"><div class="stat-icon gold">⭐</div><div><div class="stat-value" id="avgScoreVal">—</div><div class="stat-label">متوسط الدرجات</div></div></div>
+        <div class="stat-card"><div class="stat-icon red">❌</div><div><div class="stat-value" id="totalWrongVal">0</div><div class="stat-label">إجمالي الأخطاء</div></div></div>
+      </div>
+      <div class="card mt-3">
+        <div class="flex items-center justify-between mb-2">
+          <h2 style="font-size:1rem;font-weight:800">آخر الاختبارات</h2>
+          <button class="btn btn-outline btn-sm" onclick="App.showView('quizzes')">عرض الكل</button>
+        </div>
+        <div id="recentQuizzesList"></div>
+      </div>
+    </div>
+
+    <!-- QUIZZES -->
+    <div class="view" id="view-quizzes">
+      <div class="view-header">
+        <div class="flex items-center justify-between">
+          <div><h1 class="view-title">الاختبارات</h1><p class="view-subtitle">اختر نوع الاختبار وابدأ</p></div>
+          <button class="btn btn-primary" onclick="App.showView('upload')">➕ رفع PDF</button>
+        </div>
+      </div>
+      <!-- Quiz type tabs -->
+      <div class="quiz-type-tabs">
+        <button class="quiz-type-tab active" onclick="QuizList.setType('banks',this)">🏦 بنوك الأسئلة</button>
+        <button class="quiz-type-tab" disabled onclick="QuizList.setType('sections',this)">
+          <span class="coming-soon-badge">قريبًا</span>📂 اختبارات أقسام
+        </button>
+        <button class="quiz-type-tab" disabled onclick="QuizList.setType('frequent',this)">
+          <span class="coming-soon-badge">قريبًا</span>🔥 الأكثر تكرارًا
+        </button>
+      </div>
+      <div class="quiz-grid" id="quizGrid"></div>
+    </div>
+
+    <!-- UPLOAD -->
+    <div class="view" id="view-upload">
+      <div class="view-header"><h1 class="view-title">رفع ملفات PDF</h1>
+        <p class="view-subtitle">كل صفحة (2–49) = سؤال صوري • يمكن رفع عدة ملفات دفعة واحدة</p></div>
+      <div class="grid-2" style="align-items:start;gap:1.5rem">
+        <div>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="pdfInput" accept=".pdf" multiple>
+            <div class="upload-icon">📄</div>
+            <div class="upload-title">اسحب وأفلت ملفات PDF هنا</div>
+            <div class="upload-desc">أو انقر للتحديد • يدعم رفع أكثر من ملف</div>
+          </div>
+          <div class="upload-list" id="uploadList"></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:.9rem;font-weight:700;margin-bottom:1rem">📌 تعليمات</h3>
+          <ul style="font-size:.82rem;color:var(--text-2);line-height:2.2;list-style:none">
+            <li>🖼️ الأسئلة تُعرض كصور مباشرة من PDF</li>
+            <li>📄 كل ملف PDF = اختبار واحد (48 سؤال)</li>
+            <li>📃 الصفحة الأولى تُتجاهل تلقائيًا</li>
+            <li>🎯 الإجابات تُستخرج تلقائيًا من النص الأحمر</li>
+            <li>⏱️ مدة كل اختبار: 48 دقيقة</li>
+            <li>💾 كل شيء يُحفظ في المتصفح</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="view" id="view-youtube">
+      <div class="view-header"><h1 class="view-title">ربط يوتيوب</h1>
+        <p class="view-subtitle">يدعم القوائم الطويلة • يمكن إضافة فيديوهات يدوية</p></div>
+      <div class="card mb-2">
+        <h3 style="font-size:.85rem;font-weight:700;margin-bottom:.85rem">🎬 تحميل قائمة تشغيل</h3>
+        <div class="yt-input-group">
+          <input type="text" class="yt-input" id="ytPlaylistUrl" placeholder="https://www.youtube.com/playlist?list=..." dir="ltr">
+          <button class="btn btn-primary" onclick="YTManager.loadPlaylist()">🔗 تحميل</button>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0">
+        <h3 style="font-size:.85rem;font-weight:700;margin-bottom:.75rem">➕ إضافة فيديو يدوي</h3>
+        <div class="yt-input-group">
+          <input type="text" class="yt-input" id="ytManualUrl" placeholder="رابط يوتيوب أو معرف الفيديو" dir="ltr">
+          <input type="text" class="yt-input" id="ytManualTitle" placeholder="العنوان (اختياري)" style="max-width:200px">
+          <button class="btn btn-accent" onclick="YTManager.addManualVideo()">➕ إضافة</button>
+        </div>
+      </div>
+      <div id="ytStatsBar" class="yt-stats-bar hidden"></div>
+      <div id="ytVideoList" class="yt-video-list"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="view" id="view-stats">
+      <div class="view-header"><h1 class="view-title">الإحصائيات</h1><p class="view-subtitle">تحليل شامل لأدائك</p></div>
+      <div class="stats-grid" id="statsCards"></div>
+      <div class="charts-grid">
+        <div class="chart-card"><div class="chart-title">📈 الدرجات</div><canvas id="chartScores" height="200"></canvas></div>
+        <div class="chart-card"><div class="chart-title">🍩 توزيع الإجابات</div><canvas id="chartDist" height="200"></canvas></div>
+        <div class="chart-card"><div class="chart-title">📊 صحيح وخطأ</div><canvas id="chartWrongRight" height="200"></canvas></div>
+        <div class="chart-card"><div class="chart-title">⏱️ وقت الإنهاء</div><canvas id="chartTime" height="200"></canvas></div>
+      </div>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="view" id="view-review">
+      <div class="view-header"><h1 class="view-title">مراجعة الأخطاء</h1>
+        <p class="view-subtitle">صور الأسئلة الأصلية مع الإجابات الصحيحة</p></div>
+      <div class="filter-tabs" id="reviewFilterTabs">
+        <button class="filter-tab active" onclick="Review.filter('all',this)">جميع الاختبارات</button>
+      </div>
+      <div id="reviewList"></div>
+    </div>
+
+    <!-- COMPLETED -->
+    <div class="view" id="view-completed">
+      <div class="view-header"><h1 class="view-title">الاختبارات المكتملة</h1><p class="view-subtitle">سجل كامل بنتائجك</p></div>
+      <div id="completedList"></div>
+    </div>
+  </main>
+</div>
+
+<!-- QUIZ PAGE -->
+<div id="page-quiz" class="page">
+  <div class="quiz-topbar">
+    <button class="btn btn-ghost btn-sm" onclick="QuizEngine.confirmExit()">← خروج</button>
+    <div class="quiz-topbar-title" id="quizTopTitle">اختبار</div>
+    <div class="timer-display" id="timerDisplay"><span>⏱</span><span id="timerText">48:00</span></div>
+    <button class="btn btn-outline btn-sm" onclick="QuizEngine.toggleNav()">🗂</button>
+    <button class="btn btn-accent btn-sm" onclick="QuizEngine.showSubmitModal()">✅ تسليم</button>
+  </div>
+  <div class="quiz-progress-top"><div class="quiz-progress-top-fill" id="quizProgressFill" style="width:0%"></div></div>
+  <div class="quiz-layout">
+    <aside class="quiz-navigator" id="quizNavigator">
+      <div class="nav-section-title">تنقل سريع</div>
+      <div class="nav-grid" id="navGrid"></div>
+      <div class="nav-legend">
+        <div class="legend-item"><div class="legend-dot ld-none"></div>لم تُجب</div>
+        <div class="legend-item"><div class="legend-dot ld-ans"></div>أجبت</div>
+        <div class="legend-item"><div class="legend-dot ld-cur"></div>الحالي</div>
+      </div>
+    </aside>
+    <div class="quiz-main" id="quizMainScroll">
+      <div class="sections-indicator" id="sectionsIndicator"></div>
+      <div class="quiz-video-panel hidden" id="quizVideoPanel">
+        <div class="quiz-video-panel-header">
+          <span>🎬</span>
+          <div class="quiz-video-panel-title" id="quizVideoPanelTitle">الدرس المرتبط</div>
+          <div style="display:flex;gap:.4rem;margin-right:auto">
+            <button class="btn btn-ghost btn-sm" id="quizVideoToggleBtn" onclick="QuizEngine.toggleVideoPanel()">🔼 إخفاء</button>
+            <button class="btn btn-ghost btn-sm" onclick="QuizEngine.openVideoFull()">⛶</button>
+          </div>
+        </div>
+        <div class="quiz-video-panel-embed" id="quizVideoEmbed">
+          <iframe id="quizVideoIframe" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share"></iframe>
+        </div>
+      </div>
+      <button class="hidden btn btn-primary btn-sm" id="quizVideoShowBtn" onclick="QuizEngine.toggleVideoPanel()">🎬 عرض الدرس</button>
+      <div class="question-card" id="questionCard">
+        <div class="question-header">
+          <span class="question-number-badge" id="questionNumber">السؤال 1 من 48</span>
+          <span class="question-section-badge" id="questionSectionBadge">القسم 1</span>
+        </div>
+        <div class="question-image-area" id="questionImageArea">
+          <div class="question-img-loading"><div class="spinner"></div>جاري التحميل...</div>
+        </div>
+        <div class="question-zoom-hint">💡 انقر على الصورة للتكبير</div>
+        <div class="choices-area">
+          <div class="choices-label">اختر إجابتك</div>
+          <div class="choices-list" id="choicesList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="quiz-bottombar">
+    <button class="btn btn-outline" id="prevBtn" onclick="QuizEngine.prevQuestion()">→ السابق</button>
+    <div class="answered-counter"><span id="answeredCount">0</span> / <span id="totalCount">48</span> أُجيب</div>
+    <button class="btn btn-primary" id="nextBtn" onclick="QuizEngine.nextQuestion()">التالي ←</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="page-results" class="page">
+  <div class="results-container">
+    <div class="results-hero">
+      <div class="results-score-ring" id="scoreRing">
+        <div class="results-pct" id="resultsPct">0%</div>
+        <div class="results-pct-label">نتيجتك</div>
+      </div>
+      <div class="results-title" id="resultsTitle">اكتمل الاختبار!</div>
+      <div class="results-subtitle" id="resultsSubtitle"></div>
+    </div>
+    <div class="results-grid">
+      <div class="result-item"><div class="result-item-value" id="resCorrect">—</div><div class="result-item-label">صحيح</div></div>
+      <div class="result-item"><div class="result-item-value" id="resWrong">—</div><div class="result-item-label">خطأ</div></div>
+      <div class="result-item"><div class="result-item-value" id="resUnanswered">—</div><div class="result-item-label">بلا إجابة</div></div>
+      <div class="result-item"><div class="result-item-value" id="resTime">—</div><div class="result-item-label">الوقت</div></div>
+    </div>
+    <div class="flex gap-2" style="flex-wrap:wrap">
+      <button class="btn btn-primary btn-lg" style="flex:1" onclick="App.navigate('dashboard')">🏠 لوحة التحكم</button>
+      <button class="btn btn-outline btn-lg" style="flex:1" onclick="Review.showFromResults()">🔴 مراجعة</button>
+      <button class="btn btn-accent btn-lg" style="flex:1" onclick="QuizEngine.retakeQuiz()">🔄 إعادة</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="video-modal-overlay" id="videoModal" onclick="if(event.target===this)VideoModal.close()">
+  <div class="video-modal-inner">
+    <div class="video-modal-header">
+      <button class="video-modal-close" onclick="VideoModal.close()">✕</button>
+      <div class="video-modal-title" id="videoModalTitle">الدرس</div>
+    </div>
+    <div class="video-modal-player">
+      <iframe id="videoModalIframe" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;web-share"></iframe>
+    </div>
+    <div class="video-modal-nav" id="videoModalNav"></div>
+  </div>
+</div>
+
+<!-- SUBMIT MODAL -->
+<div class="modal-overlay" id="submitModal">
+  <div class="modal">
+    <div class="modal-title">✅ تأكيد التسليم</div>
+    <div class="modal-body">
+      <div id="submitSummary" style="margin-bottom:.85rem"></div>
+      <div class="submit-review-list" id="submitReviewList"></div>
+      هل أنت متأكد؟ لا يمكن التراجع.
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="App.closeModal('submitModal')">إلغاء</button>
+      <button class="btn btn-accent" onclick="QuizEngine.submitQuiz()">تسليم</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXIT MODAL -->
+<div class="modal-overlay" id="exitModal">
+  <div class="modal">
+    <div class="modal-title">⚠️ تأكيد الخروج</div>
+    <div class="modal-body">ستُفقد إجاباتك الحالية. هل تريد الخروج؟</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="App.closeModal('exitModal')">البقاء</button>
+      <button class="btn btn-danger" onclick="QuizEngine.exitQuiz()">خروج</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-title">🗑️ حذف الاختبار</div>
+    <div class="modal-body">هل تريد حذف هذا الاختبار وجميع بياناته؟</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="App.closeModal('deleteModal')">إلغاء</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn">حذف</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLAN MODAL -->
+<div class="modal-overlay" id="planModal">
+  <div class="modal">
+    <div class="modal-title">📅 إعداد خطة الاستعداد</div>
+    <div class="modal-body plan-modal-body">
+      <label>تاريخ الاختبار</label>
+      <input type="date" id="planExamDate">
+      <label>إجمالي الاختبارات المستهدفة</label>
+      <input type="number" id="planTargetTotal" min="1" max="200" placeholder="مثال: 20">
+      <label>الاختبارات المنجزة حتى الآن (تلقائي)</label>
+      <input type="number" id="planDoneInput" readonly style="opacity:.6;cursor:not-allowed">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="App.closeModal('planModal')">إلغاء</button>
+      <button class="btn btn-primary" onclick="PlanManager.save()">حفظ الخطة</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+'use strict';
+
+/* ====================================================
+   IndexedDB WRAPPER
+   ==================================================== */
+const IDB={
+  db:null,DB_NAME:'QuanLearn',DB_VER:4,
+  async open(){
+    if(this.db)return this.db;
+    return new Promise((res,rej)=>{
+      const r=indexedDB.open(this.DB_NAME,this.DB_VER);
+      r.onupgradeneeded=e=>{
+        const d=e.target.result;
+        if(!d.objectStoreNames.contains('images'))d.createObjectStore('images');
+        if(!d.objectStoreNames.contains('meta'))d.createObjectStore('meta');
+      };
+      r.onsuccess=e=>{this.db=e.target.result;res(this.db)};
+      r.onerror=e=>rej(e.target.error);
+    });
+  },
+  async get(store,key){
+    const db=await this.open();
+    return new Promise((res,rej)=>{
+      const tx=db.transaction(store,'readonly');
+      const req=tx.objectStore(store).get(key);
+      req.onsuccess=()=>res(req.result);
+      req.onerror=e=>rej(e.target.error);
+    });
+  },
+  async set(store,key,val){
+    const db=await this.open();
+    return new Promise((res,rej)=>{
+      const tx=db.transaction(store,'readwrite');
+      tx.objectStore(store).put(val,key);
+      tx.oncomplete=()=>res();
+      tx.onerror=e=>rej(e.target.error);
+    });
+  },
+  async del(store,key){
+    const db=await this.open();
+    return new Promise((res,rej)=>{
+      const tx=db.transaction(store,'readwrite');
+      tx.objectStore(store).delete(key);
+      tx.oncomplete=()=>res();
+      tx.onerror=e=>rej(e.target.error);
+    });
+  },
+  async getAllKeys(store){
+    const db=await this.open();
+    return new Promise((res,rej)=>{
+      const tx=db.transaction(store,'readonly');
+      const req=tx.objectStore(store).getAllKeys();
+      req.onsuccess=()=>res(req.result);
+      req.onerror=e=>rej(e.target.error);
+    });
+  }
+};
+
+/* ====================================================
+   LOCAL STORAGE
+   ==================================================== */
+const Store={
+  _g(k){try{return JSON.parse(localStorage.getItem(k))}catch{return null}},
+  _s(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.error('Store err',e)}},
+  getQuizzes(){return this._g('quizzes')||[]},
+  setQuizzes(q){
+    // Strip imageDataUrl before saving to localStorage (images live in IndexedDB)
+    // This prevents the 5MB localStorage limit from being hit with base64 images
+    const lean=q.map(quiz=>({
+      ...quiz,
+      questions:(quiz.questions||[]).map(qn=>({
+        id:qn.id,idbKey:qn.idbKey,correct:qn.correct,page:qn.page
+        // imageDataUrl intentionally omitted — loaded from IDB at runtime
+      }))
+    }));
+    this._s('quizzes',lean);
+  },
+  /* FIX: Results are stored PER quiz, we keep ALL results, not just overwrite */
+  getResults(){return this._g('results')||[]},
+  setResults(r){this._s('results',r)},
+  getSettings(){return this._g('settings')||{theme:'light'}},
+  setSettings(s){this._s('settings',s)},
+  getPlan(){return this._g('examPlan')||{examDate:null,targetTotal:0}},
+  setPlan(p){this._s('examPlan',p)}
+};
+
+/* ====================================================
+   APP CONTROLLER
+   ==================================================== */
+const App={
+  currentView:'overview',
+  init(){
+    const s=Store.getSettings();
+    if(s.theme==='dark')this._applyTheme('dark');
+    if(typeof pdfjsLib!=='undefined')
+      pdfjsLib.GlobalWorkerOptions.workerSrc=
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    this.updateBadges();
+    this.renderOverview();
+    YTManager.restoreFromIDB();
+  },
+  navigate(dest){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const map={landing:'page-landing',dashboard:'page-app',quiz:'page-quiz',results:'page-results'};
+    document.getElementById(map[dest]||'page-landing').classList.add('active');
+    if(dest==='dashboard'){this.renderOverview();this.updateBadges();}
+  },
+  showView(view){
+    this.currentView=view;
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    const el=document.getElementById('view-'+view);
+    if(el)el.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>
+      n.classList.toggle('active',n.dataset.view===view));
+    this.closeSidebar();
+    if(view==='overview')this.renderOverview();
+    else if(view==='quizzes')QuizList.render();
+    else if(view==='stats')Stats.render();
+    else if(view==='review')Review.render();
+    else if(view==='completed')Completed.render();
+    else if(view==='youtube')YTManager.render();
+  },
+  updateBadges(){
+    document.getElementById('quizCountBadge').textContent=Store.getQuizzes().length;
+    document.getElementById('completedCountBadge').textContent=Store.getResults().length;
+    document.getElementById('ytCountBadge').textContent=(YTManager.videos||[]).length;
+  },
+  renderOverview(){
+    const quizzes=Store.getQuizzes();
+    const results=Store.getResults();
+    document.getElementById('totalQuizzesVal').textContent=quizzes.length;
+    document.getElementById('completedQuizzesVal').textContent=results.length;
+    if(results.length){
+      const avg=results.reduce((a,r)=>a+r.percentage,0)/results.length;
+      document.getElementById('avgScoreVal').textContent=Math.round(avg)+'%';
+      document.getElementById('totalWrongVal').textContent=results.reduce((a,r)=>a+r.wrong,0);
+    }else{
+      document.getElementById('avgScoreVal').textContent='—';
+      document.getElementById('totalWrongVal').textContent='0';
+    }
+    PlanManager.render();
+    // Recent quizzes
+    const container=document.getElementById('recentQuizzesList');
+    const recent=[...quizzes].slice(-5).reverse();
+    if(!recent.length){
+      container.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">لا توجد اختبارات بعد</div><div class="empty-desc">ارفع ملف PDF للبدء</div></div>';
+      return;
+    }
+    container.innerHTML=recent.map(q=>{
+      const r=results.find(x=>x.quizId===q.id);
+      const pct=r?Math.round(r.percentage):null;
+      const sc=pct===null?'score-mid':pct>=70?'score-high':pct>=50?'score-mid':'score-low';
+      return `<div class="completed-quiz-row" onclick="QuizEngine.startQuiz('${q.id}')">
+        <div class="cqr-score ${sc}">${pct!==null?pct+'%':'—'}</div>
+        <div class="cqr-info"><div class="cqr-name">${q.title}</div>
+        <div class="cqr-meta">${q.questions.length} سؤال • ${r?'مكتمل':'لم يبدأ'}</div></div>
+        <span style="color:var(--text-3)">←</span></div>`;
+    }).join('');
+  },
+  toggleTheme(){
+    const s=Store.getSettings();const t=s.theme==='dark'?'light':'dark';
+    s.theme=t;Store.setSettings(s);this._applyTheme(t);
+  },
+  _applyTheme(t){
+    document.documentElement.setAttribute('data-theme',t);
+    const b=document.getElementById('themeBtn');
+    if(b)b.textContent=t==='dark'?'☀️ فاتح':'🌙 مظلم';
+    setTimeout(()=>{if(this.currentView==='stats')Stats.render();},80);
+  },
+  toggleSidebar(){
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  },
+  closeSidebar(){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+  },
+  openModal(id){document.getElementById(id).classList.add('active')},
+  closeModal(id){document.getElementById(id).classList.remove('active')},
+  toast(msg,type='info',icon='ℹ️'){
+    const c=document.getElementById('toastContainer');
+    const t=document.createElement('div');
+    t.className=`toast ${type}`;
+    t.innerHTML=`<span class="toast-icon">${icon}</span>${msg}`;
+    c.appendChild(t);setTimeout(()=>t.remove(),3800);
+  }
+};
+
+/* ====================================================
+   EXAM PLAN MANAGER
+   ==================================================== */
+const PlanManager={
+  render(){
+    const plan=Store.getPlan();
+    const results=Store.getResults();
+    const done=results.length;
+    document.getElementById('planDoneCount').textContent=done;
+    document.getElementById('planTotalTarget').textContent=plan.targetTotal||'—';
+
+    if(plan.examDate){
+      const now=new Date();
+      const exam=new Date(plan.examDate);
+      const daysLeft=Math.ceil((exam-now)/(1000*60*60*24));
+      document.getElementById('planDaysLeft').textContent=daysLeft>0?daysLeft:'انتهى';
+      if(plan.targetTotal>0){
+        const remaining=Math.max(0,plan.targetTotal-done);
+        const perDay=daysLeft>0?(remaining/daysLeft).toFixed(1):'—';
+        document.getElementById('planPerDay').textContent=perDay;
+        const pct=Math.min(100,Math.round((done/plan.targetTotal)*100));
+        document.getElementById('planProgressFill').style.width=pct+'%';
+        document.getElementById('planProgressLabel').textContent=
+          `أنجزت ${done} من ${plan.targetTotal} اختبار (${pct}%) • ${daysLeft>0?`${daysLeft} يوم متبقي`:'الاختبار اليوم!'}`;
+      }
+    }else{
+      document.getElementById('planDaysLeft').textContent='—';
+      document.getElementById('planPerDay').textContent='—';
+      document.getElementById('planProgressLabel').textContent='حدد تاريخ الاختبار لتتبع تقدمك';
+    }
+  },
+  openModal(){
+    const plan=Store.getPlan();
+    const results=Store.getResults();
+    if(plan.examDate)document.getElementById('planExamDate').value=plan.examDate;
+    if(plan.targetTotal)document.getElementById('planTargetTotal').value=plan.targetTotal;
+    document.getElementById('planDoneInput').value=results.length;
+    App.openModal('planModal');
+  },
+  save(){
+    const date=document.getElementById('planExamDate').value;
+    const total=parseInt(document.getElementById('planTargetTotal').value)||0;
+    Store.setPlan({examDate:date||null,targetTotal:total});
+    App.closeModal('planModal');
+    PlanManager.render();
+    App.toast('تم حفظ خطة الاستعداد','success','✅');
+  }
+};
+</script>
+<script>
+/* ====================================================
+   PDF RENDERER
+   Fixed: answer extraction now uses multiple patterns
+   and properly maps Arabic letters to indices
+   ==================================================== */
+const PDFRenderer={
+  SCALE:2.5,
+  MAX_Q:48,
+  SRC_W:1671,SRC_H_FULL:1120,SRC_H_CROP:1033,
+
+  /* Arabic letter → answer index (0-based) */
+  LETTER_MAP:{
+    'أ':0,'ا':0,'آ':0,
+    'ب':1,
+    'ج':2,
+    'د':3,
+    'A':0,'B':1,'C':2,'D':3,
+    'a':0,'b':1,'c':2,'d':3
+  },
+
+  /* Extract correct answer index from page text content.
+     The PDF has "الإجابة : ب" in red text at the bottom. */
+  async extractAnswer(pdfDoc, pageNum){
+    try{
+      const page=await pdfDoc.getPage(pageNum);
+      const tc=await page.getTextContent();
+      // Join all text items
+      const allText=tc.items.map(i=>i.str||'').join(' ').replace(/\s+/g,' ').trim();
+
+      // --- Pattern 1: "الإجابة : ب" or "اإلجابة : أ" (common PDF extraction artifact) ---
+      // Try multiple spellings because PDF.js sometimes merges Arabic ligatures differently
+      const patterns=[
+        /الإجابة\s*:\s*([أبجد])/,
+        /اإلجابة\s*:\s*([أبجد])/,
+        /اﻹجابة\s*:\s*([أبجد])/,
+        /الجابة\s*:\s*([أبجد])/,
+        /إجابة\s*:\s*([أبجد])/,
+        /جابة\s*:\s*([أبجد])/,
+        /الاجابة\s*:\s*([أبجد])/,
+      ];
+      for(const pat of patterns){
+        const m=allText.match(pat);
+        if(m){
+          const idx=this.LETTER_MAP[m[1]];
+          if(idx!==undefined)return idx;
+        }
+      }
+
+      // --- Pattern 2: Look at each text item individually for answer context ---
+      // Find items containing "إجابة" or "جابة" then look at next items for the letter
+      for(let i=0;i<tc.items.length;i++){
+        const str=(tc.items[i].str||'').trim();
+        if(str.includes('جابة')||str.includes('الإجاب')){
+          // Check this item and next 5 items for a lone Arabic letter
+          for(let j=i;j<Math.min(i+6,tc.items.length);j++){
+            const s=(tc.items[j].str||'').trim();
+            if(s.length===1&&this.LETTER_MAP[s]!==undefined){
+              return this.LETTER_MAP[s];
+            }
+            // Also check "letter :" pattern
+            const m2=s.match(/^([أبجد])\s*:?$/);
+            if(m2&&this.LETTER_MAP[m2[1]]!==undefined)return this.LETTER_MAP[m2[1]];
+          }
+        }
+      }
+
+      // --- Pattern 3: Last resort — find isolated Arabic letter near end of page ---
+      // The answer letter tends to appear near the bottom of the page text
+      const lastItems=tc.items.slice(-20);
+      for(const item of lastItems.reverse()){
+        const s=(item.str||'').trim();
+        if(s.length===1&&this.LETTER_MAP[s]!==undefined)return this.LETTER_MAP[s];
+        // "ب : 1" style
+        const m3=s.match(/([أبجد])\s*:/);
+        if(m3&&this.LETTER_MAP[m3[1]]!==undefined)return this.LETTER_MAP[m3[1]];
+      }
+    }catch(e){
+      console.warn('extractAnswer error page',pageNum,e);
+    }
+    return 0; // default أ if nothing found
+  },
+
+  /* Render one PDF page → cropped base64 WebP */
+  async renderPage(pdfDoc,pageNum){
+    try{
+      const page=await pdfDoc.getPage(pageNum);
+      const vp=page.getViewport({scale:this.SCALE});
+      const canvas=document.createElement('canvas');
+      canvas.width=vp.width;canvas.height=vp.height;
+      const ctx=canvas.getContext('2d',{alpha:false});
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      await page.render({canvasContext:ctx,viewport:vp}).promise;
+      return this._smartCrop(canvas,ctx,vp);
+    }catch(e){
+      console.error('renderPage',pageNum,e);
+      return null;
+    }
+  },
+
+  /* Smart crop: hide answer strip for known format, else whitespace-trim */
+  _smartCrop(canvas,ctx,vp){
+    const w=canvas.width,h=canvas.height;
+    const srcRatio=this.SRC_W/this.SRC_H_FULL; // ≈1.491
+    const pageRatio=vp.width/vp.height;
+    const isKnown=Math.abs(pageRatio-srcRatio)<0.08;
+
+    if(isKnown){
+      // Crop bottom answer strip — keep top SRC_H_CROP/SRC_H_FULL fraction
+      const keepH=Math.floor(h*(this.SRC_H_CROP/this.SRC_H_FULL));
+      const out=document.createElement('canvas');
+      out.width=w;out.height=keepH;
+      out.getContext('2d').drawImage(canvas,0,0,w,keepH,0,0,w,keepH);
+      return this._trim(out,out.getContext('2d'));
+    }
+    return this._trim(canvas,ctx);
+  },
+
+  /* Trim white margins */
+  _trim(canvas,ctx){
+    const w=canvas.width,h=canvas.height;
+    const d=ctx.getImageData(0,0,w,h).data;
+    const pale=(r,g,b)=>r>225&&g>225&&b>225;
+    const px=(x,y)=>{const i=(y*w+x)*4;return[d[i],d[i+1],d[i+2]];};
+    let t=0,b=h-1,l=0,r=w-1;
+    tl:for(let y=0;y<h;y++)for(let x=0;x<w;x++){const[r2,g2,b2]=px(x,y);if(!pale(r2,g2,b2)){t=Math.max(0,y-12);break tl;}}
+    bl:for(let y=h-1;y>=0;y--)for(let x=0;x<w;x++){const[r2,g2,b2]=px(x,y);if(!pale(r2,g2,b2)){b=Math.min(h-1,y+12);break bl;}}
+    ll:for(let x=0;x<w;x++)for(let y=t;y<=b;y++){const[r2,g2,b2]=px(x,y);if(!pale(r2,g2,b2)){l=Math.max(0,x-12);break ll;}}
+    rl:for(let x=w-1;x>=0;x--)for(let y=t;y<=b;y++){const[r2,g2,b2]=px(x,y);if(!pale(r2,g2,b2)){r=Math.min(w-1,x+12);break rl;}}
+    const cw=r-l,ch=b-t;
+    if(cw<20||ch<20)return canvas.toDataURL('image/webp',.92);
+    const out=document.createElement('canvas');
+    out.width=cw;out.height=ch;
+    out.getContext('2d').drawImage(canvas,l,t,cw,ch,0,0,cw,ch);
+    return out.toDataURL('image/webp',.92);
+  },
+
+  /* Process full PDF → array of question objects */
+  async processPDF(file,quizId,onProgress){
+    const buf=await file.arrayBuffer();
+    const pdfDoc=await pdfjsLib.getDocument({data:buf}).promise;
+    const total=pdfDoc.numPages;
+    const endPage=Math.min(total,49);
+    const questions=[];
+
+    for(let p=2;p<=endPage;p++){
+      const qIdx=p-2;
+      const imgKey=`${quizId}_img_${qIdx}`;
+      const ansKey=`${quizId}_ans_${qIdx}`;
+
+      // Load from cache
+      let dataUrl=null,correctIdx=0;
+      try{dataUrl=await IDB.get('images',imgKey);}catch(e){}
+      try{const ca=await IDB.get('meta',ansKey);if(ca!=null)correctIdx=ca;}catch(e){}
+
+      // Always extract answer fresh (it's fast, just text parsing — not rendering)
+      // This fixes "random answers" bug
+      correctIdx=await this.extractAnswer(pdfDoc,p);
+      try{await IDB.set('meta',ansKey,correctIdx);}catch(e){}
+
+      // Render image only if not cached
+      if(!dataUrl){
+        dataUrl=await this.renderPage(pdfDoc,p);
+        if(dataUrl){try{await IDB.set('images',imgKey,dataUrl);}catch(e){}}
+      }
+
+      questions.push({id:qIdx+1,imageDataUrl:dataUrl,idbKey:imgKey,correct:correctIdx,page:p});
+      if(onProgress)onProgress(qIdx+1,endPage-1);
+    }
+
+    // Pad to 48
+    while(questions.length<this.MAX_Q){
+      questions.push({id:questions.length+1,imageDataUrl:null,idbKey:null,correct:0,page:null});
+    }
+    return questions.slice(0,this.MAX_Q);
+  }
+};
+
+/* ====================================================
+   UPLOADER
+   Fixed: multiple quizzes now work correctly
+   ==================================================== */
+const Uploader={
+  init(){
+    const zone=document.getElementById('uploadZone');
+    const input=document.getElementById('pdfInput');
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over')});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+    zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');this.handleFiles(e.dataTransfer.files)});
+    input.addEventListener('change',e=>this.handleFiles(e.target.files));
+  },
+
+  async handleFiles(files){
+    const pdfs=Array.from(files).filter(f=>f.type==='application/pdf');
+    if(!pdfs.length){App.toast('يرجى رفع ملفات PDF فقط','warning','⚠️');return;}
+
+    for(let fi=0;fi<pdfs.length;fi++){
+      const file=pdfs[fi];
+      // Read fresh each iteration — critical for correct numbering
+      const currentQuizzes=Store.getQuizzes();
+      const quizNum=currentQuizzes.length+1;
+      // Use fi index + random to guarantee unique IDs even if Date.now() ties
+      const quizId='quiz_'+Date.now()+'_'+fi+'_'+Math.random().toString(36).slice(2,8);
+      const itemId='up_'+Date.now()+'_'+fi;
+      this._addItem(itemId,file.name,file.size);
+
+      try{
+        const questions=await PDFRenderer.processPDF(
+          file,quizId,(done,tot)=>this._updateProg(itemId,done,tot));
+
+        const v=(YTManager.videos||[])[currentQuizzes.length]||null;
+        const quiz={
+          id:quizId,title:'اختبار '+quizNum,number:quizNum,
+          fileName:file.name,questions,
+          sections:this._buildSections(questions),
+          uploadedAt:Date.now(),
+          ytVideoId:v?v.videoId:null,
+          ytVideoTitle:v?v.title:null,
+          ytEmbedUrl:v?v.embedUrl:null,
+          ytThumbUrl:v?v.thumbUrl:null
+        };
+
+        // Read fresh again right before writing to avoid any race
+        const fresh=Store.getQuizzes();
+        fresh.push(quiz);
+        Store.setQuizzes(fresh);
+
+        this._setStatus(itemId,'done',`✅ جاهز (${questions.length} سؤال)`);
+        App.toast(`"${quiz.title}" جاهز`,'success','✅');
+        // Refresh badges, overview AND quiz grid after every successful upload
+        App.updateBadges();
+        App.renderOverview();
+        QuizList.render();
+      }catch(e){
+        this._setStatus(itemId,'error','❌ '+e.message);
+        App.toast('خطأ في معالجة '+file.name+': '+e.message,'error','❌');
+        console.error(e);
+      }
+    }
+    document.getElementById('pdfInput').value='';
+  },
+
+  _buildSections(qs){
+    const per=Math.ceil(qs.length/5);
+    return[0,1,2,3,4].map(i=>({
+      label:'القسم '+(i+1),start:i*per,end:Math.min((i+1)*per,qs.length)
+    })).filter(s=>s.start<qs.length);
+  },
+
+  _addItem(id,name,size){
+    const list=document.getElementById('uploadList');
+    const el=document.createElement('div');
+    el.className='upload-item';el.id=id;
+    el.innerHTML=`<span style="font-size:1.5rem;flex-shrink:0">📄</span>
+      <div style="flex:1;min-width:0">
+        <div class="upload-item-name">${name}</div>
+        <div class="upload-item-size">${(size/1024).toFixed(1)} KB</div>
+        <div class="pdf-progress-wrap">
+          <div class="pdf-progress-track"><div class="pdf-progress-fill" id="pf_${id}"></div></div>
+          <div class="pdf-progress-label" id="pl_${id}">جاري المعالجة...</div>
+        </div>
+      </div>
+      <span id="st_${id}" class="status-processing">⏳</span>`;
+    list.appendChild(el);
+  },
+  _updateProg(id,done,tot){
+    const pf=document.getElementById('pf_'+id);
+    const pl=document.getElementById('pl_'+id);
+    if(pf)pf.style.width=Math.round((done/tot)*100)+'%';
+    if(pl)pl.textContent=`صفحة ${done} من ${tot}`;
+  },
+  _setStatus(id,type,msg){
+    const st=document.getElementById('st_'+id);
+    if(st){st.className=type==='done'?'status-done':'status-error';st.textContent=msg;}
+    const pf=document.getElementById('pf_'+id);
+    if(pf){pf.style.width='100%';pf.style.background=type==='done'?'var(--success)':'var(--error)';}
+  }
+};
+</script>
+<script>
+/* ====================================================
+   YOUTUBE MANAGER
+   ==================================================== */
+const YTManager={
+  videos:[],
+  async restoreFromIDB(){
+    try{const c=await IDB.get('meta','ytVideos');if(c&&c.length){this.videos=c;App.updateBadges();this._relinkQuizzes();}}catch(e){}
+  },
+  async loadPlaylist(){
+    const url=document.getElementById('ytPlaylistUrl').value.trim();
+    if(!url){App.toast('أدخل رابط القائمة','warning','⚠️');return;}
+    const listId=this._listId(url);
+    if(!listId){App.toast('رابط غير صحيح','error','❌');return;}
+    document.getElementById('ytVideoList').innerHTML='<div class="loading-state"><div class="spinner"></div>جاري التحميل...</div>';
+    let videos=await this._fetchInvidious(listId);
+    if(!videos||!videos.length)videos=await this._fetchInnertube(listId);
+    if(!videos||!videos.length)videos=this._fallback(listId);
+    this.videos=videos;
+    try{await IDB.set('meta','ytVideos',videos);}catch(e){}
+    this._relinkQuizzes();this.render();App.updateBadges();
+    App.toast(`تم تحميل ${videos.length} فيديو`,'success','🎬');
+  },
+  async _fetchInvidious(listId){
+    const instances=['https://invidious.io.lol','https://inv.tux.pizza','https://invidious.nerdvpn.de','https://invidious.fdn.fr'];
+    for(const base of instances){
+      try{
+        const res=await fetch(`${base}/api/v1/playlists/${listId}?fields=videos,videoCount`,{signal:AbortSignal.timeout(7000)});
+        if(!res.ok)continue;
+        const data=await res.json();
+        if(data&&data.videos&&data.videos.length){
+          return data.videos.map((v,i)=>({index:i,videoId:v.videoId,title:v.title||`فيديو ${i+1}`,
+            thumbUrl:`https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg`,
+            embedUrl:`https://www.youtube.com/embed/${v.videoId}?rel=0`,playlistId:listId}));
+        }
+      }catch(e){}
+    }
+    return null;
+  },
+  async _fetchInnertube(listId){
+    const KEY='AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8';
+    const URL=`https://www.youtube.com/youtubei/v1/browse?key=${KEY}&prettyPrint=false`;
+    const CTX={client:{clientName:'WEB',clientVersion:'2.20240101.00.00',hl:'ar',gl:'SA'}};
+    const all=[];let token=null;let page=0;
+    do{
+      try{
+        const body=JSON.stringify({context:CTX,browseId:'VL'+listId,...(token?{continuation:token}:{})});
+        const res=await fetch(URL,{method:'POST',headers:{'Content-Type':'application/json'},body,signal:AbortSignal.timeout(9000)});
+        if(!res.ok)break;
+        const data=await res.json();
+        const{vids,cont}=this._parseInnertube(data,all.length,listId);
+        all.push(...vids);token=cont;page++;
+        if(page>50)break;
+      }catch(e){break;}
+    }while(token);
+    return all.length?all:null;
+  },
+  _parseInnertube(data,offset,listId){
+    const vids=[];let cont=null;
+    const walk=obj=>{
+      if(!obj||typeof obj!=='object')return;
+      if(Array.isArray(obj)){obj.forEach(walk);return;}
+      if(obj.playlistVideoRenderer){
+        const v=obj.playlistVideoRenderer;
+        if(v.videoId)vids.push({index:offset+vids.length,videoId:v.videoId,
+          title:v.title?.runs?.[0]?.text||`فيديو ${offset+vids.length+1}`,
+          thumbUrl:`https://i.ytimg.com/vi/${v.videoId}/mqdefault.jpg`,
+          embedUrl:`https://www.youtube.com/embed/${v.videoId}?rel=0`,playlistId:listId});
+        return;
+      }
+      if(obj.continuationItemRenderer){
+        cont=obj.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token||cont;
+        return;
+      }
+      Object.values(obj).forEach(walk);
+    };
+    walk(data);return{vids,cont};
+  },
+  _fallback(listId){
+    const count=Math.max((Store.getQuizzes().length)+10,20);
+    return Array.from({length:count},(_,i)=>({index:i,videoId:null,title:`فيديو ${i+1}`,
+      thumbUrl:null,embedUrl:`https://www.youtube.com/embed/videoseries?list=${listId}&index=${i+1}&rel=0`,playlistId:listId}));
+  },
+  _relinkQuizzes(){
+    const quizzes=Store.getQuizzes();let changed=false;
+    quizzes.forEach((q,i)=>{
+      const v=this.videos[i];
+      if(v&&q.ytEmbedUrl!==v.embedUrl){
+        q.ytVideoId=v.videoId;q.ytVideoTitle=v.title;q.ytEmbedUrl=v.embedUrl;q.ytThumbUrl=v.thumbUrl;changed=true;
+      }
+    });
+    if(changed)Store.setQuizzes(quizzes);
+  },
+  async addManualVideo(){
+    const raw=document.getElementById('ytManualUrl').value.trim();
+    const customTitle=document.getElementById('ytManualTitle').value.trim();
+    if(!raw){App.toast('أدخل رابط أو معرّف','warning','⚠️');return;}
+    let vid=raw;
+    const m=raw.match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{11})/);
+    if(m)vid=m[1];
+    else if(raw.length===11&&/^[A-Za-z0-9_-]+$/.test(raw))vid=raw;
+    else{App.toast('تعذّر استخراج معرّف الفيديو','error','❌');return;}
+    const title=customTitle||`فيديو ${this.videos.length+1}`;
+    this.videos.push({index:this.videos.length,videoId:vid,title,
+      thumbUrl:`https://i.ytimg.com/vi/${vid}/mqdefault.jpg`,
+      embedUrl:`https://www.youtube.com/embed/${vid}?rel=0`,playlistId:null,manual:true});
+    try{await IDB.set('meta','ytVideos',this.videos);}catch(e){}
+    this._relinkQuizzes();this.render();App.updateBadges();
+    document.getElementById('ytManualUrl').value='';
+    document.getElementById('ytManualTitle').value='';
+    App.toast(`تمت إضافة: ${title}`,'success','✅');
+  },
+  async removeVideo(i){
+    this.videos.splice(i,1);
+    this.videos.forEach((v,idx)=>v.index=idx);
+    try{await IDB.set('meta','ytVideos',this.videos);}catch(e){}
+    this._relinkQuizzes();this.render();App.updateBadges();
+  },
+  render(){
+    const quizzes=Store.getQuizzes();
+    const statsBar=document.getElementById('ytStatsBar');
+    const container=document.getElementById('ytVideoList');
+    if(!this.videos.length){
+      statsBar.classList.add('hidden');
+      container.innerHTML='<div class="empty-state"><div class="empty-icon">🎬</div><div class="empty-title">لا توجد فيديوهات</div><div class="empty-desc">أدخل رابط قائمة أو أضف فيديو يدوي</div></div>';
+      return;
+    }
+    statsBar.classList.remove('hidden');
+    statsBar.innerHTML=`📹 ${this.videos.length} فيديو &nbsp;|&nbsp; 🔗 ${Math.min(this.videos.length,quizzes.length)} مرتبط`;
+    container.innerHTML=this.videos.map((v,i)=>{
+      const q=quizzes[i];
+      const safe=(v.title||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+      const thumb=v.thumbUrl?`<img src="${v.thumbUrl}" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'">`:'';
+      const phStyle=v.thumbUrl?'style="display:none"':'';
+      return `<div class="yt-video-item">
+        <div class="yt-thumb-wrap" style="cursor:pointer" onclick="VideoModal.open('${v.embedUrl}','${safe}',${i})">
+          ${thumb}<div class="yt-thumb-placeholder" ${phStyle}>▶</div>
+          <div class="yt-play-badge">▶</div>
+        </div>
+        <div class="yt-video-meta">
+          <div class="yt-video-index">#${i+1}${v.manual?' <span class="manual-badge">يدوي</span>':''}</div>
+          <div class="yt-video-title-text">${v.title}</div>
+        </div>
+        ${q?`<span class="yt-quiz-badge">${q.title}</span>`:''}
+        <div style="display:flex;flex-direction:column;gap:.3rem;flex-shrink:0">
+          <button class="btn btn-sm" style="background:#FF0000;color:#fff;font-size:.68rem;border-radius:5px"
+            onclick="VideoModal.open('${v.embedUrl}','${safe}',${i})">▶ شاهد</button>
+          <button style="background:none;border:none;color:var(--error);cursor:pointer;font-size:.75rem"
+            onclick="YTManager.removeVideo(${i})">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+  },
+  _listId(url){const m=url.match(/[?&]list=([^&#]+)/);return m?m[1]:null}
+};
+
+/* ====================================================
+   VIDEO MODAL
+   ==================================================== */
+const VideoModal={
+  open(embedUrl,title,index){
+    document.getElementById('videoModalTitle').textContent=title||'الدرس';
+    document.getElementById('videoModalIframe').src=embedUrl+'&autoplay=1&fs=1';
+    document.getElementById('videoModal').classList.add('active');
+    const vids=YTManager.videos||[];
+    const nav=document.getElementById('videoModalNav');
+    nav.innerHTML='';
+    if(index>0){
+      const p=vids[index-1];
+      const b=document.createElement('button');
+      b.className='btn btn-outline btn-sm';b.textContent='→ السابق';
+      b.onclick=()=>VideoModal.open(p.embedUrl,p.title,index-1);nav.appendChild(b);
+    }
+    const lbl=document.createElement('span');
+    lbl.className='video-modal-counter';lbl.textContent=`${index+1} / ${vids.length}`;nav.appendChild(lbl);
+    if(vids[index+1]){
+      const n=vids[index+1];
+      const b=document.createElement('button');
+      b.className='btn btn-outline btn-sm';b.textContent='التالي ←';
+      b.onclick=()=>VideoModal.open(n.embedUrl,n.title,index+1);nav.appendChild(b);
+    }
+  },
+  close(){
+    document.getElementById('videoModalIframe').src='';
+    document.getElementById('videoModal').classList.remove('active');
+  }
+};
+</script>
+<script>
+/* ====================================================
+   QUIZ LIST
+   ==================================================== */
+const QuizList={
+  type:'banks',
+  setType(t,btn){
+    if(btn&&btn.disabled)return;
+    this.type=t;
+    document.querySelectorAll('.quiz-type-tab').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    this.render();
+  },
+  render(){
+    const quizzes=Store.getQuizzes();
+    const results=Store.getResults();
+    const grid=document.getElementById('quizGrid');
+    if(!quizzes.length){
+      grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">📋</div><div class="empty-title">لا توجد اختبارات</div>
+        <div class="empty-desc">ارفع ملف PDF لإنشاء اختبار</div>
+        <button class="btn btn-primary mt-2" onclick="App.showView('upload')">➕ رفع PDF</button></div>`;
+      return;
+    }
+    grid.innerHTML=quizzes.map(q=>{
+      const r=results.find(x=>x.quizId===q.id);
+      const pct=r?Math.round(r.percentage):null;
+      let vs='';
+      if(q.ytEmbedUrl){
+        const safe=(q.ytVideoTitle||'الدرس').replace(/'/g,"\\'");
+        const thumb=q.ytThumbUrl?`<img src="${q.ytThumbUrl}" onerror="this.style.display='none'">`:'';
+        vs=`<div class="quiz-video-strip" onclick="event.stopPropagation();VideoModal.open('${q.ytEmbedUrl}','${safe}',${q.number-1})">
+          <div class="qvs-thumb">${thumb}<div class="qvs-thumb-placeholder">🎬</div><div class="qvs-play-overlay">▶</div></div>
+          <div class="qvs-info"><div class="qvs-title">${q.ytVideoTitle||'الدرس المرتبط'}</div>
+          <div class="qvs-sub">🎬 فيديو ${q.number}</div></div>
+          <button class="qvs-btn" onclick="event.stopPropagation();VideoModal.open('${q.ytEmbedUrl}','${safe}',${q.number-1})">▶ شاهد</button>
+        </div>`;
+      }else{
+        vs=`<div class="no-video-strip">🎬 <a href="#" onclick="App.showView('youtube');return false" style="color:var(--primary);text-decoration:none">ربط فيديو</a></div>`;
+      }
+      const badge=r?'<span class="quiz-status-badge badge-done">✅ مكتمل</span>':'<span class="quiz-status-badge badge-new">🆕 جديد</span>';
+      return `<div class="quiz-card">
+        <div class="quiz-card-header">
+          <div class="quiz-number-label">#${q.number}</div>
+          <div class="quiz-title-text">${q.title}</div>
+        </div>
+        ${vs}
+        <div class="quiz-card-body">
+          <div class="quiz-meta">
+            <div class="quiz-meta-item">❓ ${q.questions.length} سؤال</div>
+            <div class="quiz-meta-item">⏱️ 48 دقيقة</div>
+          </div>
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" style="width:${r?100:0}%"></div>
+          </div>
+          <div class="flex items-center justify-between" style="margin-bottom:.75rem">
+            ${badge}
+            ${pct!==null?`<span style="font-size:.85rem;font-weight:800;color:${pct>=70?'var(--success)':pct>=50?'var(--warning)':'var(--error)'}">${pct}%</span>`:''}
+          </div>
+          <div class="quiz-actions">
+            <button class="btn btn-primary btn-sm" style="flex:1" onclick="QuizEngine.startQuiz('${q.id}')">${r?'🔄 إعادة':'▶️ ابدأ'}</button>
+            <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();App._confirmDelete('${q.id}')">🗑️</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+};
+
+App._confirmDelete=function(quizId){
+  App.openModal('deleteModal');
+  document.getElementById('confirmDeleteBtn').onclick=()=>{
+    Store.setQuizzes(Store.getQuizzes().filter(q=>q.id!==quizId));
+    Store.setResults(Store.getResults().filter(r=>r.quizId!==quizId));
+    IDB.getAllKeys('images').then(ks=>ks.filter(k=>k.startsWith(quizId)).forEach(k=>IDB.del('images',k))).catch(()=>{});
+    App.closeModal('deleteModal');
+    App.toast('تم الحذف','success','🗑️');
+    QuizList.render();App.updateBadges();App.renderOverview();
+  };
+};
+
+/* ====================================================
+   QUIZ ENGINE
+   ==================================================== */
+const QuizEngine={
+  quiz:null,currentQ:0,answers:{},
+  timerInterval:null,timeLeft:0,startTime:null,
+
+  async startQuiz(quizId){
+    const q=Store.getQuizzes().find(x=>x.id===quizId);
+    if(!q){App.toast('لم يتم العثور على الاختبار','error','❌');return;}
+    this.quiz=q;this.currentQ=0;this.answers={};
+    this.timeLeft=48*60;this.startTime=Date.now();
+    document.getElementById('quizTopTitle').textContent=q.title;
+    document.getElementById('totalCount').textContent=q.questions.length;
+    this._buildNav();this._buildSections();this._setupVideo();
+    await this._renderQ();this._startTimer();
+    App.navigate('quiz');
+  },
+
+  _buildNav(){
+    const g=document.getElementById('navGrid');g.innerHTML='';
+    this.quiz.questions.forEach((_,i)=>{
+      const b=document.createElement('button');
+      b.className='nav-btn';b.id=`nb_${i}`;b.textContent=i+1;
+      b.onclick=()=>this.goTo(i);g.appendChild(b);
+    });
+    this._refreshNav();
+  },
+
+  _buildSections(){
+    const c=document.getElementById('sectionsIndicator');
+    c.innerHTML=(this.quiz.sections||[]).map((s,i)=>
+      `<span class="section-dot" id="sec_${i}" onclick="QuizEngine.goTo(${s.start})">${s.label}</span>`
+    ).join('');
+    this._refreshSections();
+  },
+
+  _setupVideo(){
+    const panel=document.getElementById('quizVideoPanel');
+    const iframe=document.getElementById('quizVideoIframe');
+    const title=document.getElementById('quizVideoPanelTitle');
+    const embed=document.getElementById('quizVideoEmbed');
+    const toggleBtn=document.getElementById('quizVideoToggleBtn');
+    const showBtn=document.getElementById('quizVideoShowBtn');
+    if(this.quiz.ytEmbedUrl){
+      iframe.src=this.quiz.ytEmbedUrl;
+      title.textContent=this.quiz.ytVideoTitle||'الدرس المرتبط';
+      panel.classList.remove('hidden');
+      if(embed)embed.style.display='';
+      if(toggleBtn)toggleBtn.textContent='🔼 إخفاء';
+      if(showBtn)showBtn.classList.add('hidden');
+    }else{
+      iframe.src='';panel.classList.add('hidden');
+      if(showBtn)showBtn.classList.add('hidden');
+    }
+  },
+
+  async _renderQ(){
+    const q=this.quiz.questions[this.currentQ];
+    const LETTERS=['أ','ب','ج','د'];
+    const sec=(this.quiz.sections||[]).find(s=>this.currentQ>=s.start&&this.currentQ<s.end);
+    document.getElementById('questionNumber').textContent=`السؤال ${this.currentQ+1} من ${this.quiz.questions.length}`;
+    document.getElementById('questionSectionBadge').textContent=sec?sec.label:'';
+
+    const imgArea=document.getElementById('questionImageArea');
+    imgArea.innerHTML='<div class="question-img-loading"><div class="spinner"></div>جاري التحميل...</div>';
+
+    let src=q.imageDataUrl;
+    if(!src&&q.idbKey){
+      try{src=await IDB.get('images',q.idbKey);}catch(e){}
+      if(src)q.imageDataUrl=src;
+    }
+    if(src){
+      imgArea.innerHTML=`<img class="question-img" src="${src}" alt="سؤال ${this.currentQ+1}" onclick="this.classList.toggle('zoomed')" draggable="false">`;
+    }else{
+      imgArea.innerHTML=`<div class="question-img-error">⚠️ تعذّر تحميل الصورة</div>`;
+    }
+
+    document.getElementById('choicesList').innerHTML=LETTERS.map((l,i)=>{
+      const sel=this.answers[this.currentQ]===i;
+      return `<div class="choice-item${sel?' selected':''}" onclick="QuizEngine.pick(${i})">
+        <div class="choice-letter">${l}</div><div class="choice-text">${l}</div></div>`;
+    }).join('');
+
+    document.getElementById('quizProgressFill').style.width=((this.currentQ+1)/this.quiz.questions.length*100)+'%';
+    document.getElementById('answeredCount').textContent=Object.keys(this.answers).length;
+    document.getElementById('prevBtn').disabled=this.currentQ===0;
+    document.getElementById('nextBtn').textContent=this.currentQ===this.quiz.questions.length-1?'✅ مراجعة':'التالي ←';
+    this._refreshNav();this._refreshSections();
+    document.getElementById('quizMainScroll').scrollTo({top:0,behavior:'smooth'});
+  },
+
+  pick(idx){
+    this.answers[this.currentQ]=idx;
+    const LETTERS=['أ','ب','ج','د'];
+    document.getElementById('choicesList').innerHTML=LETTERS.map((l,i)=>{
+      const sel=i===idx;
+      return `<div class="choice-item${sel?' selected':''}" onclick="QuizEngine.pick(${i})">
+        <div class="choice-letter">${l}</div><div class="choice-text">${l}</div></div>`;
+    }).join('');
+    document.getElementById('answeredCount').textContent=Object.keys(this.answers).length;
+    this._refreshNav();
+  },
+
+  goTo(i){if(i<0||i>=this.quiz.questions.length)return;this.currentQ=i;this._renderQ()},
+  prevQuestion(){this.goTo(this.currentQ-1)},
+  nextQuestion(){
+    if(this.currentQ===this.quiz.questions.length-1)this.showSubmitModal();
+    else this.goTo(this.currentQ+1);
+  },
+
+  _refreshNav(){
+    this.quiz.questions.forEach((_,i)=>{
+      const b=document.getElementById(`nb_${i}`);if(!b)return;
+      b.className='nav-btn';
+      if(this.answers[i]!==undefined)b.classList.add('answered');
+      if(i===this.currentQ)b.classList.add('current');
+    });
+  },
+
+  _refreshSections(){
+    (this.quiz.sections||[]).forEach((s,i)=>{
+      const el=document.getElementById(`sec_${i}`);if(!el)return;
+      el.className='section-dot';
+      if(this.currentQ>=s.start&&this.currentQ<s.end)el.classList.add('current');
+      let all=true;
+      for(let j=s.start;j<s.end;j++)if(this.answers[j]===undefined){all=false;break;}
+      if(all)el.classList.add('completed');
+    });
+  },
+
+  _startTimer(){
+    clearInterval(this.timerInterval);
+    this._showTimer();
+    this.timerInterval=setInterval(()=>{
+      this.timeLeft--;this._showTimer();
+      if(this.timeLeft<=0){clearInterval(this.timerInterval);App.toast('انتهى الوقت!','warning','⏰');setTimeout(()=>this.submitQuiz(),1500);}
+    },1000);
+  },
+
+  _showTimer(){
+    const m=Math.floor(this.timeLeft/60),s=this.timeLeft%60;
+    document.getElementById('timerText').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    const el=document.getElementById('timerDisplay');
+    el.className='timer-display';
+    if(this.timeLeft<=300)el.classList.add('warning');
+    if(this.timeLeft<=60)el.classList.add('critical');
+  },
+
+  showSubmitModal(){
+    const total=this.quiz.questions.length;
+    const answered=Object.keys(this.answers).length;
+    document.getElementById('submitSummary').innerHTML=
+      `<div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <span style="color:var(--success);font-weight:700">✅ ${answered} أُجيب</span>
+        <span style="color:var(--error);font-weight:700">⭕ ${total-answered} لم يُجب</span></div>`;
+    const LETTERS=['أ','ب','ج','د'];
+    document.getElementById('submitReviewList').innerHTML=this.quiz.questions.map((_,i)=>{
+      const a=this.answers[i];
+      return `<div class="submit-review-item${a!==undefined?' answered':''}">
+        <div class="submit-review-dot" style="background:${a!==undefined?'var(--success)':'var(--border)'}"></div>
+        <span>السؤال ${i+1}</span>
+        <span style="color:var(--text-3);font-size:.75rem">${a!==undefined?LETTERS[a]:'—'}</span></div>`;
+    }).join('');
+    App.openModal('submitModal');
+  },
+
+  submitQuiz(){
+    clearInterval(this.timerInterval);
+    App.closeModal('submitModal');
+    const total=this.quiz.questions.length;
+    const timeSpent=Math.floor((Date.now()-this.startTime)/1000);
+    let correct=0,wrong=0,unanswered=0;
+    const wrongItems=[];
+
+    this.quiz.questions.forEach((q,i)=>{
+      const ua=this.answers[i];
+      if(ua===undefined){unanswered++;return;}
+      if(ua===q.correct){correct++;}
+      else{
+        wrong++;
+        /* FIX: store imageDataUrl in wrongItems so review can show the image */
+        wrongItems.push({
+          questionIndex:i,
+          imageDataUrl:null,          // not stored in localStorage — loaded from IDB
+          idbKey:q.idbKey||null,      // key to load image from IndexedDB
+          userAnswer:ua,
+          correctAnswer:q.correct,
+          quizId:this.quiz.id,
+          quizTitle:this.quiz.title,
+          ytEmbedUrl:this.quiz.ytEmbedUrl||null,
+          ytVideoTitle:this.quiz.ytVideoTitle||null
+        });
+      }
+    });
+
+    const pct=(correct/total)*100;
+    const result={
+      id:'r_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+      quizId:this.quiz.id,quizTitle:this.quiz.title,
+      correct,wrong,unanswered,total,percentage:pct,timeSpent,
+      wrongItems,completedAt:Date.now()
+    };
+
+    /* FIX: Don't replace all results — just update/append for this quiz */
+    const results=Store.getResults();
+    const existingIdx=results.findIndex(r=>r.quizId===this.quiz.id);
+    if(existingIdx>=0)results[existingIdx]=result;
+    else results.push(result);
+    Store.setResults(results);
+
+    this._showResults(result);
+  },
+
+  _showResults(r){
+    const pct=Math.round(r.percentage);
+    document.getElementById('resultsPct').textContent=pct+'%';
+    document.getElementById('resCorrect').textContent=r.correct;
+    document.getElementById('resWrong').textContent=r.wrong;
+    document.getElementById('resUnanswered').textContent=r.unanswered;
+    const m=Math.floor(r.timeSpent/60),s=r.timeSpent%60;
+    document.getElementById('resTime').textContent=`${m}:${String(s).padStart(2,'0')}`;
+    document.getElementById('resultsTitle').textContent='اكتمل الاختبار!';
+    document.getElementById('resultsSubtitle').textContent=
+      pct>=90?'🏆 ممتاز!':pct>=70?'👍 جيد جداً!':pct>=50?'📚 مقبول، راجع أخطاءك':'💪 تحتاج مزيد دراسة';
+    document.getElementById('scoreRing').style.setProperty('--score-deg',(pct/100*360)+'deg');
+    App.navigate('results');App.updateBadges();
+  },
+
+  retakeQuiz(){if(this.quiz)this.startQuiz(this.quiz.id)},
+  confirmExit(){App.openModal('exitModal')},
+  exitQuiz(){
+    clearInterval(this.timerInterval);
+    App.closeModal('exitModal');
+    document.getElementById('quizVideoIframe').src='';
+    App.navigate('dashboard');App.showView('quizzes');
+  },
+  toggleNav(){
+    const n=document.getElementById('quizNavigator');
+    n.style.display=n.style.display==='none'?'':'none';
+  },
+  toggleVideoPanel(){
+    const embed=document.getElementById('quizVideoEmbed');
+    const toggleBtn=document.getElementById('quizVideoToggleBtn');
+    const showBtn=document.getElementById('quizVideoShowBtn');
+    if(!embed)return;
+    const visible=embed.style.display!=='none';
+    embed.style.display=visible?'none':'';
+    if(toggleBtn)toggleBtn.textContent=visible?'🔽 عرض الفيديو':'🔼 إخفاء';
+    if(showBtn)showBtn.classList.toggle('hidden',!visible);
+  },
+  openVideoFull(){
+    const iframe=document.getElementById('quizVideoIframe');
+    const title=document.getElementById('quizVideoPanelTitle');
+    if(iframe&&iframe.src)VideoModal.open(iframe.src.replace('&autoplay=1',''),title?title.textContent:'الدرس',0);
+  }
+};
+</script>
+<script>
+/* ====================================================
+   REVIEW — Fixed: now loads images from IDB correctly
+   ==================================================== */
+const Review={
+  currentFilter:'all',
+  render(){
+    const results=Store.getResults();
+    const tabs=document.getElementById('reviewFilterTabs');
+    let html=`<button class="filter-tab${this.currentFilter==='all'?' active':''}" onclick="Review.filter('all',this)">جميع الاختبارات</button>`;
+    results.forEach(r=>{
+      html+=`<button class="filter-tab${this.currentFilter===r.quizId?' active':''}" onclick="Review.filter('${r.quizId}',this)">${r.quizTitle}</button>`;
+    });
+    tabs.innerHTML=html;
+    this._renderList();
+  },
+  filter(id,btn){
+    this.currentFilter=id;
+    document.querySelectorAll('#reviewFilterTabs .filter-tab').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+    this._renderList();
+  },
+  async _renderList(){
+    const results=Store.getResults();
+    const LETTERS=['أ','ب','ج','د'];
+    const container=document.getElementById('reviewList');
+
+    /* FIX: collect wrongItems properly from results */
+    let all=[];
+    results.forEach(r=>{
+      if(this.currentFilter==='all'||r.quizId===this.currentFilter){
+        (r.wrongItems||[]).forEach(item=>all.push({...item,_quizTitle:r.quizTitle}));
+      }
+    });
+
+    if(!all.length){
+      container.innerHTML=`<div class="empty-state">
+        <div class="empty-icon">${results.length?'🎉':'📋'}</div>
+        <div class="empty-title">${results.length?'لا أخطاء! أحسنت':'لا توجد اختبارات مكتملة'}</div>
+        <div class="empty-desc">${results.length?'أجبت على كل الأسئلة صحيحاً':'أكمل اختبارًا لترى أخطاءك'}</div>
+      </div>`;
+      return;
+    }
+
+    /* Build cards with placeholders first, then lazy-load images */
+    container.innerHTML=all.map((item,idx)=>`
+      <div class="review-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+          <span class="text-xs text-muted">خطأ #${idx+1}</span>
+          <span class="text-xs text-muted">${item._quizTitle||item.quizTitle||''}</span>
+        </div>
+        <div id="rimg_${idx}" style="margin-bottom:.85rem">
+          ${item.imageDataUrl
+            ?`<img class="review-q-image" src="${item.imageDataUrl}" alt="سؤال">`
+            :`<div class="question-img-loading" style="padding:1rem;min-height:80px"><div class="spinner" style="width:24px;height:24px;border-width:2px"></div><span style="font-size:.75rem">جاري التحميل...</span></div>`}
+        </div>
+        <div class="review-answers">
+          <div class="review-answer user-wrong">
+            <span>❌</span>
+            <span><strong>إجابتك:</strong> ${LETTERS[item.userAnswer]||'—'}</span>
+          </div>
+          <div class="review-answer correct-ans">
+            <span>✅</span>
+            <span><strong>الصحيحة:</strong> ${LETTERS[item.correctAnswer]||'—'}</span>
+          </div>
+        </div>
+        <div class="review-meta">
+          <span>📋 ${item._quizTitle||item.quizTitle||''}</span>
+          ${item.ytVideoTitle?`<span>🎬 ${item.ytVideoTitle}</span>`:''}
+        </div>
+        ${item.ytEmbedUrl?`<button class="btn btn-outline btn-sm mt-1"
+          onclick="VideoModal.open('${(item.ytEmbedUrl||'').replace(/'/g,"\\'")}','${(item.ytVideoTitle||'الدرس').replace(/'/g,"\\'")}',0)">🎬 شاهد الدرس</button>`:''}
+      </div>`).join('');
+
+    /* Lazy load images from IDB for items without cached dataUrl */
+    all.forEach(async(item,idx)=>{
+      if(item.imageDataUrl)return;
+      if(!item.idbKey)return;
+      try{
+        const src=await IDB.get('images',item.idbKey);
+        if(src){
+          item.imageDataUrl=src;
+          const el=document.getElementById(`rimg_${idx}`);
+          if(el)el.innerHTML=`<img class="review-q-image" src="${src}" alt="سؤال">`;
+        }else{
+          const el=document.getElementById(`rimg_${idx}`);
+          if(el)el.innerHTML=`<div class="question-img-error" style="padding:.75rem">⚠️ الصورة غير متاحة — افتح الاختبار مرة أخرى لتحميلها</div>`;
+        }
+      }catch(e){
+        const el=document.getElementById(`rimg_${idx}`);
+        if(el)el.innerHTML=`<div class="question-img-error" style="padding:.75rem">⚠️ خطأ في تحميل الصورة</div>`;
+      }
+    });
+  },
+  showFromResults(){
+    App.navigate('dashboard');
+    setTimeout(()=>App.showView('review'),80);
+  }
+};
+
+/* ====================================================
+   STATISTICS
+   ==================================================== */
+const Stats={
+  charts:{},
+  render(){
+    const results=Store.getResults();
+    const quizzes=Store.getQuizzes();
+    const c=document.getElementById('statsCards');
+    if(!results.length){
+      c.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">📊</div><div class="empty-title">لا إحصائيات بعد</div>
+        <div class="empty-desc">أكمل اختبارًا لترى التحليلات</div></div>`;
+      ['chartScores','chartDist','chartWrongRight','chartTime'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)el.getContext('2d').clearRect(0,0,el.width,el.height);
+      });
+      return;
+    }
+    const tQ=results.reduce((a,r)=>a+r.total,0);
+    const tR=results.reduce((a,r)=>a+r.correct,0);
+    const tW=results.reduce((a,r)=>a+r.wrong,0);
+    const tU=results.reduce((a,r)=>a+r.unanswered,0);
+    const avg=results.reduce((a,r)=>a+r.percentage,0)/results.length;
+    const best=Math.max(...results.map(r=>r.percentage));
+    const worst=Math.min(...results.map(r=>r.percentage));
+    c.innerHTML=[
+      ['blue','📋',results.length,'مكتملة'],
+      ['gold','⭐',Math.round(avg)+'%','متوسط'],
+      ['green','🏆',Math.round(best)+'%','أعلى'],
+      ['red','📉',Math.round(worst)+'%','أدنى'],
+      ['blue','❓',tQ,'أسئلة'],
+      ['red','❌',tW,'أخطاء'],
+      ['green','✅',(tR/tQ*100).toFixed(1)+'%','نجاح'],
+      ['blue','📚',quizzes.length,'إجمالي']
+    ].map(([cl,ic,v,l])=>
+      `<div class="stat-card"><div class="stat-icon ${cl}">${ic}</div>
+      <div><div class="stat-value">${v}</div><div class="stat-label">${l}</div></div></div>`
+    ).join('');
+    this._charts(results,tR,tW,tU);
+  },
+  _col(){
+    const d=document.documentElement.getAttribute('data-theme')==='dark';
+    return{text:d?'#E6EDF3':'#1A2332',grid:d?'rgba(255,255,255,.1)':'rgba(0,0,0,.08)'};
+  },
+  _charts(results,tR,tW,tU){
+    const col=this._col();
+    const labels=results.map(r=>r.quizTitle);
+    Chart.defaults.color=col.text;Chart.defaults.borderColor=col.grid;
+    Object.values(this.charts).forEach(c=>{try{c.destroy();}catch(e){}});
+    this.charts={};
+    const base={responsive:true,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:col.grid},ticks:{color:col.text}},y:{grid:{color:col.grid},ticks:{color:col.text}}}};
+    const c1=document.getElementById('chartScores');
+    if(c1)this.charts.s=new Chart(c1,{type:'line',data:{labels,datasets:[{label:'%',
+      data:results.map(r=>Math.round(r.percentage)),borderColor:'#0F4C75',
+      backgroundColor:'rgba(15,76,117,.15)',fill:true,tension:.4,pointBackgroundColor:'#0F4C75',pointRadius:5
+    }]},options:{...base,scales:{...base.scales,y:{...base.scales.y,min:0,max:100}}}});
+    const c2=document.getElementById('chartDist');
+    if(c2)this.charts.d=new Chart(c2,{type:'doughnut',data:{
+      labels:['صحيح','خطأ','بلا إجابة'],
+      datasets:[{data:[tR,tW,tU],backgroundColor:['#22863A','#C53030','#D97706'],borderWidth:0}]
+    },options:{responsive:true,plugins:{legend:{display:true,position:'bottom',labels:{color:col.text}}}}});
+    const c3=document.getElementById('chartWrongRight');
+    if(c3)this.charts.w=new Chart(c3,{type:'bar',data:{labels,datasets:[
+      {label:'صحيح',data:results.map(r=>r.correct),backgroundColor:'#22863A',borderRadius:4},
+      {label:'خطأ',data:results.map(r=>r.wrong),backgroundColor:'#C53030',borderRadius:4}
+    ]},options:{...base,plugins:{legend:{display:true,labels:{color:col.text}}},
+      scales:{x:{stacked:true,...base.scales.x},y:{stacked:true,...base.scales.y}}}});
+    const c4=document.getElementById('chartTime');
+    if(c4)this.charts.t=new Chart(c4,{type:'bar',data:{labels,datasets:[{
+      label:'دقيقة',data:results.map(r=>Math.round(r.timeSpent/60)),
+      backgroundColor:'#D4A843',borderRadius:6}]},options:base});
+  }
+};
+
+/* ====================================================
+   COMPLETED
+   ==================================================== */
+const Completed={
+  render(){
+    const results=Store.getResults();
+    const c=document.getElementById('completedList');
+    if(!results.length){
+      c.innerHTML=`<div class="empty-state"><div class="empty-icon">✅</div>
+        <div class="empty-title">لا اختبارات مكتملة</div>
+        <div class="empty-desc">أكمل اختبارًا لتظهر هنا</div></div>`;
+      return;
+    }
+    c.innerHTML=[...results].sort((a,b)=>b.completedAt-a.completedAt).map(r=>{
+      const pct=Math.round(r.percentage);
+      const sc=pct>=70?'score-high':pct>=50?'score-mid':'score-low';
+      const m=Math.floor(r.timeSpent/60),s=r.timeSpent%60;
+      const date=new Date(r.completedAt).toLocaleDateString('ar-SA');
+      return `<div class="completed-quiz-row" onclick="QuizEngine.startQuiz('${r.quizId}')">
+        <div class="cqr-score ${sc}">${pct}%</div>
+        <div class="cqr-info">
+          <div class="cqr-name">${r.quizTitle}</div>
+          <div class="cqr-meta">✅ ${r.correct} • ❌ ${r.wrong} • ⏱️ ${m}:${String(s).padStart(2,'0')} • 📅 ${date}</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="event.stopPropagation();QuizEngine.startQuiz('${r.quizId}')">🔄 إعادة</button>
+      </div>`;
+    }).join('');
+  }
+};
+
+/* ====================================================
+   BOOT
+   ==================================================== */
+document.addEventListener('DOMContentLoaded',()=>{
+  App.init();
+  Uploader.init();
+});
+</script>
+</body>
+</html>
