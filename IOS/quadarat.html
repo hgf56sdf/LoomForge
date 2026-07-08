@@ -464,6 +464,20 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
 .font-bold{font-weight:700}.hidden{display:none!important}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 
+/* ─── MISTAKE SOURCE CHECKBOXES ─── */
+.mistake-source-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition);background:var(--surface)}
+.mistake-source-item:hover{border-color:var(--primary);background:var(--info-bg)}
+.mistake-source-item.selected{border-color:var(--primary);background:linear-gradient(to left,var(--info-bg),rgba(15,76,117,.04))}
+.mistake-source-cb{width:18px;height:18px;border:2px solid var(--border);border-radius:4px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all var(--transition)}
+.mistake-source-item.selected .mistake-source-cb{background:var(--primary);border-color:var(--primary);color:#fff;font-size:.7rem}
+.mistake-source-label{flex:1;font-size:.88rem;font-weight:600;color:var(--text)}
+.mistake-source-count{font-size:.75rem;color:var(--text-3)}
+
+/* ─── FREQUENT QUIZ SETUP ─── */
+.freq-setup-card{background:var(--surface-2);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.75rem;border:1px solid var(--border)}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:768px){
   .sidebar{transform:translateX(100%);width:280px}
@@ -535,6 +549,9 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
       <div class="nav-section-label">التحليل</div>
       <div class="nav-item" data-view="stats" onclick="App.showView('stats')"><span class="nav-icon">📊</span>الإحصائيات</div>
       <div class="nav-item" data-view="review" onclick="App.showView('review')"><span class="nav-icon">🔴</span>مراجعة الأخطاء</div>
+      <div class="nav-item" data-view="mistakequiz" onclick="App.showView('mistakequiz')"><span class="nav-icon">🎯</span>اختبار الأخطاء</div>
+      <div class="nav-section-label">الملف</div>
+      <div class="nav-item" data-view="datamanager" onclick="App.showView('datamanager')"><span class="nav-icon">💾</span>النسخ الاحتياطي</div>
     </nav>
     <div class="sidebar-footer">
       <button class="back-btn" onclick="App.navigate('landing')">↩ الرئيسية</button>
@@ -590,8 +607,8 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
         <button class="quiz-type-tab" disabled onclick="QuizList.setType('sections',this)">
           <span class="coming-soon-badge">قريبًا</span>📂 اختبارات أقسام
         </button>
-        <button class="quiz-type-tab" disabled onclick="QuizList.setType('frequent',this)">
-          <span class="coming-soon-badge">قريبًا</span>🔥 الأكثر تكرارًا
+        <button class="quiz-type-tab" onclick="QuizList.setType('frequent',this)">
+          🔥 الأكثر تكرارًا
         </button>
       </div>
       <div class="quiz-grid" id="quizGrid"></div>
@@ -599,28 +616,83 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
 
     <!-- UPLOAD -->
     <div class="view" id="view-upload">
-      <div class="view-header"><h1 class="view-title">رفع ملفات PDF</h1>
-        <p class="view-subtitle">كل صفحة (2–49) = سؤال صوري • يمكن رفع عدة ملفات دفعة واحدة</p></div>
-      <div class="grid-2" style="align-items:start;gap:1.5rem">
-        <div>
-          <div class="upload-zone" id="uploadZone">
-            <input type="file" id="pdfInput" accept=".pdf" multiple>
-            <div class="upload-icon">📄</div>
-            <div class="upload-title">اسحب وأفلت ملفات PDF هنا</div>
-            <div class="upload-desc">أو انقر للتحديد • يدعم رفع أكثر من ملف</div>
+      <div class="view-header">
+        <h1 class="view-title">رفع ملفات PDF</h1>
+        <p class="view-subtitle">اختر نوع الرفع حسب حجم الملف</p>
+      </div>
+      <div class="quiz-type-tabs" style="margin-bottom:1.5rem">
+        <button class="quiz-type-tab active" id="uploadTabBanks" onclick="UploadTabs.show('banks')">🏦 بنوك الأسئلة</button>
+        <button class="quiz-type-tab" id="uploadTabFrequent" onclick="UploadTabs.show('frequent')">🔥 الأكثر تكرارًا</button>
+      </div>
+      <div id="uploadPanelBanks">
+        <div class="grid-2" style="align-items:start;gap:1.5rem">
+          <div>
+            <div class="upload-zone" id="uploadZone">
+              <input type="file" id="pdfInput" accept=".pdf" multiple>
+              <div class="upload-icon">📄</div>
+              <div class="upload-title">اسحب وأفلت ملفات PDF هنا</div>
+              <div class="upload-desc">أو انقر للتحديد • يدعم رفع أكثر من ملف</div>
+            </div>
+            <div class="upload-list" id="uploadList"></div>
           </div>
-          <div class="upload-list" id="uploadList"></div>
+          <div class="card">
+            <h3 style="font-size:.9rem;font-weight:700;margin-bottom:1rem">📌 تعليمات بنوك الأسئلة</h3>
+            <ul style="font-size:.82rem;color:var(--text-2);line-height:2.2;list-style:none">
+              <li>🖼️ الأسئلة تُعرض كصور مباشرة من PDF</li>
+              <li>📄 كل ملف PDF = اختبار واحد (48 سؤال)</li>
+              <li>📃 الصفحة الأولى تُتجاهل تلقائيًا</li>
+              <li>🎯 الإجابات تُستخرج تلقائيًا من النص الأحمر</li>
+              <li>⏱️ مدة كل اختبار: 48 دقيقة</li>
+              <li>💾 كل شيء يُحفظ في المتصفح</li>
+            </ul>
+          </div>
         </div>
+      </div>
+      <div id="uploadPanelFrequent" style="display:none">
         <div class="card">
-          <h3 style="font-size:.9rem;font-weight:700;margin-bottom:1rem">📌 تعليمات</h3>
-          <ul style="font-size:.82rem;color:var(--text-2);line-height:2.2;list-style:none">
-            <li>🖼️ الأسئلة تُعرض كصور مباشرة من PDF</li>
-            <li>📄 كل ملف PDF = اختبار واحد (48 سؤال)</li>
-            <li>📃 الصفحة الأولى تُتجاهل تلقائيًا</li>
-            <li>🎯 الإجابات تُستخرج تلقائيًا من النص الأحمر</li>
-            <li>⏱️ مدة كل اختبار: 48 دقيقة</li>
-            <li>💾 كل شيء يُحفظ في المتصفح</li>
-          </ul>
+          <h2 style="font-size:1.05rem;font-weight:800;margin-bottom:.5rem">🔥 رفع ملف PDF كبير</h2>
+          <p style="font-size:.84rem;color:var(--text-3);margin-bottom:1.5rem">ارفع ملف كبير (700–900+ صفحة) وحدد عدد الأسئلة لكل اختبار. يُقسَّم تلقائيًا ويظهر في تبويب الأكثر تكرارًا.</p>
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div style="position:relative;border:2px dashed var(--border);border-radius:var(--radius-sm);
+              padding:1.75rem;text-align:center;cursor:pointer;background:var(--surface);transition:all var(--transition)"
+              ondragover="event.preventDefault();this.style.borderColor='var(--primary)'"
+              ondragleave="this.style.borderColor=''"
+              ondrop="event.preventDefault();this.style.borderColor='';FrequentQuiz.handleFile(event.dataTransfer.files[0])">
+              <input type="file" id="freqPdfInput" accept=".pdf"
+                style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"
+                onchange="FrequentQuiz.handleFile(this.files[0]);this.value=''">
+              <div style="font-size:2rem;margin-bottom:.5rem">📄</div>
+              <div style="font-weight:700;color:var(--text)">اسحب ملف PDF الكبير أو انقر للاختيار</div>
+              <div style="font-size:.78rem;color:var(--text-3);margin-top:.3rem">يدعم ملفات 700–900 صفحة أو أكثر</div>
+            </div>
+            <div id="freqUploadStatus" style="font-size:.82rem;color:var(--text-3)"></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div>
+                <label style="font-size:.82rem;font-weight:700;color:var(--text-2);display:block;margin-bottom:.4rem">عدد الأسئلة لكل اختبار</label>
+                <input type="number" id="freqQPerExam" value="48" min="5" max="200"
+                  style="width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-family:var(--font-ar);font-size:.9rem"
+                  oninput="FrequentQuiz.updatePreview()">
+              </div>
+              <div>
+                <label style="font-size:.82rem;font-weight:700;color:var(--text-2);display:block;margin-bottom:.4rem">عدد الاختبارات المتوقع</label>
+                <input type="number" id="freqExamCount" value="0" readonly
+                  style="width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text);font-family:var(--font-ar);font-size:.9rem;opacity:.7">
+              </div>
+            </div>
+            <div id="freqPreview" style="font-size:.83rem;color:var(--text-3);padding:.75rem;background:var(--surface-2);border-radius:var(--radius-sm);display:none"></div>
+            <button class="btn btn-primary btn-lg" id="freqStartBtn" onclick="FrequentQuiz.processAndCreate()" disabled>
+              🔥 إنشاء الاختبارات
+            </button>
+            <div id="freqProgress" style="display:none">
+              <div style="display:flex;justify-content:space-between;margin-bottom:.4rem;font-size:.82rem">
+                <span id="freqProgressLabel">جاري المعالجة...</span>
+                <span id="freqProgressPct">0%</span>
+              </div>
+              <div style="height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden">
+                <div id="freqProgressFill" style="height:100%;background:linear-gradient(to left,#7B2D8B,#C2185B);border-radius:4px;width:0%;transition:width .3s ease"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -673,6 +745,80 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
     <div class="view" id="view-completed">
       <div class="view-header"><h1 class="view-title">الاختبارات المكتملة</h1><p class="view-subtitle">سجل كامل بنتائجك</p></div>
       <div id="completedList"></div>
+    </div>
+
+    <!-- MISTAKE QUIZ -->
+    <div class="view" id="view-mistakequiz">
+      <div class="view-header">
+        <h1 class="view-title">🎯 اختبار الأخطاء</h1>
+        <p class="view-subtitle">اختبر نفسك على أسئلة أخطأت فيها سابقًا</p>
+      </div>
+      <div class="card mb-2">
+        <h3 style="font-size:.9rem;font-weight:700;margin-bottom:1rem">اختر مصدر الأسئلة</h3>
+        <div style="display:flex;flex-direction:column;gap:.75rem" id="mistakeSourceList"></div>
+        <div style="margin-top:1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:160px">
+            <label style="font-size:.8rem;font-weight:700;color:var(--text-2);display:block;margin-bottom:.4rem">عدد الأسئلة في الاختبار</label>
+            <input type="number" id="mistakeQuizCount" value="20" min="5" max="200"
+              style="width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+              background:var(--surface);color:var(--text);font-family:var(--font-ar);font-size:.9rem">
+          </div>
+          <button class="btn btn-primary btn-lg" style="margin-top:1.4rem" onclick="MistakeQuiz.start()">🎯 ابدأ اختبار الأخطاء</button>
+        </div>
+        <div id="mistakeQuizInfo" style="margin-top:.75rem;font-size:.82rem;color:var(--text-3)"></div>
+      </div>
+    </div>
+
+    <!-- DATA MANAGER -->
+    <div class="view" id="view-datamanager">
+      <div class="view-header">
+        <h1 class="view-title">💾 النسخ الاحتياطي</h1>
+        <p class="view-subtitle">احفظ بياناتك واستعدها في أي وقت — لا تفقد تقدمك</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;flex-wrap:wrap" class="grid-2">
+        <div class="card">
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:.5rem">📥 تصدير البيانات</h3>
+          <p style="font-size:.83rem;color:var(--text-3);margin-bottom:1.25rem">تنزيل كامل بياناتك: الاختبارات، النتائج، إعدادات يوتيوب، والخطة — كملف JSON واحد</p>
+          <button class="btn btn-primary btn-full" onclick="DataManager.exportData()">📥 تنزيل النسخة الاحتياطية</button>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem;font-weight:800;margin-bottom:.5rem">📤 استيراد البيانات</h3>
+          <p style="font-size:.83rem;color:var(--text-3);margin-bottom:1.25rem">رفع ملف نسخة احتياطية لاستعادة بياناتك. لن تُحذف أي بيانات موجودة — فقط يُضاف الجديد</p>
+          <div style="position:relative">
+            <input type="file" id="importFileInput" accept=".json" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">
+            <button class="btn btn-accent btn-full" onclick="document.getElementById('importFileInput').click()">📤 رفع ملف الاستيراد</button>
+          </div>
+          <div id="importStatus" style="margin-top:.75rem;font-size:.82rem"></div>
+        </div>
+      </div>
+      <div class="card mt-3">
+        <h3 style="font-size:.9rem;font-weight:700;margin-bottom:1rem">📊 ما يُصدَّر</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem">
+          <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:.85rem;text-align:center">
+            <div style="font-size:1.5rem;margin-bottom:.3rem">📋</div>
+            <div style="font-weight:700;font-size:.85rem" id="exportQuizCount">0 اختبار</div>
+            <div style="font-size:.72rem;color:var(--text-3)">هياكل الاختبارات</div>
+          </div>
+          <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:.85rem;text-align:center">
+            <div style="font-size:1.5rem;margin-bottom:.3rem">✅</div>
+            <div style="font-weight:700;font-size:.85rem" id="exportResultCount">0 نتيجة</div>
+            <div style="font-size:.72rem;color:var(--text-3)">النتائج والأخطاء</div>
+          </div>
+          <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:.85rem;text-align:center">
+            <div style="font-size:1.5rem;margin-bottom:.3rem">🎬</div>
+            <div style="font-weight:700;font-size:.85rem" id="exportYtCount">0 فيديو</div>
+            <div style="font-size:.72rem;color:var(--text-3)">قائمة يوتيوب</div>
+          </div>
+          <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:.85rem;text-align:center">
+            <div style="font-size:1.5rem;margin-bottom:.3rem">⚙️</div>
+            <div style="font-weight:700;font-size:.85rem">الإعدادات</div>
+            <div style="font-size:.72rem;color:var(--text-3)">خطة + مظهر</div>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-3);margin-top:1rem">
+          ⚠️ ملاحظة: صور الأسئلة (كبيرة الحجم) لا تُصدَّر — ستُعاد معالجتها تلقائيًا عند رفع ملفات PDF مرة أخرى
+        </p>
+      </div>
     </div>
   </main>
 </div>
@@ -843,7 +989,7 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
    IndexedDB WRAPPER
    ==================================================== */
 const IDB={
-  db:null,DB_NAME:'QuanLearn',DB_VER:4,
+  db:null,DB_NAME:'QuanLearn',DB_VER:5,
   async open(){
     if(this.db)return this.db;
     return new Promise((res,rej)=>{
@@ -852,6 +998,7 @@ const IDB={
         const d=e.target.result;
         if(!d.objectStoreNames.contains('images'))d.createObjectStore('images');
         if(!d.objectStoreNames.contains('meta'))d.createObjectStore('meta');
+        // v5: no new stores needed — frequentQuizzes stored in meta
       };
       r.onsuccess=e=>{this.db=e.target.result;res(this.db)};
       r.onerror=e=>rej(e.target.error);
@@ -958,6 +1105,8 @@ const App={
     else if(view==='review')Review.render();
     else if(view==='completed')Completed.render();
     else if(view==='youtube')YTManager.render();
+    else if(view==='mistakequiz')MistakeQuiz.render();
+    else if(view==='datamanager')DataManager.render();
   },
   updateBadges(){
     document.getElementById('quizCountBadge').textContent=Store.getQuizzes().length;
@@ -1212,44 +1361,51 @@ const PDFRenderer={
     return out.toDataURL('image/webp',.92);
   },
 
-  /* Process full PDF → array of question objects */
+  /* Process full PDF → array of question objects.
+     For large PDFs (>49 pages): splits into multiple 48-question exams automatically.
+     Returns array of question arrays: [[q1..q48],[q49..q96],...]  */
   async processPDF(file,quizId,onProgress){
     const buf=await file.arrayBuffer();
     const pdfDoc=await pdfjsLib.getDocument({data:buf}).promise;
     const total=pdfDoc.numPages;
-    const endPage=Math.min(total,49);
-    const questions=[];
+    // Skip page 1. Pages 2..total are questions (1 per page)
+    const questionPages=[];
+    for(let p=2;p<=total;p++) questionPages.push(p);
+    const totalQ=questionPages.length;
+    const allQuestions=[];
 
-    for(let p=2;p<=endPage;p++){
-      const qIdx=p-2;
-      const imgKey=`${quizId}_img_${qIdx}`;
-      const ansKey=`${quizId}_ans_${qIdx}`;
+    for(let qi=0;qi<totalQ;qi++){
+      const p=questionPages[qi];
+      const imgKey=`${quizId}_img_${qi}`;
+      const ansKey=`${quizId}_ans_${qi}`;
 
-      // Load from cache
       let dataUrl=null,correctIdx=0;
       try{dataUrl=await IDB.get('images',imgKey);}catch(e){}
-      try{const ca=await IDB.get('meta',ansKey);if(ca!=null)correctIdx=ca;}catch(e){}
 
-      // Always extract answer fresh (it's fast, just text parsing — not rendering)
-      // This fixes "random answers" bug
       correctIdx=await this.extractAnswer(pdfDoc,p);
       try{await IDB.set('meta',ansKey,correctIdx);}catch(e){}
 
-      // Render image only if not cached
       if(!dataUrl){
         dataUrl=await this.renderPage(pdfDoc,p);
         if(dataUrl){try{await IDB.set('images',imgKey,dataUrl);}catch(e){}}
       }
 
-      questions.push({id:qIdx+1,imageDataUrl:dataUrl,idbKey:imgKey,correct:correctIdx,page:p});
-      if(onProgress)onProgress(qIdx+1,endPage-1);
+      allQuestions.push({id:qi+1,imageDataUrl:dataUrl,idbKey:imgKey,correct:correctIdx,page:p});
+      if(onProgress)onProgress(qi+1,totalQ);
     }
 
-    // Pad to 48
-    while(questions.length<this.MAX_Q){
-      questions.push({id:questions.length+1,imageDataUrl:null,idbKey:null,correct:0,page:null});
+    // Split into groups of 48
+    const groups=[];
+    for(let i=0;i<allQuestions.length;i+=this.MAX_Q){
+      const group=allQuestions.slice(i,i+this.MAX_Q);
+      // Pad last group if needed
+      while(group.length<this.MAX_Q){
+        group.push({id:group.length+1,imageDataUrl:null,idbKey:null,correct:0,page:null});
+      }
+      groups.push(group);
     }
-    return questions.slice(0,this.MAX_Q);
+    if(!groups.length)groups.push(Array.from({length:this.MAX_Q},(_,i)=>({id:i+1,imageDataUrl:null,idbKey:null,correct:0,page:null})));
+    return groups; // array of arrays
   }
 };
 
@@ -1282,29 +1438,35 @@ const Uploader={
       this._addItem(itemId,file.name,file.size);
 
       try{
-        const questions=await PDFRenderer.processPDF(
+        const groups=await PDFRenderer.processPDF(
           file,quizId,(done,tot)=>this._updateProg(itemId,done,tot));
 
-        const v=(YTManager.videos||[])[currentQuizzes.length]||null;
-        const quiz={
-          id:quizId,title:'اختبار '+quizNum,number:quizNum,
-          fileName:file.name,questions,
-          sections:this._buildSections(questions),
-          uploadedAt:Date.now(),
-          ytVideoId:v?v.videoId:null,
-          ytVideoTitle:v?v.title:null,
-          ytEmbedUrl:v?v.embedUrl:null,
-          ytThumbUrl:v?v.thumbUrl:null
-        };
+        const isLarge=groups.length>1;
+        let addedCount=0;
+        for(let gi=0;gi<groups.length;gi++){
+          const questions=groups[gi];
+          // Re-read fresh for every group to get correct count
+          const latestQuizzes=Store.getQuizzes();
+          const groupNum=latestQuizzes.length+1;
+          const groupId=gi===0?quizId:`${quizId}_g${gi}`;
+          const groupTitle=isLarge?`اختبار ${groupNum} (${gi+1}/${groups.length})`:`اختبار ${groupNum}`;
+          const v=(YTManager.videos||[])[latestQuizzes.length]||null;
+          const quiz={
+            id:groupId,title:groupTitle,number:groupNum,
+            fileName:file.name,questions,
+            sections:this._buildSections(questions),
+            uploadedAt:Date.now(),
+            ytVideoId:v?v.videoId:null,ytVideoTitle:v?v.title:null,
+            ytEmbedUrl:v?v.embedUrl:null,ytThumbUrl:v?v.thumbUrl:null
+          };
+          const fresh=Store.getQuizzes();
+          fresh.push(quiz);
+          Store.setQuizzes(fresh);
+          addedCount++;
+        }
 
-        // Read fresh again right before writing to avoid any race
-        const fresh=Store.getQuizzes();
-        fresh.push(quiz);
-        Store.setQuizzes(fresh);
-
-        this._setStatus(itemId,'done',`✅ جاهز (${questions.length} سؤال)`);
-        App.toast(`"${quiz.title}" جاهز`,'success','✅');
-        // Refresh badges, overview AND quiz grid after every successful upload
+        this._setStatus(itemId,'done',`✅ ${addedCount} اختبار جاهز`);
+        App.toast(isLarge?`تم تقسيم الملف إلى ${addedCount} اختبار`:'الاختبار جاهز','success','✅');
         App.updateBadges();
         App.renderOverview();
         QuizList.render();
@@ -1556,13 +1718,16 @@ const QuizList={
     this.render();
   },
   render(){
-    const quizzes=Store.getQuizzes();
+    if(this.type==='frequent'){FrequentQuiz.renderGrid();return;}
+    const allQuizzes=Store.getQuizzes();
     const results=Store.getResults();
     const grid=document.getElementById('quizGrid');
+    // Banks tab: only show quizzes that are NOT frequent
+    const quizzes=allQuizzes.filter(q=>!q.isFrequent);
     if(!quizzes.length){
       grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
         <div class="empty-icon">📋</div><div class="empty-title">لا توجد اختبارات</div>
-        <div class="empty-desc">ارفع ملف PDF لإنشاء اختبار</div>
+        <div class="empty-desc">ارفع ملف PDF من تبويب رفع ملفات PDF</div>
         <button class="btn btn-primary mt-2" onclick="App.showView('upload')">➕ رفع PDF</button></div>`;
       return;
     }
@@ -2086,6 +2251,539 @@ const Completed={
     }).join('');
   }
 };
+
+/* ====================================================
+   MISTAKE QUIZ — اختبار الأخطاء
+   Feature 1: exam from mistakes, select source(s)
+   ==================================================== */
+const MistakeQuiz={
+  render(){
+    const results=Store.getResults();
+    const container=document.getElementById('mistakeSourceList');
+    if(!container)return;
+
+    // Count total mistakes across all quizzes
+    let totalMistakes=0;
+    results.forEach(r=>{totalMistakes+=(r.wrongItems||[]).length;});
+
+    // Build source checkboxes
+    let html=`<label style="display:flex;align-items:center;gap:.65rem;padding:.6rem .85rem;
+      border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;
+      background:var(--surface);transition:all var(--transition)" id="src_all_lbl">
+      <input type="checkbox" id="src_all" onchange="MistakeQuiz.toggleAll(this)"
+        style="width:18px;height:18px;accent-color:var(--primary);flex-shrink:0">
+      <span style="font-weight:700">جميع الاختبارات</span>
+      <span style="margin-right:auto;font-size:.75rem;color:var(--text-3)">${totalMistakes} خطأ</span>
+    </label>`;
+
+    results.forEach(r=>{
+      const cnt=(r.wrongItems||[]).length;
+      if(!cnt)return;
+      html+=`<label style="display:flex;align-items:center;gap:.65rem;padding:.6rem .85rem;
+        border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;
+        background:var(--surface);transition:all var(--transition)" id="src_${r.quizId}_lbl">
+        <input type="checkbox" class="src-quiz-cb" data-id="${r.quizId}"
+          onchange="MistakeQuiz.updateCount()"
+          style="width:18px;height:18px;accent-color:var(--primary);flex-shrink:0">
+        <span style="font-weight:600">${r.quizTitle}</span>
+        <span style="margin-right:auto;font-size:.75rem;color:var(--text-3)">${cnt} خطأ</span>
+      </label>`;
+    });
+
+    if(!results.length||totalMistakes===0){
+      html='<div class="empty-state"><div class="empty-icon">🎉</div><div class="empty-title">لا توجد أخطاء بعد</div><div class="empty-desc">أكمل اختبارًا أولاً</div></div>';
+    }
+    container.innerHTML=html;
+    this.updateCount();
+  },
+
+  toggleAll(cb){
+    const cbs=document.querySelectorAll('.src-quiz-cb');
+    cbs.forEach(c=>{c.checked=cb.checked;});
+    this.updateCount();
+  },
+
+  updateCount(){
+    const allCb=document.getElementById('src_all');
+    const cbs=[...document.querySelectorAll('.src-quiz-cb')];
+    if(allCb){
+      const allChecked=cbs.every(c=>c.checked);
+      const noneChecked=cbs.every(c=>!c.checked);
+      allCb.checked=allChecked;
+      allCb.indeterminate=!allChecked&&!noneChecked;
+    }
+    // Count selected mistakes
+    const results=Store.getResults();
+    let total=0;
+    cbs.filter(c=>c.checked).forEach(c=>{
+      const r=results.find(x=>x.quizId===c.dataset.id);
+      if(r)total+=(r.wrongItems||[]).length;
+    });
+    // If all-checkbox checked
+    if(allCb&&allCb.checked){
+      total=0;
+      results.forEach(r=>{total+=(r.wrongItems||[]).length;});
+    }
+    const infoEl=document.getElementById('mistakeQuizInfo');
+    if(infoEl){
+      const maxCount=parseInt(document.getElementById('mistakeQuizCount')?.value||20);
+      infoEl.textContent=total>0?`سيتم اختيار ${Math.min(maxCount,total)} سؤال من ${total} خطأ متاح`:'لم تختر أي مصدر';
+    }
+  },
+
+  start(){
+    const results=Store.getResults();
+    const allCb=document.getElementById('src_all');
+    const cbs=[...document.querySelectorAll('.src-quiz-cb')];
+    const maxCount=parseInt(document.getElementById('mistakeQuizCount')?.value||20);
+
+    // Collect selected quizIds
+    let selectedIds=new Set();
+    if(allCb&&allCb.checked){
+      results.forEach(r=>selectedIds.add(r.quizId));
+    }else{
+      cbs.filter(c=>c.checked).forEach(c=>selectedIds.add(c.dataset.id));
+    }
+
+    if(!selectedIds.size){App.toast('اختر مصدرًا على الأقل','warning','⚠️');return;}
+
+    // Collect all wrongItems from selected quizzes
+    let allWrong=[];
+    results.forEach(r=>{
+      if(selectedIds.has(r.quizId)){
+        (r.wrongItems||[]).forEach(item=>allWrong.push({...item,_fromQuizTitle:r.quizTitle}));
+      }
+    });
+
+    if(!allWrong.length){App.toast('لا توجد أخطاء في المصادر المحددة','warning','⚠️');return;}
+
+    // Shuffle and take maxCount
+    allWrong=allWrong.sort(()=>Math.random()-.5).slice(0,maxCount);
+
+    // Build a virtual quiz object
+    const vQuiz={
+      id:'mistake_exam_'+Date.now(),
+      title:'اختبار الأخطاء',
+      number:0,
+      questions:allWrong.map((item,i)=>({
+        id:i+1,
+        imageDataUrl:item.imageDataUrl||null,
+        idbKey:item.idbKey||null,
+        correct:item.correctAnswer,
+        page:null
+      })),
+      sections:MistakeQuiz._buildSections(allWrong.length),
+      uploadedAt:Date.now(),
+      isMistakeExam:true,
+      ytVideoId:null,ytVideoTitle:null,ytEmbedUrl:null,ytThumbUrl:null
+    };
+
+    // Start the quiz engine with this virtual quiz (do not save to storage)
+    QuizEngine.startVirtualQuiz(vQuiz);
+  },
+
+  _buildSections(total){
+    const per=Math.ceil(total/5);
+    return[0,1,2,3,4].map(i=>({
+      label:'القسم '+(i+1),start:i*per,end:Math.min((i+1)*per,total)
+    })).filter(s=>s.start<total);
+  }
+};
+
+/* ====================================================
+   FREQUENT QUIZ — الأكثر تكرارًا
+   Feature 2: large PDF split into custom-sized exams
+   ==================================================== */
+const FrequentQuiz={
+  renderGrid(){
+    const allQuizzes=Store.getQuizzes();
+    const results=Store.getResults();
+    const grid=document.getElementById('quizGrid');
+    const freqQuizzes=allQuizzes.filter(q=>q.isFrequent);
+    if(!freqQuizzes.length){
+      // No frequent quizzes yet — show upload prompt
+      grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">🔥</div>
+        <div class="empty-title">لا توجد اختبارات متكررة بعد</div>
+        <div class="empty-desc">ارفع ملف PDF كبير من تبويب "الأكثر تكرارًا" في رفع ملفات PDF</div>
+        <button class="btn btn-primary mt-2" onclick="App.showView('upload');setTimeout(()=>UploadTabs.show('frequent'),100)">📄 رفع PDF كبير</button>
+      </div>`;
+      return;
+    }
+    grid.innerHTML=freqQuizzes.map(q=>{
+      const r=results.find(x=>x.quizId===q.id);
+      const pct=r?Math.round(r.percentage):null;
+      const badge=r?'<span class="quiz-status-badge badge-done">✅ مكتمل</span>':'<span class="quiz-status-badge badge-new">🆕 جديد</span>';
+      return `<div class="quiz-card">
+        <div class="quiz-card-header" style="background:linear-gradient(135deg,#7B2D8B,#C2185B)">
+          <div class="quiz-number-label">#${q.number} 🔥</div>
+          <div class="quiz-title-text">${q.title}</div>
+        </div>
+        <div class="no-video-strip">📄 ${q.fileName||''}</div>
+        <div class="quiz-card-body">
+          <div class="quiz-meta">
+            <div class="quiz-meta-item">❓ ${q.questions.length} سؤال</div>
+            <div class="quiz-meta-item">⏱️ ${Math.round(q.questions.length)} دقيقة</div>
+          </div>
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" style="width:${r?100:0}%"></div>
+          </div>
+          <div class="flex items-center justify-between" style="margin-bottom:.75rem">
+            ${badge}
+            ${pct!==null?`<span style="font-size:.85rem;font-weight:800;color:${pct>=70?'var(--success)':pct>=50?'var(--warning)':'var(--error)'}">${pct}%</span>`:''}
+          </div>
+          <div class="quiz-actions">
+            <button class="btn btn-primary btn-sm" style="flex:1" onclick="QuizEngine.startQuiz('${q.id}')">${r?'🔄 إعادة':'▶️ ابدأ'}</button>
+            <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();App._confirmDelete('${q.id}')">🗑️</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  },
+
+  renderSetup(){
+    const grid=document.getElementById('quizGrid');
+    grid.innerHTML=`
+      <div style="grid-column:1/-1">
+        <div class="card">
+          <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:.5rem">🔥 اختبارات الأكثر تكرارًا</h2>
+          <p style="font-size:.85rem;color:var(--text-3);margin-bottom:1.5rem">
+            ارفع ملف PDF كبير (مئات الصفحات) وحدد عدد الأسئلة لكل اختبار.
+            سيتم تقسيمه تلقائيًا إلى اختبارات متعددة.
+          </p>
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div>
+              <label style="font-size:.82rem;font-weight:700;color:var(--text-2);display:block;margin-bottom:.4rem">رفع ملف PDF كبير</label>
+              <div style="position:relative;border:2px dashed var(--border);border-radius:var(--radius-sm);
+                padding:1.5rem;text-align:center;cursor:pointer;background:var(--surface);transition:all var(--transition)"
+                id="freqUploadZone">
+                <input type="file" id="freqPdfInput" accept=".pdf"
+                  style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"
+                  onchange="FrequentQuiz.handleFile(this.files[0])">
+                <div style="font-size:1.5rem;margin-bottom:.5rem">📄</div>
+                <div style="font-weight:700;color:var(--text)">اسحب ملف PDF أو انقر للاختيار</div>
+                <div style="font-size:.8rem;color:var(--text-3);margin-top:.3rem">يدعم ملفات 700–900 صفحة أو أكثر</div>
+              </div>
+              <div id="freqUploadStatus" style="margin-top:.75rem;font-size:.82rem;color:var(--text-3)"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+              <div>
+                <label style="font-size:.82rem;font-weight:700;color:var(--text-2);display:block;margin-bottom:.4rem">عدد الأسئلة لكل اختبار</label>
+                <input type="number" id="freqQPerExam" value="48" min="5" max="200"
+                  style="width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);
+                  border-radius:var(--radius-sm);background:var(--surface);color:var(--text);
+                  font-family:var(--font-ar);font-size:.9rem"
+                  oninput="FrequentQuiz.updatePreview()">
+              </div>
+              <div>
+                <label style="font-size:.82rem;font-weight:700;color:var(--text-2);display:block;margin-bottom:.4rem">عدد الاختبارات للإنشاء</label>
+                <input type="number" id="freqExamCount" value="0" min="1" readonly
+                  style="width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);
+                  border-radius:var(--radius-sm);background:var(--surface-2);color:var(--text);
+                  font-family:var(--font-ar);font-size:.9rem;opacity:.7">
+              </div>
+            </div>
+            <div id="freqPreview" style="font-size:.83rem;color:var(--text-3);padding:.75rem;
+              background:var(--surface-2);border-radius:var(--radius-sm);display:none"></div>
+            <button class="btn btn-primary btn-lg" id="freqStartBtn" onclick="FrequentQuiz.processAndCreate()" disabled>
+              🔥 إنشاء الاختبارات
+            </button>
+          </div>
+          <div id="freqProgress" style="margin-top:1.25rem;display:none">
+            <div style="display:flex;justify-content:space-between;margin-bottom:.4rem;font-size:.82rem">
+              <span id="freqProgressLabel">جاري المعالجة...</span>
+              <span id="freqProgressPct">0%</span>
+            </div>
+            <div style="height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden">
+              <div id="freqProgressFill" style="height:100%;background:var(--primary);border-radius:4px;width:0%;transition:width .3s ease"></div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  },
+
+  _pdfDoc:null,
+  _totalPages:0,
+  _fileName:'',
+
+  async handleFile(file){
+    if(!file||file.type!=='application/pdf'){App.toast('يرجى اختيار ملف PDF','warning','⚠️');return;}
+    this._fileName=file.name;
+    const statusEl=document.getElementById('freqUploadStatus');
+    if(statusEl)statusEl.textContent='⏳ جاري قراءة الملف...';
+    try{
+      const buf=await file.arrayBuffer();
+      this._pdfDoc=await pdfjsLib.getDocument({data:buf}).promise;
+      this._totalPages=this._pdfDoc.numPages;
+      const questionPages=this._totalPages-1; // skip page 1
+      if(statusEl)statusEl.textContent=`✅ ${file.name} • ${this._totalPages} صفحة • ${questionPages} سؤال`;
+      this.updatePreview();
+      const btn=document.getElementById('freqStartBtn');
+      if(btn)btn.disabled=false;
+    }catch(e){
+      if(statusEl)statusEl.textContent='❌ خطأ في قراءة الملف: '+e.message;
+      App.toast('خطأ في قراءة الملف','error','❌');
+    }
+  },
+
+  updatePreview(){
+    if(!this._totalPages)return;
+    const qPerExam=parseInt(document.getElementById('freqQPerExam')?.value||48);
+    const questionPages=Math.max(0,this._totalPages-1);
+    const examCount=Math.ceil(questionPages/qPerExam);
+    const countEl=document.getElementById('freqExamCount');
+    if(countEl)countEl.value=examCount;
+    const preview=document.getElementById('freqPreview');
+    if(preview){
+      preview.style.display='';
+      preview.innerHTML=`📊 إجمالي الأسئلة: <strong>${questionPages}</strong> &nbsp;|&nbsp; 
+        عدد الاختبارات: <strong>${examCount}</strong> &nbsp;|&nbsp;
+        الأسئلة لكل اختبار: <strong>${qPerExam}</strong>
+        <br><span style="color:var(--warning);font-size:.75rem">⚠️ المعالجة قد تستغرق وقتًا للملفات الكبيرة</span>`;
+    }
+  },
+
+  async processAndCreate(){
+    if(!this._pdfDoc){App.toast('اختر ملف PDF أولاً','warning','⚠️');return;}
+    const qPerExam=parseInt(document.getElementById('freqQPerExam')?.value||48);
+    const pdfDoc=this._pdfDoc;
+    const totalPages=this._totalPages;
+    const questionPages=totalPages-1;
+    const baseId='freq_'+Date.now();
+
+    const btn=document.getElementById('freqStartBtn');
+    if(btn)btn.disabled=true;
+    const progDiv=document.getElementById('freqProgress');
+    if(progDiv)progDiv.style.display='';
+
+    const setProgress=(done,total,label)=>{
+      const pct=Math.round((done/total)*100);
+      const fill=document.getElementById('freqProgressFill');
+      const lbl=document.getElementById('freqProgressLabel');
+      const pctEl=document.getElementById('freqProgressPct');
+      if(fill)fill.style.width=pct+'%';
+      if(lbl)lbl.textContent=label||`صفحة ${done} من ${total}`;
+      if(pctEl)pctEl.textContent=pct+'%';
+    };
+
+    // Process all pages
+    const allQuestions=[];
+    for(let qi=0;qi<questionPages;qi++){
+      const pageNum=qi+2; // skip page 1
+      const imgKey=`${baseId}_img_${qi}`;
+      const ansKey=`${baseId}_ans_${qi}`;
+      let dataUrl=null;
+      let correctIdx=0;
+      try{dataUrl=await IDB.get('images',imgKey);}catch(e){}
+      correctIdx=await PDFRenderer.extractAnswer(pdfDoc,pageNum);
+      try{await IDB.set('meta',ansKey,correctIdx);}catch(e){}
+      if(!dataUrl){
+        dataUrl=await PDFRenderer.renderPage(pdfDoc,pageNum);
+        if(dataUrl){try{await IDB.set('images',imgKey,dataUrl);}catch(e){}}
+      }
+      allQuestions.push({id:qi+1,imageDataUrl:dataUrl,idbKey:imgKey,correct:correctIdx,page:pageNum});
+      setProgress(qi+1,questionPages,`معالجة صفحة ${qi+1} من ${questionPages}`);
+    }
+
+    // Split into groups and save as separate quizzes
+    let createdCount=0;
+    for(let gi=0;gi*qPerExam<allQuestions.length;gi++){
+      const group=allQuestions.slice(gi*qPerExam,(gi+1)*qPerExam);
+      const fresh=Store.getQuizzes();
+      const quizNum=fresh.length+1;
+      const groupId=`${baseId}_g${gi}`;
+      const quiz={
+        id:groupId,
+        title:`اختبار ${quizNum} (${this._fileName.replace('.pdf','')})`,
+        number:quizNum,
+        fileName:this._fileName,
+        questions:group,
+        sections:Uploader._buildSections(group),
+        uploadedAt:Date.now(),
+        isFrequent:true,
+        ytVideoId:null,ytVideoTitle:null,ytEmbedUrl:null,ytThumbUrl:null
+      };
+      fresh.push(quiz);
+      Store.setQuizzes(fresh);
+      createdCount++;
+    }
+
+    setProgress(questionPages,questionPages,'تم الانتهاء!');
+    App.toast(`تم إنشاء ${createdCount} اختبار`,'success','✅');
+    App.updateBadges();
+    App.renderOverview();
+    QuizList.render();
+    if(btn)btn.disabled=false;
+    this._pdfDoc=null;this._totalPages=0;this._fileName='';
+  }
+};
+
+/* ====================================================
+   DATA MANAGER — تصدير واستيراد البيانات
+   Feature 3: download all data + upload restore
+   Preserves existing data — only MERGES on import
+   ==================================================== */
+const DataManager={
+  async exportData(){
+    App.toast('جاري تجميع البيانات...','info','⏳');
+    try{
+      // Collect all localStorage data
+      const quizzes=Store.getQuizzes();
+      const results=Store.getResults();
+      const settings=Store.getSettings();
+      const plan=Store.getPlan();
+      const ytVideos=YTManager.videos||[];
+
+      // Collect all IDB images & meta keys
+      const imgKeys=await IDB.getAllKeys('images').catch(()=>[]);
+      const metaKeys=await IDB.getAllKeys('meta').catch(()=>[]);
+      const images={};
+      const meta={};
+
+      // Export images (base64 strings)
+      for(const k of imgKeys){
+        try{const v=await IDB.get('images',k);if(v)images[k]=v;}catch(e){}
+      }
+      // Export meta (answer indices, ytVideos cache)
+      for(const k of metaKeys){
+        try{const v=await IDB.get('meta',k);if(v!==undefined)meta[k]=v;}catch(e){}
+      }
+
+      const exportObj={
+        version:2,
+        exportedAt:new Date().toISOString(),
+        localStorage:{quizzes,results,settings,plan,ytVideos},
+        idb:{images,meta}
+      };
+
+      const json=JSON.stringify(exportObj);
+      const blob=new Blob([json],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;
+      const date=new Date().toISOString().slice(0,10);
+      a.download=`quanti-backup-${date}.json`;
+      document.body.appendChild(a);a.click();
+      document.body.removeChild(a);URL.revokeObjectURL(url);
+      App.toast('تم تنزيل النسخة الاحتياطية','success','✅');
+    }catch(e){
+      App.toast('خطأ في التصدير: '+e.message,'error','❌');
+      console.error(e);
+    }
+  },
+
+  async importData(file){
+    if(!file||!file.name.endsWith('.json')){App.toast('يرجى اختيار ملف JSON','warning','⚠️');return;}
+    App.toast('جاري استيراد البيانات...','info','⏳');
+    try{
+      const text=await file.text();
+      const data=JSON.parse(text);
+
+      // Support both v1 (flat) and v2 (structured) exports
+      const ls=data.localStorage||data;
+      const idbData=data.idb||{};
+
+      // ── Merge quizzes (never overwrite existing) ──
+      const existing=Store.getQuizzes();
+      const existingIds=new Set(existing.map(q=>q.id));
+      const incoming=(ls.quizzes||[]).filter(q=>!existingIds.has(q.id));
+      if(incoming.length){
+        Store.setQuizzes([...existing,...incoming]);
+      }
+
+      // ── Merge results (never overwrite existing) ──
+      const existingR=Store.getResults();
+      const existingRIds=new Set(existingR.map(r=>r.id));
+      const incomingR=(ls.results||[]).filter(r=>!existingRIds.has(r.id));
+      if(incomingR.length){
+        Store.setResults([...existingR,...incomingR]);
+      }
+
+      // ── Merge settings (only if not set) ──
+      const curSettings=Store.getSettings();
+      if(!curSettings.theme&&ls.settings)Store.setSettings(ls.settings);
+
+      // ── Merge plan (only if not set) ──
+      const curPlan=Store.getPlan();
+      if(!curPlan.examDate&&ls.plan&&ls.plan.examDate)Store.setPlan(ls.plan);
+
+      // ── Restore YT videos (merge) ──
+      if(ls.ytVideos&&ls.ytVideos.length){
+        const curVids=YTManager.videos||[];
+        const curVidIds=new Set(curVids.map(v=>v.videoId||v.embedUrl));
+        const newVids=(ls.ytVideos).filter(v=>!curVidIds.has(v.videoId||v.embedUrl));
+        if(newVids.length){
+          YTManager.videos=[...curVids,...newVids];
+          await IDB.set('meta','ytVideos',YTManager.videos).catch(()=>{});
+        }
+      }
+
+      // ── Restore IDB images (only missing keys) ──
+      let imgCount=0;
+      if(idbData.images){
+        const existingImgKeys=new Set(await IDB.getAllKeys('images').catch(()=>[]));
+        for(const[k,v] of Object.entries(idbData.images)){
+          if(!existingImgKeys.has(k)&&v){
+            try{await IDB.set('images',k,v);imgCount++;}catch(e){}
+          }
+        }
+      }
+      // ── Restore IDB meta (only missing keys) ──
+      if(idbData.meta){
+        const existingMetaKeys=new Set(await IDB.getAllKeys('meta').catch(()=>[]));
+        for(const[k,v] of Object.entries(idbData.meta)){
+          if(!existingMetaKeys.has(k)&&v!==undefined){
+            try{await IDB.set('meta',k,v);}catch(e){}
+          }
+        }
+      }
+
+      App.toast(`تم الاستيراد ✅ — ${incoming.length} اختبار جديد، ${incomingR.length} نتيجة، ${imgCount} صورة`,'success','✅');
+      App.updateBadges();App.renderOverview();QuizList.render();
+      YTManager.render();
+    }catch(e){
+      App.toast('خطأ في الاستيراد: '+e.message,'error','❌');
+      console.error(e);
+    }
+  }
+};
+
+/* ====================================================
+   QUIZ ENGINE extension: startVirtualQuiz
+   Allows running a quiz from a virtual object (not stored)
+   ==================================================== */
+QuizEngine.startVirtualQuiz=async function(vQuiz){
+  this.quiz=vQuiz;this.currentQ=0;this.answers={};
+  this.timeLeft=48*60;this.startTime=Date.now();
+  document.getElementById('quizTopTitle').textContent=vQuiz.title;
+  document.getElementById('totalCount').textContent=vQuiz.questions.length;
+  this._buildNav();this._buildSections();this._setupVideo();
+  await this._renderQ();this._startTimer();
+  App.navigate('quiz');
+};
+
+/* ====================================================
+   App.showView extension: handle new views
+   ==================================================== */
+const _origShowView=App.showView.bind(App);
+App.showView=function(view){
+  _origShowView(view);
+  if(view==='mistakequiz')MistakeQuiz.render();
+  if(view==='datamanager'){/* HTML is static, just ensure import input works */}
+};
+
+/* ====================================================
+   Wire up import file input (set in HTML but needs JS)
+   ==================================================== */
+document.addEventListener('DOMContentLoaded',()=>{
+  const importInput=document.getElementById('importFileInput');
+  if(importInput){
+    importInput.addEventListener('change',e=>{
+      if(e.target.files[0])DataManager.importData(e.target.files[0]);
+      e.target.value='';
+    });
+  }
+});
 
 /* ====================================================
    BOOT
