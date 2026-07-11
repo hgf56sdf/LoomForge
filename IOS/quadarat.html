@@ -336,6 +336,7 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
   min-height:180px;background:var(--bg);position:relative}
 .question-img{max-width:100%;border-radius:6px;cursor:zoom-in;display:block;box-shadow:var(--shadow-sm);transition:transform .2s ease}
 .question-img.zoomed{transform:scale(1.6);cursor:zoom-out;z-index:20;position:relative}
+.review-q-image.zoomed{transform:scale(1.6);cursor:zoom-out;z-index:20;position:relative;transform-origin:top center}
 .question-img-loading{display:flex;align-items:center;justify-content:center;flex-direction:column;
   gap:.75rem;color:var(--text-3);font-size:.85rem;padding:2.5rem;width:100%}
 .question-img-error{color:var(--text-3);font-size:.82rem;text-align:center;padding:1.5rem;width:100%}
@@ -607,7 +608,7 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
         <button class="quiz-type-tab" disabled onclick="QuizList.setType('sections',this)">
           <span class="coming-soon-badge">قريبًا</span>📂 اختبارات أقسام
         </button>
-        <button class="quiz-type-tab" onclick="QuizList.setType('frequent',this)">
+        <button class="quiz-type-tab" id="quizTabFrequent" onclick="QuizList.setType('frequent',this)">
           🔥 الأكثر تكرارًا
         </button>
       </div>
@@ -738,6 +739,7 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
       <div class="filter-tabs" id="reviewFilterTabs">
         <button class="filter-tab active" onclick="Review.filter('all',this)">جميع الاختبارات</button>
       </div>
+      <div id="reviewListHeader"></div>
       <div id="reviewList"></div>
     </div>
 
@@ -1106,6 +1108,7 @@ const App={
     else if(view==='completed')Completed.render();
     else if(view==='youtube')YTManager.render();
     else if(view==='mistakequiz')MistakeQuiz.render();
+    else if(view==='datamanager'){/* static — no render needed */}
     else if(view==='datamanager')DataManager.render();
   },
   updateBadges(){
@@ -2052,36 +2055,66 @@ const QuizEngine={
    ==================================================== */
 const Review={
   currentFilter:'all',
+
   render(){
     const results=Store.getResults();
     const tabs=document.getElementById('reviewFilterTabs');
     let html=`<button class="filter-tab${this.currentFilter==='all'?' active':''}" onclick="Review.filter('all',this)">جميع الاختبارات</button>`;
     results.forEach(r=>{
-      html+=`<button class="filter-tab${this.currentFilter===r.quizId?' active':''}" onclick="Review.filter('${r.quizId}',this)">${r.quizTitle}</button>`;
+      if((r.wrongItems||[]).length)
+        html+=`<button class="filter-tab${this.currentFilter===r.quizId?' active':''}" onclick="Review.filter('${r.quizId}',this)">${r.quizTitle}</button>`;
     });
     tabs.innerHTML=html;
     this._renderList();
   },
+
   filter(id,btn){
     this.currentFilter=id;
     document.querySelectorAll('#reviewFilterTabs .filter-tab').forEach(b=>b.classList.remove('active'));
     if(btn)btn.classList.add('active');
     this._renderList();
   },
+
+  /* Delete a single wrong answer by quizId + questionIndex */
+  deleteItem(quizId,questionIndex){
+    const results=Store.getResults();
+    const r=results.find(x=>x.quizId===quizId);
+    if(!r)return;
+    r.wrongItems=(r.wrongItems||[]).filter(item=>item.questionIndex!==questionIndex);
+    Store.setResults(results);
+    App.toast('تم حذف الخطأ','success','🗑️');
+    this.render();
+  },
+
+  /* Delete ALL wrong answers for a quiz (or all quizzes) */
+  deleteAll(quizId){
+    const results=Store.getResults();
+    if(quizId==='all'){
+      results.forEach(r=>{r.wrongItems=[];});
+    }else{
+      const r=results.find(x=>x.quizId===quizId);
+      if(r)r.wrongItems=[];
+    }
+    Store.setResults(results);
+    App.toast('تم مسح الأخطاء','success','🗑️');
+    this.render();
+  },
+
   async _renderList(){
     const results=Store.getResults();
     const LETTERS=['أ','ب','ج','د'];
     const container=document.getElementById('reviewList');
+    const hdr=document.getElementById('reviewListHeader');
 
-    /* FIX: collect wrongItems properly from results */
     let all=[];
     results.forEach(r=>{
       if(this.currentFilter==='all'||r.quizId===this.currentFilter){
-        (r.wrongItems||[]).forEach(item=>all.push({...item,_quizTitle:r.quizTitle}));
+        (r.wrongItems||[]).forEach(item=>all.push({...item,_quizId:r.quizId,_quizTitle:r.quizTitle}));
       }
     });
 
     if(!all.length){
+      if(hdr)hdr.innerHTML='';
       container.innerHTML=`<div class="empty-state">
         <div class="empty-icon">${results.length?'🎉':'📋'}</div>
         <div class="empty-title">${results.length?'لا أخطاء! أحسنت':'لا توجد اختبارات مكتملة'}</div>
@@ -2090,62 +2123,74 @@ const Review={
       return;
     }
 
-    /* Build cards with placeholders first, then lazy-load images */
+    /* Header with count + clear all button */
+    if(hdr){
+      const filterLabel=this.currentFilter==='all'?'جميع الاختبارات':results.find(r=>r.quizId===this.currentFilter)?.quizTitle||'';
+      hdr.innerHTML=`<div class="flex items-center justify-between" style="margin-bottom:1rem;flex-wrap:wrap;gap:.75rem">
+        <span style="font-size:.9rem;font-weight:700;color:var(--text)">${all.length} خطأ — ${filterLabel}</span>
+        <button class="btn btn-danger btn-sm" onclick="if(confirm('هل تريد مسح جميع الأخطاء؟'))Review.deleteAll('${this.currentFilter}')">
+          🗑️ مسح الكل
+        </button>
+      </div>`;
+    }
+
     container.innerHTML=all.map((item,idx)=>`
-      <div class="review-card">
+      <div class="review-card" id="rcard_${idx}">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
-          <span class="text-xs text-muted">خطأ #${idx+1}</span>
-          <span class="text-xs text-muted">${item._quizTitle||item.quizTitle||''}</span>
+          <span class="text-xs text-muted">خطأ #${idx+1} • ${item._quizTitle||item.quizTitle||''}</span>
+          <button onclick="Review.deleteItem('${item._quizId||item.quizId}',${item.questionIndex})"
+            style="background:none;border:1px solid var(--border);color:var(--error);cursor:pointer;
+            border-radius:var(--radius-sm);padding:.2rem .6rem;font-size:.72rem;font-weight:700;
+            transition:all var(--transition)"
+            onmouseover="this.style.background='var(--error-bg)'"
+            onmouseout="this.style.background='none'">🗑️ حذف</button>
         </div>
         <div id="rimg_${idx}" style="margin-bottom:.85rem">
           ${item.imageDataUrl
-            ?`<img class="review-q-image" src="${item.imageDataUrl}" alt="سؤال">`
-            :`<div class="question-img-loading" style="padding:1rem;min-height:80px"><div class="spinner" style="width:24px;height:24px;border-width:2px"></div><span style="font-size:.75rem">جاري التحميل...</span></div>`}
+            ?`<img class="review-q-image" src="${item.imageDataUrl}" alt="سؤال" onclick="this.classList.toggle('zoomed')">`
+            :`<div class="question-img-loading" style="padding:1rem;min-height:80px">
+              <div class="spinner" style="width:24px;height:24px;border-width:2px"></div>
+              <span style="font-size:.75rem">جاري التحميل...</span></div>`}
         </div>
         <div class="review-answers">
-          <div class="review-answer user-wrong">
-            <span>❌</span>
-            <span><strong>إجابتك:</strong> ${LETTERS[item.userAnswer]||'—'}</span>
-          </div>
-          <div class="review-answer correct-ans">
-            <span>✅</span>
-            <span><strong>الصحيحة:</strong> ${LETTERS[item.correctAnswer]||'—'}</span>
-          </div>
+          <div class="review-answer user-wrong"><span>❌</span><span><strong>إجابتك:</strong> ${LETTERS[item.userAnswer]||'—'}</span></div>
+          <div class="review-answer correct-ans"><span>✅</span><span><strong>الصحيحة:</strong> ${LETTERS[item.correctAnswer]||'—'}</span></div>
         </div>
         <div class="review-meta">
           <span>📋 ${item._quizTitle||item.quizTitle||''}</span>
           ${item.ytVideoTitle?`<span>🎬 ${item.ytVideoTitle}</span>`:''}
         </div>
         ${item.ytEmbedUrl?`<button class="btn btn-outline btn-sm mt-1"
-          onclick="VideoModal.open('${(item.ytEmbedUrl||'').replace(/'/g,"\\'")}','${(item.ytVideoTitle||'الدرس').replace(/'/g,"\\'")}',0)">🎬 شاهد الدرس</button>`:''}
+          onclick="VideoModal.open('${(item.ytEmbedUrl||'').replace(/'/g,"\'")}','${(item.ytVideoTitle||'الدرس').replace(/'/g,"\'")}',0)">🎬 شاهد الدرس</button>`:''}
       </div>`).join('');
 
-    /* Lazy load images from IDB for items without cached dataUrl */
+    /* Lazy-load images from IDB */
     all.forEach(async(item,idx)=>{
       if(item.imageDataUrl)return;
       if(!item.idbKey)return;
       try{
         const src=await IDB.get('images',item.idbKey);
-        if(src){
-          item.imageDataUrl=src;
-          const el=document.getElementById(`rimg_${idx}`);
-          if(el)el.innerHTML=`<img class="review-q-image" src="${src}" alt="سؤال">`;
-        }else{
-          const el=document.getElementById(`rimg_${idx}`);
-          if(el)el.innerHTML=`<div class="question-img-error" style="padding:.75rem">⚠️ الصورة غير متاحة — افتح الاختبار مرة أخرى لتحميلها</div>`;
+        const el=document.getElementById(`rimg_${idx}`);
+        if(el){
+          if(src){
+            item.imageDataUrl=src;
+            el.innerHTML=`<img class="review-q-image" src="${src}" alt="سؤال" onclick="this.classList.toggle('zoomed')">`;
+          }else{
+            el.innerHTML=`<div class="question-img-error" style="padding:.75rem">⚠️ الصورة غير متاحة — افتح الاختبار مرة أخرى</div>`;
+          }
         }
       }catch(e){
         const el=document.getElementById(`rimg_${idx}`);
-        if(el)el.innerHTML=`<div class="question-img-error" style="padding:.75rem">⚠️ خطأ في تحميل الصورة</div>`;
+        if(el)el.innerHTML=`<div class="question-img-error" style="padding:.75rem">⚠️ خطأ تحميل الصورة</div>`;
       }
     });
   },
+
   showFromResults(){
     App.navigate('dashboard');
     setTimeout(()=>App.showView('review'),80);
   }
 };
-
 /* ====================================================
    STATISTICS
    ==================================================== */
@@ -2765,12 +2810,7 @@ QuizEngine.startVirtualQuiz=async function(vQuiz){
 /* ====================================================
    App.showView extension: handle new views
    ==================================================== */
-const _origShowView=App.showView.bind(App);
-App.showView=function(view){
-  _origShowView(view);
-  if(view==='mistakequiz')MistakeQuiz.render();
-  if(view==='datamanager'){/* HTML is static, just ensure import input works */}
-};
+/* showView already handles all views */
 
 /* ====================================================
    Wire up import file input (set in HTML but needs JS)
@@ -2784,6 +2824,26 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   }
 });
+
+/* ====================================================
+   UPLOAD TABS  (بنوك / الأكثر تكرارًا)
+   ==================================================== */
+const UploadTabs={
+  current:'banks',
+  show(tab){
+    this.current=tab;
+    // Toggle panels
+    const banks=document.getElementById('uploadPanelBanks');
+    const freq=document.getElementById('uploadPanelFrequent');
+    if(banks)banks.style.display=tab==='banks'?'':'none';
+    if(freq)freq.style.display=tab==='frequent'?'':'none';
+    // Toggle tab buttons
+    const tbB=document.getElementById('uploadTabBanks');
+    const tbF=document.getElementById('uploadTabFrequent');
+    if(tbB)tbB.classList.toggle('active',tab==='banks');
+    if(tbF)tbF.classList.toggle('active',tab==='frequent');
+  }
+};
 
 /* ====================================================
    BOOT
