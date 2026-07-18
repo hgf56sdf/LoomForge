@@ -479,28 +479,212 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
 /* ─── FREQUENT QUIZ SETUP ─── */
 .freq-setup-card{background:var(--surface-2);border-radius:var(--radius-sm);padding:1rem;margin-bottom:.75rem;border:1px solid var(--border)}
 
-/* ─── RESPONSIVE ─── */
+/* ─── CUSTOM MISTAKE QUIZ ─── */
+.cmq-q-btn{
+  aspect-ratio:1;border-radius:6px;border:1.5px solid var(--border);
+  background:var(--surface);color:var(--text-2);font-size:.7rem;font-weight:700;
+  cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;
+  padding:0;min-height:44px;
+}
+.cmq-q-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--info-bg)}
+.cmq-q-btn.selected{background:var(--primary);border-color:var(--primary);color:#fff}
+.cmq-q-btn.previewing{border-color:var(--accent);box-shadow:0 0 0 2px rgba(212,168,67,.4)}
+.cmq-quiz-row{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;
+  background:var(--surface);transition:all var(--transition)}
+.cmq-quiz-row:hover{border-color:var(--primary);background:var(--info-bg)}
+.cmq-quiz-row.selected{border-color:var(--primary);background:var(--info-bg)}
+.cmq-saved-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;
+  border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:.6rem;
+  background:var(--surface)}
+.cmq-saved-badge{background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;border-radius:var(--radius-sm);padding:.4rem .7rem;font-size:.75rem;font-weight:800;flex-shrink:0}
+
+/* ─── AI PROMPT GENERATOR (reuse card style) ─── */
+.ai-prompt-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:1rem;font-size:.82rem;color:var(--text-2);line-height:1.7;direction:ltr;text-align:left;
+  white-space:pre-wrap;word-break:break-word;max-height:300px;overflow-y:auto;user-select:all}
+
+/* ─── RESPONSIVE — ALL DEVICES & ORIENTATIONS ─── */
+
+/* ══ Tablet landscape / small desktop (1024px) ══ */
+@media(max-width:1024px){
+  .sidebar{width:220px}
+  .main-content{margin-right:220px}
+  .quiz-navigator{width:190px}
+  .charts-grid{grid-template-columns:1fr 1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ══ Tablet portrait (768px) ══ */
 @media(max-width:768px){
-  .sidebar{transform:translateX(100%);width:280px}
+  .sidebar{transform:translateX(100%);width:280px;box-shadow:var(--shadow-xl)}
   .sidebar.open{transform:translateX(0)}
   .sidebar-overlay{display:block;opacity:0;pointer-events:none;transition:opacity var(--transition)}
   .sidebar-overlay.active{opacity:1;pointer-events:all}
   .main-content{margin-right:0}
   .mobile-header{display:flex}
-  .quiz-navigator{display:none}
-  .quiz-main{padding:1rem}
-  .quiz-bottombar{padding:.85rem 1rem}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .view{padding:1.25rem}
+  .view-title{font-size:1.4rem}
+  .view-header{margin-bottom:1.5rem;padding-bottom:1.25rem}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:.75rem}
   .charts-grid{grid-template-columns:1fr}
   .quiz-grid{grid-template-columns:1fr}
   .results-grid{grid-template-columns:repeat(2,1fr)}
   .grid-2{grid-template-columns:1fr}
+  .quiz-navigator{display:none}
+  .quiz-main{padding:1rem;gap:1rem}
+  .quiz-topbar{padding:.75rem 1rem;gap:.5rem}
+  .quiz-topbar-title{font-size:.85rem}
+  .timer-display{font-size:.95rem;padding:.4rem .7rem}
+  .quiz-bottombar{padding:.85rem 1rem}
+  .question-image-area{padding:.75rem}
+  .choices-area{padding:.85rem 1rem 1rem}
+  .choice-item{padding:.75rem .85rem}
+  .plan-stats{grid-template-columns:repeat(2,1fr)}
+  .progress-plan{padding:1.25rem}
+  .quiz-type-tab{font-size:.75rem;padding:.5rem .6rem}
+  .upload-zone{padding:2rem 1rem}
+  .yt-thumb-wrap{width:80px;height:50px}
+  .results-hero{padding:1.75rem 1.25rem}
+  .results-score-ring{width:110px;height:110px}
+  .results-pct{font-size:2rem}
 }
+
+/* ══ Mobile landscape ══ */
+@media(max-width:768px) and (orientation:landscape){
+  .quiz-main{padding:.75rem}
+  .quiz-topbar{padding:.5rem .85rem}
+  .question-image-area{min-height:100px;padding:.5rem}
+  .quiz-bottombar{padding:.6rem 1rem}
+  .choice-item{padding:.55rem .75rem}
+  .choices-list{gap:.35rem}
+  .progress-plan{padding:1rem}
+  .plan-stats{grid-template-columns:repeat(4,1fr)}
+  .results-hero{padding:1.25rem}
+  .results-score-ring{width:90px;height:90px}
+  .results-pct{font-size:1.6rem}
+  .results-container{padding:.75rem}
+  .sidebar{width:260px}
+  .question-zoom-hint{display:none}
+}
+
+/* ══ Small mobile (480px) ══ */
 @media(max-width:480px){
-  .stats-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
   .view{padding:1rem}
+  .view-title{font-size:1.25rem}
   .landing-choices{flex-direction:column;align-items:center}
-  .choice-card{width:90%}
+  .choice-card{width:88%}
+  .landing-title{font-size:1.6rem}
+  .landing-question{font-size:1.1rem}
+  .quiz-topbar .btn-sm{padding:.35rem .6rem;font-size:.72rem}
+  .quiz-topbar-title{font-size:.78rem}
+  .timer-display{font-size:.88rem;padding:.35rem .6rem}
+  .nav-grid{grid-template-columns:repeat(8,1fr);gap:2px}
+  .nav-btn{font-size:.58rem}
+  .sections-indicator{gap:.3rem}
+  .section-dot{font-size:.65rem;padding:.22rem .5rem}
+  .choice-item{padding:.8rem .75rem;gap:.6rem}
+  .choice-letter{width:30px;height:30px;font-size:.85rem}
+  .choice-text{font-size:.85rem}
+  .results-grid{grid-template-columns:repeat(2,1fr);gap:.75rem}
+  .result-item{padding:1rem .75rem}
+  .result-item-value{font-size:1.6rem}
+  .results-hero{padding:1.5rem 1rem}
+  .results-score-ring{width:100px;height:100px}
+  .results-pct{font-size:1.9rem}
+  .plan-stats{grid-template-columns:repeat(2,1fr)}
+  .plan-stat-value{font-size:1.25rem}
+  .quiz-type-tabs{flex-wrap:wrap;gap:.35rem}
+  .quiz-type-tab{flex:unset;width:calc(50% - .175rem);text-align:center}
+  #uploadTabBanks,#uploadTabFrequent{width:calc(50% - .175rem)}
+  .yt-thumb-wrap{width:70px;height:44px}
+  .yt-video-title-text{font-size:.78rem}
+  .modal{padding:1.25rem;border-radius:var(--radius)}
+  .modal-title{font-size:1rem}
+  .submit-review-list{max-height:180px}
+  .quiz-card-header{padding:1rem}
+  .quiz-card-body{padding:.85rem 1rem}
+  .quiz-title-text{font-size:1rem}
+  .stat-card{padding:1rem}
+  .stat-value{font-size:1.5rem}
+  .stat-icon{width:44px;height:44px;font-size:1.2rem}
+  .filter-tabs{gap:.35rem}
+  .filter-tab{font-size:.73rem;padding:.38rem .7rem}
+  .answered-counter{font-size:.75rem}
+}
+
+/* ══ Very small (360px) ══ */
+@media(max-width:360px){
+  .stats-grid{grid-template-columns:1fr}
+  .view{padding:.75rem}
+  .quiz-topbar{gap:.3rem}
+  .choice-letter{width:28px;height:28px;font-size:.8rem}
+  .choice-item{padding:.65rem .55rem;gap:.45rem}
+  .results-grid{grid-template-columns:1fr 1fr}
+  .plan-stats{grid-template-columns:1fr 1fr}
+  .timer-display span:first-child{display:none}
+}
+
+/* ══ Tablet portrait only (601-768px) ══ */
+@media(min-width:601px) and (max-width:768px){
+  .quiz-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ══ Touch devices — bigger tap targets, no hover transforms ══ */
+@media(hover:none){
+  .nav-item{padding:.9rem 1.5rem}
+  .btn{min-height:42px}
+  .choice-item{min-height:52px}
+  .nav-btn{min-height:32px}
+  .quiz-card:hover{transform:none;box-shadow:var(--shadow-sm)}
+  .stat-card:hover{transform:none}
+  .choice-card.enabled:hover{transform:none;box-shadow:none}
+  .btn-primary:hover{transform:none}
+  .btn-accent:hover{transform:none}
+  .completed-quiz-row:hover{box-shadow:none}
+  .yt-video-item:hover{background:var(--surface)}
+}
+
+/* ══ High DPI / Retina ══ */
+@media(-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi){
+  .question-img{image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges}
+  .review-q-image{image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges}
+}
+
+/* ══ Safe area insets (iPhone notch/home bar) ══ */
+@supports(padding:env(safe-area-inset-top)){
+  .mobile-header{padding-top:calc(1rem + env(safe-area-inset-top))}
+  .quiz-topbar{padding-top:calc(.85rem + env(safe-area-inset-top))}
+  .quiz-bottombar{padding-bottom:calc(1rem + env(safe-area-inset-bottom))}
+  .sidebar{padding-top:env(safe-area-inset-top)}
+  .toast-container{
+    bottom:calc(1.5rem + env(safe-area-inset-bottom));
+    left:calc(1.5rem + env(safe-area-inset-left));
+  }
+}
+
+/* ══ Reduced motion ══ */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+  .landing-logo{animation:none}
+  #page-landing::after{animation:none}
+}
+
+/* ══ Print ══ */
+@media print{
+  .sidebar,.mobile-header,.quiz-topbar,.quiz-bottombar,
+  .quiz-navigator,.toast-container,.modal-overlay,
+  .btn,.quiz-actions{display:none!important}
+  .main-content{margin-right:0}
+  .view{padding:0}
+  body{background:#fff;color:#000}
 }
 </style>
 </head>
@@ -551,6 +735,7 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
       <div class="nav-item" data-view="stats" onclick="App.showView('stats')"><span class="nav-icon">📊</span>الإحصائيات</div>
       <div class="nav-item" data-view="review" onclick="App.showView('review')"><span class="nav-icon">🔴</span>مراجعة الأخطاء</div>
       <div class="nav-item" data-view="mistakequiz" onclick="App.showView('mistakequiz')"><span class="nav-icon">🎯</span>اختبار الأخطاء</div>
+      <div class="nav-item" data-view="custommistake" onclick="App.showView('custommistake')"><span class="nav-icon">✏️</span>أخطاء مخصصة</div>
       <div class="nav-section-label">الملف</div>
       <div class="nav-item" data-view="datamanager" onclick="App.showView('datamanager')"><span class="nav-icon">💾</span>النسخ الاحتياطي</div>
     </nav>
@@ -768,6 +953,54 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
           <button class="btn btn-primary btn-lg" style="margin-top:1.4rem" onclick="MistakeQuiz.start()">🎯 ابدأ اختبار الأخطاء</button>
         </div>
         <div id="mistakeQuizInfo" style="margin-top:.75rem;font-size:.82rem;color:var(--text-3)"></div>
+      </div>
+    </div>
+
+    <!-- CUSTOM MISTAKE QUIZ -->
+    <div class="view" id="view-custommistake">
+      <div class="view-header">
+        <h1 class="view-title">✏️ اختبار مخصص للأخطاء</h1>
+        <p class="view-subtitle">اختر اختبارًا ثم حدد الأسئلة التي تريد إضافتها كأخطاء مخصصة</p>
+      </div>
+      <!-- Step 1: choose quiz -->
+      <div class="card mb-2" id="cmqStep1">
+        <h3 style="font-size:.9rem;font-weight:700;margin-bottom:1rem">الخطوة 1 — اختر الاختبار</h3>
+        <div id="cmqQuizList" style="display:flex;flex-direction:column;gap:.6rem"></div>
+      </div>
+      <!-- Step 2: choose questions (shown after quiz selected) -->
+      <div class="card mb-2 hidden" id="cmqStep2">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+          <h3 style="font-size:.9rem;font-weight:700" id="cmqStep2Title">الخطوة 2 — اختر الأسئلة</h3>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm" onclick="CustomMistakeQuiz.selectAll()">تحديد الكل</button>
+            <button class="btn btn-outline btn-sm" onclick="CustomMistakeQuiz.clearAll()">إلغاء الكل</button>
+            <button class="btn btn-ghost btn-sm" onclick="CustomMistakeQuiz.backToStep1()">← رجوع</button>
+          </div>
+        </div>
+        <div id="cmqQuestionGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:.4rem;margin-bottom:1.25rem"></div>
+        <!-- Preview of selected question image -->
+        <div id="cmqPreviewArea" class="hidden" style="margin-bottom:1.25rem;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden">
+          <div style="padding:.6rem 1rem;background:var(--surface-2);font-size:.78rem;font-weight:700;color:var(--text-2)">معاينة السؤال المحدد</div>
+          <div style="padding:1rem;background:var(--bg);display:flex;justify-content:center">
+            <img id="cmqPreviewImg" style="max-width:100%;border-radius:6px;max-height:300px;object-fit:contain" alt="معاينة">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+          <span style="font-size:.85rem;color:var(--text-2)">تم تحديد: <strong id="cmqSelectedCount">0</strong> سؤال</span>
+          <button class="btn btn-primary" onclick="CustomMistakeQuiz.addToMistakes()" id="cmqAddBtn" disabled>
+            ➕ إضافة كأخطاء مخصصة
+          </button>
+        </div>
+      </div>
+      <!-- Saved custom groups -->
+      <div class="card" id="cmqSavedCard">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+          <h3 style="font-size:.9rem;font-weight:700">الأخطاء المخصصة المحفوظة</h3>
+          <button class="btn btn-primary btn-sm" onclick="CustomMistakeQuiz.startAll()" id="cmqStartAllBtn" disabled>
+            🎯 اختبار كل الأخطاء المخصصة
+          </button>
+        </div>
+        <div id="cmqSavedList"></div>
       </div>
     </div>
 
@@ -1108,6 +1341,7 @@ const App={
     else if(view==='completed')Completed.render();
     else if(view==='youtube')YTManager.render();
     else if(view==='mistakequiz')MistakeQuiz.render();
+    else if(view==='custommistake')CustomMistakeQuiz.render();
     else if(view==='datamanager'){/* static — no render needed */}
     else if(view==='datamanager')DataManager.render();
   },
@@ -2075,6 +2309,46 @@ const Review={
     this._renderList();
   },
 
+  /* Change the correct answer for a wrongItem — updates storage + UI instantly */
+  changeAnswer(quizId,questionIndex,newCorrect,cardIdx){
+    const LETTERS=['أ','ب','ج','د'];
+    const results=Store.getResults();
+    const r=results.find(x=>x.quizId===quizId);
+    if(!r)return;
+    const item=(r.wrongItems||[]).find(w=>w.questionIndex===questionIndex);
+    if(!item)return;
+
+    // Update stored correctAnswer
+    item.correctAnswer=newCorrect;
+    Store.setResults(results);
+
+    // Also update the quiz question's correct answer so future exams use updated answer
+    const quizzes=Store.getQuizzes();
+    const quiz=quizzes.find(q=>q.id===quizId);
+    if(quiz&&quiz.questions[questionIndex]!==undefined){
+      quiz.questions[questionIndex].correct=newCorrect;
+      // Also update IDB answer key
+      const ansKey=`${quizId}_ans_${questionIndex}`;
+      IDB.set('meta',ansKey,newCorrect).catch(()=>{});
+      Store.setQuizzes(quizzes);
+    }
+
+    // Update UI: toggle button styles
+    for(let i=0;i<4;i++){
+      const btn=document.getElementById(`ranbtn_${cardIdx}_${i}`);
+      if(!btn)continue;
+      const isSelected=i===newCorrect;
+      btn.style.border=`2px solid ${isSelected?'var(--primary)':'var(--border)'}`;
+      btn.style.background=isSelected?'var(--primary)':'var(--surface)';
+      btn.style.color=isSelected?'#fff':'var(--text-2)';
+    }
+    // Update correct answer label
+    const lbl=document.getElementById(`rcorrect_lbl_${cardIdx}`);
+    if(lbl)lbl.textContent=LETTERS[newCorrect]||'—';
+
+    App.toast(`تم تغيير الإجابة الصحيحة إلى ${LETTERS[newCorrect]}`,'success','✅');
+  },
+
   /* Delete a single wrong answer by quizId + questionIndex */
   deleteItem(quizId,questionIndex){
     const results=Store.getResults();
@@ -2134,7 +2408,18 @@ const Review={
       </div>`;
     }
 
-    container.innerHTML=all.map((item,idx)=>`
+    container.innerHTML=all.map((item,idx)=>{
+      const LETTERS=['أ','ب','ج','د'];
+      const ansButtons=['أ','ب','ج','د'].map((l,i)=>`
+        <button onclick="Review.changeAnswer('${item._quizId||item.quizId}',${item.questionIndex},${i},${idx})"
+          id="ranbtn_${idx}_${i}"
+          style="width:38px;height:38px;border-radius:50%;
+          border:2px solid ${i===item.correctAnswer?'var(--primary)':'var(--border)'};
+          background:${i===item.correctAnswer?'var(--primary)':'var(--surface)'};
+          color:${i===item.correctAnswer?'#fff':'var(--text-2)'};
+          font-weight:800;font-size:.9rem;cursor:pointer;transition:all .2s;
+          font-family:var(--font-ar)">${l}</button>`).join('');
+      return `
       <div class="review-card" id="rcard_${idx}">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
           <span class="text-xs text-muted">خطأ #${idx+1} • ${item._quizTitle||item.quizTitle||''}</span>
@@ -2154,15 +2439,20 @@ const Review={
         </div>
         <div class="review-answers">
           <div class="review-answer user-wrong"><span>❌</span><span><strong>إجابتك:</strong> ${LETTERS[item.userAnswer]||'—'}</span></div>
-          <div class="review-answer correct-ans"><span>✅</span><span><strong>الصحيحة:</strong> ${LETTERS[item.correctAnswer]||'—'}</span></div>
+          <div class="review-answer correct-ans" id="rcorrect_${idx}"><span>✅</span><span><strong>الصحيحة:</strong> <span id="rcorrect_lbl_${idx}">${LETTERS[item.correctAnswer]||'—'}</span></span></div>
+        </div>
+        <div style="margin-bottom:.75rem">
+          <div style="font-size:.72rem;font-weight:700;color:var(--text-3);margin-bottom:.4rem">✏️ تعديل الإجابة الصحيحة:</div>
+          <div style="display:flex;gap:.4rem">${ansButtons}</div>
         </div>
         <div class="review-meta">
           <span>📋 ${item._quizTitle||item.quizTitle||''}</span>
           ${item.ytVideoTitle?`<span>🎬 ${item.ytVideoTitle}</span>`:''}
         </div>
         ${item.ytEmbedUrl?`<button class="btn btn-outline btn-sm mt-1"
-          onclick="VideoModal.open('${(item.ytEmbedUrl||'').replace(/'/g,"\'")}','${(item.ytVideoTitle||'الدرس').replace(/'/g,"\'")}',0)">🎬 شاهد الدرس</button>`:''}
-      </div>`).join('');
+          onclick="VideoModal.open('${(item.ytEmbedUrl||'').replace(/'/g,"\\'")}','${(item.ytVideoTitle||'الدرس').replace(/'/g,"\\'")}',0)">🎬 شاهد الدرس</button>`:''}
+      </div>`;
+    }).join('');
 
     /* Lazy-load images from IDB */
     all.forEach(async(item,idx)=>{
@@ -2846,11 +3136,211 @@ const UploadTabs={
 };
 
 /* ====================================================
+   CUSTOM MISTAKE QUIZ
+   ==================================================== */
+const CustomMistakeQuiz={
+  _selQuizId:null,
+  _selQs:new Set(),
+  _prevIdx:null,
+
+  _getGroups(){try{return JSON.parse(localStorage.getItem('cmGroups'))||[];}catch{return [];}},
+  _saveGroups(g){try{localStorage.setItem('cmGroups',JSON.stringify(g));}catch(e){console.error(e);}},
+
+  render(){
+    this._renderQuizList();
+    this._renderSaved();
+    this._step(1);
+  },
+
+  _step(n){
+    const s1=document.getElementById('cmqStep1');
+    const s2=document.getElementById('cmqStep2');
+    if(n===1){if(s1)s1.classList.remove('hidden');if(s2)s2.classList.add('hidden');}
+    else{if(s1)s1.classList.add('hidden');if(s2)s2.classList.remove('hidden');}
+  },
+
+  _renderQuizList(){
+    const quizzes=Store.getQuizzes();
+    const el=document.getElementById('cmqQuizList');
+    if(!el)return;
+    if(!quizzes.length){
+      el.innerHTML='<div class="empty-state" style="padding:1.5rem"><div class="empty-icon">📋</div><div class="empty-title">لا توجد اختبارات</div></div>';
+      return;
+    }
+    el.innerHTML=quizzes.map(q=>`
+      <div class="cmq-quiz-row${this._selQuizId===q.id?' selected':''}" onclick="CustomMistakeQuiz.selectQuiz('${q.id}')">
+        <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+          display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.85rem;flex-shrink:0">${q.number}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:.9rem;color:var(--text)">${q.title}</div>
+          <div style="font-size:.72rem;color:var(--text-3)">${q.questions.length} سؤال</div>
+        </div>
+        <span style="font-size:.8rem;color:var(--primary);font-weight:700">اختر ←</span>
+      </div>`).join('');
+  },
+
+  async selectQuiz(id){
+    const quiz=Store.getQuizzes().find(q=>q.id===id);
+    if(!quiz)return;
+    this._selQuizId=id;
+    this._selQs=new Set();
+    this._prevIdx=null;
+    document.getElementById('cmqStep2Title').textContent=`الخطوة 2 — "${quiz.title}"`;
+    const grid=document.getElementById('cmqQuestionGrid');
+    if(grid)grid.innerHTML=quiz.questions.map((_,i)=>
+      `<button class="cmq-q-btn" id="cmqb_${i}"
+        onclick="CustomMistakeQuiz.toggleQ(${i})"
+        onmouseenter="CustomMistakeQuiz.preview(${i})">${i+1}</button>`
+    ).join('');
+    this._step(2);
+    this._updateCount();
+    this._renderQuizList();
+  },
+
+  async preview(idx){
+    if(this._prevIdx===idx)return;
+    this._prevIdx=idx;
+    document.querySelectorAll('.cmq-q-btn').forEach(b=>b.classList.remove('previewing'));
+    const btn=document.getElementById(`cmqb_${idx}`);
+    if(btn)btn.classList.add('previewing');
+    const quiz=Store.getQuizzes().find(q=>q.id===this._selQuizId);
+    if(!quiz||!quiz.questions[idx])return;
+    const q=quiz.questions[idx];
+    let src=q.imageDataUrl;
+    if(!src&&q.idbKey){try{src=await IDB.get('images',q.idbKey);}catch(e){}}
+    const pa=document.getElementById('cmqPreviewArea');
+    const pi=document.getElementById('cmqPreviewImg');
+    if(src&&pa&&pi){pi.src=src;pa.classList.remove('hidden');}
+  },
+
+  toggleQ(idx){
+    if(this._selQs.has(idx))this._selQs.delete(idx);
+    else this._selQs.add(idx);
+    const btn=document.getElementById(`cmqb_${idx}`);
+    if(btn)btn.classList.toggle('selected',this._selQs.has(idx));
+    this._updateCount();
+  },
+
+  selectAll(){
+    const quiz=Store.getQuizzes().find(q=>q.id===this._selQuizId);
+    if(!quiz)return;
+    quiz.questions.forEach((_,i)=>{
+      this._selQs.add(i);
+      const b=document.getElementById(`cmqb_${i}`);
+      if(b)b.classList.add('selected');
+    });
+    this._updateCount();
+  },
+
+  clearAll(){
+    this._selQs.forEach(i=>{
+      const b=document.getElementById(`cmqb_${i}`);
+      if(b)b.classList.remove('selected');
+    });
+    this._selQs=new Set();
+    this._updateCount();
+  },
+
+  _updateCount(){
+    const cnt=this._selQs.size;
+    const el=document.getElementById('cmqSelectedCount');
+    if(el)el.textContent=cnt;
+    const btn=document.getElementById('cmqAddBtn');
+    if(btn)btn.disabled=cnt===0;
+  },
+
+  async addToMistakes(){
+    if(!this._selQuizId||!this._selQs.size)return;
+    const quiz=Store.getQuizzes().find(q=>q.id===this._selQuizId);
+    if(!quiz){App.toast('اختبار غير موجود','error','❌');return;}
+    const groups=this._getGroups();
+    const questions=[...this._selQs].sort((a,b)=>a-b).map(idx=>{
+      const q=quiz.questions[idx];
+      return{questionIndex:idx,idbKey:q?q.idbKey:null,correct:q?q.correct:0,
+        fromQuizId:quiz.id,fromQuizTitle:quiz.title};
+    });
+    groups.push({id:'cmg_'+Date.now(),name:`أخطاء مخصصة — ${quiz.title}`,
+      fromQuizId:quiz.id,fromQuizTitle:quiz.title,questions,createdAt:Date.now()});
+    this._saveGroups(groups);
+    App.toast(`تم حفظ ${questions.length} سؤال`,'success','✅');
+    this._selQuizId=null;this._selQs=new Set();
+    this._step(1);this._renderQuizList();this._renderSaved();
+  },
+
+  _renderSaved(){
+    const groups=this._getGroups();
+    const el=document.getElementById('cmqSavedList');
+    const btn=document.getElementById('cmqStartAllBtn');
+    if(btn)btn.disabled=!groups.length;
+    if(!el)return;
+    if(!groups.length){
+      el.innerHTML='<div style="font-size:.83rem;color:var(--text-3);padding:.5rem">لا توجد أخطاء مخصصة محفوظة بعد.</div>';
+      return;
+    }
+    el.innerHTML=groups.map(g=>`
+      <div class="cmq-saved-item">
+        <div class="cmq-saved-badge">${g.questions.length} سؤال</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:700;font-size:.88rem;color:var(--text)">${g.name}</div>
+          <div style="font-size:.7rem;color:var(--text-3)">${new Date(g.createdAt).toLocaleDateString('ar-SA')}</div>
+        </div>
+        <div style="display:flex;gap:.4rem;flex-shrink:0">
+          <button class="btn btn-primary btn-sm" onclick="CustomMistakeQuiz.startGroup('${g.id}')">🎯 اختبر</button>
+          <button class="btn btn-danger btn-sm" onclick="CustomMistakeQuiz.deleteGroup('${g.id}')">🗑️</button>
+        </div>
+      </div>`).join('');
+  },
+
+  async _buildVQ(questions,title){
+    const per=Math.ceil(questions.length/5);
+    const secs=[0,1,2,3,4].map(i=>({label:'القسم '+(i+1),start:i*per,end:Math.min((i+1)*per,questions.length)}))
+      .filter(s=>s.start<questions.length);
+    const qs=await Promise.all(questions.map(async(q,i)=>{
+      let src=null;
+      if(q.idbKey){try{src=await IDB.get('images',q.idbKey);}catch(e){}}
+      return{id:i+1,imageDataUrl:src||null,idbKey:q.idbKey||null,correct:q.correct||0,page:null};
+    }));
+    return{id:'cmgx_'+Date.now(),title,number:0,questions:qs,sections:secs,
+      uploadedAt:Date.now(),isCustomMistake:true,ytVideoId:null,ytVideoTitle:null,ytEmbedUrl:null,ytThumbUrl:null};
+  },
+
+  async startGroup(id){
+    const g=this._getGroups().find(x=>x.id===id);
+    if(!g){App.toast('المجموعة غير موجودة','error','❌');return;}
+    App.toast('جاري التحميل...','info','⏳');
+    QuizEngine.startVirtualQuiz(await this._buildVQ(g.questions,g.name));
+  },
+
+  async startAll(){
+    const groups=this._getGroups();
+    if(!groups.length){App.toast('لا توجد أخطاء مخصصة','warning','⚠️');return;}
+    const seen=new Set();const all=[];
+    groups.forEach(g=>g.questions.forEach(q=>{
+      const k=q.idbKey||`${q.fromQuizId}_${q.questionIndex}`;
+      if(!seen.has(k)){seen.add(k);all.push(q);}
+    }));
+    App.toast('جاري التحميل...','info','⏳');
+    QuizEngine.startVirtualQuiz(await this._buildVQ(all,'اختبار كل الأخطاء المخصصة'));
+  },
+
+  deleteGroup(id){
+    if(!confirm('هل تريد حذف هذه المجموعة؟'))return;
+    this._saveGroups(this._getGroups().filter(g=>g.id!==id));
+    this._renderSaved();App.toast('تم الحذف','success','🗑️');
+  }
+};
+
+/* ====================================================
    BOOT
    ==================================================== */
 document.addEventListener('DOMContentLoaded',()=>{
   App.init();
   Uploader.init();
+  const ii=document.getElementById('importFileInput');
+  if(ii)ii.addEventListener('change',e=>{
+    if(e.target.files[0])DataManager.importData(e.target.files[0]);
+    e.target.value='';
+  });
 });
 </script>
 </body>
