@@ -790,8 +790,8 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
       <!-- Quiz type tabs -->
       <div class="quiz-type-tabs">
         <button class="quiz-type-tab active" onclick="QuizList.setType('banks',this)">🏦 بنوك الأسئلة</button>
-        <button class="quiz-type-tab" disabled onclick="QuizList.setType('sections',this)">
-          <span class="coming-soon-badge">قريبًا</span>📂 اختبارات أقسام
+        <button class="quiz-type-tab" id="quizTabSections" onclick="QuizList.setType('sections',this)">
+          📂 اختبارات أقسام
         </button>
         <button class="quiz-type-tab" id="quizTabFrequent" onclick="QuizList.setType('frequent',this)">
           🔥 الأكثر تكرارًا
@@ -808,6 +808,7 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
       </div>
       <div class="quiz-type-tabs" style="margin-bottom:1.5rem">
         <button class="quiz-type-tab active" id="uploadTabBanks" onclick="UploadTabs.show('banks')">🏦 بنوك الأسئلة</button>
+        <button class="quiz-type-tab" id="uploadTabSections" onclick="UploadTabs.show('sections')">📂 أقسام</button>
         <button class="quiz-type-tab" id="uploadTabFrequent" onclick="UploadTabs.show('frequent')">🔥 الأكثر تكرارًا</button>
       </div>
       <div id="uploadPanelBanks">
@@ -876,6 +877,40 @@ body{font-family:var(--font-ar);background:var(--bg);color:var(--text);direction
               </div>
               <div style="height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden">
                 <div id="freqProgressFill" style="height:100%;background:linear-gradient(to left,#7B2D8B,#C2185B);border-radius:4px;width:0%;transition:width .3s ease"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="uploadPanelSections" style="display:none">
+        <div class="card">
+          <h2 style="font-size:1.05rem;font-weight:800;margin-bottom:.5rem">📂 رفع ملف الأقسام</h2>
+          <p style="font-size:.84rem;color:var(--text-3);margin-bottom:1.25rem">
+            ارفع ملف PDF كبير. الصفحة الأولى تُتجاهل، ثم كل <strong>11 سؤالاً</strong> يُشكّلون قسمًا واحدًا (اختبارًا مستقلاً). يظهر في تبويب "اختبارات أقسام".
+          </p>
+          <div style="display:flex;flex-direction:column;gap:1rem">
+            <div style="position:relative;border:2px dashed var(--border);border-radius:var(--radius-sm);
+              padding:1.75rem;text-align:center;cursor:pointer;background:var(--surface);transition:all var(--transition)"
+              ondragover="event.preventDefault();this.style.borderColor='var(--primary)'"
+              ondragleave="this.style.borderColor=''"
+              ondrop="event.preventDefault();this.style.borderColor='';SectionsQuiz.handleFile(event.dataTransfer.files[0])">
+              <input type="file" id="secPdfInput" accept=".pdf"
+                style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"
+                onchange="SectionsQuiz.handleFile(this.files[0]);this.value=''">
+              <div style="font-size:2rem;margin-bottom:.5rem">📂</div>
+              <div style="font-weight:700;color:var(--text)">اسحب ملف PDF الكبير أو انقر</div>
+              <div style="font-size:.78rem;color:var(--text-3);margin-top:.3rem">كل 11 سؤال = قسم واحد (اختبار مستقل)</div>
+            </div>
+            <div id="secUploadStatus" style="font-size:.82rem;color:var(--text-3)"></div>
+            <div id="secPreview" style="font-size:.83rem;color:var(--text-3);padding:.75rem;background:var(--surface-2);border-radius:var(--radius-sm);display:none"></div>
+            <button class="btn btn-primary btn-lg" id="secStartBtn" onclick="SectionsQuiz.processAndCreate()" disabled>📂 إنشاء اختبارات الأقسام</button>
+            <div id="secProgress" style="display:none">
+              <div style="display:flex;justify-content:space-between;margin-bottom:.4rem;font-size:.82rem">
+                <span id="secProgressLabel">جاري المعالجة...</span>
+                <span id="secProgressPct">0%</span>
+              </div>
+              <div style="height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden">
+                <div id="secProgressFill" style="height:100%;background:linear-gradient(to left,#1565C0,#42A5F5);border-radius:4px;width:0%;transition:width .3s ease"></div>
               </div>
             </div>
           </div>
@@ -1956,6 +1991,7 @@ const QuizList={
   },
   render(){
     if(this.type==='frequent'){FrequentQuiz.renderGrid();return;}
+    if(this.type==='sections'){SectionsQuiz.renderGrid();return;}
     const allQuizzes=Store.getQuizzes();
     const results=Store.getResults();
     const grid=document.getElementById('quizGrid');
@@ -3122,16 +3158,176 @@ const UploadTabs={
   current:'banks',
   show(tab){
     this.current=tab;
-    // Toggle panels
-    const banks=document.getElementById('uploadPanelBanks');
-    const freq=document.getElementById('uploadPanelFrequent');
-    if(banks)banks.style.display=tab==='banks'?'':'none';
-    if(freq)freq.style.display=tab==='frequent'?'':'none';
-    // Toggle tab buttons
-    const tbB=document.getElementById('uploadTabBanks');
-    const tbF=document.getElementById('uploadTabFrequent');
-    if(tbB)tbB.classList.toggle('active',tab==='banks');
-    if(tbF)tbF.classList.toggle('active',tab==='frequent');
+    ['Banks','Sections','Frequent'].forEach(t=>{
+      const panel=document.getElementById('uploadPanel'+t);
+      const btn=document.getElementById('uploadTab'+t);
+      if(panel)panel.style.display=tab===t.toLowerCase()?'':'none';
+      if(btn)btn.classList.toggle('active',tab===t.toLowerCase());
+    });
+  }
+};
+
+/* ====================================================
+   SECTIONS QUIZ
+   Splits large PDF: skip page 1, then every 11 pages = 1 section quiz
+   Stored with isSection:true — never overwrites existing quizzes
+   ==================================================== */
+const SectionsQuiz={
+  _pdfDoc:null,_totalPages:0,_fileName:'',
+  QUESTIONS_PER_SECTION:11,
+
+  async handleFile(file){
+    if(!file||file.type!=='application/pdf'){App.toast('يرجى اختيار ملف PDF','warning','⚠️');return;}
+    this._fileName=file.name;
+    const st=document.getElementById('secUploadStatus');
+    if(st)st.textContent='⏳ جاري قراءة الملف...';
+    try{
+      const buf=await file.arrayBuffer();
+      this._pdfDoc=await pdfjsLib.getDocument({data:buf}).promise;
+      this._totalPages=this._pdfDoc.numPages;
+      const qPages=this._totalPages-1;
+      const sections=Math.ceil(qPages/this.QUESTIONS_PER_SECTION);
+      if(st)st.textContent=`✅ ${file.name} • ${this._totalPages} صفحة • ${qPages} سؤال • ${sections} قسم`;
+      const prev=document.getElementById('secPreview');
+      if(prev){
+        prev.style.display='';
+        prev.innerHTML=`📊 إجمالي الأسئلة: <strong>${qPages}</strong> &nbsp;|&nbsp; عدد الأقسام: <strong>${sections}</strong> &nbsp;|&nbsp; أسئلة لكل قسم: <strong>${this.QUESTIONS_PER_SECTION}</strong>`;
+      }
+      const btn=document.getElementById('secStartBtn');
+      if(btn)btn.disabled=false;
+    }catch(e){
+      if(st)st.textContent='❌ خطأ: '+e.message;
+    }
+  },
+
+  async processAndCreate(){
+    if(!this._pdfDoc){App.toast('اختر ملف PDF أولاً','warning','⚠️');return;}
+    const btn=document.getElementById('secStartBtn');
+    if(btn)btn.disabled=true;
+    const prog=document.getElementById('secProgress');
+    if(prog)prog.style.display='';
+
+    const setP=(done,total,label)=>{
+      const pct=Math.round(done/total*100);
+      const f=document.getElementById('secProgressFill');
+      const l=document.getElementById('secProgressLabel');
+      const p=document.getElementById('secProgressPct');
+      if(f)f.style.width=pct+'%';
+      if(l)l.textContent=label||`صفحة ${done} من ${total}`;
+      if(p)p.textContent=pct+'%';
+    };
+
+    const pdfDoc=this._pdfDoc;
+    const totalPages=this._totalPages;
+    const qPages=totalPages-1; // skip page 1
+    const baseId='sec_'+Date.now();
+    let created=0;
+
+    // Process page by page, group into sections of 11
+    for(let s=0;s*this.QUESTIONS_PER_SECTION<qPages;s++){
+      const startQ=s*this.QUESTIONS_PER_SECTION;
+      const endQ=Math.min(startQ+this.QUESTIONS_PER_SECTION,qPages);
+      const groupQuestions=[];
+
+      for(let qi=startQ;qi<endQ;qi++){
+        const pageNum=qi+2; // +2 because page 1 is skipped
+        const imgKey=`${baseId}_s${s}_q${qi-startQ}`;
+        const ansKey=`${baseId}_s${s}_a${qi-startQ}`;
+        let dataUrl=null,correctIdx=0;
+        try{dataUrl=await IDB.get('images',imgKey);}catch(e){}
+        correctIdx=await PDFRenderer.extractAnswer(pdfDoc,pageNum);
+        try{await IDB.set('meta',ansKey,correctIdx);}catch(e){}
+        if(!dataUrl){
+          dataUrl=await PDFRenderer.renderPage(pdfDoc,pageNum);
+          if(dataUrl){try{await IDB.set('images',imgKey,dataUrl);}catch(e){}}
+        }
+        groupQuestions.push({
+          id:qi-startQ+1,
+          imageDataUrl:dataUrl,
+          idbKey:imgKey,
+          correct:correctIdx,
+          page:pageNum
+        });
+        setP(qi+1,qPages,`معالجة صفحة ${qi+1} من ${qPages}`);
+      }
+
+      // Save this section as a quiz
+      const fresh=Store.getQuizzes();
+      const quizNum=fresh.length+1;
+      const sectionNum=s+1;
+      const per=Math.ceil(groupQuestions.length/Math.min(5,groupQuestions.length));
+      const sections=[0,1,2,3,4].map(i=>({
+        label:'جزء '+(i+1),
+        start:i*per,
+        end:Math.min((i+1)*per,groupQuestions.length)
+      })).filter(x=>x.start<groupQuestions.length);
+
+      const quiz={
+        id:`${baseId}_s${s}`,
+        title:`قسم ${sectionNum} — ${this._fileName.replace('.pdf','')}`,
+        number:quizNum,
+        fileName:this._fileName,
+        questions:groupQuestions,
+        sections,
+        uploadedAt:Date.now(),
+        isSection:true,
+        sectionNumber:sectionNum,
+        ytVideoId:null,ytVideoTitle:null,ytEmbedUrl:null,ytThumbUrl:null
+      };
+      fresh.push(quiz);
+      Store.setQuizzes(fresh);
+      created++;
+    }
+
+    setP(qPages,qPages,'اكتملت المعالجة!');
+    App.toast(`تم إنشاء ${created} قسم`,'success','✅');
+    App.updateBadges();App.renderOverview();QuizList.render();
+    if(btn)btn.disabled=false;
+    this._pdfDoc=null;this._totalPages=0;this._fileName='';
+  },
+
+  renderGrid(){
+    const quizzes=Store.getQuizzes().filter(q=>q.isSection);
+    const results=Store.getResults();
+    const grid=document.getElementById('quizGrid');
+    if(!quizzes.length){
+      grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">📂</div>
+        <div class="empty-title">لا توجد اختبارات أقسام بعد</div>
+        <div class="empty-desc">ارفع ملف PDF كبير من تبويب "أقسام" في رفع ملفات PDF</div>
+        <button class="btn btn-primary mt-2" onclick="App.showView('upload');setTimeout(()=>UploadTabs.show('sections'),100)">📂 رفع ملف الأقسام</button>
+      </div>`;
+      return;
+    }
+    grid.innerHTML=quizzes.map(q=>{
+      const r=results.find(x=>x.quizId===q.id);
+      const pct=r?Math.round(r.percentage):null;
+      const badge=r?'<span class="quiz-status-badge badge-done">✅ مكتمل</span>':'<span class="quiz-status-badge badge-new">🆕 جديد</span>';
+      return `<div class="quiz-card">
+        <div class="quiz-card-header" style="background:linear-gradient(135deg,#1565C0,#42A5F5)">
+          <div class="quiz-number-label">قسم #${q.sectionNumber||q.number} 📂</div>
+          <div class="quiz-title-text">${q.title}</div>
+        </div>
+        <div class="no-video-strip">📄 ${q.fileName||''}</div>
+        <div class="quiz-card-body">
+          <div class="quiz-meta">
+            <div class="quiz-meta-item">❓ ${q.questions.length} سؤال</div>
+            <div class="quiz-meta-item">⏱️ ${q.questions.length} دقيقة</div>
+          </div>
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" style="width:${r?100:0}%"></div>
+          </div>
+          <div class="flex items-center justify-between" style="margin-bottom:.75rem">
+            ${badge}
+            ${pct!==null?`<span style="font-size:.85rem;font-weight:800;color:${pct>=70?'var(--success)':pct>=50?'var(--warning)':'var(--error)'}">${pct}%</span>`:''}
+          </div>
+          <div class="quiz-actions">
+            <button class="btn btn-primary btn-sm" style="flex:1" onclick="QuizEngine.startQuiz('${q.id}')">${r?'🔄 إعادة':'▶️ ابدأ'}</button>
+            <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();App._confirmDelete('${q.id}')">🗑️</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
   }
 };
 
