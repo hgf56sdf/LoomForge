@@ -7,7 +7,7 @@
 <title>Worksheet Scanner</title>
 <style>
 :root{--bg:#0b0d10;--card:#14181d;--card2:#1b2026;--line:#2a3139;--text:#f2f4f7;--muted:#9ca6b2;--accent:#5b8def;--ok:#37c98b;--bad:#ee6262;--radius:12px;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-*{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}body{margin:0;background:var(--bg);color:var(--text);font-size:16px;line-height:1.45}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}.app{width:min(100% - 24px,860px);margin:auto;padding:22px 0 34px}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}h1{font-size:22px;margin:0;font-weight:700;letter-spacing:-.02em}.settings-button{width:40px;height:40px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--text);font-size:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}.dropzone{text-align:center;padding:24px 16px;border:1px dashed #3a4550;border-radius:10px}.dropzone.drag{border-color:var(--accent)}.dropzone p{margin:0 0 14px;color:var(--muted);font-size:14px}.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}.button{border:1px solid var(--line);border-radius:9px;background:var(--card2);color:var(--text);padding:10px 15px;font-weight:650;min-height:42px}.button:hover:not(:disabled){border-color:#4e5d6d}.button.primary{background:var(--accent);border-color:var(--accent);color:#fff}.button.small{min-height:36px;padding:7px 11px;font-size:14px}.hidden-input{display:none}.image-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.image-slot{min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px;background:#0f1216}.image-slot img{display:block;width:100%;height:220px;object-fit:contain;background:#090b0e;border-radius:7px}.image-slot-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:13px;font-weight:700}.image-slot.empty{display:none}.remove{border:0;background:transparent;color:var(--muted);font-size:13px;padding:3px}.remove:hover{color:var(--bad)}.solve-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.status{color:var(--muted);font-size:14px}.answer-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.answer-head h2{font-size:18px;margin:0}.answer-state{color:var(--muted);font-size:13px}.answer{min-height:110px;margin:12px 0;padding:14px;border:1px solid var(--line);border-radius:9px;background:#0f1216;white-space:pre-wrap;overflow-wrap:anywhere}.answer.empty{color:var(--muted)}.toolbar{display:flex;flex-wrap:wrap;gap:8px}.verification{margin-top:12px;padding:11px;border-left:3px solid var(--ok);background:rgba(55,201,139,.08);border-radius:0 8px 8px 0;font-size:14px}.verification.different{border-color:var(--bad);background:rgba(238,98,98,.08)}.manual{display:grid;gap:8px;margin-top:12px}.manual textarea{width:100%;min-height:76px;padding:10px;background:#0f1216;border:1px solid var(--line);border-radius:8px;color:var(--text);resize:vertical}.details{margin-top:12px}.details summary{cursor:pointer;color:var(--muted);font-size:13px}.diag{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.diag div{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px}.diag b{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.diag span{font-size:12px;overflow-wrap:anywhere}.modal{display:none;position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.75);align-items:flex-end;justify-content:center;padding:12px}.modal.open{display:flex}.panel{width:min(100%,540px);max-height:92vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.panel h2{margin:0;font-size:19px}.close{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--card2);color:var(--text)}.field{margin:0 0 13px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}.field small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:3px}.input,.select{width:100%;height:42px;border:1px solid var(--line);border-radius:8px;background:#0f1216;color:var(--text);padding:0 10px}.provider{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.provider:last-child{border-bottom:0}.ready{color:var(--ok)}.not-ready{color:var(--muted)}.error{color:var(--bad)}.note{color:var(--muted);font-size:12px;margin:0 0 12px}.toast{position:fixed;left:50%;bottom:16px;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:#222930;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;transition:.15s;max-width:calc(100% - 24px)}.toast.show{opacity:1;transform:translate(-50%,0)}@media(max-width:620px){.app{padding-top:14px}.image-list{grid-template-columns:1fr}.image-slot img{height:240px}.actions .button{flex:1;min-width:130px}.solve-row{align-items:stretch;flex-direction:column}.solve-row .button{width:100%}.diag{grid-template-columns:1fr}}
+*{box-sizing:border-box}html{background:var(--bg);color-scheme:dark}body{margin:0;background:var(--bg);color:var(--text);font-size:16px;line-height:1.45}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.55}.app{width:min(100% - 24px,860px);margin:auto;padding:22px 0 34px}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}h1{font-size:22px;margin:0;font-weight:700;letter-spacing:-.02em}.settings-button{width:40px;height:40px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--text);font-size:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}.dropzone{text-align:center;padding:24px 16px;border:1px dashed #3a4550;border-radius:10px}.dropzone.drag{border-color:var(--accent)}.dropzone p{margin:0 0 14px;color:var(--muted);font-size:14px}.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}.button{border:1px solid var(--line);border-radius:9px;background:var(--card2);color:var(--text);padding:10px 15px;font-weight:650;min-height:42px}.button:hover:not(:disabled){border-color:#4e5d6d}.button.primary{background:var(--accent);border-color:var(--accent);color:#fff}.button.small{min-height:36px;padding:7px 11px;font-size:14px}.hidden-input{display:none}.image-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.image-slot{min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px;background:#0f1216}.image-slot img{display:block;width:100%;height:220px;object-fit:contain;background:#090b0e;border-radius:7px}.image-slot-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:13px;font-weight:700}.image-slot.empty{display:none}.remove{border:0;background:transparent;color:var(--muted);font-size:13px;padding:3px}.remove:hover{color:var(--bad)}.solve-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.status{color:var(--muted);font-size:14px}.answer-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.answer-head h2{font-size:18px;margin:0}.answer-state{color:var(--muted);font-size:13px}.answer{min-height:110px;margin:12px 0;padding:14px;border:1px solid var(--line);border-radius:9px;background:#0f1216;white-space:pre-wrap;overflow-wrap:anywhere}.answer.empty{color:var(--muted)}.toolbar{display:flex;flex-wrap:wrap;gap:8px}.verification{margin-top:12px;padding:11px;border-left:3px solid var(--ok);background:rgba(55,201,139,.08);border-radius:0 8px 8px 0;font-size:14px}.verification.different{border-color:var(--bad);background:rgba(238,98,98,.08)}.ai-disagreement{margin-top:8px;font-size:13px}.manual{display:grid;gap:8px;margin-top:12px}.manual textarea{width:100%;min-height:76px;padding:10px;background:#0f1216;border:1px solid var(--line);border-radius:8px;color:var(--text);resize:vertical}.details{margin-top:12px}.details summary{cursor:pointer;color:var(--muted);font-size:13px}.diag{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.diag div{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px}.diag b{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.diag span{font-size:12px;overflow-wrap:anywhere}.modal{display:none;position:fixed;inset:0;z-index:5;background:rgba(0,0,0,.75);align-items:flex-end;justify-content:center;padding:12px}.modal.open{display:flex}.panel{width:min(100%,540px);max-height:92vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.panel h2{margin:0;font-size:19px}.close{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--card2);color:var(--text)}.field{margin:0 0 13px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:5px}.field small{display:block;color:var(--muted);font-size:11px;font-weight:400;margin-top:3px}.input,.select{width:100%;height:42px;border:1px solid var(--line);border-radius:8px;background:#0f1216;color:var(--text);padding:0 10px}.provider{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.provider:last-child{border-bottom:0}.ready{color:var(--ok)}.not-ready{color:var(--muted)}.error{color:var(--bad)}.note{color:var(--muted);font-size:12px;margin:0 0 12px}.toast{position:fixed;left:50%;bottom:16px;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:#222930;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13px;transition:.15s;max-width:calc(100% - 24px)}.toast.show{opacity:1;transform:translate(-50%,0)}@media(max-width:620px){.app{padding-top:14px}.image-list{grid-template-columns:1fr}.image-slot img{height:240px}.actions .button{flex:1;min-width:130px}.solve-row{align-items:stretch;flex-direction:column}.solve-row .button{width:100%}.diag{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -15,10 +15,12 @@
 <header><h1>Worksheet Scanner</h1><button class="settings-button" id="settingsButton" aria-label="Settings">⚙</button></header>
 <main>
 <section class="card dropzone" id="dropzone">
-<p>Add one or two worksheet images.</p>
-<div class="actions"><label class="button primary" for="image1Input">Add Image</label><label class="button" for="image2Input" id="secondImageButton" hidden>Add Second Image</label></div>
+<p>Add up to four worksheet images.</p>
+<div class="actions"><label class="button primary" for="image1Input">Add Image</label><label class="button" for="image2Input" id="secondImageButton" hidden>Add Second Image</label><label class="button" for="image3Input" id="thirdImageButton" hidden>Add Third Image</label><label class="button" for="image4Input" id="fourthImageButton" hidden>Add Fourth Image</label></div>
 <input class="hidden-input" id="image1Input" type="file" accept="image/*" capture="environment">
 <input class="hidden-input" id="image2Input" type="file" accept="image/*" capture="environment">
+<input class="hidden-input" id="image3Input" type="file" accept="image/*" capture="environment">
+<input class="hidden-input" id="image4Input" type="file" accept="image/*" capture="environment">
 <div class="image-list" id="imageList"></div>
 </section>
 <section class="card"><div class="solve-row"><span class="status" id="status">Add an image to begin.</span><button class="button primary" id="solveButton" disabled>Solve</button></div></section>
@@ -106,12 +108,12 @@ function temporaryError(error) { return !error.status || error.name === 'AbortEr
 function loadImage(file, slot) {
   if (!file || !file.type.startsWith('image/') || file.size > 20 * 1024 * 1024) { toast('Choose a JPEG, PNG, or WEBP image under 20 MB.'); return; }
   const objectUrl = URL.createObjectURL(file); const image = new Image();
-  image.onload = () => { URL.revokeObjectURL(objectUrl); const reader = new FileReader(); reader.onload = () => { STATE.images[slot] = { name: file.name || `Image ${slot + 1}`, mime: ['image/jpeg', 'image/png', 'image/webp'].includes(file.type) ? file.type : 'image/jpeg', dataUrl: reader.result }; STATE.images = STATE.images.slice(0, 2); renderImages(); }; reader.readAsDataURL(file); };
+  image.onload = () => { URL.revokeObjectURL(objectUrl); const reader = new FileReader(); reader.onload = () => { STATE.images[slot] = { name: file.name || `Image ${slot + 1}`, mime: ['image/jpeg', 'image/png', 'image/webp'].includes(file.type) ? file.type : 'image/jpeg', dataUrl: reader.result }; STATE.images = STATE.images.slice(0, 4); renderImages(); }; reader.readAsDataURL(file); };
   image.onerror = () => { URL.revokeObjectURL(objectUrl); toast("Couldn't read this image."); }; image.src = objectUrl;
 }
 function processImages(images) { return Promise.all(images.map(item => new Promise(resolve => { const image = new Image(); image.onload = () => { const max = 3600; const scale = Math.min(1, max / Math.max(image.naturalWidth, image.naturalHeight)); if (scale === 1) return resolve(item); const canvas = document.createElement('canvas'); canvas.width = Math.round(image.naturalWidth * scale); canvas.height = Math.round(image.naturalHeight * scale); canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height); resolve({ ...item, mime: 'image/jpeg', dataUrl: canvas.toDataURL('image/jpeg', .92) }); }; image.src = item.dataUrl; }))); }
 function removeImage(index) { STATE.images.splice(index, 1); renderImages(); if (!STATE.images.length) setStatus('Add an image to begin.'); }
-function renderImages() { const list = $('imageList'); list.innerHTML = ''; STATE.images.slice(0, 2).forEach((item, index) => { const slot = document.createElement('div'); slot.className = 'image-slot'; slot.innerHTML = `<div class="image-slot-head"><span>Image ${index + 1}</span><button class="remove">Remove</button></div><img src="${item.dataUrl}" alt="Worksheet image ${index + 1}">`; slot.querySelector('button').onclick = () => removeImage(index); list.appendChild(slot); }); $('secondImageButton').hidden = STATE.images.length !== 1; $('solveButton').disabled = !STATE.images.length || STATE.solving; if (STATE.images.length) setStatus(`${STATE.images.length} image${STATE.images.length === 1 ? '' : 's'} ready.`); }
+function renderImages() { const list = $('imageList'); list.innerHTML = ''; STATE.images.slice(0, 4).forEach((item, index) => { const slot = document.createElement('div'); slot.className = 'image-slot'; slot.innerHTML = `<div class="image-slot-head"><span>Image ${index + 1}</span><button class="remove">Remove</button></div><img src="${item.dataUrl}" alt="Worksheet image ${index + 1}">`; slot.querySelector('button').onclick = () => removeImage(index); list.appendChild(slot); }); $('secondImageButton').hidden = STATE.images.length !== 1; $('solveButton').disabled = !STATE.images.length || STATE.solving; if (STATE.images.length) setStatus(`${STATE.images.length} image${STATE.images.length === 1 ? '' : 's'} ready.`); }
 function releaseImages() { STATE.images.forEach(image => { image.dataUrl = ''; }); STATE.images = []; renderImages(); }
 
 // ===============================
@@ -232,6 +234,506 @@ async function testProvider(key) { const input = $(`${key}Key`); if (!STATE.keys
 function escapeHtml(text) { return String(text).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char])); }
 function wireInterface() { loadSettings(); restoreSettingsInputs(); $('image1Input').onchange = event => { if (event.target.files?.[0]) loadImage(event.target.files[0], 0); event.target.value = ''; }; $('image2Input').onchange = event => { if (event.target.files?.[0]) loadImage(event.target.files[0], 1); event.target.value = ''; }; $('secondImageButton').onclick = () => $('image2Input').click(); $('dropzone').ondragover = event => { event.preventDefault(); $('dropzone').classList.add('drag'); }; $('dropzone').ondragleave = () => $('dropzone').classList.remove('drag'); $('dropzone').ondrop = event => { event.preventDefault(); $('dropzone').classList.remove('drag'); [...event.dataTransfer.files].filter(file => file.type.startsWith('image/')).slice(0, 2 - STATE.images.length).forEach((file, index) => loadImage(file, STATE.images.length + index)); }; $('solveButton').onclick = solveQuestion; $('retryButton').onclick = solveQuestion; $('verifyButton').onclick = verifyAnswer; $('copyButton').onclick = async () => { try { await navigator.clipboard.writeText(STATE.answer?.display || ''); toast('Answer copied.'); } catch { toast('Copy is unavailable here.'); } }; $('readButton').onclick = () => { if (STATE.answer?.display) { speechSynthesis.cancel(); speechSynthesis.speak(new SpeechSynthesisUtterance(STATE.answer.display)); } }; $('settingsButton').onclick = () => $('settingsModal').classList.add('open'); $('closeSettings').onclick = () => $('settingsModal').classList.remove('open'); $('settingsModal').onclick = event => { if (event.target === $('settingsModal')) $('settingsModal').classList.remove('open'); }; [['geminiKey', 'gemini'], ['groqKey', 'groq'], ['openrouterKey', 'openrouter']].forEach(([id, key]) => { $(id).oninput = event => { STATE.keys[key] = event.target.value.trim(); saveSettings(); }; }); $('discordWebhook').oninput = event => { STATE.webhook = event.target.value.trim(); saveSettings(); }; $('saveSettings').onclick = () => { STATE.keys.gemini = $('geminiKey').value.trim(); STATE.keys.groq = $('groqKey').value.trim(); STATE.keys.openrouter = $('openrouterKey').value.trim(); STATE.webhook = $('discordWebhook').value.trim(); saveSettings(); toast('Settings saved.'); }; $('testGemini').onclick = () => testProvider('gemini'); $('testGroq').onclick = () => testProvider('groq'); $('testOpenrouter').onclick = () => testProvider('openrouter'); $('clearCache').onclick = () => { localStorage.removeItem(CONFIG.cacheKey); toast('Saved answers cleared.'); }; $('clearKeys').onclick = () => { STATE.keys = { gemini: '', groq: '', openrouter: '' }; STATE.webhook = ''; saveSettings(); ['geminiKey', 'groqKey', 'openrouterKey', 'discordWebhook'].forEach(id => $(id).value = ''); toast('Settings cleared.'); }; }
 wireInterface();
+
+</script>
+
+<script id="consensus-upgrade">
+(() => {
+  const CONSENSUS = {
+    maxConcurrent: 5,
+    maxDiscussionRounds: 3,
+    maxRound1Responses: 30,
+    maxDiscussionParticipants: 12
+  };
+
+  function answerItems(answer) {
+    return Array.isArray(answer?.questions) ? answer.questions : [];
+  }
+  function stripPrefix(value) {
+    return String(value || '').trim().replace(/^(answer|option|choice)\s*[:.-]?\s*/i, '').trim();
+  }
+  function canonicalPart(value) {
+    const text = stripPrefix(value).toLowerCase().replace(/[“”"'`]/g, '').replace(/\s+/g, ' ').trim();
+    const letter = text.match(/^(?:option\s*)?([a-h])(?:\s*[—–:-].*)?$/i);
+    if (letter) return `choice:${letter[1].toLowerCase()}`;
+    const numeric = text.replace(/,/g, '').match(/^[-+]?\d+(?:\.\d+)?(?:\s*[a-z%°]+)?$/i);
+    if (numeric) {
+      const number = Number(numeric[0].replace(/[^0-9.+-]/g, ''));
+      if (Number.isFinite(number)) return `number:${number}`;
+    }
+    return text.replace(/[^\p{L}\p{N}\s.%+-]/gu, '').replace(/\s+/g, ' ').trim();
+  }
+  function canonicalAnswer(answer) {
+    return answerItems(answer).map(item => canonicalPart(item.answer || item.answerText)).join(' || ');
+  }
+  function answerSignature(answer) {
+    return canonicalAnswer(answer) || String(answer?.display || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  }
+  function independentRecord(result, phase = 'round1') {
+    return {
+      provider: result.provider,
+      model: result.model,
+      answer: result.answer,
+      reasoning: result.reasoning || '',
+      success: Boolean(result.success !== false && isValidAnswer(result.answer)),
+      method: result.method || 'vision',
+      phase
+    };
+  }
+  function uniqueModels(list) {
+    const seen = new Set();
+    return list.filter(model => {
+      const key = `${model.provider}:${model.id}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+  async function modelPool() {
+    const pool = [];
+    if (STATE.keys.gemini) {
+      try { (await getGeminiVisionModels()).forEach(model => pool.push({ provider: 'Gemini', id: geminiModelId(model), model })); } catch (error) { debug('consensus Gemini discovery failed', { error: safeMessage(error) }); }
+    }
+    if (STATE.keys.groq) {
+      try { (await getGroqVisionModels()).forEach(model => pool.push({ provider: 'Groq', id: model.id, model })); } catch (error) { debug('consensus Groq discovery failed', { error: safeMessage(error) }); }
+    }
+    if (STATE.keys.openrouter) pool.push({ provider: 'OpenRouter', id: CONFIG.openRouterModel, model: null });
+    return uniqueModels(pool).slice(0, CONSENSUS.maxRound1Responses);
+  }
+  async function runLimited(items, worker, limit = CONSENSUS.maxConcurrent) {
+    const output = new Array(items.length);
+    let cursor = 0;
+    async function runner() {
+      while (true) {
+        const index = cursor++;
+        if (index >= items.length) return;
+        try { output[index] = await worker(items[index], index); } catch (error) { output[index] = { error }; }
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(limit, items.length) }, runner));
+    return output;
+  }
+  async function solveOpenRouterPrompt(images, prompt) {
+    if (!STATE.keys.openrouter) throw new Error('OpenRouter not configured');
+    const content = [{ type: 'text', text: prompt }, ...(images || []).map(image => ({ type: 'image_url', image_url: { url: image.dataUrl } }))];
+    const data = await jsonRequest('https://openrouter.ai/api/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${STATE.keys.openrouter}` }, body: JSON.stringify({ model: CONFIG.openRouterModel, messages: [{ role: 'user', content }], stream: false, max_tokens: 2048 }) });
+    const answer = parseOpenRouterResponse(data);
+    if (!isValidAnswer(answer)) throw new Error('invalid OpenRouter answer');
+    return { success: true, provider: 'OpenRouter', model: data?.model || CONFIG.openRouterModel, answer, method: 'vision' };
+  }
+  async function callPoolModel(entry, images, prompt) {
+    const started = Date.now();
+    try {
+      let result;
+      if (entry.provider === 'Gemini') result = await solveWithGemini(entry.model, images, prompt);
+      else if (entry.provider === 'Groq') result = await solveWithGroq(entry.model, images, prompt);
+      else result = await solveOpenRouterPrompt(images, prompt);
+      if (!isValidAnswer(result.answer)) throw new Error('empty consensus response');
+      recordDiagnostic({ provider: entry.provider, model: entry.id, success: true, duration: Date.now() - started });
+      return independentRecord(result);
+    } catch (error) {
+      recordDiagnostic({ provider: entry.provider, model: entry.id, success: false, status: error.status || error.name || 'error', duration: Date.now() - started });
+      return { provider: entry.provider, model: entry.id, answer: null, reasoning: '', success: false, error: safeMessage(error) };
+    }
+  }
+  function groupRecords(records) {
+    const groups = new Map();
+    for (const record of records.filter(item => item?.success)) {
+      const key = answerSignature(record.answer);
+      if (!key) continue;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(record);
+    }
+    return [...groups.entries()].sort((a, b) => b[1].length - a[1].length);
+  }
+  function strongestGroup(records) {
+    const groups = groupRecords(records);
+    return groups[0] || null;
+  }
+  function hasStrongConsensus(records) {
+    const groups = groupRecords(records);
+    if (!groups.length) return false;
+    const successful = records.filter(item => item?.success).length;
+    if (successful === 1) return true;
+    return groups[0][1].length >= 2 && groups[0][1].length / successful >= 0.6;
+  }
+  function selectedAnswer(records) {
+    const group = strongestGroup(records);
+    return group ? group[1][0].answer : null;
+  }
+  function competingText(records) {
+    return groupRecords(records).map(([signature, group]) => {
+      const sample = group[0];
+      return `${group.map(item => `${item.provider}/${item.model}`).join(', ')}: ${sample.answer.display}`;
+    }).join('\n');
+  }
+  function discussionPrompt(records, ocrText = '', evidence = '') {
+    const competing = competingText(records);
+    return `You are resolving a worksheet disagreement. Re-solve the original question from the provided image(s); the images are authoritative. Several independent models returned competing answers below. Do not vote blindly or copy an answer. For mathematics, calculate independently. For science or factual questions, use direct image evidence and, if evidence is supplied, evaluate it critically. Explain briefly why the chosen answer is correct and why alternatives are incorrect. If multiple questions exist, answer each separately. Return valid JSON only: {"questions":[{"number":1,"answer":"B","answerText":"complete answer text"}]}\n\nCOMPETING ANSWERS:\n${competing}\n\nADDITIONAL OCR (not authoritative):\n${ocrText || '(none)'}\n\nINTERNAL SEARCH EVIDENCE (not authoritative):\n${evidence || '(none)'}`;
+  }
+  async function runDiscussion(records, images) {
+    let current = records.filter(item => item.success).slice(0, CONSENSUS.maxDiscussionParticipants);
+    let discussionRounds = 0;
+    let usedOCR = false;
+    let usedSearch = false;
+    let sources = [];
+    let ocrText = '';
+    let evidence = '';
+    while (discussionRounds < CONSENSUS.maxDiscussionRounds && current.length) {
+      discussionRounds += 1;
+      setStatus(discussionRounds === 1 ? 'Checking answers...' : 'Resolving...');
+      if (discussionRounds >= 2 && !ocrText) {
+        try { ocrText = await runOCR(images); usedOCR = Boolean(ocrText); } catch (error) { debug('discussion OCR unavailable', { error: safeMessage(error) }); }
+      }
+      if (discussionRounds >= 2 && !evidence && needsSearch(ocrText)) {
+        try {
+          const searchResult = await searchAndSolve(ocrText);
+          evidence = searchResult.answer?.display || '';
+          sources = searchResult.sources || [];
+          usedSearch = Boolean(evidence);
+        } catch (error) { debug('discussion search unavailable', { error: safeMessage(error) }); }
+      }
+      const prompt = discussionPrompt(current, ocrText, evidence);
+      const participants = current.map(item => ({ provider: item.provider, id: item.model, model: item.modelObject || null }));
+      const refreshed = [];
+      for (const entry of participants) {
+        try {
+          let result;
+          if (entry.provider === 'Gemini') result = await solveWithGemini({ name: `models/${entry.id}`, baseModelId: entry.id }, images, prompt);
+          else if (entry.provider === 'Groq') result = await solveWithGroq({ id: entry.id }, images, prompt);
+          else result = await solveOpenRouterPrompt(images, prompt);
+          if (isValidAnswer(result.answer)) refreshed.push(independentRecord(result, `discussion${discussionRounds}`));
+        } catch (error) {
+          recordDiagnostic({ provider: entry.provider, model: entry.id, success: false, status: error.status || error.name || 'error' });
+        }
+      }
+      if (refreshed.length) current = refreshed;
+      if (hasStrongConsensus(current)) break;
+    }
+    return { records: current, discussionRounds, usedOCR, usedSearch, sources };
+  }
+  function consensusResult(initialRecords, discussion) {
+    const all = discussion?.records?.length ? discussion.records : initialRecords;
+    const group = strongestGroup(all);
+    const answer = group?.[1]?.[0]?.answer || selectedAnswer(initialRecords);
+    if (!answer) throw new Error('No usable model answer');
+    const consensus = hasStrongConsensus(all);
+    return {
+      answer,
+      provider: consensus ? 'Consensus' : (group?.[1]?.[0]?.provider || 'Reconciled'),
+      model: consensus ? `${all.filter(item => item.success).length} models` : (group?.[1]?.[0]?.model || 'reconciled'),
+      method: discussion?.discussionRounds ? 'consensus-discussion' : 'consensus',
+      consensus,
+      disagreement: initialRecords.filter(item => item.success).length > 1 && groupRecords(initialRecords).length > 1,
+      usedModels: all.filter(item => item.success).map(item => `${item.provider}/${item.model}`),
+      failedModels: initialRecords.filter(item => !item.success).map(item => `${item.provider}/${item.model}`),
+      discussionRounds: discussion?.discussionRounds || 0,
+      ocrUsed: Boolean(discussion?.usedOCR),
+      searchUsed: Boolean(discussion?.usedSearch),
+      sources: discussion?.sources || [],
+      conflicts: groupRecords(initialRecords).slice(1).map(([, group]) => group[0].answer.display),
+      initialRecords,
+      discussionRecords: discussion?.records || []
+    };
+  }
+  function consensusCacheAnswer(hash, result) {
+    const cache = readCache();
+    cache[hash] = {
+      hash,
+      answer: result.answer,
+      provider: result.provider,
+      model: result.model,
+      method: result.method,
+      consensus: Boolean(result.consensus),
+      disagreement: Boolean(result.disagreement),
+      usedModels: result.usedModels || [],
+      failedModels: result.failedModels || [],
+      discussionRounds: result.discussionRounds || 0,
+      ocrUsed: Boolean(result.ocrUsed),
+      searchUsed: Boolean(result.searchUsed),
+      sources: result.sources || [],
+      conflicts: result.conflicts || [],
+      verified: false,
+      timestamp: Date.now()
+    };
+    localStorage.setItem(CONFIG.cacheKey, JSON.stringify(cache));
+  }
+  function consensusWebhook(result) {
+    const initial = (result.initialRecords || []).filter(item => item.success).map(item => `${item.provider}: ${item.answer.display}`).join('\n');
+    const discussion = (result.discussionRecords || []).filter(item => item.success).map(item => `${item.provider}: ${item.answer.display}`).join('\n');
+    const header = result.disagreement ? 'Worksheet Scanner — AI Disagreement' : 'Worksheet Scanner';
+    const message = `${header}\nAnswer:\n${result.answer.display}\nStatus: ${result.consensus ? 'Consensus' : 'Best supported answer; disagreement remains'}\nModels:\n${(result.usedModels || []).join('\n') || 'None'}\nSearch used: ${result.searchUsed ? 'Yes' : 'No'}\nOCR used: ${result.ocrUsed ? 'Yes' : 'No'}${result.disagreement ? `\n\nInitial answers:\n${initial}\n\nAfter discussion:\n${discussion || '(none)'}\n\nConflicts:\n${(result.conflicts || []).join('\n') || '(none)'}` : ''}`;
+    sendWebhook(message);
+  }
+  async function consensusSolve(images) {
+    const pool = await modelPool();
+    if (!pool.length) {
+      const attempted = new Set();
+      const text = await runOCR(images);
+      const fallback = await solveFromOCR(text, attempted);
+      return { ...fallback, consensus: false, disagreement: false, usedModels: [`${fallback.provider}/${fallback.model}`], failedModels: [], discussionRounds: 0, ocrUsed: true, searchUsed: Boolean(fallback.searchUsed), conflicts: [], initialRecords: [] };
+    }
+    setStatus('Analyzing...');
+    const initialRecords = await runLimited(pool, entry => callPoolModel(entry, images, visionPrompt()), CONSENSUS.maxConcurrent);
+    const successes = initialRecords.filter(item => item.success);
+    if (!successes.length) {
+      const attempted = new Set(pool.map(item => `${item.provider}:${item.id}:vision`));
+      const text = await runOCR(images);
+      const fallback = await solveFromOCR(text, attempted);
+      return { ...fallback, consensus: false, disagreement: false, usedModels: [`${fallback.provider}/${fallback.model}`], failedModels: initialRecords.map(item => `${item.provider}/${item.model}`), discussionRounds: 0, ocrUsed: true, searchUsed: Boolean(fallback.searchUsed), conflicts: [], initialRecords };
+    }
+    if (hasStrongConsensus(successes)) return consensusResult(initialRecords, { records: successes, discussionRounds: 0, usedOCR: false, usedSearch: false, sources: [] });
+    setStatus('Resolving...');
+    const discussion = await runDiscussion(successes, images);
+    return consensusResult(initialRecords, discussion);
+  }
+  function displayConsensus(result) {
+    displayAnswer(result.answer, result);
+    STATE.consensus = result;
+    setStatus(result.consensus ? 'Answer ready' : 'Answer ready; disagreement resolved with best support.', 'ok');
+  }
+  async function consensusSolveQuestion() {
+    if (STATE.solving || !STATE.images.length) { if (!STATE.images.length) toast('Add an image first.'); return; }
+    STATE.solving = true;
+    $('solveButton').disabled = true;
+    $('solveButton').textContent = 'Analyzing...';
+    $('verifyButton').disabled = true;
+    $('answer').classList.add('empty');
+    $('answer').textContent = '';
+    $('verificationBox').innerHTML = '';
+    $('manualBox').hidden = true;
+    try {
+      STATE.images = await processImages(STATE.images);
+      STATE.hash = await hashImages(STATE.images);
+      const cached = readCache()[STATE.hash];
+      if (cached) { displayConsensus(cached); return; }
+      const result = await consensusSolve(STATE.images);
+      displayConsensus(result);
+      consensusCacheAnswer(STATE.hash, result);
+      consensusWebhook(result);
+    } catch (error) {
+      setStatus("Couldn't get an answer right now. Try again.", 'bad');
+      $('retryButton').hidden = false;
+      showManualRecovery();
+      recordDiagnostic({ provider: 'Consensus Router', success: false, status: error.status || error.name || 'error' });
+    } finally {
+      STATE.solving = false;
+      $('solveButton').disabled = !STATE.images.length;
+      $('solveButton').textContent = 'Solve';
+    }
+  }
+  async function consensusVerifyAnswer() {
+    if (STATE.verifying || !STATE.answer || !STATE.images.length) { if (!STATE.images.length) toast('The images are no longer available. Add them again to verify.'); return; }
+    STATE.verifying = true;
+    $('verifyButton').disabled = true;
+    $('verifyButton').textContent = 'Verify…';
+    $('verificationBox').innerHTML = '';
+    try {
+      setStatus('Verifying...');
+      const pool = await modelPool();
+      const eligible = pool.filter(entry => entry.provider !== STATE.provider || STATE.provider === 'Consensus').slice(0, CONSENSUS.maxRound1Responses);
+      const checks = await runLimited(eligible, async entry => {
+        try {
+          let result;
+          if (entry.provider === 'Gemini') result = await verifyWithGemini(entry.model, STATE.images, STATE.answer);
+          else if (entry.provider === 'Groq') result = await verifyWithGroq(entry.model, STATE.images, STATE.answer);
+          else result = await verifyWithOpenRouter(STATE.images, STATE.answer);
+          return { ...result, success: true, verdict: result.result?.result };
+        } catch (error) {
+          recordDiagnostic({ provider: entry.provider, model: entry.id, success: false, status: error.status || error.name || 'error' });
+          return { success: false, provider: entry.provider, model: entry.id };
+        }
+      }, CONSENSUS.maxConcurrent);
+      const valid = checks.filter(item => item.success);
+      if (!valid.length) throw new Error('verification unavailable');
+      const verified = valid.filter(item => item.verdict === 'VERIFIED').length >= Math.max(1, Math.ceil(valid.length * 0.6));
+      const corrected = valid.find(item => item.verdict === 'INCORRECT' && item.result?.correctedAnswer)?.result?.correctedAnswer;
+      $('verificationBox').innerHTML = verified ? '<div class="verification">Verified ✓</div>' : `<div class="verification different">Different answer<br>${escapeHtml(corrected || 'The verification models found a disagreement.')}</div>`;
+      const cached = readCache()[STATE.hash] || {};
+      cached.verified = verified;
+      cached.verificationModels = valid.map(item => `${item.provider}/${item.model}`);
+      localStorage.setItem(CONFIG.cacheKey, JSON.stringify({ ...readCache(), [STATE.hash]: cached }));
+      sendWebhook(`Worksheet Scanner\nVerification\nOriginal answer:\n${STATE.answer.display}\nVerification status: ${verified ? 'Verified' : 'Different answer'}\nVerifier models:\n${valid.map(item => `${item.provider}/${item.model}: ${item.verdict}`).join('\n')}`);
+    } catch (error) {
+      $('verificationBox').innerHTML = '<div class="verification different">Verification could not be completed.</div>';
+      recordDiagnostic({ provider: 'Verification', success: false, status: error.status || error.name || 'error' });
+    } finally {
+      STATE.verifying = false;
+      $('verifyButton').disabled = false;
+      $('verifyButton').textContent = 'Verify';
+      releaseImages();
+    }
+  }
+  window.solveQuestion = consensusSolveQuestion;
+  window.verifyAnswer = consensusVerifyAnswer;
+  $('solveButton').onclick = consensusSolveQuestion;
+  $('retryButton').onclick = consensusSolveQuestion;
+  $('verifyButton').onclick = consensusVerifyAnswer;
+})();
+
+</script>
+
+<script id="final-upgrade">
+(() => {
+  const FINAL = { maxImages: 4, primaryModels: 10, fallbackModels: 6, concurrency: 5, discussionRounds: 3 };
+  const supers = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','-':'⁻','=':'⁼','(':'⁽',')':'⁾','n':'ⁿ','i':'ⁱ'};
+  const subs = {'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉','+':'₊','-':'₋','=':'₌','(':'₍',')':'₎','a':'ₐ','e':'ₑ','o':'ₒ','x':'ₓ'};
+  const greek = {alpha:'α',beta:'β',gamma:'γ',delta:'δ',epsilon:'ε',theta:'θ',lambda:'λ',mu:'μ',pi:'π',sigma:'σ',phi:'φ',omega:'ω',Delta:'Δ',Sigma:'Σ',Omega:'Ω'};
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function mathText(value) {
+    let text = String(value ?? '');
+    text = text.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '($1/$2)').replace(/\\sqrt\{([^{}]+)\}/g, '√$1').replace(/\\(alpha|beta|gamma|delta|epsilon|theta|lambda|mu|pi|sigma|phi|omega|Delta|Sigma|Omega)\b/g, (_, k) => greek[k]);
+    text = text.replace(/\^\{([^{}]+)\}/g, (_, s) => [...s].map(c => supers[c] || c).join('')).replace(/_\{([^{}]+)\}/g, (_, s) => [...s].map(c => subs[c] || c).join(''));
+    text = text.replace(/\^([0-9A-Za-z+\-=()])/g, (_, c) => supers[c] || c).replace(/_([0-9A-Za-z])/g, (_, c) => subs[c] || c);
+    text = text.replace(/\\times/g,'×').replace(/\\cdot/g,'·').replace(/\\div/g,'÷').replace(/\\pm/g,'±').replace(/\\leq/g,'≤').replace(/\\geq/g,'≥').replace(/\\neq/g,'≠').replace(/\\infty/g,'∞').replace(/\\%/g,'%');
+    return text.replace(/\\[a-zA-Z]+/g, '').replace(/[{}]/g, '');
+  }
+  function cleanPlain(value) { return mathText(String(value ?? '')).replace(/\s+\n/g,'\n').replace(/\n\s+/g,'\n').trim(); }
+  function renderMath(value) {
+    const source = String(value ?? '');
+    const parts = source.split(/(\$\$[\s\S]*?\$\$|\\\([\s\S]*?\\\)|\$[^$\n]+\$)/g);
+    return parts.map((part, i) => {
+      const math = /^\$\$[\s\S]*\$\$$/.test(part) ? part.slice(2,-2) : /^\\\([\s\S]*\\\)$/.test(part) ? part.slice(2,-2) : /^\$[^$\n]+\$$/.test(part) ? part.slice(1,-1) : null;
+      return math === null ? esc(part) : `<span class="math">${esc(mathText(math))}</span>`;
+    }).join('').replace(/\n/g,'<br>');
+  }
+  function modelAnswerText(answer) { return cleanPlain(answer?.display || answer?.answerText || ''); }
+  function itemText(item) { const a = cleanPlain(item?.answer || ''); const b = cleanPlain(item?.answerText || ''); return a && b && !b.toLowerCase().startsWith(a.toLowerCase()) ? `${a} — ${b}` : (b || a); }
+  function canonical(value) {
+    let t = cleanPlain(value).toLowerCase().replace(/^[\s]*(answer|option|choice)\s*[:.-]?\s*/,'').replace(/\s+/g,' ').trim();
+    const letter = t.match(/^([a-h])(?:\s*[—–:-].*)?$/); if (letter) return `choice:${letter[1]}`;
+    const number = t.replace(/,/g,'').match(/^[-+]?\d+(?:\.\d+)?(?:\s*[a-z%°]+)?$/); if (number) return `number:${Number(number[0].replace(/[^0-9.+-]/g,''))}`;
+    return t.replace(/[^\p{L}\p{N}\s.%+\-]/gu,'').replace(/\s+/g,' ');
+  }
+  function responsePerImage(answer, count) {
+    const qs = Array.isArray(answer?.questions) ? answer.questions : [];
+    const values = [];
+    for (let i=0;i<count;i++) {
+      const q = qs[i] || qs.find(item => Number(item?.number) === i + 1) || (qs.length === 1 ? qs[0] : null);
+      values.push(q ? { number: i + 1, text: itemText(q) || modelAnswerText(answer) } : { number: i + 1, text: modelAnswerText(answer) || 'No answer returned.' });
+    }
+    return values;
+  }
+  function groups(records, index) {
+    const map = new Map();
+    records.filter(r => r?.success && r.perImage?.[index]?.text).forEach(r => { const key = canonical(r.perImage[index].text); if (!map.has(key)) map.set(key, []); map.get(key).push(r); });
+    return [...map.entries()].sort((a,b)=>b[1].length-a[1].length);
+  }
+  function poolUnique(pool) { const seen = new Set(); return pool.filter(x => { const k = `${x.provider}:${x.id}`; if (seen.has(k)) return false; seen.add(k); return true; }); }
+  async function openRouterPool() {
+    if (!STATE.keys.openrouter) return [];
+    const cached = discoveryCacheRead('openrouter-vision-final'); if (cached?.length) return cached;
+    try {
+      const data = await jsonRequest('https://openrouter.ai/api/v1/models', { headers: { Authorization: `Bearer ${STATE.keys.openrouter}`, Accept: 'application/json' } });
+      const models = (data?.data || []).filter(m => { const modalities = m?.architecture?.input_modalities || []; const id = String(m.id || '').toLowerCase(); return m.id && (modalities.includes('image') || modalities.includes('image_url') || /vision|vl|gemini|qwen2\.5-vl|llama-4/.test(id)); }).sort((a,b)=>Number(a.pricing?.prompt || 0)-Number(b.pricing?.prompt || 0)).map(m => ({ provider:'OpenRouter', id:m.id, model:m }));
+      const free = models.filter(m => String(m.id).endsWith(':free'));
+      const result = [...free, ...models].filter((m,i,a)=>a.findIndex(x=>x.id===m.id)===i);
+      if (result.length) { discoveryCacheWrite('openrouter-vision-final', result); return result; }
+    } catch (error) { debug('OpenRouter discovery failed', {error:safeMessage(error)}); }
+    return [{provider:'OpenRouter', id:CONFIG.openRouterModel, model:null}];
+  }
+  async function finalPool() {
+    const pool=[];
+    if (STATE.keys.gemini) { try {(await getGeminiVisionModels()).forEach(m=>pool.push({provider:'Gemini',id:geminiModelId(m),model:m}));} catch(error){} }
+    if (STATE.keys.groq) { try {(await getGroqVisionModels()).forEach(m=>pool.push({provider:'Groq',id:m.id,model:m}));} catch(error){} }
+    pool.push(...await openRouterPool());
+    return poolUnique(pool);
+  }
+  async function limited(list, worker) {
+    const out = new Array(list.length); let next=0;
+    async function run(){ while(true){ const i=next++; if(i>=list.length)return; try{out[i]=await worker(list[i]);}catch(error){out[i]={success:false,error,provider:list[i].provider,model:list[i].id};} } }
+    await Promise.all(Array.from({length:Math.min(FINAL.concurrency,list.length)},run)); return out;
+  }
+  function visionTask(count) { return `You are an independent worksheet solver. The request contains ${count} ordered worksheet image(s). IMAGE 1 is first, IMAGE 2 is second, IMAGE 3 is third, IMAGE 4 is fourth when present. Analyze every image separately and return one questions entry per image in order. Do not merge images. For each image, solve the visible question(s), preserving multiple questions inside that image when possible. For mathematics, calculate independently. Return valid JSON only: {"questions":[{"number":1,"answer":"B","answerText":"complete answer for IMAGE 1"}]}.`; }
+  function discussionTask(count, initial) { const conflicts=initial.map((r,i)=>`Model ${r.provider}/${r.model}: ${r.perImage.map((p,n)=>`Image ${n+1}: ${p.text}`).join(' | ')}`).join('\n'); return `Re-solve the original ${count} worksheet image(s) independently. IMAGE 1 through IMAGE ${count} are separate and authoritative. Several models disagreed below. Do not vote blindly. Recalculate math and inspect the original image(s), then return one questions entry per image in order. Explain only through the answerText. JSON only: {"questions":[{"number":1,"answer":"B","answerText":"..."}]}\nCOMPETING ANSWERS:\n${conflicts}`; }
+  async function call(entry, images, prompt) {
+    try { let result; if(entry.provider==='Gemini') result=await solveWithGemini(entry.model,images,prompt); else if(entry.provider==='Groq') result=await solveWithGroq(entry.model,images,prompt); else { const content=[{type:'text',text:prompt},...images.map(x=>({type:'image_url',image_url:{url:x.dataUrl}}))]; const data=await jsonRequest('https://openrouter.ai/api/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${STATE.keys.openrouter}`},body:JSON.stringify({model:entry.id||CONFIG.openRouterModel,messages:[{role:'user',content}],stream:false,max_tokens:2048})}); result={success:true,provider:'OpenRouter',model:data?.model||entry.id,answer:parseOpenRouterResponse(data)}; } if(!isValidAnswer(result.answer))throw new Error('empty answer'); return {provider:entry.provider,model:result.model||entry.id,success:true,answer:result.answer,perImage:responsePerImage(result.answer,images.length)}; } catch(error) { recordDiagnostic({provider:entry.provider,model:entry.id,success:false,status:error.status||error.name||'error'}); return {provider:entry.provider,model:entry.id,success:false,perImage:[]}; }
+  }
+  function makeImageResults(records, count, finalRecords) {
+    const results=[];
+    for(let i=0;i<count;i++) { const initial=groups(records,i); const final=groups(finalRecords?.length?finalRecords:records,i); const top=final[0]; const disagreement=initial.length>1; results.push({image:i+1,answer:top?.[1]?.[0]?.perImage?.[i]?.text||'No answer returned.',consensus:final.length<=1 || (top && top[1].length/Math.max(1,finalRecords.filter(r=>r.success).length)>=.6),disagreement,competingAnswers:initial.slice(1).map(([,g])=>g[0].perImage[i].text),modelsUsed:final.flatMap(([,g])=>g.map(r=>`${r.provider}/${r.model}`)),initialRecords:records.filter(r=>r.success).map(r=>({provider:r.provider,model:r.model,answer:r.perImage[i]?.text||''})),finalRecords:(finalRecords||[]).filter(r=>r.success).map(r=>({provider:r.provider,model:r.model,answer:r.perImage[i]?.text||''}))}); }
+    return results;
+  }
+  function renderFinal(result) { const html=result.imageResults.map(item=>`<div class="answer-image"><strong>Image ${item.image}:</strong><br>${renderMath(item.answer)}${item.disagreement?'<div class="verification different ai-disagreement">⚠️ AI disagreement on this question</div>':''}</div>`).join('<br>'); $('answer').classList.remove('empty'); $('answer').innerHTML=html; STATE.answer={display:result.imageResults.map(item=>`Image ${item.image}:\n${item.answer}${item.disagreement?'\n⚠️ AI disagreement on this question':''}`).join('\n\n'),questions:result.imageResults.map(item=>({number:item.image,answerText:item.answer}))}; STATE.answerPlain=cleanPlain(STATE.answer.display); $('copyButton').disabled=false; $('readButton').disabled=false; $('verifyButton').hidden=false; $('verifyButton').disabled=false; $('retryButton').hidden=true; }
+  function finalWebhook(result) { const lines=['Worksheet Scanner','━━━━━━━━━━━━━━']; result.imageResults.forEach(item=>{ lines.push(`Image ${item.image}:`,`Answer:`,cleanPlain(item.answer),`Status: ${item.disagreement?'⚠️ AI disagreement':'✅ Consensus'}`); if(item.disagreement){lines.push('Competing answers:',...item.competingAnswers.map(cleanPlain),'Status:',item.consensus?'Disagreement resolved':'⚠️ AI disagreement — unresolved');} lines.push('━━━━━━━━━━━━━━'); }); sendWebhook(lines.join('\n')); }
+  function cacheFinal(hash,result) { const cache=readCache(); cache[hash]={hash,answer:STATE.answer,provider:'Consensus',model:`${result.usedModels.length} models`,method:'consensus',consensus:result.imageResults.every(x=>x.consensus),disagreement:result.imageResults.some(x=>x.disagreement),competingAnswers:result.imageResults.flatMap(x=>x.competingAnswers),imageResults:result.imageResults,modelsUsed:result.usedModels,timestamp:Date.now()}; localStorage.setItem(CONFIG.cacheKey,JSON.stringify(cache)); }
+  async function finalSolve() {
+    if(STATE.solving||!STATE.images.length){if(!STATE.images.length)toast('Add an image first.');return;} STATE.solving=true; $('solveButton').disabled=true; $('solveButton').textContent='Analyzing...'; $('verifyButton').disabled=true; $('answer').classList.add('empty'); $('answer').textContent=''; $('verificationBox').innerHTML=''; try {
+      STATE.images=await processImages(STATE.images); STATE.hash=await hashImages(STATE.images); const cached=readCache()[STATE.hash]; if(cached?.imageResults){ const cachedResult={...cached,imageResults:cached.imageResults,usedModels:cached.modelsUsed||[]}; renderFinal(cachedResult); STATE.consensus=cachedResult; setStatus('Cached answer.','ok'); return; }
+      const pool=await finalPool(); const primary=pool.slice(0,FINAL.primaryModels); const fallback=pool.slice(FINAL.primaryModels,FINAL.primaryModels+FINAL.fallbackModels); const first=await limited(primary,e=>call(e,STATE.images,visionTask(STATE.images.length))); let successful=first.filter(x=>x.success); let attempted=first;
+      if(!successful.length&&fallback.length){setStatus('Trying backup models...'); const second=await limited(fallback,e=>call(e,STATE.images,visionTask(STATE.images.length))); successful=second.filter(x=>x.success); attempted=[...first,...second];}
+      if(!successful.length){const text=await runOCR(STATE.images); const fallbackAnswer=await solveFromOCR(text,new Set()); successful=[{provider:fallbackAnswer.provider,model:fallbackAnswer.model,success:true,answer:fallbackAnswer.answer,perImage:responsePerImage(fallbackAnswer.answer,STATE.images.length)}]; attempted=successful;}
+      let finalRecords=successful; let rounds=0; let needsDiscussion=STATE.images.length>0&&STATE.images.some((_,i)=>groups(successful,i).length>1); while(needsDiscussion&&rounds<FINAL.discussionRounds){rounds++; setStatus(rounds===1?'Checking answers...':'Resolving...'); const prompt=discussionTask(STATE.images.length,successful); const discussion=await limited(successful.slice(0,FINAL.primaryModels),e=>call(e,STATE.images,prompt)); if(discussion.filter(x=>x.success).length)finalRecords=discussion.filter(x=>x.success); needsDiscussion=STATE.images.some((_,i)=>groups(finalRecords,i).length>1);}
+      const imageResults=makeImageResults(successful,STATE.images.length,finalRecords); const result={imageResults,usedModels:finalRecords.map(x=>`${x.provider}/${x.model}`),failedModels:attempted.filter(x=>!x.success).map(x=>`${x.provider}/${x.model}`),discussionRounds:rounds,ocrUsed:false,searchUsed:false,consensus:imageResults.every(x=>x.consensus),disagreement:imageResults.some(x=>x.disagreement)}; renderFinal(result); STATE.consensus=result; cacheFinal(STATE.hash,result); setStatus(result.disagreement?'Answer ready; disagreement noted.':'Answer ready','ok'); finalWebhook(result);
+    } catch(error){setStatus("Couldn't get an answer right now. Try again.",'bad'); $('retryButton').hidden=false; showManualRecovery(); recordDiagnostic({provider:'Consensus Router',success:false,status:error.status||error.name||'error'});} finally {STATE.solving=false; $('solveButton').disabled=!STATE.images.length; $('solveButton').textContent='Solve';}
+  }
+  const originalProcess=window.processImages;
+  function wireFourInputs(){ const ids=['image1Input','image2Input','image3Input','image4Input']; ids.forEach((id,index)=>{const input=$(id); if(!input)return; input.onchange=e=>{if(e.target.files?.[0])loadImage(e.target.files[0],index);e.target.value='';};});     $('secondImageButton').onclick=()=>$('image2Input').click();     const oldRender=window.renderImages; window.renderImages=()=>{oldRender(); const count=STATE.images.length; if($('thirdImageButton'))$('thirdImageButton').hidden=count!==2; if($('fourthImageButton'))$('fourthImageButton').hidden=count!==3; $('secondImageButton').hidden=count!==1;}; const oldLoad=window.loadImage; window.loadImage=(file,slot)=>{oldLoad(file,slot); setTimeout(()=>window.renderImages(),0);}; const oldRemove=window.removeImage; window.removeImage=(index)=>{oldRemove(index); window.renderImages();}; const drop=$('dropzone'); drop.ondrop=e=>{e.preventDefault();drop.classList.remove('drag');[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/')).slice(0,FINAL.maxImages-STATE.images.length).forEach((f,i)=>loadImage(f,STATE.images.length+i));}; }
+  window.solveQuestion=finalSolve; $('solveButton').onclick=finalSolve; $('retryButton').onclick=finalSolve; if($('copyButton'))$('copyButton').onclick=async()=>{try{await navigator.clipboard.writeText(STATE.answerPlain||STATE.answer?.display||'');toast('Answer copied.');}catch{toast('Copy is unavailable here.');}};
+  wireFourInputs(); window.renderImages();
+})();
+
+</script>
+
+
+
+
+
+
+
+
+
+<script id="question-fix">
+(() => {
+  const QFIX = { primary: 10, fallback: 6, concurrency: 5, recoveryPasses: 2 };
+  const escQ = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const mathQ = value => { let t=String(value??''); const sup={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','-':'⁻','=':'⁼'}; const sub={'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉','+':'₊','-':'₋','=':'₌'}; t=t.replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,'($1/$2)').replace(/\\sqrt\{([^{}]+)\}/g,'√$1').replace(/\^\{([^{}]+)\}/g,(_,s)=>[...s].map(c=>sup[c]||c).join('')).replace(/_\{([^{}]+)\}/g,(_,s)=>[...s].map(c=>sub[c]||c).join('')).replace(/\^([0-9+\-=])/g,(_,c)=>sup[c]||c).replace(/_([0-9])/g,(_,c)=>sub[c]||c).replace(/\\times/g,'×').replace(/\\cdot/g,'·').replace(/\\div/g,'÷').replace(/\\pm/g,'±').replace(/\\leq/g,'≤').replace(/\\geq/g,'≥').replace(/\\neq/g,'≠').replace(/[{}]/g,''); return t.replace(/\\[a-zA-Z]+/g,''); };
+  const cleanQ = v => mathQ(String(v??'')).replace(/\s+/g,' ').trim();
+  const itemTextQ = q => { const a=cleanQ(q?.answer||''); const b=cleanQ(q?.answerText||q?.text||''); return a&&b&&!b.toLowerCase().startsWith(a.toLowerCase())?`${a} — ${b}`:(b||a); };
+  function canonQ(value) { let t=cleanQ(value).toLowerCase().replace(/[“”"'`]/g,'').replace(/^(answer|final answer|option|choice)\s*[:—–.\-]?\s*/,'').trim(); const letter=t.match(/^([a-h])(?:\s*(?:[—–:.)\-]|\b).*)?$/); if(letter)return `l:${letter[1]}`; const numeric=t.replace(/,/g,'').match(/^[-+]?\d+(?:\.\d+)?(?:\s*[a-z%°]+)?(?:\s*(?:[—–:]|\(|,|;|\.).*)?$/); if(numeric){const n=Number(numeric[0].match(/^[-+]?\d+(?:\.\d+)?/)[0]);if(Number.isFinite(n))return `n:${n}`;} const equation=t.replace(/\s+/g,''); if(equation.includes('=')){const sides=equation.split('=').map(x=>x.replace(/[.]+$/,'')).sort();return `eq:${sides.join('=')}`;} return t.replace(/[^\p{L}\p{N}\s.%+\-×÷√=]/gu,'').replace(/\s+/g,' ').trim(); }
+  function questionRows(answer, imageCount) {
+    const rows=Array.isArray(answer?.questions)?answer.questions:[]; const out=[]; let fallbackNo=1;
+    rows.forEach(q=>{ const image=Number(q.image??q.imageNumber??q.page??q.pageNumber??1); const number=q.number??q.questionNumber??q.id??fallbackNo++; if(!Number.isFinite(image)||image<1||image>imageCount) { if(imageCount===1) out.push({image:1,number,text:itemTextQ(q)}); return; } out.push({image,number:String(number),text:itemTextQ(q)}); });
+    return out.filter(q=>q.text);
+  }
+  function fullPrompt(images, extra='') { return `You are solving an entire worksheet, not a single question. Inspect the COMPLETE page of every provided image and identify EVERY visible question, subquestion, multiple-choice item, and numbered item. Preserve each image boundary and the original question numbering. For every image, solve every visible question in order. Do not stop after the first question. Multiple-choice answers must include the option letter and full answer text. Numerical questions need the final value. Open-ended answers must be concise and exam-ready. Before responding, internally check that the number of detected questions equals the number of answers for each image. Return JSON only in this exact shape: {"questions":[{"image":1,"number":"1","answer":"B","answerText":"B — full answer text"},{"image":1,"number":"2","answer":"42","answerText":"42"},{"image":2,"number":"1","answer":"A","answerText":"A — full answer text"}]}. ` + extra; }
+  async function openRouterQ(entry, images, prompt) { const content=[{type:'text',text:prompt},...images.map(x=>({type:'image_url',image_url:{url:x.dataUrl}}))]; const data=await jsonRequest('https://openrouter.ai/api/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${STATE.keys.openrouter}`},body:JSON.stringify({model:entry.id||CONFIG.openRouterModel,messages:[{role:'user',content}],stream:false,max_tokens:4096})}); const answer=parseOpenRouterResponse(data); if(!isValidAnswer(answer))throw new Error('empty OpenRouter worksheet answer'); return {provider:'OpenRouter',model:data?.model||entry.id,answer}; }
+  async function callQ(entry, images, prompt) { try { let r; if(entry.provider==='Gemini')r=await solveWithGemini(entry.model,images,prompt); else if(entry.provider==='Groq')r=await solveWithGroq(entry.model,images,prompt); else r=await openRouterQ(entry,images,prompt); const rows=questionRows(r.answer,images.length); if(!rows.length)throw new Error('no worksheet questions returned'); return {provider:entry.provider,model:r.model||entry.id,success:true,rows,answer:r.answer}; } catch(error) { recordDiagnostic({provider:entry.provider,model:entry.id,success:false,status:error.status||error.name||'error'}); return {provider:entry.provider,model:entry.id,success:false,rows:[],error:safeMessage(error)}; } }
+  async function limitQ(list, worker) { const out=new Array(list.length); let next=0; async function run(){while(true){const i=next++;if(i>=list.length)return;out[i]=await worker(list[i]);}} await Promise.all(Array.from({length:Math.min(QFIX.concurrency,list.length)},run)); return out; }
+  async function discoverQ() { const pool=[]; if(STATE.keys.gemini){try{(await getGeminiVisionModels()).forEach(m=>pool.push({provider:'Gemini',id:geminiModelId(m),model:m}));}catch{}} if(STATE.keys.groq){try{(await getGroqVisionModels()).forEach(m=>pool.push({provider:'Groq',id:m.id,model:m}));}catch{}} if(STATE.keys.openrouter)pool.push({provider:'OpenRouter',id:CONFIG.openRouterModel,model:null}); const seen=new Set(); return pool.filter(x=>{const k=x.provider+':'+x.id;if(seen.has(k))return false;seen.add(k);return true;}); }
+  function allKeys(records) { return [...new Set(records.filter(r=>r?.success).map(r=>`${r.provider} — ${r.model}`))]; }
+  function expectedKeys(records) { const s=new Set(); records.filter(r=>r?.success).forEach(r=>r.rows.forEach(q=>s.add(`${q.image}:${q.number}`))); return s; }
+  function groupQuestion(records,key) { const map=new Map(); records.filter(r=>r?.success).forEach(r=>r.rows.filter(q=>`${q.image}:${q.number}`===key).forEach(q=>{const c=canonQ(q.text);if(!map.has(c))map.set(c,[]);map.get(c).push({...r,q});})); return [...map.entries()].sort((a,b)=>b[1].length-a[1].length); }
+  function makeWorksheet(records, finalRecords) { const keys=[...expectedKeys(records)].sort((a,b)=>{const [ai,an]=a.split(':');const [bi,bn]=b.split(':');return Number(ai)-Number(bi)||String(an).localeCompare(String(bn),undefined,{numeric:true});}); const byImage=new Map(); keys.forEach(key=>{const gs=groupQuestion(records,key);const fs=groupQuestion(finalRecords?.length?finalRecords:records,key);const top=fs[0]?.[1]?.[0];if(!top)return;const competing=gs.slice(1).map(([,g])=>g[0].q.text);const entry={image:top.q.image,number:String(top.q.number),answer:top.q.text,disagreement:gs.length>1,competingAnswers:competing,consensus:fs.length<=1||fs[0][1].length/Math.max(1,finalRecords.filter(r=>r.success).length)>=.6};if(!byImage.has(entry.image))byImage.set(entry.image,[]);byImage.get(entry.image).push(entry);}); return [...byImage.entries()].sort((a,b)=>a[0]-b[0]).map(([image,questions])=>({image,questions})); }
+  async function recoverMissing(records, images, finalRecords) { const expected=[...expectedKeys(records)]; const present=new Set(); finalRecords.filter(r=>r?.success).forEach(r=>r.rows.forEach(q=>present.add(`${q.image}:${q.number}`))); const missing=expected.filter(k=>!present.has(k)); if(!missing.length)return finalRecords; const pool=await discoverQ(); const recovered=[]; for(const key of missing.slice(0,QFIX.recoveryPasses)){const [image,number]=key.split(':'); const index=Number(image)-1; const prompt=fullPrompt([images[index]],`The page is IMAGE ${image}. Recover the missing question numbered ${number}. Return all questions you can see on this page, including the missing one.`); const r=await limitQ(pool.slice(0,2),e=>callQ(e,[images[index]],prompt)); r.filter(x=>x.success).forEach(x=>x.rows=x.rows.map(q=>({...q,image:Number(image)}))); recovered.push(...r.filter(x=>x.success)); } return [...finalRecords,...recovered]; }
+  function htmlWorksheet(ws) { return ws.map(img=>`<div class="worksheet-image"><strong>Image ${img.image}:</strong>${img.questions.map(q=>`<div class="worksheet-question"><br><strong>Question ${escQ(q.number)}:</strong><br>${escQ(mathQ(q.answer))}${q.disagreement?`<div class="verification different ai-disagreement">⚠️ Note: AI disagreement on this question. Other answer${q.competingAnswers.length>1?'s':''}: ${escQ(q.competingAnswers.map(cleanQ).join(', '))}.</div>`:''}</div>`).join('')}</div>`).join('<br>'); }
+  function plainWorksheet(ws) { return ws.map(img=>[`Image ${img.image}:`,...img.questions.flatMap(q=>[`Question ${q.number}:`,`Answer: ${cleanQ(q.answer)}`,...(q.disagreement?[`⚠️ Note: AI disagreement on this question. Other answer${q.competingAnswers.length>1?'s':''}: ${q.competingAnswers.map(cleanQ).join(', ')}.`]:[])])].join('\n')).join('\n\n'); }
+  function discordWorksheet(ws, used, failed) { const lines=['Worksheet Scanner','━━━━━━━━━━━━━━━━']; ws.forEach(img=>{lines.push(`IMAGE ${img.image}`,'');img.questions.forEach(q=>{lines.push(`Question ${q.number}:`,`Answer: ${cleanQ(q.answer)}`);if(q.disagreement){lines.push(`⚠️ Note: AI disagreement on this question. Other answer${q.competingAnswers.length>1?'s':''}: ${q.competingAnswers.map(cleanQ).join(', ')}.`);}lines.push('');});lines.push('━━━━━━━━━━━━━━━━');});lines.push('AI MODELS USED',...used.map(x=>`• ${x}`));if(failed.length)lines.push('','FAILED MODELS',...failed.map(x=>`• ${x}`));lines.push('','STATUS:',ws.some(img=>img.questions.some(q=>q.disagreement))?'⚠️ Completed with AI disagreements':'✅ Completed');return lines.join('\n'); }
+  function saveQ(hash, ws, used, failed, result) { const cache=readCache(); const answer={display:plainWorksheet(ws),questions:ws.flatMap(img=>img.questions.map(q=>({number:q.number,image:img.image,answerText:q.answer})))}; cache[hash]={hash,answer,provider:'Consensus',model:`${used.length} models`,method:'multi-question-consensus',imageResults:ws,modelsUsed:used,failedModels:failed,disagreement:ws.some(img=>img.questions.some(q=>q.disagreement)),verified:false,timestamp:Date.now()};localStorage.setItem(CONFIG.cacheKey,JSON.stringify(cache));STATE.answer=answer;STATE.answerPlain=answer.display;STATE.consensus={...result,imageResults:ws,usedModels:used,failedModels:failed}; }
+  async function solveQuestions() { if(STATE.solving||!STATE.images.length){if(!STATE.images.length)toast('Add an image first.');return;} STATE.solving=true;$('solveButton').disabled=true;$('solveButton').textContent='Analyzing...';$('answer').classList.add('empty');$('answer').textContent='';$('verificationBox').innerHTML=''; try { STATE.images=await processImages(STATE.images);STATE.hash=await hashImages(STATE.images);const cached=readCache()[STATE.hash];if(cached?.imageResults){STATE.answer=cached.answer;STATE.answerPlain=cached.answer.display;$('answer').classList.remove('empty');$('answer').innerHTML=htmlWorksheet(cached.imageResults);$('copyButton').disabled=false;$('readButton').disabled=false;$('verifyButton').hidden=false;$('verifyButton').disabled=false;STATE.consensus=cached;setStatus('Cached answer.','ok');return;} const pool=await discoverQ();const first=await limitQ(pool.slice(0,QFIX.primary),e=>callQ(e,STATE.images,fullPrompt(STATE.images)));let attempted=first;let successes=first.filter(x=>x.success);if(!successes.length){setStatus('Trying backup models...');const second=await limitQ(pool.slice(QFIX.primary,QFIX.primary+QFIX.fallback),e=>callQ(e,STATE.images,fullPrompt(STATE.images)));attempted=[...first,...second];successes=second.filter(x=>x.success);} if(!successes.length){const ocr=await runOCR(STATE.images);const text=await solveFromOCR(ocr,new Set());successes=[{provider:text.provider,model:text.model,success:true,rows:questionRows(text.answer,STATE.images.length),answer:text.answer}];attempted=successes;} let finalRecords=successes;let rounds=0;while(rounds<3){const worksheet=makeWorksheet(successes,finalRecords);const any=worksheet.some(img=>img.questions.some(q=>q.disagreement));if(!any)break;rounds++;setStatus(rounds===1?'Checking answers...':'Resolving...');const discussion=await limitQ(finalRecords.filter(r=>r.success).slice(0,QFIX.primary),e=>callQ(e,STATE.images,fullPrompt(STATE.images,`Competing answers exist. Re-evaluate every question per image, do not vote blindly. Return every question again.\n${JSON.stringify(worksheet)}`)));if(discussion.some(r=>r.success))finalRecords=discussion.filter(r=>r.success);} finalRecords=await recoverMissing(successes,STATE.images,finalRecords);const ws=makeWorksheet(successes,finalRecords);const used=allKeys([...attempted,...finalRecords]);const failed=[...new Set(attempted.filter(r=>!r.success).map(r=>`${r.provider} — ${r.model}`))];const result={consensus:!ws.some(img=>img.questions.some(q=>q.disagreement)),disagreement:ws.some(img=>img.questions.some(q=>q.disagreement)),discussionRounds:rounds};const answer={display:plainWorksheet(ws),questions:ws.flatMap(img=>img.questions.map(q=>({number:q.number,image:img.image,answerText:q.answer})))};STATE.answer=answer;STATE.answerPlain=answer.display;$('answer').classList.remove('empty');$('answer').innerHTML=htmlWorksheet(ws);$('copyButton').disabled=false;$('readButton').disabled=false;$('verifyButton').hidden=false;$('verifyButton').disabled=false;$('retryButton').hidden=true;saveQ(STATE.hash,ws,used,failed,result);setStatus(result.disagreement?'Answer ready; disagreements noted.':'Answer ready','ok');sendWebhook(discordWorksheet(ws,used,failed)); } catch(error){setStatus("Couldn't get an answer right now. Try again.",'bad');$('retryButton').hidden=false;showManualRecovery();recordDiagnostic({provider:'Question engine',success:false,status:error.status||error.name||'error'});} finally {STATE.solving=false;$('solveButton').disabled=!STATE.images.length;$('solveButton').textContent='Solve';} }
+  window.solveQuestion=solveQuestions;$('solveButton').onclick=solveQuestions;$('retryButton').onclick=solveQuestions;if($('copyButton'))$('copyButton').onclick=async()=>{try{await navigator.clipboard.writeText(STATE.answerPlain||'');toast('Answer copied.');}catch{toast('Copy is unavailable here.');}};
+})();
+
+</script>
+<script id="verified-fix">
+(() => {
+  const VERIFY = { maxModels: 3, maxLength: 1900 };
+  const escV = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const mathV = value => String(value??'').replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g,'($1/$2)').replace(/\\sqrt\{([^{}]+)\}/g,'√$1').replace(/\^\{([^{}]+)\}/g,(_,s)=>[...s].map(c=>({'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}[c]||c)).join('')).replace(/\^([0-9])/g,(_,c)=>({'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'}[c]||c)).replace(/\\times/g,'×').replace(/\\div/g,'÷').replace(/\\pm/g,'±').replace(/\\[a-zA-Z]+/g,'').replace(/[{}]/g,'');
+  const cleanV = v => mathV(String(v??'')).replace(/\s+/g,' ').trim(); 
+  function normalizeAnswer(value) { let t=cleanV(value).toLowerCase().replace(/[“”"'`]/g,'').replace(/^(answer|final answer|option|choice)\s*[:—–.\-]?\s*/,'').trim(); const letter=t.match(/^([a-h])(?:\s*(?:[—–:.)\-]|\b).*)?$/); if(letter)return `letter:${letter[1]}`; const numeric=t.replace(/,/g,'').match(/^[-+]?\d+(?:\.\d+)?(?:\s*[a-z%°]+)?(?:\s*(?:[—–:]|\(|,|;|\.).*)?$/); if(numeric){const n=Number(numeric[0].match(/^[-+]?\d+(?:\.\d+)?/)[0]);if(Number.isFinite(n))return `number:${n}`;} const equation=t.replace(/\s+/g,''); if(equation.includes('='))return `equation:${equation.split('=').sort().join('=')}`; return t.replace(/[^\p{L}\p{N}\s.%+\-×÷√=]/gu,'').replace(/\s+/g,' ').trim(); }
+  function verifyPrompt(ws) { return `You are an independent verifier. Inspect the original worksheet image(s) and verify EVERY proposed answer below. Do not merely agree. Re-solve each visible question, preserve image and question numbering, and return JSON only: {"questions":[{"image":1,"number":"1","answer":"B","answerText":"B — full answer"}]}. Proposed answers:\n${ws.map(img=>`IMAGE ${img.image}\n${img.questions.map(q=>`Question ${q.number}: ${q.answer}`).join('\n')}`).join('\n')}`; }
+  function rowsV(answer) { return (Array.isArray(answer?.questions)?answer.questions:[]).map(q=>({image:Number(q.image??q.imageNumber??1),number:String(q.number??q.questionNumber??q.id??''),text:cleanV(q.answerText||q.answer||q.text||'')})).filter(q=>q.number&&q.text); }
+  async function callVerifier(entry, images, prompt) { try { let r; if(entry.provider==='Gemini')r=await solveWithGemini(entry.model,images,prompt); else if(entry.provider==='Groq')r=await solveWithGroq(entry.model,images,prompt); else { const content=[{type:'text',text:prompt},...images.map(x=>({type:'image_url',image_url:{url:x.dataUrl}}))];const data=await jsonRequest('https://openrouter.ai/api/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${STATE.keys.openrouter}`},body:JSON.stringify({model:entry.id||CONFIG.openRouterModel,messages:[{role:'user',content}],stream:false,max_tokens:4096})});r={provider:'OpenRouter',model:data?.model||entry.id,answer:parseOpenRouterResponse(data)};}const rows=rowsV(r.answer);if(!rows.length)throw new Error('empty verification');return {provider:entry.provider,model:r.model||entry.id,success:true,rows};}catch(error){recordDiagnostic({provider:entry.provider,model:entry.id,success:false,status:error.status||error.name||'verification'});return {provider:entry.provider,model:entry.id,success:false,rows:[]};} }
+  async function verifierPool() { const p=[]; const used=new Set((STATE.consensus?.usedModels||[]).map(x=>String(x))); if(STATE.keys.gemini){try{(await getGeminiVisionModels()).forEach(m=>p.push({provider:'Gemini',id:geminiModelId(m),model:m}));}catch{}}if(STATE.keys.groq){try{(await getGroqVisionModels()).forEach(m=>p.push({provider:'Groq',id:m.id,model:m}));}catch{}}if(STATE.keys.openrouter)p.push({provider:'OpenRouter',id:CONFIG.openRouterModel,model:null});const seen=new Set();const unique=p.filter(x=>{const key=`${x.provider} — ${x.id}`;if(seen.has(key))return false;seen.add(key);return true;});const fresh=unique.filter(x=>!used.has(`${x.provider} — ${x.id}`));return [...fresh,...unique.filter(x=>!fresh.includes(x))]; }
+  function splitDiscordMessage(text, max=VERIFY.maxLength) { const lines=String(text).split('\n');const parts=[];let current='';for(const line of lines){const next=current?`${current}\n${line}`:line;if(next.length>max&&current){parts.push(current);current=line;}else current=next;}if(current)parts.push(current);return parts; }
+  function verifiedPlain(ws) { return ws.map(img=>[`Image ${img.image}:`,...img.questions.flatMap(q=>[`Question ${q.number}:`,`Answer: ${cleanV(q.answer)}`,...(q.disagreement?[`⚠️ Note: AI disagreement on this question. Other answer${q.competingAnswers.length>1?'s':''}: ${q.competingAnswers.map(cleanV).join(', ')}.`]:[])])].join('\n')).join('\n\n'); }
+  function verifiedHTML(ws) { return ws.map(img=>`<div class="worksheet-image"><strong>Image ${img.image}:</strong>${img.questions.map(q=>`<div class="worksheet-question"><br><strong>Question ${escV(q.number)}:</strong><br>${escV(mathV(q.answer))}${q.disagreement?`<div class="verification different ai-disagreement">⚠️ Note: AI disagreement on this question. Other answer${q.competingAnswers.length>1?'s':''}: ${escV(q.competingAnswers.map(cleanV).join(', '))}.</div>`:''}</div>`).join('')}</div>`).join('<br>'); }
+  function verifiedDiscord(ws, models) { const text=['Worksheet Scanner','━━━━━━━━━━━━━━━━','✅ AUTO-VERIFIED ANSWERS'];ws.forEach(img=>{text.push(`IMAGE ${img.image}`,'');img.questions.forEach(q=>{text.push(`Question ${q.number}:`,`Answer: ${cleanV(q.answer)}`);if(q.disagreement)text.push(`⚠️ Note: AI disagreement on this question. Other answer${q.competingAnswers.length>1?'s':''}: ${q.competingAnswers.map(cleanV).join(', ')}.`);text.push('');});});text.push('━━━━━━━━━━━━━━━━','Verification:','Completed','Models used for verification:',...models.map(x=>`• ${x}`));return text.join('\n'); }
+  function updateCacheVerified(ws, models, hash) { const cache=readCache();const entry=cache[hash];if(!entry)return;entry.answer={display:verifiedPlain(ws),questions:ws.flatMap(img=>img.questions.map(q=>({image:img.image,number:q.number,answerText:q.answer,verified:q.verified,verifiedAnswer:q.verifiedAnswer||q.answer,verificationModels:q.verificationModels||models})))};entry.imageResults=ws;entry.finalAnswer=entry.answer.display;entry.verified=true;entry.verificationModels=models;entry.disagreement=ws.some(img=>img.questions.some(q=>q.disagreement));entry.timestamp=Date.now();localStorage.setItem(CONFIG.cacheKey,JSON.stringify(cache)); }
+  async function automaticVerify() { const base=STATE.consensus;const ws=base?.imageResults;if(!ws?.length||!STATE.images?.length)return false;const pool=(await verifierPool()).slice(0,VERIFY.maxModels);if(!pool.length)return false;const results=[];const prompt=verifyPrompt(ws);for(const entry of pool){const r=await callVerifier(entry,STATE.images,prompt);if(r.success)results.push(r);}if(!results.length)return false;const modelNames=[...new Set(results.map(r=>`${r.provider} — ${r.model}`))];const verifiedWs=ws.map(img=>({image:img.image,questions:img.questions.map(q=>{const key=`${img.image}:${q.number}`;const vals=results.flatMap(r=>r.rows.filter(x=>`${x.image}:${x.number}`===key));const counts=new Map();vals.forEach(v=>{const n=normalizeAnswer(v.text);if(!counts.has(n))counts.set(n,[]);counts.get(n).push(v);});const top=[...counts.entries()].sort((a,b)=>b[1].length-a[1].length)[0];const proposed=normalizeAnswer(q.answer);const corrected=top&&top[0]!==proposed&&top[1].length>=Math.max(1,Math.ceil(results.length/2));const finalText=corrected?top[1][0].text:q.answer;const disagreements=q.disagreement||Boolean(corrected);const competing=corrected?[q.answer,...q.competingAnswers]:q.competingAnswers;return {...q,answer:finalText,verifiedAnswer:finalText,verified:true,disagreement:disagreements,competingAnswers:[...new Set(competing)],verificationModels:modelNames};})}));STATE.answer={display:verifiedPlain(verifiedWs),questions:verifiedWs.flatMap(img=>img.questions.map(q=>({image:img.image,number:q.number,answerText:q.answer,verified:true})))};STATE.answerPlain=STATE.answer.display;STATE.consensus={...base,imageResults:verifiedWs,verified:true,verificationModels:modelNames};$('answer').classList.remove('empty');$('answer').innerHTML=verifiedHTML(verifiedWs);$('copyButton').disabled=false;$('readButton').disabled=false;updateCacheVerified(verifiedWs,modelNames,STATE.hash);for(const part of splitDiscordMessage(verifiedDiscord(verifiedWs,modelNames)))sendWebhook(part);return true; }
+  const previousSolve=window.solveQuestion;window.solveQuestion=async()=>{await previousSolve();try{await automaticVerify();}catch(error){recordDiagnostic({provider:'Automatic verification',success:false,status:error.status||error.name||'verification'});} };$('solveButton').onclick=window.solveQuestion;$('retryButton').onclick=window.solveQuestion;
+})();
 
 </script>
 </body>
