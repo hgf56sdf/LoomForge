@@ -1,0 +1,5577 @@
+{
+  "pdfCount": 11,
+  "pageCount": 191,
+  "lessons": [
+    {
+      "id": "acid-models",
+      "chapter": 7,
+      "title": "Introduction to Acids and Bases",
+      "sourceName": "Lesson1_Introduction_to_Acids_and_Bases_202610161554_45424.pdf",
+      "sections": [
+        {
+          "title": "Recognizing acids and bases",
+          "pages": [
+            4
+          ]
+        },
+        {
+          "title": "Water and the Arrhenius model",
+          "pages": [
+            5
+          ]
+        },
+        {
+          "title": "Brønsted–Lowry: follow the proton",
+          "pages": [
+            6,
+            7
+          ]
+        },
+        {
+          "title": "Lewis: follow the electron pair",
+          "pages": [
+            7
+          ]
+        },
+        {
+          "title": "One proton at a time",
+          "pages": [
+            8
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Arrhenius acid",
+          "Increases H₃O⁺ in water."
+        ],
+        [
+          "Arrhenius base",
+          "Increases OH⁻ in water."
+        ],
+        [
+          "Conjugate base",
+          "An acid after losing one H⁺."
+        ],
+        [
+          "Conjugate acid",
+          "A base after gaining one H⁺."
+        ],
+        [
+          "Amphoteric water",
+          "Can act as either an acid or a base."
+        ],
+        [
+          "Polyprotic acids",
+          "Donate more than one H⁺ in successive steps."
+        ]
+      ],
+      "formulas": [
+        "2H₂O ⇌ H₃O⁺ + OH⁻",
+        "HCl + H₂O → H₃O⁺ + Cl⁻",
+        "NaOH → Na⁺ + OH⁻",
+        "NH₃ + H₂O ⇌ NH₄⁺ + OH⁻",
+        "HX + H₂O ⇌ H₃O⁺ + X⁻",
+        "HNO₂ + H₂O ⇌ NO₂⁻ + H₃O⁺",
+        "H⁺ + F⁻ → HF",
+        "BF₃ + NH₃ → F₃B–NH₃",
+        "NH₃ + H₂O ⇌ NH₄⁺ + OH⁻",
+        "HSO₄⁻ + H₂O ⇌ SO₄²⁻ + H₃O⁺"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "Introduc tion to Acids and Bases",
+            "Prope\u0000ies, models, and the language of acid-base chemist\u0000"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Standards",
+            "Chemist\u0000 2.6 — Acid–Base Chemist\u0000: prope\u0000ies and de\u0000ning models of acids and bases.",
+            "Objectives",
+            "1. What are the prope\u0000ies of acids and bases?"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "What Do You Already Know?",
+            "WHAT I KNOW WHAT I WANT TO KNOW EXPLORE THE SOURCE",
+            "Lemons & vinegar taste sour Why do acids \"burn\"?",
+            "▪ ▪"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Prope\u0000ies of Acids and Bases",
+            "ACIDS BASES",
+            "Taste sour Taste bitter, feel slippe\u0000",
+            "▪ ▪"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Water's Balancing Ac t & the Arrhenius Model",
+            "Self-ionization of water",
+            "Water produces equal numbers of H and OH ions on its own.",
+            "▪ ⁺ ⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "\u0000e Brønsted-Low\u0000 Model",
+            "An acid is a hydrogen-ion donor; a base is a hydrogen-ion acceptor.",
+            "▪",
+            "More inclusive than Arrhenius — explains bases like NH₃ with no OH group."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "\u0000e Lewis Model — \u0000e Broadest View",
+            "A Lewis acid is an electron-pair acceptor; a Lewis base is an",
+            "▪",
+            "electron-pair donor."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Monoprotic & Polyprotic Acids",
+            "Acid Formula Conjugate Base Formula",
+            "Hydrochloric acid HCl Chloride ion Cl",
+            "⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [
+            "Lesson Summa\u0000",
+            "Key Takeaways Test Yourself",
+            "1. Acids taste sour, conduct electricity, and turn litmus red; 1. Explain why many Lewis acids and bases are not classi\u0000ed as",
+            "Arrhenius or Brønsted-Low\u0000 acids and bases."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/acid-models-9.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "acid-models-t1",
+          "title": "Acid and base properties",
+          "cards": [
+            "acid-models-t1-c1",
+            "acid-models-t1-c2",
+            "acid-models-t1-c3",
+            "acid-models-t1-c4"
+          ],
+          "sourcePages": [
+            4
+          ]
+        },
+        {
+          "id": "acid-models-t2",
+          "title": "Water and Arrhenius models",
+          "cards": [
+            "acid-models-t2-c1",
+            "acid-models-t2-c2",
+            "acid-models-t2-c3",
+            "acid-models-t2-c4",
+            "acid-models-t2-c5"
+          ],
+          "sourcePages": [
+            5
+          ]
+        },
+        {
+          "id": "acid-models-t3",
+          "title": "Protons and conjugate pairs",
+          "cards": [
+            "acid-models-t3-c1",
+            "acid-models-t3-c2",
+            "acid-models-t3-c3",
+            "acid-models-t3-c4",
+            "acid-models-t3-c5"
+          ],
+          "sourcePages": [
+            6,
+            7
+          ]
+        },
+        {
+          "id": "acid-models-t4",
+          "title": "Lewis pairs and amphoteric water",
+          "cards": [
+            "acid-models-t4-c1",
+            "acid-models-t4-c2",
+            "acid-models-t4-c3",
+            "acid-models-t4-c4",
+            "acid-models-t4-c5"
+          ],
+          "sourcePages": [
+            7
+          ]
+        },
+        {
+          "id": "acid-models-t5",
+          "title": "Ionizable protons",
+          "cards": [
+            "acid-models-t5-c1",
+            "acid-models-t5-c2",
+            "acid-models-t5-c3",
+            "acid-models-t5-c4",
+            "acid-models-t5-c5"
+          ],
+          "sourcePages": [
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "chapter": 7,
+      "title": "Strengths of Acids and Bases",
+      "sourceName": "Lesson2_Strengths_of_Acids_and_Bases_202610161554_45931.pdf",
+      "sections": [
+        {
+          "title": "Strong and weak electrolytes",
+          "pages": [
+            4
+          ]
+        },
+        {
+          "title": "Acids in the source tables",
+          "pages": [
+            5,
+            8
+          ]
+        },
+        {
+          "title": "Kₐ measures weak-acid ionization",
+          "pages": [
+            6
+          ]
+        },
+        {
+          "title": "Bases and Kᵦ",
+          "pages": [
+            7
+          ]
+        },
+        {
+          "title": "Conjugate strengths",
+          "pages": [
+            4,
+            8
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Strength",
+          "How completely the acid or base reacts in water."
+        ],
+        [
+          "Kₐ",
+          "Measures equilibrium ionization of a weak acid."
+        ],
+        [
+          "Kᵦ",
+          "Measures equilibrium ionization of a weak base."
+        ]
+      ],
+      "formulas": [
+        "HCl + H₂O → H₃O⁺ + Cl⁻",
+        "CH₃COOH + H₂O ⇌ H₃O⁺ + CH₃COO⁻",
+        "H₂SeO₃ + H₂O ⇌ H₃O⁺ + HSeO₃⁻",
+        "HSeO₃⁻ + H₂O ⇌ H₃O⁺ + SeO₃²⁻",
+        "Kₐ = [H₃O⁺][A⁻] / [HA]",
+        "B + H₂O ⇌ BH⁺ + OH⁻",
+        "Kᵦ = [BH⁺][OH⁻] / [B]",
+        "KₐKᵦ = K_w"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "Strengths of Acids and Bases",
+            "Strong vs. weak, and the equilibrium constants that measure it"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Standards",
+            "Chemist\u0000 2.6 — Acid–Base Chemist\u0000: strength, ionization equilibrium, Ka and Kb.",
+            "Objectives",
+            "1. What distinguishes a strong acid/base from a weak one?"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "What Do You Already Know?",
+            "WHAT I KNOW WHAT I WANT TO KNOW EXPLORE THE SOURCE",
+            "Car batteries contain a strong acid Why does a weak acid still \"count\"",
+            "▪ ▪"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Strengths of Acids",
+            "Strong acids",
+            "Conductivity Test",
+            "Ionize completely: HCl(aq) + H₂O(l) → H₃O (aq) + Cl (aq)"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Strong Acids vs. Weak Acids",
+            "STRONG ACIDS WEAK ACIDS",
+            "Acid Ionization Acid Ionization",
+            "Hydrochloric HCl → H + Cl Hydro\u0000uoric HF H + F"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "\u0000e Acid Ionization Constant, Ka",
+            "Acid Ionization Equation Ka (298 K)",
+            "Hydro\u0000uoric HF H + F 6.3 × 10 ⁴",
+            "⇌ ⁺ ⁻ ⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Strengths of Bases",
+            "Base Ionization Equation Kb (298 K)",
+            "Ethylamine C₂H₅NH₂ + H₂O C₂H₅NH₃ + OH 5.0 × 10 ⁴",
+            "⇌ ⁺ ⁻ ⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Lesson Summa\u0000",
+            "Key Takeaways Test Yourself",
+            "1. Strong acids/bases ionize completely; weak acids/bases 1. Write ionization equations and Ka expressions for HClO₂,",
+            "HNO₂, and HIO."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/strength-8.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "strength-t1",
+          "title": "Strong versus weak",
+          "cards": [
+            "strength-t1-c1",
+            "strength-t1-c2",
+            "strength-t1-c3",
+            "strength-t1-c4",
+            "strength-t1-c5"
+          ],
+          "sourcePages": [
+            4
+          ]
+        },
+        {
+          "id": "strength-t2",
+          "title": "Acid lists and ionization stages",
+          "cards": [
+            "strength-t2-c1",
+            "strength-t2-c2",
+            "strength-t2-c3",
+            "strength-t2-c4"
+          ],
+          "sourcePages": [
+            5,
+            8
+          ]
+        },
+        {
+          "id": "strength-t3",
+          "title": "Acid ionization constant",
+          "cards": [
+            "strength-t3-c1",
+            "strength-t3-c2",
+            "strength-t3-c3",
+            "strength-t3-c4",
+            "strength-t3-c5"
+          ],
+          "sourcePages": [
+            6
+          ]
+        },
+        {
+          "id": "strength-t4",
+          "title": "Bases and Kᵦ",
+          "cards": [
+            "strength-t4-c1",
+            "strength-t4-c2",
+            "strength-t4-c3",
+            "strength-t4-c4",
+            "strength-t4-c5",
+            "strength-t4-c6"
+          ],
+          "sourcePages": [
+            7
+          ]
+        },
+        {
+          "id": "strength-t5",
+          "title": "Conjugate strengths",
+          "cards": [
+            "strength-t5-c1",
+            "strength-t5-c2",
+            "strength-t5-c3"
+          ],
+          "sourcePages": [
+            4,
+            8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "neutralization",
+      "chapter": 7,
+      "title": "Reactions Between Acids and Bases",
+      "sourceName": "Lesson3_Reactions_Between_Acids_and_Bases_202610161554_47835.pdf",
+      "sections": [
+        {
+          "title": "Neutralization and spectator ions",
+          "pages": [
+            4
+          ]
+        },
+        {
+          "title": "Titration step by step",
+          "pages": [
+            5
+          ]
+        },
+        {
+          "title": "Use the balanced mole ratio",
+          "pages": [
+            5,
+            10
+          ]
+        },
+        {
+          "title": "Curves and indicators",
+          "pages": [
+            6,
+            7
+          ]
+        },
+        {
+          "title": "Salt hydrolysis",
+          "pages": [
+            8
+          ]
+        },
+        {
+          "title": "Buffers and capacity",
+          "pages": [
+            9
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Salt",
+          "Ionic compound containing the base cation and acid anion."
+        ],
+        [
+          "Titrant",
+          "The added solution with known concentration."
+        ],
+        [
+          "Hydrolysis",
+          "An ion reacts with water."
+        ],
+        [
+          "Buffer",
+          "Resists large pH changes from limited acid or base additions."
+        ],
+        [
+          "Buffer capacity",
+          "Amount absorbed before a large pH change."
+        ]
+      ],
+      "formulas": [
+        "HCl + NaOH → NaCl + H₂O",
+        "H⁺ + OH⁻ → H₂O",
+        "n = M × V",
+        "MₐVₐ = MᵦVᵦ",
+        "H₃PO₄ + 3NaOH → Na₃PO₄ + 3H₂O",
+        "F⁻ + H₂O ⇌ HF + OH⁻",
+        "NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "Reac tions Between Acids and",
+            "Bases",
+            "Neutralization, titration, and staying in balance"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Standards",
+            "Chemist\u0000 2.6 — Acid–Base Chemist\u0000: neutralization, titration, hydrolysis, and bu\u0000ers.",
+            "Objectives",
+            "1. What happens when an acid and a base react?"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "What Do You Already Know?",
+            "WHAT I KNOW WHAT I WANT TO KNOW EXPLORE THE SOURCE",
+            "Antacids neutralize stomach acid Why does mixing acid + base feel",
+            "▪ ▪"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Neutralization Reac tions",
+            "A neutralization reaction: acid + base → salt + water.",
+            "▪",
+            "HCl(aq) + NaOH(aq) → NaCl(aq) + H₂O(l)"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Titration: Finding an Unknown Concentration",
+            "Place a measured volume of unknown acid/base in a beaker; record",
+            "1",
+            "Key Terms"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "Titration Cu\u0000es: Strong vs. Weak Acid",
+            "14",
+            "12",
+            "10"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Acid-Base Indicators",
+            "Chemical dyes whose color depends on the pH of the surrounding solution.",
+            "Color in acid Color in base",
+            "Methyl orange 3.1 – 4.4"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Salt Hydrolysis",
+            "Salt Parent Acid + Base Dissociation Result",
+            "KF strong base (KOH) + weak acid (HF) KF(s) → K (aq) + F (aq) Basic",
+            "⁺ ⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [
+            "Bu\u0000ered Solutions",
+            "A bu\u0000er resists pH change when limited acid or base is added.",
+            "▪",
+            "Conjugate Pair Bu\u0000er pH"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-9.webp"
+        },
+        {
+          "page": 10,
+          "headings": [
+            "Lesson Summa\u0000",
+            "Key Takeaways Test Yourself",
+            "1. Neutralization produces a salt and water: HCl + NaOH → 1. What is the molarity of a nitric acid solution if 43.33 mL of",
+            "0.1000M KOH is needed to neutralize 20.00 mL of the acid?"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/neutralization-10.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "neutralization-t1",
+          "title": "Neutralization and salts",
+          "cards": [
+            "neutralization-t1-c1",
+            "neutralization-t1-c2",
+            "neutralization-t1-c3",
+            "neutralization-t1-c4"
+          ],
+          "sourcePages": [
+            4
+          ]
+        },
+        {
+          "id": "neutralization-t2",
+          "title": "Titration procedure",
+          "cards": [
+            "neutralization-t2-c1",
+            "neutralization-t2-c2",
+            "neutralization-t2-c3",
+            "neutralization-t2-c4"
+          ],
+          "sourcePages": [
+            5
+          ]
+        },
+        {
+          "id": "neutralization-t3",
+          "title": "Moles and balanced ratios",
+          "cards": [
+            "neutralization-t3-c1",
+            "neutralization-t3-c2",
+            "neutralization-t3-c3",
+            "neutralization-t3-c4",
+            "neutralization-t3-c5",
+            "neutralization-t3-c6"
+          ],
+          "sourcePages": [
+            5,
+            10
+          ]
+        },
+        {
+          "id": "neutralization-t4",
+          "title": "Curves and indicators",
+          "cards": [
+            "neutralization-t4-c1",
+            "neutralization-t4-c2",
+            "neutralization-t4-c3"
+          ],
+          "sourcePages": [
+            6,
+            7
+          ]
+        },
+        {
+          "id": "neutralization-t5",
+          "title": "Salt hydrolysis",
+          "cards": [
+            "neutralization-t5-c1",
+            "neutralization-t5-c2",
+            "neutralization-t5-c3",
+            "neutralization-t5-c4",
+            "neutralization-t5-c5"
+          ],
+          "sourcePages": [
+            8
+          ]
+        },
+        {
+          "id": "neutralization-t6",
+          "title": "Buffers and capacity",
+          "cards": [
+            "neutralization-t6-c1",
+            "neutralization-t6-c2",
+            "neutralization-t6-c3",
+            "neutralization-t6-c4",
+            "neutralization-t6-c5",
+            "neutralization-t6-c6",
+            "neutralization-t6-c7"
+          ],
+          "sourcePages": [
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ph",
+      "chapter": 7,
+      "title": "Hydrogen Ion Concentration and pH",
+      "sourceName": "Lesson4_Hydrogen_Ion_and_pH_202610161554_49014.pdf",
+      "sections": [
+        {
+          "title": "Water ion product",
+          "pages": [
+            4
+          ]
+        },
+        {
+          "title": "The logarithmic scale",
+          "pages": [
+            5
+          ]
+        },
+        {
+          "title": "From pH back to concentration",
+          "pages": [
+            7,
+            8
+          ]
+        },
+        {
+          "title": "Everyday pH and written notes",
+          "pages": [
+            6,
+            8,
+            9
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "K_w",
+          "The equilibrium ion product of water."
+        ],
+        [
+          "pH",
+          "Negative base-ten logarithm of hydrogen-ion activity."
+        ]
+      ],
+      "formulas": [
+        "K_w = [H₃O⁺][OH⁻] = 1.0×10⁻¹⁴",
+        "pH = −log₁₀[H₃O⁺]",
+        "pOH = −log₁₀[OH⁻]",
+        "[H₃O⁺] = 10^(−pH) M",
+        "[OH⁻] = 10^(−pOH) M"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "Hydrogen Ion Concentration and",
+            "pH",
+            "From Kw to the pH scale — measuring acidity precisely"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Standards",
+            "Chemist\u0000 2.6 — Acid–Base Chemist\u0000: Kw, pH, and pOH calculations.",
+            "Objectives",
+            "1. What is the ion product constant for water, Kw?"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "What Do You Already Know?",
+            "WHAT I KNOW WHAT I WANT TO KNOW EXPLORE THE SOURCE",
+            "Lemon juice and batte\u0000 acid are How is pH actually calculated?",
+            "▪ ▪"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "\u0000e Ion Produc t Constant for Water, Kw",
+            "Pure water contains equal [H ] and [OH ].",
+            "▪ ⁺ ⁻ [H ] [OH ]",
+            "⁺ ⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "pH and pOH",
+            "pH = −log[H ] pOH = −log[OH ]",
+            "⁺ ⁻",
+            "\u0000e negative logarithm of the hydrogen-ion concentration. \u0000e negative logarithm of the hydroxide-ion concentration."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "\u0000e pH Scale in Eve\u0000day Life",
+            "Acidic Basic",
+            "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14",
+            "Batte\u0000 acid Co\u0000ee Antacid"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Worked Example: pH of Blood",
+            "What are [H ] and [OH] in blood at pH 7.40 (298 K)?",
+            "⁺ ⁻",
+            "Find [H ] Find [OH ]"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Lesson Summa\u0000",
+            "Key Takeaways Test Yourself",
+            "1. Kw = [H ][OH ] = 1.0 × 10 ¹⁴ at 298 K — as one ion 1. Calculate the pH of solutions with [H ] = 1.0 × 10 ²M and [H ]",
+            "⁺ ⁻ ⁻ ⁺ ⁻ ⁺"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/ph-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [],
+          "hasSelectableText": false,
+          "image": "assets/ph-9.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "ph-t1",
+          "title": "Water ion product",
+          "cards": [
+            "ph-t1-c1",
+            "ph-t1-c2",
+            "ph-t1-c3",
+            "ph-t1-c4"
+          ],
+          "sourcePages": [
+            4
+          ]
+        },
+        {
+          "id": "ph-t2",
+          "title": "pH and pOH",
+          "cards": [
+            "ph-t2-c1",
+            "ph-t2-c2",
+            "ph-t2-c3",
+            "ph-t2-c4",
+            "ph-t2-c5",
+            "ph-t2-c6"
+          ],
+          "sourcePages": [
+            5
+          ]
+        },
+        {
+          "id": "ph-t3",
+          "title": "From pH to concentration",
+          "cards": [
+            "ph-t3-c1",
+            "ph-t3-c2",
+            "ph-t3-c3",
+            "ph-t3-c4",
+            "ph-t3-c5"
+          ],
+          "sourcePages": [
+            7,
+            8
+          ]
+        },
+        {
+          "id": "ph-t4",
+          "title": "Everyday scale and notes",
+          "cards": [
+            "ph-t4-c1",
+            "ph-t4-c2",
+            "ph-t4-c3"
+          ],
+          "sourcePages": [
+            6,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "redox",
+      "chapter": 8,
+      "title": "Oxidation and Reduction",
+      "sourceName": "Lesson 1_202610161556_01928.pdf",
+      "sections": [
+        {
+          "title": "Electron transfer",
+          "pages": [
+            6,
+            7
+          ]
+        },
+        {
+          "title": "Oxidation numbers",
+          "pages": [
+            8,
+            12,
+            17
+          ]
+        },
+        {
+          "title": "Which agent does what?",
+          "pages": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "title": "Molecular reactions and spectator ions",
+          "pages": [
+            6,
+            9,
+            12
+          ]
+        },
+        {
+          "title": "Reading the handwritten notes",
+          "pages": [
+            16,
+            17,
+            18
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Redox reaction",
+          "Reaction involving electron transfer or changed electron assignment."
+        ],
+        [
+          "Oxidation number",
+          "Bookkeeping value for tracking electron loss or gain."
+        ]
+      ],
+      "formulas": [
+        "Na → Na⁺ + e⁻",
+        "Cl₂ + 2e⁻ → 2Cl⁻",
+        "Sum of oxidation numbers = overall species charge",
+        "2K + Cl₂ → 2KCl",
+        "N₂ + 3H₂ → 2NH₃",
+        "2Al + 2Fe³⁺ + 3O²⁻ → 2Fe + 2Al³⁺ + 3O²⁻",
+        "H₂S + Cl₂ → S + 2HCl",
+        "Fe + 2Ag⁺ → Fe²⁺ + 2Ag"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "LESSON 1",
+            "Oxidation and Reduction",
+            "ELECTRON TRANSFER, OXIDATION NUMBERS, AND REDOX AGENTS",
+            "1.0"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Standards",
+            "Reactions: explain how electron transfer drives oxidation-reduction reactions.",
+            "Objectives"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "Section 1",
+            "Oxidation and Reduction",
+            "MAIN IDEA",
+            "A redox reaction is an electron transfer: the atom that loses electrons is oxidized, the one that gains them is reduced."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Vocabulary",
+            "Review New",
+            "chemical reaction oxidation"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Group Investigation",
+            "Form 3 groups. Each group researches the topic and shares its findings with the class.",
+            "Each stage earns a point: research, discussion, solving the questions, and answering other groups' questions."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Electron Transfer and Redox Reactions",
+            "An oxidation-reduction reaction, or redox reaction, involves the transfer of electrons from one atom to another.",
+            "A reaction in which electrons are transferred from one substance to another is called an oxidation-reduction reaction, also called a"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Oxidation and Reduction",
+            "Oxidation is defined as the loss of electrons from atoms of a substance.",
+            "Reduction is defined as the gain of electrons by the atoms of a substance."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Tracking Oxidation Numbers",
+            "Oxidation numbers rise and fall in exactly opposite directions for oxidation and reduction:",
+            "Process What happens to the atom Oxidation number"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Identify Oxidation-Reduction Reactions",
+            "The following equation represents the redox reaction of aluminum and iron:",
+            "2Al + 2Fe³⁺ + 3O²⁻ → 2Fe + 2Al³⁺ + 3O²⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-9.webp"
+        },
+        {
+          "page": 10,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Oxidizing and Reducing Agents",
+            "The substance that oxidizes another substance by accepting its electrons is called an oxidizing agent — it is itself reduced in the",
+            "reaction."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-10.webp"
+        },
+        {
+          "page": 11,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Table 1: Summary of Redox Reactions",
+            "Process What Happens Agent & Oxidation Number",
+            "Oxidation X loses an electron. X is the reducing agent and becomes oxidized; the oxidation number of X increases."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-11.webp"
+        },
+        {
+          "page": 12,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Redox and Electronegativity",
+            "Redox reactions are not limited to atoms of an element changing to ions — some redox reactions involve changes in molecular",
+            "substances or polyatomic ions."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-12.webp"
+        },
+        {
+          "page": 13,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Checkpoint: Oxidation and Reduction",
+            "1. In your own words, explain why reduction involves a GAIN of electrons even though the number seems to “reduce.”",
+            "2. Identify the oxidizing agent and the reducing agent: Fe(s) + 2Ag⁺(aq) → Fe²⁺(aq) + 2Ag(s). Explain your answer."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-13.webp"
+        },
+        {
+          "page": 14,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Lesson Summary",
+            "Key Takeaways Vocabulary Recap",
+            "A redox reaction transfers electrons from one atom or ion to another. oxidation — loss of electrons"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-14.webp"
+        },
+        {
+          "page": 15,
+          "headings": [
+            "Lesson 1 — Oxidation and Reduction",
+            "Evaluation: Oxidation and Reduction",
+            "Complete independently. Review the summary if you get stuck, then check your answers with your teacher.",
+            "1. Define oxidation and reduction in terms of electrons, and explain how the two always occur together."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/redox-15.webp"
+        },
+        {
+          "page": 16,
+          "headings": [],
+          "hasSelectableText": false,
+          "image": "assets/redox-16.webp"
+        },
+        {
+          "page": 17,
+          "headings": [],
+          "hasSelectableText": false,
+          "image": "assets/redox-17.webp"
+        },
+        {
+          "page": 18,
+          "headings": [],
+          "hasSelectableText": false,
+          "image": "assets/redox-18.webp"
+        },
+        {
+          "page": 19,
+          "headings": [],
+          "hasSelectableText": false,
+          "image": "assets/redox-19.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "redox-t1",
+          "title": "Electron transfer",
+          "cards": [
+            "redox-t1-c1",
+            "redox-t1-c2",
+            "redox-t1-c3",
+            "redox-t1-c4"
+          ],
+          "sourcePages": [
+            6,
+            7
+          ]
+        },
+        {
+          "id": "redox-t2",
+          "title": "Oxidation-number rules",
+          "cards": [
+            "redox-t2-c1",
+            "redox-t2-c2",
+            "redox-t2-c3",
+            "redox-t2-c4",
+            "redox-t2-c5"
+          ],
+          "sourcePages": [
+            8,
+            12,
+            17
+          ]
+        },
+        {
+          "id": "redox-t3",
+          "title": "Oxidizing and reducing agents",
+          "cards": [
+            "redox-t3-c1",
+            "redox-t3-c2",
+            "redox-t3-c3",
+            "redox-t3-c4"
+          ],
+          "sourcePages": [
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "id": "redox-t4",
+          "title": "Molecules and spectators",
+          "cards": [
+            "redox-t4-c1",
+            "redox-t4-c2",
+            "redox-t4-c3"
+          ],
+          "sourcePages": [
+            6,
+            9,
+            12
+          ]
+        },
+        {
+          "id": "redox-t5",
+          "title": "Practice and handwritten reminders",
+          "cards": [
+            "redox-t5-c1",
+            "redox-t5-c2",
+            "redox-t5-c3",
+            "redox-t5-c4",
+            "redox-t5-c5"
+          ],
+          "sourcePages": [
+            16,
+            17,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "id": "balance",
+      "chapter": 8,
+      "title": "Balancing Redox Equations",
+      "sourceName": "balancing_redox_equations_202610161556_00023.pdf",
+      "sections": [
+        {
+          "title": "Oxidation-number method",
+          "pages": [
+            5,
+            6
+          ]
+        },
+        {
+          "title": "Half-reactions in acidic solution",
+          "pages": [
+            8,
+            10,
+            11
+          ]
+        },
+        {
+          "title": "Half-reactions in basic solution",
+          "pages": [
+            8,
+            9,
+            11
+          ]
+        },
+        {
+          "title": "Important source corrections",
+          "pages": [
+            8,
+            12,
+            15
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Balanced redox equation",
+          "Conserves atoms, total charge and electron transfer."
+        ],
+        [
+          "Net ionic equation",
+          "Shows reacting species; omits spectator ions."
+        ],
+        [
+          "Half-reaction",
+          "Shows either oxidation or reduction."
+        ]
+      ],
+      "formulas": [
+        "ClO₄⁻ + 8H⁺ + 8e⁻ → Cl⁻ + 4H₂O",
+        "8Br⁻ → 4Br₂ + 8e⁻",
+        "Cr₂O₇²⁻ + 14H⁺ + 6I⁻ → 2Cr³⁺ + 3I₂ + 7H₂O",
+        "2MnO₄⁻ + 6I⁻ + 4H₂O → 2MnO₂ + 3I₂ + 8OH⁻",
+        "Cu + 4H⁺ + 2NO₃⁻ → Cu²⁺ + 2NO₂ + 2H₂O"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "LESSON 2",
+            "Balancing Redox Equations",
+            "THE OXIDATION-NUMBER METHOD AND THE HALF-REACTION METHOD",
+            "2.0"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Standards",
+            "Reactions: apply systematic methods to balance oxidation-reduction equations.",
+            "Objectives"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "Section 2",
+            "Balancing Redox Equations",
+            "MAIN IDEA",
+            "Redox equations balance electrons lost against electrons gained, using either oxidation numbers or half-reactions."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Vocabulary",
+            "Review New",
+            "oxidation oxidation-number method"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "The Oxidation-Number Method",
+            "According to the oxidation-number method, chemical equations must be balanced to show the correct quantities of reactants and",
+            "products."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Table 4: The Oxidation-Number Method",
+            "1 Assign oxidation numbers to all chemical elements in the equation.",
+            "2 Identify the atoms or ions that are oxidized and reduced."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Worked Example: Copper + Nitric Acid",
+            "Balance the following redox equation using the oxidation-number method:",
+            "Cu + HNO3 → Cu(NO3)2 + NO2 + H2O"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Balancing Net Ionic Redox Equations",
+            "Sometimes it is preferred to express redox reactions in the simplest possible terms, showing only the oxidation and reduction processes.",
+            "When balancing equations in acidic solution, hydrogen ions (H⁺) or water molecules can be added to either side of the equation."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Balance a Net Ionic Redox Equation",
+            "Balance the following redox equation:",
+            "ClO4⁻(aq) + Br⁻(aq) → Cl⁻(aq) + Br2(g) (in acidic solution)"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-9.webp"
+        },
+        {
+          "page": 10,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Balancing Redox Equations Using Half-Reactions",
+            "In chemistry, a species is any kind of chemical unit involved in a process.",
+            "Oxidation-reduction reactions occur whenever a species that can give up electrons comes into contact with another species that can"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-10.webp"
+        },
+        {
+          "page": 11,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Table 6: The Half-Reaction Method",
+            "1 Write the unbalanced, net ionic equation for the reaction, omitting spectator ions.",
+            "2 Write separate, incomplete equations for the oxidation and reduction half-reactions, including oxidation numbers."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-11.webp"
+        },
+        {
+          "page": 12,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Worked Example: Iron + Copper(II) Sulfate",
+            "Step Result",
+            "1. Net ionic equation Fe + Cu²⁺ → Cu + 2Fe³⁺"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-12.webp"
+        },
+        {
+          "page": 13,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Checkpoint: Balancing Redox Equations",
+            "1. Balance KMnO4(aq) + SnCl2(aq) + HCl(aq) → MnCl2(aq) + SnCl4(aq) + H2O(l) + KCl(aq) using half-reactions.",
+            "2. Explain, in your own words, why the number of electrons lost must equal the number gained in a balanced redox equation."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-13.webp"
+        },
+        {
+          "page": 14,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Lesson Summary",
+            "Key Takeaways Vocabulary Recap",
+            "The oxidation-number method balances a redox equation by making the oxidation-number method — balances using oxidation-number changes"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-14.webp"
+        },
+        {
+          "page": 15,
+          "headings": [
+            "Lesson 2 — Balancing Redox Equations",
+            "Evaluation: Balancing Redox Equations",
+            "Complete independently. Review the summary if you get stuck, then check your answers with your teacher.",
+            "1. Use the oxidation-number method to balance: NH3(g) + NO2(g) → N2(g) + H2O(l)."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/balance-15.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "balance-t1",
+          "title": "Oxidation-number method",
+          "cards": [
+            "balance-t1-c1",
+            "balance-t1-c2",
+            "balance-t1-c3",
+            "balance-t1-c4"
+          ],
+          "sourcePages": [
+            5,
+            6
+          ]
+        },
+        {
+          "id": "balance-t2",
+          "title": "Acidic half-reactions",
+          "cards": [
+            "balance-t2-c1",
+            "balance-t2-c2",
+            "balance-t2-c3",
+            "balance-t2-c4",
+            "balance-t2-c5",
+            "balance-t2-c6"
+          ],
+          "sourcePages": [
+            8,
+            10,
+            11
+          ]
+        },
+        {
+          "id": "balance-t3",
+          "title": "Basic half-reactions",
+          "cards": [
+            "balance-t3-c1",
+            "balance-t3-c2",
+            "balance-t3-c3"
+          ],
+          "sourcePages": [
+            8,
+            9,
+            11
+          ]
+        },
+        {
+          "id": "balance-t4",
+          "title": "Source corrections and practice",
+          "cards": [
+            "balance-t4-c1",
+            "balance-t4-c2",
+            "balance-t4-c3",
+            "balance-t4-c4",
+            "balance-t4-c5",
+            "balance-t4-c6"
+          ],
+          "sourcePages": [
+            8,
+            12,
+            15
+          ]
+        }
+      ]
+    },
+    {
+      "id": "voltaic",
+      "chapter": 8,
+      "title": "Voltaic Cells",
+      "sourceName": "Electrochemistry_1_Voltaic_Cells_202610161556_09694.pdf",
+      "sections": [
+        {
+          "title": "Complete the circuit",
+          "pages": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "title": "Anode and cathode",
+          "pages": [
+            8
+          ]
+        },
+        {
+          "title": "Potential and the hydrogen reference",
+          "pages": [
+            9,
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "title": "Read the notation",
+          "pages": [
+            8,
+            14,
+            15
+          ]
+        },
+        {
+          "title": "Calculate E°cell",
+          "pages": [
+            14,
+            15,
+            16,
+            17
+          ]
+        },
+        {
+          "title": "Selected standard reduction potentials",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Electrochemical cell",
+          "Interconverts chemical and electrical energy."
+        ],
+        [
+          "Voltaic cell",
+          "Produces electricity from a spontaneous redox reaction."
+        ],
+        [
+          "Salt bridge",
+          "Allows ion movement and prevents charge buildup."
+        ],
+        [
+          "Anode",
+          "Electrode where oxidation occurs."
+        ],
+        [
+          "Cathode",
+          "Electrode where reduction occurs."
+        ],
+        [
+          "Cell potential",
+          "Electrical energy per unit charge."
+        ],
+        [
+          "Reduction potential",
+          "Tendency to gain electrons relative to a reference."
+        ]
+      ],
+      "formulas": [
+        "Zn → Zn²⁺ + 2e⁻",
+        "Cu²⁺ + 2e⁻ → Cu",
+        "Zn + Cu²⁺ → Zn²⁺ + Cu",
+        "1 V = 1 J/C",
+        "2H⁺ + 2e⁻ → H₂",
+        "Zn | Zn²⁺ || Cu²⁺ | Cu",
+        "Fe | Fe²⁺ || I⁻ | I₂ | Pt",
+        "E°cell = E°cathode − E°anode"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "SECTION 1",
+            "Voltaic Cells",
+            "TURNING CHEMICAL ENERGY INTO ELECTRICAL ENERGY",
+            "1.0"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Standards",
+            "Electrochemistry: students explain how redox reactions convert chemical energy to electrical energy and back, and apply this to cells,",
+            "batteries, corrosion, and electrolysis."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "Section 1",
+            "Voltaic Cells",
+            "MAIN IDEA",
+            "In voltaic cells, oxidation takes place at the anode, yielding electrons that flow to the cathode, where reduction occurs."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Vocabulary",
+            "Review New",
+            "salt bridge — pathway that lets ions pass from one"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Redox in Electrochemistry",
+            "Electrochemistry is the study of the",
+            "redox processes by which chemical"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Two Directions of Energy Conversion",
+            "The same redox chemistry can run in either direction — this unit studies both.",
+            "WATCH Tyler DeWitt: Introduction to Electrochemistry"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Completing the Circuit: The Salt Bridge",
+            "A salt bridge is a pathway to allow the passage of ions from one side to another, so that ions do not build up around the",
+            "electrodes."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Parts of a Voltaic Cell",
+            "An electrochemical cell consists of two parts called",
+            "half-cells, in which the separate oxidation and reduction"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Electric Potential and the Volt",
+            "Electric potential energy is a measure of",
+            "the amount of current that can be generated"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-9.webp"
+        },
+        {
+          "page": 10,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Battery Lab: Build a Galvanic Cell",
+            "Open the Battery Lab and build the zinc–copper cell",
+            "yourself before we calculate its voltage."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-10.webp"
+        },
+        {
+          "page": 11,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Reduction Potential and the Standard Hydrogen Electrode",
+            "The tendency of a substance to gain electrons is its reduction",
+            "potential."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-11.webp"
+        },
+        {
+          "page": 12,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Table 1 — Selected Standard Reduction Potentials",
+            "The standard hydrogen electrode is the standard against which all other reduction potentials are measured (25°C, 1 atm, 1 M).",
+            "Half-reaction E° (V) Half-reaction E° (V)"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-12.webp"
+        },
+        {
+          "page": 13,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Measuring Potentials Against the Hydrogen Electrode",
+            "(a) Copper is reduced — electrons flow to the copper strip (b) Zinc is oxidized — electrons flow from the zinc strip",
+            "H₂ | H⁺ || Cu²⁺ | Cu Zn | Zn²⁺ || H⁺ | H₂"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-13.webp"
+        },
+        {
+          "page": 14,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Formula for Cell Potential",
+            "E°cell = E°reduction – E°oxidation",
+            "standard potential of the reduction half-cell minus standard potential of the oxidation half-cell"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-14.webp"
+        },
+        {
+          "page": 15,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Worked Example: Calculate a Cell Potential",
+            "The following reduction half-reactions represent the",
+            "Solve"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-15.webp"
+        },
+        {
+          "page": 16,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Practice: Cell Potentials",
+            "For each pair of half-reactions, write the balanced equation for the overall cell",
+            "Method"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-16.webp"
+        },
+        {
+          "page": 17,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Using Cell Potentials: Will It Happen?",
+            "Cell potentials can be used to determine if a proposed reaction under standard conditions will be spontaneous.",
+            "If the calculated potential is positive, the reaction is spontaneous. If it is negative, the reaction is not spontaneous."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-17.webp"
+        },
+        {
+          "page": 18,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Watch & Explore: Voltaic Cells",
+            "Click a card to open it. Build at least two different cells and compare the measured voltage with your calculated E°cell.",
+            "SIMULATION LAB"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-18.webp"
+        },
+        {
+          "page": 19,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Checkpoint: Voltaic Cells",
+            "1. At which electrode does oxidation occur? At which does reduction occur?",
+            "2. What would happen to the current if the salt bridge were removed? Why?"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-19.webp"
+        },
+        {
+          "page": 20,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Lesson Summary",
+            "Key Takeaways Key Ideas & Equations",
+            "In a voltaic cell, oxidation and reduction take place"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-20.webp"
+        },
+        {
+          "page": 21,
+          "headings": [
+            "Section 1 — Voltaic Cells",
+            "Evaluation: Voltaic Cells",
+            "Complete independently. Review the summary if you get stuck, then check your answers with your teacher.",
+            "1. Describe the conditions under which a redox reaction causes an electric current to flow through a wire."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/voltaic-21.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "voltaic-t1",
+          "title": "Complete the circuit",
+          "cards": [
+            "voltaic-t1-c1",
+            "voltaic-t1-c2",
+            "voltaic-t1-c3",
+            "voltaic-t1-c4",
+            "voltaic-t1-c5",
+            "voltaic-t1-c6"
+          ],
+          "sourcePages": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "id": "voltaic-t2",
+          "title": "Anode and cathode",
+          "cards": [
+            "voltaic-t2-c1",
+            "voltaic-t2-c2",
+            "voltaic-t2-c3",
+            "voltaic-t2-c4"
+          ],
+          "sourcePages": [
+            8
+          ]
+        },
+        {
+          "id": "voltaic-t3",
+          "title": "Voltage and hydrogen reference",
+          "cards": [
+            "voltaic-t3-c1",
+            "voltaic-t3-c2",
+            "voltaic-t3-c3",
+            "voltaic-t3-c4"
+          ],
+          "sourcePages": [
+            9,
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "id": "voltaic-t4",
+          "title": "Cell notation",
+          "cards": [
+            "voltaic-t4-c1",
+            "voltaic-t4-c2",
+            "voltaic-t4-c3",
+            "voltaic-t4-c4"
+          ],
+          "sourcePages": [
+            8,
+            14,
+            15
+          ]
+        },
+        {
+          "id": "voltaic-t5",
+          "title": "Calculate standard cell voltage",
+          "cards": [
+            "voltaic-t5-c1",
+            "voltaic-t5-c2",
+            "voltaic-t5-c3",
+            "voltaic-t5-c4",
+            "voltaic-t5-c5",
+            "voltaic-t5-c6",
+            "voltaic-t5-c7"
+          ],
+          "sourcePages": [
+            14,
+            15,
+            16,
+            17
+          ]
+        },
+        {
+          "id": "voltaic-t6",
+          "title": "Reduction-potential table",
+          "cards": [
+            "voltaic-t6-c1",
+            "voltaic-t6-c2",
+            "voltaic-t6-c3"
+          ],
+          "sourcePages": [
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "batteries",
+      "chapter": 8,
+      "title": "Batteries",
+      "sourceName": "Electrochemistry_2_Batteries_202610161556_11587.pdf",
+      "sections": [
+        {
+          "title": "Dry, alkaline and silver cells",
+          "pages": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "title": "Primary and secondary",
+          "pages": [
+            8
+          ]
+        },
+        {
+          "title": "Lead-acid and lithium",
+          "pages": [
+            9,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "title": "Fuel supplied continuously",
+          "pages": [
+            13
+          ]
+        },
+        {
+          "title": "Corrosion is an unwanted cell",
+          "pages": [
+            15,
+            16
+          ]
+        },
+        {
+          "title": "Protect the iron",
+          "pages": [
+            17,
+            18
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Battery",
+          "One or more voltaic cells packaged together."
+        ],
+        [
+          "Dry cell",
+          "Uses a moist electrolyte paste."
+        ],
+        [
+          "Secondary battery",
+          "Battery designed for recharging by reversing its reactions."
+        ],
+        [
+          "Fuel cell",
+          "Produces electricity while fuel and oxidant are supplied."
+        ],
+        [
+          "Corrosion",
+          "Metal loss through redox reaction with the environment."
+        ],
+        [
+          "Galvanization",
+          "Coating iron or steel with zinc."
+        ]
+      ],
+      "formulas": [
+        "Zn → Zn²⁺ + 2e⁻",
+        "2NH₄⁺ + 2MnO₂ + 2e⁻ → Mn₂O₃ + 2NH₃ + H₂O",
+        "Zn + 2OH⁻ → ZnO + H₂O + 2e⁻",
+        "MnO₂ + 2H₂O + 2e⁻ → Mn(OH)₂ + 2OH⁻",
+        "Ag₂O + H₂O + 2e⁻ → 2Ag + 2OH⁻",
+        "Cd + 2OH⁻ → Cd(OH)₂ + 2e⁻",
+        "NiO(OH) + H₂O + e⁻ → Ni(OH)₂ + OH⁻",
+        "Pb + SO₄²⁻ → PbSO₄ + 2e⁻",
+        "PbO₂ + 4H⁺ + SO₄²⁻ + 2e⁻ → PbSO₄ + 2H₂O",
+        "Pb + PbO₂ + 4H⁺ + 2SO₄²⁻ → 2PbSO₄ + 2H₂O",
+        "2H₂ + O₂ → 2H₂O",
+        "2H₂ + 4OH⁻ → 4H₂O + 4e⁻",
+        "O₂ + 2H₂O + 4e⁻ → 4OH⁻",
+        "Fe → Fe²⁺ + 2e⁻",
+        "O₂ + 2H₂O + 4e⁻ → 4OH⁻",
+        "Mg → Mg²⁺ + 2e⁻"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "SECTION 2",
+            "Batteries",
+            "DRY CELLS, STORAGE BATTERIES, FUEL CELLS, AND CORROSION",
+            "2.0"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Section 2 — Batteries",
+            "Standards",
+            "Electrochemistry: students explain how redox reactions convert chemical energy to electrical energy and back, and apply this to cells,",
+            "batteries, corrosion, and electrolysis."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "Section 2",
+            "Batteries",
+            "MAIN IDEA",
+            "Batteries are voltaic cells that use spontaneous reactions to provide energy for a variety of purposes."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Section 2 — Batteries",
+            "Vocabulary",
+            "Review New",
+            "battery — one or more voltaic cells in a single package"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Section 2 — Batteries",
+            "Dry Cells: The Zinc–Carbon Cell",
+            "A battery is one or more voltaic cells in a single package that generates",
+            "electric current."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "Section 2 — Batteries",
+            "Alkaline and Silver Batteries",
+            "In the alkaline cell, zinc is in a powdered form and mixed with potassium hydroxide, contained in a steel case. Alkaline",
+            "batteries are smaller and more useful in small devices."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Section 2 — Batteries",
+            "Alkaline and Silver Batteries: Half-Reactions",
+            "Alkaline battery Silver button battery",
+            "ANODE ANODE"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Section 2 — Batteries",
+            "Primary and Secondary Batteries",
+            "Primary batteries produce electric energy by means of",
+            "redox reactions that are not easily reversed. Example:"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [
+            "Section 2 — Batteries",
+            "Lead-Acid Storage Battery",
+            "Lead-acid storage batteries are common",
+            "in automobiles."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-9.webp"
+        },
+        {
+          "page": 10,
+          "headings": [
+            "Section 2 — Batteries",
+            "Lead-Acid Battery: Reactions and Recharging",
+            "ANODE",
+            "Pb(s) + SO₄²⁻(aq) → PbSO₄(s) + 2e⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-10.webp"
+        },
+        {
+          "page": 11,
+          "headings": [
+            "Section 2 — Batteries",
+            "Lithium Batteries",
+            "Lithium is the lightest known metal and has the",
+            "lowest standard reduction potential of the metallic"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-11.webp"
+        },
+        {
+          "page": 12,
+          "headings": [
+            "Section 2 — Batteries",
+            "Comparing Common Batteries",
+            "Battery Anode Cathode Electrolyte Rechargeable?",
+            "Zinc–carbon zinc shell carbon rod / MnO₂ paste ZnCl₂, NH₄Cl paste no (primary)"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-12.webp"
+        },
+        {
+          "page": 13,
+          "headings": [
+            "Section 2 — Batteries",
+            "Fuel Cells",
+            "A fuel cell is a voltaic cell in which the oxidation of a",
+            "fuel is used to produce electric energy."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-13.webp"
+        },
+        {
+          "page": 14,
+          "headings": [
+            "Section 2 — Batteries",
+            "Battery Lab: Explore Each Cell",
+            "Open the Battery Lab and work through the",
+            "stations for this section."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-14.webp"
+        },
+        {
+          "page": 15,
+          "headings": [
+            "Section 2 — Batteries",
+            "Corrosion",
+            "Corrosion is the loss of metal resulting",
+            "from an oxidation-reduction reaction of the"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-15.webp"
+        },
+        {
+          "page": 16,
+          "headings": [
+            "Section 2 — Batteries",
+            "The Chemistry of Rusting",
+            "STEP 1 — ANODE (IN THE PIT): IRON IS OXIDIZED",
+            "Fe(s) → Fe²⁺(aq) + 2e⁻"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-16.webp"
+        },
+        {
+          "page": 17,
+          "headings": [
+            "Section 2 — Batteries",
+            "Preventing Corrosion: Sacrificial Anodes",
+            "Paint and other covers seal out moisture to",
+            "prevent corrosion."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-17.webp"
+        },
+        {
+          "page": 18,
+          "headings": [
+            "Section 2 — Batteries",
+            "Preventing Corrosion: Galvanization",
+            "Galvanization is the process of coating iron with a layer of zinc.",
+            "Zinc oxidizes at the surface, creating a layer of metal oxide that protects from further corrosion. If the coating"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-18.webp"
+        },
+        {
+          "page": 19,
+          "headings": [
+            "Section 2 — Batteries",
+            "Watch & Explore: Batteries and Corrosion",
+            "Click a card to open it.",
+            "LAB"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-19.webp"
+        },
+        {
+          "page": 20,
+          "headings": [
+            "Section 2 — Batteries",
+            "Checkpoint: Batteries",
+            "1. In a zinc–carbon dry cell, which part is the anode?",
+            "2. What is the difference between a primary battery and a secondary battery? Give one example"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-20.webp"
+        },
+        {
+          "page": 21,
+          "headings": [
+            "Section 2 — Batteries",
+            "Lesson Summary",
+            "Key Takeaways Vocabulary Recap",
+            "battery — one or more voltaic cells in one"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-21.webp"
+        },
+        {
+          "page": 22,
+          "headings": [
+            "Section 2 — Batteries",
+            "Evaluation: Batteries",
+            "Complete independently. Review the summary if you get stuck, then check your answers with your teacher.",
+            "1. Identify the anode, the cathode, and the electrolyte in a zinc–carbon dry cell."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/batteries-22.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "batteries-t1",
+          "title": "Dry, alkaline and silver cells",
+          "cards": [
+            "batteries-t1-c1",
+            "batteries-t1-c2",
+            "batteries-t1-c3",
+            "batteries-t1-c4",
+            "batteries-t1-c5",
+            "batteries-t1-c6",
+            "batteries-t1-c7",
+            "batteries-t1-c8",
+            "batteries-t1-c9",
+            "batteries-t1-c10"
+          ],
+          "sourcePages": [
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        {
+          "id": "batteries-t2",
+          "title": "Primary and secondary batteries",
+          "cards": [
+            "batteries-t2-c1",
+            "batteries-t2-c2",
+            "batteries-t2-c3",
+            "batteries-t2-c4",
+            "batteries-t2-c5"
+          ],
+          "sourcePages": [
+            8
+          ]
+        },
+        {
+          "id": "batteries-t3",
+          "title": "Lead-acid and lithium",
+          "cards": [
+            "batteries-t3-c1",
+            "batteries-t3-c2",
+            "batteries-t3-c3",
+            "batteries-t3-c4",
+            "batteries-t3-c5",
+            "batteries-t3-c6"
+          ],
+          "sourcePages": [
+            9,
+            10,
+            11,
+            12
+          ]
+        },
+        {
+          "id": "batteries-t4",
+          "title": "Hydrogen–oxygen fuel cells",
+          "cards": [
+            "batteries-t4-c1",
+            "batteries-t4-c2",
+            "batteries-t4-c3",
+            "batteries-t4-c4",
+            "batteries-t4-c5"
+          ],
+          "sourcePages": [
+            13
+          ]
+        },
+        {
+          "id": "batteries-t5",
+          "title": "Corrosion and rust",
+          "cards": [
+            "batteries-t5-c1",
+            "batteries-t5-c2",
+            "batteries-t5-c3",
+            "batteries-t5-c4",
+            "batteries-t5-c5"
+          ],
+          "sourcePages": [
+            15,
+            16
+          ]
+        },
+        {
+          "id": "batteries-t6",
+          "title": "Preventing corrosion",
+          "cards": [
+            "batteries-t6-c1",
+            "batteries-t6-c2",
+            "batteries-t6-c3",
+            "batteries-t6-c4",
+            "batteries-t6-c5"
+          ],
+          "sourcePages": [
+            17,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "id": "electrolysis",
+      "chapter": 8,
+      "title": "Electrolysis",
+      "sourceName": "Electrochemistry_3_Electrolysis_202610161556_11127.pdf",
+      "sections": [
+        {
+          "title": "Drive the reverse reaction",
+          "pages": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "title": "Electrolysis of water",
+          "pages": [
+            7
+          ]
+        },
+        {
+          "title": "Molten sodium chloride",
+          "pages": [
+            8
+          ]
+        },
+        {
+          "title": "Brine is different",
+          "pages": [
+            9
+          ]
+        },
+        {
+          "title": "Aluminum and recycling",
+          "pages": [
+            10,
+            11
+          ]
+        },
+        {
+          "title": "Electroplating",
+          "pages": [
+            12
+          ]
+        }
+      ],
+      "definitions": [
+        [
+          "Electrolysis",
+          "Electrical energy drives a chemical reaction."
+        ],
+        [
+          "Electrolytic cell",
+          "Uses an external supply to drive nonspontaneous redox."
+        ],
+        [
+          "Downs cell",
+          "Electrolyzes molten NaCl to sodium and chlorine."
+        ],
+        [
+          "Brine",
+          "Aqueous sodium chloride solution."
+        ],
+        [
+          "Electroplating",
+          "Deposits a metal coating by reduction at the object."
+        ]
+      ],
+      "formulas": [
+        "2H₂O → 2H₂ + O₂",
+        "Na⁺ + e⁻ → Na(l)",
+        "2Cl⁻ → Cl₂ + 2e⁻",
+        "2NaCl(l) → 2Na(l) + Cl₂(g)",
+        "2H₂O + 2e⁻ → H₂ + 2OH⁻",
+        "2Cl⁻ → Cl₂ + 2e⁻",
+        "2H₂O + 2NaCl → H₂ + Cl₂ + 2NaOH",
+        "Al³⁺ + 3e⁻ → Al",
+        "2O²⁻ → O₂ + 4e⁻",
+        "C + O₂ → CO₂",
+        "Ag → Ag⁺ + e⁻",
+        "Ag⁺ + e⁻ → Ag"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "headings": [
+            "SECTION 3",
+            "Electrolysis",
+            "USING ELECTRICAL ENERGY TO DRIVE CHEMICAL REACTIONS",
+            "3.0"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-1.webp"
+        },
+        {
+          "page": 2,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Standards",
+            "Electrochemistry: students explain how redox reactions convert chemical energy to electrical energy and back, and apply this to cells,",
+            "batteries, corrosion, and electrolysis."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-2.webp"
+        },
+        {
+          "page": 3,
+          "headings": [
+            "Section 3",
+            "Electrolysis",
+            "MAIN IDEA",
+            "In electrolysis, a power source causes nonspontaneous reactions to occur in electrochemical cells."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-3.webp"
+        },
+        {
+          "page": 4,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Vocabulary",
+            "Review New",
+            "redox reaction — a reaction in which"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-4.webp"
+        },
+        {
+          "page": 5,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Reversing Redox Reactions",
+            "The use of electrical energy to bring about a chemical reaction is called electrolysis.",
+            "An electrochemical cell in which electrolysis occurs is called an electrolytic cell."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-5.webp"
+        },
+        {
+          "page": 6,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Voltaic Cell vs. Electrolytic Cell",
+            "Voltaic cell Electrolytic cell",
+            "Energy change chemical → electrical electrical → chemical"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-6.webp"
+        },
+        {
+          "page": 7,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Application: Electrolysis of Water",
+            "Electrolysis of water is one method of obtaining",
+            "hydrogen gas for commercial use."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-7.webp"
+        },
+        {
+          "page": 8,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Application: Molten Sodium Chloride",
+            "Electrolysis can separate molten sodium chloride into",
+            "sodium metal and chlorine gas in a chamber called a"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-8.webp"
+        },
+        {
+          "page": 9,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Application: Electrolysis of Brine",
+            "In the decomposition of brine, an aqueous solution of NaCl, electrolysis is used to produce hydrogen gas, chlorine gas, and",
+            "sodium hydroxide."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-9.webp"
+        },
+        {
+          "page": 10,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Application: Producing Aluminum",
+            "Aluminum is produced by the Hall–Héroult",
+            "process: aluminum oxide is dissolved in"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-10.webp"
+        },
+        {
+          "page": 11,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Why Recycle Aluminum?",
+            "The Hall–Héroult process requires large",
+            "amounts of energy, which is the primary"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-11.webp"
+        },
+        {
+          "page": 12,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Application: Electroplating",
+            "Objects can be electroplated with a metal such as",
+            "silver."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-12.webp"
+        },
+        {
+          "page": 13,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Watch & Explore: Electrolysis",
+            "Click a card to open it.",
+            "Electrolysis Electroplating Introduction to Electrochemistry"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-13.webp"
+        },
+        {
+          "page": 14,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Checkpoint: Electrolysis",
+            "1. Define electrolysis and electrolytic cell.",
+            "2. What must be added to a voltaic cell's circuit to reverse its reaction?"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-14.webp"
+        },
+        {
+          "page": 15,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Lesson Summary",
+            "Key Takeaways Vocabulary & Key Reactions",
+            "In an electrolytic cell, an outside source of power"
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-15.webp"
+        },
+        {
+          "page": 16,
+          "headings": [
+            "Section 3 — Electrolysis",
+            "Evaluation: Electrolysis",
+            "Complete independently. Review the summary if you get stuck, then check your answers with your teacher.",
+            "1. Define electrolysis and relate the definition to the spontaneity of redox reactions."
+          ],
+          "hasSelectableText": true,
+          "image": "assets/electrolysis-16.webp"
+        }
+      ],
+      "structuredTopics": [
+        {
+          "id": "electrolysis-t1",
+          "title": "Driven redox reactions",
+          "cards": [
+            "electrolysis-t1-c1",
+            "electrolysis-t1-c2",
+            "electrolysis-t1-c3",
+            "electrolysis-t1-c4",
+            "electrolysis-t1-c5"
+          ],
+          "sourcePages": [
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "id": "electrolysis-t2",
+          "title": "Electrolysis of water",
+          "cards": [
+            "electrolysis-t2-c1",
+            "electrolysis-t2-c2",
+            "electrolysis-t2-c3",
+            "electrolysis-t2-c4"
+          ],
+          "sourcePages": [
+            7
+          ]
+        },
+        {
+          "id": "electrolysis-t3",
+          "title": "Molten sodium chloride",
+          "cards": [
+            "electrolysis-t3-c1",
+            "electrolysis-t3-c2",
+            "electrolysis-t3-c3",
+            "electrolysis-t3-c4",
+            "electrolysis-t3-c5"
+          ],
+          "sourcePages": [
+            8
+          ]
+        },
+        {
+          "id": "electrolysis-t4",
+          "title": "Aqueous sodium chloride: brine",
+          "cards": [
+            "electrolysis-t4-c1",
+            "electrolysis-t4-c2",
+            "electrolysis-t4-c3",
+            "electrolysis-t4-c4",
+            "electrolysis-t4-c5",
+            "electrolysis-t4-c6"
+          ],
+          "sourcePages": [
+            9
+          ]
+        },
+        {
+          "id": "electrolysis-t5",
+          "title": "Aluminum production and recycling",
+          "cards": [
+            "electrolysis-t5-c1",
+            "electrolysis-t5-c2",
+            "electrolysis-t5-c3",
+            "electrolysis-t5-c4",
+            "electrolysis-t5-c5",
+            "electrolysis-t5-c6"
+          ],
+          "sourcePages": [
+            10,
+            11
+          ]
+        },
+        {
+          "id": "electrolysis-t6",
+          "title": "Electroplating",
+          "cards": [
+            "electrolysis-t6-c1",
+            "electrolysis-t6-c2",
+            "electrolysis-t6-c3",
+            "electrolysis-t6-c4",
+            "electrolysis-t6-c5",
+            "electrolysis-t6-c6"
+          ],
+          "sourcePages": [
+            12
+          ]
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "comp-001",
+      "original": 1,
+      "bank": "comp",
+      "page": 1,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-002",
+      "original": 2,
+      "bank": "comp",
+      "page": 1,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-003",
+      "original": 3,
+      "bank": "comp",
+      "page": 1,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-004",
+      "original": 4,
+      "bank": "comp",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-005",
+      "original": 5,
+      "bank": "comp",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-006",
+      "original": 6,
+      "bank": "comp",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-007",
+      "original": 7,
+      "bank": "comp",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-008",
+      "original": 8,
+      "bank": "comp",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-009",
+      "original": 9,
+      "bank": "comp",
+      "page": 3,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-010",
+      "original": 10,
+      "bank": "comp",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-011",
+      "original": 11,
+      "bank": "comp",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-012",
+      "original": 12,
+      "bank": "comp",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-013",
+      "original": 13,
+      "bank": "comp",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-014",
+      "original": 14,
+      "bank": "comp",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-015",
+      "original": 15,
+      "bank": "comp",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-016",
+      "original": 16,
+      "bank": "comp",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-017",
+      "original": 17,
+      "bank": "comp",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-018",
+      "original": 18,
+      "bank": "comp",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-019",
+      "original": 19,
+      "bank": "comp",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-020",
+      "original": 20,
+      "bank": "comp",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-021",
+      "original": 21,
+      "bank": "comp",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-022",
+      "original": 22,
+      "bank": "comp",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-023",
+      "original": 23,
+      "bank": "comp",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-024",
+      "original": 24,
+      "bank": "comp",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-025",
+      "original": 25,
+      "bank": "comp",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-026",
+      "original": 26,
+      "bank": "comp",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-027",
+      "original": 27,
+      "bank": "comp",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-028",
+      "original": 28,
+      "bank": "comp",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-029",
+      "original": 29,
+      "bank": "comp",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-030",
+      "original": 30,
+      "bank": "comp",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-031",
+      "original": 31,
+      "bank": "comp",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-032",
+      "original": 32,
+      "bank": "comp",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-033",
+      "original": 33,
+      "bank": "comp",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-034",
+      "original": 34,
+      "bank": "comp",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-035",
+      "original": 35,
+      "bank": "comp",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-036",
+      "original": 36,
+      "bank": "comp",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-037",
+      "original": 37,
+      "bank": "comp",
+      "page": 10,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-038",
+      "original": 38,
+      "bank": "comp",
+      "page": 10,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-039",
+      "original": 39,
+      "bank": "comp",
+      "page": 10,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-040",
+      "original": 40,
+      "bank": "comp",
+      "page": 11,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-041",
+      "original": 41,
+      "bank": "comp",
+      "page": 11,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-042",
+      "original": 42,
+      "bank": "comp",
+      "page": 11,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-043",
+      "original": 43,
+      "bank": "comp",
+      "page": 11,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-044",
+      "original": 44,
+      "bank": "comp",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-045",
+      "original": 45,
+      "bank": "comp",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-046",
+      "original": 46,
+      "bank": "comp",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-047",
+      "original": 47,
+      "bank": "comp",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-048",
+      "original": 48,
+      "bank": "comp",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-049",
+      "original": 49,
+      "bank": "comp",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": false,
+      "issue": "Strength cannot be inferred from a fixed pH without concentration."
+    },
+    {
+      "id": "comp-050",
+      "original": 50,
+      "bank": "comp",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": false,
+      "issue": "pH alone cannot establish strong versus weak acid."
+    },
+    {
+      "id": "comp-051",
+      "original": 51,
+      "bank": "comp",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": false,
+      "issue": "Hydrogen-ion concentration does not establish base strength."
+    },
+    {
+      "id": "comp-052",
+      "original": 52,
+      "bank": "comp",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": false,
+      "issue": "A strong base has no single fixed pOH without concentration."
+    },
+    {
+      "id": "comp-053",
+      "original": 53,
+      "bank": "comp",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-054",
+      "original": 54,
+      "bank": "comp",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-055",
+      "original": 55,
+      "bank": "comp",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-056",
+      "original": 56,
+      "bank": "comp",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": false,
+      "issue": "Litmus indicates acid/base character, not a numerical pH estimate."
+    },
+    {
+      "id": "comp-057",
+      "original": 57,
+      "bank": "comp",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-058",
+      "original": 58,
+      "bank": "comp",
+      "page": 14,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-059",
+      "original": 59,
+      "bank": "comp",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-060",
+      "original": 60,
+      "bank": "comp",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-061",
+      "original": 61,
+      "bank": "comp",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-062",
+      "original": 62,
+      "bank": "comp",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-063",
+      "original": 63,
+      "bank": "comp",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-064",
+      "original": 64,
+      "bank": "comp",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-065",
+      "original": 65,
+      "bank": "comp",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-066",
+      "original": 66,
+      "bank": "comp",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "Only appropriate basic anions hydrolyze this way; the statement is too general."
+    },
+    {
+      "id": "comp-067",
+      "original": 67,
+      "bank": "comp",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-068",
+      "original": 68,
+      "bank": "comp",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-069",
+      "original": 69,
+      "bank": "comp",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-070",
+      "original": 70,
+      "bank": "comp",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-071",
+      "original": 71,
+      "bank": "comp",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-072",
+      "original": 72,
+      "bank": "comp",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-073",
+      "original": 73,
+      "bank": "comp",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-074",
+      "original": 74,
+      "bank": "comp",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-075",
+      "original": 75,
+      "bank": "comp",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-076",
+      "original": 76,
+      "bank": "comp",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-077",
+      "original": 77,
+      "bank": "comp",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-078",
+      "original": 78,
+      "bank": "comp",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-079",
+      "original": 79,
+      "bank": "comp",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-080",
+      "original": 80,
+      "bank": "comp",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-081",
+      "original": 81,
+      "bank": "comp",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-082",
+      "original": 82,
+      "bank": "comp",
+      "page": 20,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "B",
+      "gradable": false,
+      "issue": "Positive oxidation state +2 is not unique to metals; valency and oxidation state are conflated."
+    },
+    {
+      "id": "comp-083",
+      "original": 83,
+      "bank": "comp",
+      "page": 20,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-084",
+      "original": 84,
+      "bank": "comp",
+      "page": 20,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-085",
+      "original": 85,
+      "bank": "comp",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-086",
+      "original": 86,
+      "bank": "comp",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-087",
+      "original": 87,
+      "bank": "comp",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-088",
+      "original": 88,
+      "bank": "comp",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-089",
+      "original": 89,
+      "bank": "comp",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-090",
+      "original": 90,
+      "bank": "comp",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-091",
+      "original": 91,
+      "bank": "comp",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-092",
+      "original": 92,
+      "bank": "comp",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-093",
+      "original": 93,
+      "bank": "comp",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-094",
+      "original": 94,
+      "bank": "comp",
+      "page": 23,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-095",
+      "original": 95,
+      "bank": "comp",
+      "page": 23,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-096",
+      "original": 96,
+      "bank": "comp",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-097",
+      "original": 97,
+      "bank": "comp",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-098",
+      "original": 98,
+      "bank": "comp",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-099",
+      "original": 99,
+      "bank": "comp",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-100",
+      "original": 100,
+      "bank": "comp",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-101",
+      "original": 101,
+      "bank": "comp",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-102",
+      "original": 102,
+      "bank": "comp",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-103",
+      "original": 103,
+      "bank": "comp",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-104",
+      "original": 104,
+      "bank": "comp",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-105",
+      "original": 105,
+      "bank": "comp",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "The stem omits the standard hydrogen electrode; standard reduction potentials in general are not zero."
+    },
+    {
+      "id": "comp-106",
+      "original": 106,
+      "bank": "comp",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-107",
+      "original": 107,
+      "bank": "comp",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-108",
+      "original": 108,
+      "bank": "comp",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-109",
+      "original": 109,
+      "bank": "comp",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-110",
+      "original": 110,
+      "bank": "comp",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-111",
+      "original": 111,
+      "bank": "comp",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "0.85 − (−0.76) = +1.61 V. No answer choice matches."
+    },
+    {
+      "id": "comp-112",
+      "original": 112,
+      "bank": "comp",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-113",
+      "original": 113,
+      "bank": "comp",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-114",
+      "original": 114,
+      "bank": "comp",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-115",
+      "original": 115,
+      "bank": "comp",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "Earphone type and battery chemistry are unspecified; no unique answer follows."
+    },
+    {
+      "id": "comp-116",
+      "original": 116,
+      "bank": "comp",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-117",
+      "original": 117,
+      "bank": "comp",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-118",
+      "original": 118,
+      "bank": "comp",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-119",
+      "original": 119,
+      "bank": "comp",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-120",
+      "original": 120,
+      "bank": "comp",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "B",
+      "gradable": false,
+      "issue": "Incomplete stem does not specify zinc or even iron coating sufficiently to uniquely define galvanization."
+    },
+    {
+      "id": "comp-121",
+      "original": 121,
+      "bank": "comp",
+      "page": 29,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-122",
+      "original": 122,
+      "bank": "comp",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-123",
+      "original": 123,
+      "bank": "comp",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-124",
+      "original": 124,
+      "bank": "comp",
+      "page": 30,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-125",
+      "original": 125,
+      "bank": "comp",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "comp-126",
+      "original": 126,
+      "bank": "comp",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-001",
+      "original": 1,
+      "bank": "zip",
+      "page": 1,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-002",
+      "original": 2,
+      "bank": "zip",
+      "page": 1,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-003",
+      "original": 3,
+      "bank": "zip",
+      "page": 1,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-004",
+      "original": 4,
+      "bank": "zip",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-005",
+      "original": 5,
+      "bank": "zip",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-006",
+      "original": 6,
+      "bank": "zip",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-007",
+      "original": 7,
+      "bank": "zip",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-008",
+      "original": 8,
+      "bank": "zip",
+      "page": 2,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-009",
+      "original": 9,
+      "bank": "zip",
+      "page": 3,
+      "lesson": "acid-models",
+      "topic": "Properties of acids and bases",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-010",
+      "original": 10,
+      "bank": "zip",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-011",
+      "original": 11,
+      "bank": "zip",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-012",
+      "original": 12,
+      "bank": "zip",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-013",
+      "original": 13,
+      "bank": "zip",
+      "page": 4,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-014",
+      "original": 14,
+      "bank": "zip",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-015",
+      "original": 15,
+      "bank": "zip",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-016",
+      "original": 16,
+      "bank": "zip",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-017",
+      "original": 17,
+      "bank": "zip",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-018",
+      "original": 18,
+      "bank": "zip",
+      "page": 5,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-019",
+      "original": 19,
+      "bank": "zip",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-020",
+      "original": 20,
+      "bank": "zip",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-021",
+      "original": 21,
+      "bank": "zip",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-022",
+      "original": 22,
+      "bank": "zip",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-023",
+      "original": 23,
+      "bank": "zip",
+      "page": 6,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-024",
+      "original": 24,
+      "bank": "zip",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-025",
+      "original": 25,
+      "bank": "zip",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-026",
+      "original": 26,
+      "bank": "zip",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-027",
+      "original": 27,
+      "bank": "zip",
+      "page": 7,
+      "lesson": "acid-models",
+      "topic": "Arrhenius and Brønsted-Lowry models",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-028",
+      "original": 28,
+      "bank": "zip",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-029",
+      "original": 29,
+      "bank": "zip",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-030",
+      "original": 30,
+      "bank": "zip",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-031",
+      "original": 31,
+      "bank": "zip",
+      "page": 8,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-032",
+      "original": 32,
+      "bank": "zip",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-033",
+      "original": 33,
+      "bank": "zip",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-034",
+      "original": 34,
+      "bank": "zip",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-035",
+      "original": 35,
+      "bank": "zip",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-036",
+      "original": 36,
+      "bank": "zip",
+      "page": 9,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-037",
+      "original": 37,
+      "bank": "zip",
+      "page": 10,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-038",
+      "original": 38,
+      "bank": "zip",
+      "page": 10,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-039",
+      "original": 39,
+      "bank": "zip",
+      "page": 10,
+      "lesson": "acid-models",
+      "topic": "Polyprotic acids and Lewis acids",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-040",
+      "original": 40,
+      "bank": "zip",
+      "page": 11,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-041",
+      "original": 41,
+      "bank": "zip",
+      "page": 11,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-042",
+      "original": 42,
+      "bank": "zip",
+      "page": 11,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-043",
+      "original": 43,
+      "bank": "zip",
+      "page": 11,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-044",
+      "original": 44,
+      "bank": "zip",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-045",
+      "original": 45,
+      "bank": "zip",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-046",
+      "original": 46,
+      "bank": "zip",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-047",
+      "original": 47,
+      "bank": "zip",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-048",
+      "original": 48,
+      "bank": "zip",
+      "page": 12,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-049",
+      "original": 49,
+      "bank": "zip",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": false,
+      "issue": "Strength cannot be inferred from a fixed pH without concentration."
+    },
+    {
+      "id": "zip-050",
+      "original": 50,
+      "bank": "zip",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "B",
+      "gradable": false,
+      "issue": "pH alone cannot establish strong versus weak acid."
+    },
+    {
+      "id": "zip-051",
+      "original": 51,
+      "bank": "zip",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": false,
+      "issue": "Hydrogen-ion concentration does not establish base strength."
+    },
+    {
+      "id": "zip-052",
+      "original": 52,
+      "bank": "zip",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": false,
+      "issue": "A strong base has no single fixed pOH without concentration."
+    },
+    {
+      "id": "zip-053",
+      "original": 53,
+      "bank": "zip",
+      "page": 13,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-054",
+      "original": 54,
+      "bank": "zip",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-055",
+      "original": 55,
+      "bank": "zip",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-056",
+      "original": 56,
+      "bank": "zip",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "C",
+      "gradable": false,
+      "issue": "Litmus indicates acid/base character, not a numerical pH estimate."
+    },
+    {
+      "id": "zip-057",
+      "original": 57,
+      "bank": "zip",
+      "page": 14,
+      "lesson": "ph",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-058",
+      "original": 58,
+      "bank": "zip",
+      "page": 14,
+      "lesson": "strength",
+      "topic": "Strength, pH and pOH",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-059",
+      "original": 59,
+      "bank": "zip",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-060",
+      "original": 60,
+      "bank": "zip",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-061",
+      "original": 61,
+      "bank": "zip",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-062",
+      "original": 62,
+      "bank": "zip",
+      "page": 15,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-063",
+      "original": 63,
+      "bank": "zip",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-064",
+      "original": 64,
+      "bank": "zip",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-065",
+      "original": 65,
+      "bank": "zip",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-066",
+      "original": 66,
+      "bank": "zip",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "Only appropriate basic anions hydrolyze this way; the statement is too general."
+    },
+    {
+      "id": "zip-067",
+      "original": 67,
+      "bank": "zip",
+      "page": 16,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-068",
+      "original": 68,
+      "bank": "zip",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-069",
+      "original": 69,
+      "bank": "zip",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-070",
+      "original": 70,
+      "bank": "zip",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-071",
+      "original": 71,
+      "bank": "zip",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-072",
+      "original": 72,
+      "bank": "zip",
+      "page": 17,
+      "lesson": "neutralization",
+      "topic": "Neutralization, titration, salts and buffers",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-073",
+      "original": 73,
+      "bank": "zip",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-074",
+      "original": 74,
+      "bank": "zip",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-075",
+      "original": 75,
+      "bank": "zip",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-076",
+      "original": 76,
+      "bank": "zip",
+      "page": 18,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-077",
+      "original": 77,
+      "bank": "zip",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-078",
+      "original": 78,
+      "bank": "zip",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-079",
+      "original": 79,
+      "bank": "zip",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-080",
+      "original": 80,
+      "bank": "zip",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-081",
+      "original": 81,
+      "bank": "zip",
+      "page": 19,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-082",
+      "original": 82,
+      "bank": "zip",
+      "page": 20,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "B",
+      "gradable": false,
+      "issue": "Positive oxidation state +2 is not unique to metals; valency and oxidation state are conflated."
+    },
+    {
+      "id": "zip-083",
+      "original": 83,
+      "bank": "zip",
+      "page": 20,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-084",
+      "original": 84,
+      "bank": "zip",
+      "page": 20,
+      "lesson": "redox",
+      "topic": "Oxidation, reduction and redox agents",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-085",
+      "original": 85,
+      "bank": "zip",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-086",
+      "original": 86,
+      "bank": "zip",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-087",
+      "original": 87,
+      "bank": "zip",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-088",
+      "original": 88,
+      "bank": "zip",
+      "page": 21,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-089",
+      "original": 89,
+      "bank": "zip",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-090",
+      "original": 90,
+      "bank": "zip",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-091",
+      "original": 91,
+      "bank": "zip",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-092",
+      "original": 92,
+      "bank": "zip",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-093",
+      "original": 93,
+      "bank": "zip",
+      "page": 22,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-094",
+      "original": 94,
+      "bank": "zip",
+      "page": 23,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-095",
+      "original": 95,
+      "bank": "zip",
+      "page": 23,
+      "lesson": "redox",
+      "topic": "Oxidation numbers",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-096",
+      "original": 96,
+      "bank": "zip",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-097",
+      "original": 97,
+      "bank": "zip",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-098",
+      "original": 98,
+      "bank": "zip",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-099",
+      "original": 99,
+      "bank": "zip",
+      "page": 24,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-100",
+      "original": 100,
+      "bank": "zip",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-101",
+      "original": 101,
+      "bank": "zip",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-102",
+      "original": 102,
+      "bank": "zip",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-103",
+      "original": 103,
+      "bank": "zip",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-104",
+      "original": 104,
+      "bank": "zip",
+      "page": 25,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-105",
+      "original": 105,
+      "bank": "zip",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "The stem omits the standard hydrogen electrode; standard reduction potentials in general are not zero."
+    },
+    {
+      "id": "zip-106",
+      "original": 106,
+      "bank": "zip",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-107",
+      "original": 107,
+      "bank": "zip",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-108",
+      "original": 108,
+      "bank": "zip",
+      "page": 26,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-109",
+      "original": 109,
+      "bank": "zip",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-110",
+      "original": 110,
+      "bank": "zip",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-111",
+      "original": 111,
+      "bank": "zip",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "0.85 − (−0.76) = +1.61 V. No answer choice matches."
+    },
+    {
+      "id": "zip-112",
+      "original": 112,
+      "bank": "zip",
+      "page": 27,
+      "lesson": "voltaic",
+      "topic": "Galvanic cells and cell potential",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-113",
+      "original": 113,
+      "bank": "zip",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-114",
+      "original": 114,
+      "bank": "zip",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "B",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-115",
+      "original": 115,
+      "bank": "zip",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": false,
+      "issue": "Earphone type and battery chemistry are unspecified; no unique answer follows."
+    },
+    {
+      "id": "zip-116",
+      "original": 116,
+      "bank": "zip",
+      "page": 28,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-117",
+      "original": 117,
+      "bank": "zip",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-118",
+      "original": 118,
+      "bank": "zip",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-119",
+      "original": 119,
+      "bank": "zip",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-120",
+      "original": 120,
+      "bank": "zip",
+      "page": 29,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "B",
+      "gradable": false,
+      "issue": "Incomplete stem does not specify zinc or even iron coating sufficiently to uniquely define galvanization."
+    },
+    {
+      "id": "zip-121",
+      "original": 121,
+      "bank": "zip",
+      "page": 29,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "D",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-122",
+      "original": 122,
+      "bank": "zip",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-123",
+      "original": 123,
+      "bank": "zip",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-124",
+      "original": 124,
+      "bank": "zip",
+      "page": 30,
+      "lesson": "batteries",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "C",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-125",
+      "original": 125,
+      "bank": "zip",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    },
+    {
+      "id": "zip-126",
+      "original": 126,
+      "bank": "zip",
+      "page": 30,
+      "lesson": "electrolysis",
+      "topic": "Batteries, corrosion and electrolysis",
+      "keyAnswer": "A",
+      "gradable": true,
+      "issue": null
+    }
+  ],
+  "redesignVersion": 2,
+  "learningCards": 230,
+  "quickChecks": 47
+}

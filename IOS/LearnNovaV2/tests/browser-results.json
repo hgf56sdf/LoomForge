@@ -1,0 +1,30 @@
+{
+  "passed": [
+    "Initial dashboard shows zero progress",
+    "First incorrect gives hint without answer",
+    "Refresh preserves consumed attempt",
+    "Second incorrect reveals solution",
+    "Second-attempt recovery recorded",
+    "Results separate first, recovered and wrong",
+    "Mistakes retain recovered and unresolved questions",
+    "Compilation resumes exact session and question",
+    "Export includes durable attempts and bookmarks",
+    "Validated restore succeeds",
+    "Unresolved question is not gradable",
+    "Random practice excludes all eleven flagged items",
+    "Route renders: dashboard",
+    "Route renders: chapters",
+    "Route renders: weak",
+    "Route renders: revision",
+    "Route renders: statistics",
+    "Route renders: settings",
+    "Search links to actual content",
+    "Mobile has no horizontal overflow: dashboard",
+    "Mobile has no horizontal overflow: compilation",
+    "Mobile has no horizontal overflow: lesson/voltaic",
+    "Mobile has no horizontal overflow: statistics",
+    "Mobile has no horizontal overflow: settings",
+    "No browser JavaScript errors"
+  ],
+  "errors": []
+}

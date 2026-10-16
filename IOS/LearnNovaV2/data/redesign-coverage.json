@@ -1,0 +1,1029 @@
+[
+  {
+    "lesson": "acid-models",
+    "legacySection": 0,
+    "originalTopic": "Recognizing acids and bases",
+    "originalPages": [
+      4
+    ],
+    "newTopic": "acid-models-t1",
+    "cards": [
+      "acid-models-t1-c1",
+      "acid-models-t1-c2",
+      "acid-models-t1-c3",
+      "acid-models-t1-c4"
+    ],
+    "sourcePages": [
+      4
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "acid-models",
+    "legacySection": 1,
+    "originalTopic": "Water and the Arrhenius model",
+    "originalPages": [
+      5
+    ],
+    "newTopic": "acid-models-t2",
+    "cards": [
+      "acid-models-t2-c1",
+      "acid-models-t2-c2",
+      "acid-models-t2-c3",
+      "acid-models-t2-c4",
+      "acid-models-t2-c5"
+    ],
+    "sourcePages": [
+      5
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "acid-models",
+    "legacySection": 2,
+    "originalTopic": "Brønsted–Lowry: follow the proton",
+    "originalPages": [
+      6,
+      7
+    ],
+    "newTopic": "acid-models-t3",
+    "cards": [
+      "acid-models-t3-c1",
+      "acid-models-t3-c2",
+      "acid-models-t3-c3",
+      "acid-models-t3-c4",
+      "acid-models-t3-c5"
+    ],
+    "sourcePages": [
+      6,
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "acid-models",
+    "legacySection": 3,
+    "originalTopic": "Lewis: follow the electron pair",
+    "originalPages": [
+      7
+    ],
+    "newTopic": "acid-models-t4",
+    "cards": [
+      "acid-models-t4-c1",
+      "acid-models-t4-c2",
+      "acid-models-t4-c3",
+      "acid-models-t4-c4",
+      "acid-models-t4-c5"
+    ],
+    "sourcePages": [
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "acid-models",
+    "legacySection": 4,
+    "originalTopic": "One proton at a time",
+    "originalPages": [
+      8
+    ],
+    "newTopic": "acid-models-t5",
+    "cards": [
+      "acid-models-t5-c1",
+      "acid-models-t5-c2",
+      "acid-models-t5-c3",
+      "acid-models-t5-c4",
+      "acid-models-t5-c5"
+    ],
+    "sourcePages": [
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "strength",
+    "legacySection": 0,
+    "originalTopic": "Strong and weak electrolytes",
+    "originalPages": [
+      4
+    ],
+    "newTopic": "strength-t1",
+    "cards": [
+      "strength-t1-c1",
+      "strength-t1-c2",
+      "strength-t1-c3",
+      "strength-t1-c4",
+      "strength-t1-c5"
+    ],
+    "sourcePages": [
+      4
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "strength",
+    "legacySection": 1,
+    "originalTopic": "Acids in the source tables",
+    "originalPages": [
+      5,
+      8
+    ],
+    "newTopic": "strength-t2",
+    "cards": [
+      "strength-t2-c1",
+      "strength-t2-c2",
+      "strength-t2-c3",
+      "strength-t2-c4"
+    ],
+    "sourcePages": [
+      5,
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "strength",
+    "legacySection": 2,
+    "originalTopic": "Kₐ measures weak-acid ionization",
+    "originalPages": [
+      6
+    ],
+    "newTopic": "strength-t3",
+    "cards": [
+      "strength-t3-c1",
+      "strength-t3-c2",
+      "strength-t3-c3",
+      "strength-t3-c4",
+      "strength-t3-c5"
+    ],
+    "sourcePages": [
+      6
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "strength",
+    "legacySection": 3,
+    "originalTopic": "Bases and Kᵦ",
+    "originalPages": [
+      7
+    ],
+    "newTopic": "strength-t4",
+    "cards": [
+      "strength-t4-c1",
+      "strength-t4-c2",
+      "strength-t4-c3",
+      "strength-t4-c4",
+      "strength-t4-c5",
+      "strength-t4-c6"
+    ],
+    "sourcePages": [
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "strength",
+    "legacySection": 4,
+    "originalTopic": "Conjugate strengths",
+    "originalPages": [
+      4,
+      8
+    ],
+    "newTopic": "strength-t5",
+    "cards": [
+      "strength-t5-c1",
+      "strength-t5-c2",
+      "strength-t5-c3"
+    ],
+    "sourcePages": [
+      4,
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "neutralization",
+    "legacySection": 0,
+    "originalTopic": "Neutralization and spectator ions",
+    "originalPages": [
+      4
+    ],
+    "newTopic": "neutralization-t1",
+    "cards": [
+      "neutralization-t1-c1",
+      "neutralization-t1-c2",
+      "neutralization-t1-c3",
+      "neutralization-t1-c4"
+    ],
+    "sourcePages": [
+      4
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "neutralization",
+    "legacySection": 1,
+    "originalTopic": "Titration step by step",
+    "originalPages": [
+      5
+    ],
+    "newTopic": "neutralization-t2",
+    "cards": [
+      "neutralization-t2-c1",
+      "neutralization-t2-c2",
+      "neutralization-t2-c3",
+      "neutralization-t2-c4"
+    ],
+    "sourcePages": [
+      5
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "neutralization",
+    "legacySection": 2,
+    "originalTopic": "Use the balanced mole ratio",
+    "originalPages": [
+      5,
+      10
+    ],
+    "newTopic": "neutralization-t3",
+    "cards": [
+      "neutralization-t3-c1",
+      "neutralization-t3-c2",
+      "neutralization-t3-c3",
+      "neutralization-t3-c4",
+      "neutralization-t3-c5",
+      "neutralization-t3-c6"
+    ],
+    "sourcePages": [
+      5,
+      10
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "neutralization",
+    "legacySection": 3,
+    "originalTopic": "Curves and indicators",
+    "originalPages": [
+      6,
+      7
+    ],
+    "newTopic": "neutralization-t4",
+    "cards": [
+      "neutralization-t4-c1",
+      "neutralization-t4-c2",
+      "neutralization-t4-c3"
+    ],
+    "sourcePages": [
+      6,
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "neutralization",
+    "legacySection": 4,
+    "originalTopic": "Salt hydrolysis",
+    "originalPages": [
+      8
+    ],
+    "newTopic": "neutralization-t5",
+    "cards": [
+      "neutralization-t5-c1",
+      "neutralization-t5-c2",
+      "neutralization-t5-c3",
+      "neutralization-t5-c4",
+      "neutralization-t5-c5"
+    ],
+    "sourcePages": [
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "neutralization",
+    "legacySection": 5,
+    "originalTopic": "Buffers and capacity",
+    "originalPages": [
+      9
+    ],
+    "newTopic": "neutralization-t6",
+    "cards": [
+      "neutralization-t6-c1",
+      "neutralization-t6-c2",
+      "neutralization-t6-c3",
+      "neutralization-t6-c4",
+      "neutralization-t6-c5",
+      "neutralization-t6-c6",
+      "neutralization-t6-c7"
+    ],
+    "sourcePages": [
+      9
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "ph",
+    "legacySection": 0,
+    "originalTopic": "Water ion product",
+    "originalPages": [
+      4
+    ],
+    "newTopic": "ph-t1",
+    "cards": [
+      "ph-t1-c1",
+      "ph-t1-c2",
+      "ph-t1-c3",
+      "ph-t1-c4"
+    ],
+    "sourcePages": [
+      4
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "ph",
+    "legacySection": 1,
+    "originalTopic": "The logarithmic scale",
+    "originalPages": [
+      5
+    ],
+    "newTopic": "ph-t2",
+    "cards": [
+      "ph-t2-c1",
+      "ph-t2-c2",
+      "ph-t2-c3",
+      "ph-t2-c4",
+      "ph-t2-c5",
+      "ph-t2-c6"
+    ],
+    "sourcePages": [
+      5
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "ph",
+    "legacySection": 2,
+    "originalTopic": "From pH back to concentration",
+    "originalPages": [
+      7,
+      8
+    ],
+    "newTopic": "ph-t3",
+    "cards": [
+      "ph-t3-c1",
+      "ph-t3-c2",
+      "ph-t3-c3",
+      "ph-t3-c4",
+      "ph-t3-c5"
+    ],
+    "sourcePages": [
+      7,
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "ph",
+    "legacySection": 3,
+    "originalTopic": "Everyday pH and written notes",
+    "originalPages": [
+      6,
+      8,
+      9
+    ],
+    "newTopic": "ph-t4",
+    "cards": [
+      "ph-t4-c1",
+      "ph-t4-c2",
+      "ph-t4-c3"
+    ],
+    "sourcePages": [
+      6,
+      8,
+      9
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "redox",
+    "legacySection": 0,
+    "originalTopic": "Electron transfer",
+    "originalPages": [
+      6,
+      7
+    ],
+    "newTopic": "redox-t1",
+    "cards": [
+      "redox-t1-c1",
+      "redox-t1-c2",
+      "redox-t1-c3",
+      "redox-t1-c4"
+    ],
+    "sourcePages": [
+      6,
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "redox",
+    "legacySection": 1,
+    "originalTopic": "Oxidation numbers",
+    "originalPages": [
+      8,
+      12,
+      17
+    ],
+    "newTopic": "redox-t2",
+    "cards": [
+      "redox-t2-c1",
+      "redox-t2-c2",
+      "redox-t2-c3",
+      "redox-t2-c4",
+      "redox-t2-c5"
+    ],
+    "sourcePages": [
+      8,
+      12,
+      17
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "redox",
+    "legacySection": 2,
+    "originalTopic": "Which agent does what?",
+    "originalPages": [
+      10,
+      11,
+      12
+    ],
+    "newTopic": "redox-t3",
+    "cards": [
+      "redox-t3-c1",
+      "redox-t3-c2",
+      "redox-t3-c3",
+      "redox-t3-c4"
+    ],
+    "sourcePages": [
+      10,
+      11,
+      12
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "redox",
+    "legacySection": 3,
+    "originalTopic": "Molecular reactions and spectator ions",
+    "originalPages": [
+      6,
+      9,
+      12
+    ],
+    "newTopic": "redox-t4",
+    "cards": [
+      "redox-t4-c1",
+      "redox-t4-c2",
+      "redox-t4-c3"
+    ],
+    "sourcePages": [
+      6,
+      9,
+      12
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "redox",
+    "legacySection": 4,
+    "originalTopic": "Reading the handwritten notes",
+    "originalPages": [
+      16,
+      17,
+      18
+    ],
+    "newTopic": "redox-t5",
+    "cards": [
+      "redox-t5-c1",
+      "redox-t5-c2",
+      "redox-t5-c3",
+      "redox-t5-c4",
+      "redox-t5-c5"
+    ],
+    "sourcePages": [
+      16,
+      17,
+      18
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "balance",
+    "legacySection": 0,
+    "originalTopic": "Oxidation-number method",
+    "originalPages": [
+      5,
+      6
+    ],
+    "newTopic": "balance-t1",
+    "cards": [
+      "balance-t1-c1",
+      "balance-t1-c2",
+      "balance-t1-c3",
+      "balance-t1-c4"
+    ],
+    "sourcePages": [
+      5,
+      6
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "balance",
+    "legacySection": 1,
+    "originalTopic": "Half-reactions in acidic solution",
+    "originalPages": [
+      8,
+      10,
+      11
+    ],
+    "newTopic": "balance-t2",
+    "cards": [
+      "balance-t2-c1",
+      "balance-t2-c2",
+      "balance-t2-c3",
+      "balance-t2-c4",
+      "balance-t2-c5",
+      "balance-t2-c6"
+    ],
+    "sourcePages": [
+      8,
+      10,
+      11
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "balance",
+    "legacySection": 2,
+    "originalTopic": "Half-reactions in basic solution",
+    "originalPages": [
+      8,
+      9,
+      11
+    ],
+    "newTopic": "balance-t3",
+    "cards": [
+      "balance-t3-c1",
+      "balance-t3-c2",
+      "balance-t3-c3"
+    ],
+    "sourcePages": [
+      8,
+      9,
+      11
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "balance",
+    "legacySection": 3,
+    "originalTopic": "Important source corrections",
+    "originalPages": [
+      8,
+      12,
+      15
+    ],
+    "newTopic": "balance-t4",
+    "cards": [
+      "balance-t4-c1",
+      "balance-t4-c2",
+      "balance-t4-c3",
+      "balance-t4-c4",
+      "balance-t4-c5",
+      "balance-t4-c6"
+    ],
+    "sourcePages": [
+      8,
+      12,
+      15
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "voltaic",
+    "legacySection": 0,
+    "originalTopic": "Complete the circuit",
+    "originalPages": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "newTopic": "voltaic-t1",
+    "cards": [
+      "voltaic-t1-c1",
+      "voltaic-t1-c2",
+      "voltaic-t1-c3",
+      "voltaic-t1-c4",
+      "voltaic-t1-c5",
+      "voltaic-t1-c6"
+    ],
+    "sourcePages": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "voltaic",
+    "legacySection": 1,
+    "originalTopic": "Anode and cathode",
+    "originalPages": [
+      8
+    ],
+    "newTopic": "voltaic-t2",
+    "cards": [
+      "voltaic-t2-c1",
+      "voltaic-t2-c2",
+      "voltaic-t2-c3",
+      "voltaic-t2-c4"
+    ],
+    "sourcePages": [
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "voltaic",
+    "legacySection": 2,
+    "originalTopic": "Potential and the hydrogen reference",
+    "originalPages": [
+      9,
+      11,
+      12,
+      13
+    ],
+    "newTopic": "voltaic-t3",
+    "cards": [
+      "voltaic-t3-c1",
+      "voltaic-t3-c2",
+      "voltaic-t3-c3",
+      "voltaic-t3-c4"
+    ],
+    "sourcePages": [
+      9,
+      11,
+      12,
+      13
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "voltaic",
+    "legacySection": 3,
+    "originalTopic": "Read the notation",
+    "originalPages": [
+      8,
+      14,
+      15
+    ],
+    "newTopic": "voltaic-t4",
+    "cards": [
+      "voltaic-t4-c1",
+      "voltaic-t4-c2",
+      "voltaic-t4-c3",
+      "voltaic-t4-c4"
+    ],
+    "sourcePages": [
+      8,
+      14,
+      15
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "voltaic",
+    "legacySection": 4,
+    "originalTopic": "Calculate E°cell",
+    "originalPages": [
+      14,
+      15,
+      16,
+      17
+    ],
+    "newTopic": "voltaic-t5",
+    "cards": [
+      "voltaic-t5-c1",
+      "voltaic-t5-c2",
+      "voltaic-t5-c3",
+      "voltaic-t5-c4",
+      "voltaic-t5-c5",
+      "voltaic-t5-c6",
+      "voltaic-t5-c7"
+    ],
+    "sourcePages": [
+      14,
+      15,
+      16,
+      17
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "voltaic",
+    "legacySection": 5,
+    "originalTopic": "Selected standard reduction potentials",
+    "originalPages": [
+      12
+    ],
+    "newTopic": "voltaic-t6",
+    "cards": [
+      "voltaic-t6-c1",
+      "voltaic-t6-c2",
+      "voltaic-t6-c3"
+    ],
+    "sourcePages": [
+      12
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "batteries",
+    "legacySection": 0,
+    "originalTopic": "Dry, alkaline and silver cells",
+    "originalPages": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "newTopic": "batteries-t1",
+    "cards": [
+      "batteries-t1-c1",
+      "batteries-t1-c2",
+      "batteries-t1-c3",
+      "batteries-t1-c4",
+      "batteries-t1-c5",
+      "batteries-t1-c6",
+      "batteries-t1-c7",
+      "batteries-t1-c8",
+      "batteries-t1-c9",
+      "batteries-t1-c10"
+    ],
+    "sourcePages": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "batteries",
+    "legacySection": 1,
+    "originalTopic": "Primary and secondary",
+    "originalPages": [
+      8
+    ],
+    "newTopic": "batteries-t2",
+    "cards": [
+      "batteries-t2-c1",
+      "batteries-t2-c2",
+      "batteries-t2-c3",
+      "batteries-t2-c4",
+      "batteries-t2-c5"
+    ],
+    "sourcePages": [
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "batteries",
+    "legacySection": 2,
+    "originalTopic": "Lead-acid and lithium",
+    "originalPages": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "newTopic": "batteries-t3",
+    "cards": [
+      "batteries-t3-c1",
+      "batteries-t3-c2",
+      "batteries-t3-c3",
+      "batteries-t3-c4",
+      "batteries-t3-c5",
+      "batteries-t3-c6"
+    ],
+    "sourcePages": [
+      9,
+      10,
+      11,
+      12
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "batteries",
+    "legacySection": 3,
+    "originalTopic": "Fuel supplied continuously",
+    "originalPages": [
+      13
+    ],
+    "newTopic": "batteries-t4",
+    "cards": [
+      "batteries-t4-c1",
+      "batteries-t4-c2",
+      "batteries-t4-c3",
+      "batteries-t4-c4",
+      "batteries-t4-c5"
+    ],
+    "sourcePages": [
+      13
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "batteries",
+    "legacySection": 4,
+    "originalTopic": "Corrosion is an unwanted cell",
+    "originalPages": [
+      15,
+      16
+    ],
+    "newTopic": "batteries-t5",
+    "cards": [
+      "batteries-t5-c1",
+      "batteries-t5-c2",
+      "batteries-t5-c3",
+      "batteries-t5-c4",
+      "batteries-t5-c5"
+    ],
+    "sourcePages": [
+      15,
+      16
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "batteries",
+    "legacySection": 5,
+    "originalTopic": "Protect the iron",
+    "originalPages": [
+      17,
+      18
+    ],
+    "newTopic": "batteries-t6",
+    "cards": [
+      "batteries-t6-c1",
+      "batteries-t6-c2",
+      "batteries-t6-c3",
+      "batteries-t6-c4",
+      "batteries-t6-c5"
+    ],
+    "sourcePages": [
+      17,
+      18
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "electrolysis",
+    "legacySection": 0,
+    "originalTopic": "Drive the reverse reaction",
+    "originalPages": [
+      4,
+      5,
+      6
+    ],
+    "newTopic": "electrolysis-t1",
+    "cards": [
+      "electrolysis-t1-c1",
+      "electrolysis-t1-c2",
+      "electrolysis-t1-c3",
+      "electrolysis-t1-c4",
+      "electrolysis-t1-c5"
+    ],
+    "sourcePages": [
+      4,
+      5,
+      6
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "electrolysis",
+    "legacySection": 1,
+    "originalTopic": "Electrolysis of water",
+    "originalPages": [
+      7
+    ],
+    "newTopic": "electrolysis-t2",
+    "cards": [
+      "electrolysis-t2-c1",
+      "electrolysis-t2-c2",
+      "electrolysis-t2-c3",
+      "electrolysis-t2-c4"
+    ],
+    "sourcePages": [
+      7
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "electrolysis",
+    "legacySection": 2,
+    "originalTopic": "Molten sodium chloride",
+    "originalPages": [
+      8
+    ],
+    "newTopic": "electrolysis-t3",
+    "cards": [
+      "electrolysis-t3-c1",
+      "electrolysis-t3-c2",
+      "electrolysis-t3-c3",
+      "electrolysis-t3-c4",
+      "electrolysis-t3-c5"
+    ],
+    "sourcePages": [
+      8
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "electrolysis",
+    "legacySection": 3,
+    "originalTopic": "Brine is different",
+    "originalPages": [
+      9
+    ],
+    "newTopic": "electrolysis-t4",
+    "cards": [
+      "electrolysis-t4-c1",
+      "electrolysis-t4-c2",
+      "electrolysis-t4-c3",
+      "electrolysis-t4-c4",
+      "electrolysis-t4-c5",
+      "electrolysis-t4-c6"
+    ],
+    "sourcePages": [
+      9
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "electrolysis",
+    "legacySection": 4,
+    "originalTopic": "Aluminum and recycling",
+    "originalPages": [
+      10,
+      11
+    ],
+    "newTopic": "electrolysis-t5",
+    "cards": [
+      "electrolysis-t5-c1",
+      "electrolysis-t5-c2",
+      "electrolysis-t5-c3",
+      "electrolysis-t5-c4",
+      "electrolysis-t5-c5",
+      "electrolysis-t5-c6"
+    ],
+    "sourcePages": [
+      10,
+      11
+    ],
+    "reviewed": true
+  },
+  {
+    "lesson": "electrolysis",
+    "legacySection": 5,
+    "originalTopic": "Electroplating",
+    "originalPages": [
+      12
+    ],
+    "newTopic": "electrolysis-t6",
+    "cards": [
+      "electrolysis-t6-c1",
+      "electrolysis-t6-c2",
+      "electrolysis-t6-c3",
+      "electrolysis-t6-c4",
+      "electrolysis-t6-c5",
+      "electrolysis-t6-c6"
+    ],
+    "sourcePages": [
+      12
+    ],
+    "reviewed": true
+  }
+]
