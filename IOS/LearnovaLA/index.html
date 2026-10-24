@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101319">
+  <meta name="description" content="Learnova Language Arts — Grade 12 Unit 1 study and practice">
+  <title>Learnova — Language Arts</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="app.min.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Learnova home"><span class="brand-mark">L</span><span>Learnova<small>LANGUAGE ARTS</small></span></a>
+      <div class="course-label">GRADE 12 · UNIT 1</div>
+      <nav class="primary-nav" aria-label="Main navigation">
+        <button data-view="dashboard" class="nav-item active"><span>⌂</span> Dashboard</button>
+        <div class="nav-caption">LEARN</div>
+        <button data-view="vocabulary" class="nav-item"><span>Aa</span> Vocabulary</button>
+        <button data-view="grammar" class="nav-item"><span>¶</span> Grammar</button>
+        <button data-view="reading" class="nav-item"><span>▤</span> Reading Skills</button>
+        <div class="nav-caption">PRACTICE</div>
+        <button data-view="practice" class="nav-item"><span>✓</span> Practice <b class="nav-count">35</b></button>
+        <button data-view="revision" class="nav-item"><span>↻</span> Smart Revision</button>
+        <button data-view="mistakes" class="nav-item"><span>!</span> My Mistakes</button>
+        <button data-view="bookmarks" class="nav-item"><span>☆</span> Bookmarks</button>
+        <button data-view="statistics" class="nav-item"><span>▥</span> Statistics</button>
+      </nav>
+      <div class="sidebar-bottom"><div class="offline"><i></i> Offline-ready after first load</div><button data-view="settings" class="nav-item"><span>⚙</span> Settings & backup</button></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><button class="menu-button" id="menu-button" aria-label="Open menu">☰</button><div class="crumb" id="breadcrumb">Dashboard <span>›</span> Overview</div><label class="search-box"><span>⌕</span><input id="search" type="search" placeholder="Search words, lessons, passages…" aria-label="Search study content"><kbd>/</kbd></label></header>
+      <section id="app" class="content" tabindex="-1" aria-live="polite"></section>
+      <footer>Learnova · Language Arts <span>Grade 12 · Unit 1: What’s Next?</span></footer>
+    </main>
+  </div>
+  <div id="toast" role="status" class="toast" aria-live="polite"></div>
+  <script src="app.min.js" defer></script>
+</body>
+</html>
