@@ -209,6 +209,8 @@ let state = loadState();
 let view = 'home';
 let learnIndex = 0;
 let learnSession = { selected: null, submitted: false, revealed: false };
+let selectedPart = null;
+let selectedGroup = 'all';
 let allQuery = '';
 let allFilter = 'all';
 let activeRevision = null;
@@ -235,17 +237,31 @@ function escapeHtml(value) {
     .replaceAll("'", '&#039;');
 }
 
+function learningQuestions() {
+  return selectedPart ? questions.filter((q) => q.part === selectedPart && (!selectedGroup || selectedGroup === 'all' || q.group === selectedGroup)) : [];
+}
+
 function currentQuestion() {
-  return questions[learnIndex] || questions[0];
+  const pool = learningQuestions();
+  return pool[learnIndex] || pool[0];
 }
 
 function isBookmarked(id) {
   return state.bookmarks.includes(id);
 }
 
-function nextIncompleteIndex() {
-  const next = questions.findIndex((q) => !state.completed.includes(q.id));
+function nextIncompleteIndex(part = selectedPart) {
+  const pool = part ? questions.filter((q) => q.part === part && (!selectedGroup || selectedGroup === 'all' || q.group === selectedGroup)) : questions;
+  const next = pool.findIndex((q) => !state.completed.includes(q.id));
   return next >= 0 ? next : 0;
+}
+
+function choosePart(part) {
+  selectedPart = part;
+  selectedGroup = null;
+  learnIndex = nextIncompleteIndex(part);
+  learnSession = { selected: null, submitted: false, revealed: false };
+  setView('learn');
 }
 
 function showToast(message) {
@@ -272,14 +288,16 @@ function toggleBookmark(id) {
   render();
 }
 
-function maybeCreateRevisionBatch() {
-  const studied = state.studiedOrder.length;
+function maybeCreateRevisionBatch(question) {
+  const scopedIds = questions.filter((q) => q.part === question.part && (selectedGroup === 'all' || q.group === selectedGroup)).map((q) => q.id);
+  const studiedIds = state.studiedOrder.filter((id) => scopedIds.includes(id));
+  const studied = studiedIds.length;
   const regularBatch = studied >= 10 && studied % 10 === 0;
-  const finalBatch = studied === questions.length && studied % 10 !== 0;
+  const finalBatch = studied === scopedIds.length && studied % 10 !== 0;
   if (!regularBatch && !finalBatch) return;
   const batchIds = finalBatch
-    ? state.studiedOrder.slice(studied - (studied % 10 || 10))
-    : state.studiedOrder.slice(studied - 10);
+    ? studiedIds.slice(studied - (studied % 10 || 10))
+    : studiedIds.slice(studied - 10);
   if (!batchIds.length) return;
   const alreadyExists = state.revisionTests.some((test) => test.questionIds.join('|') === batchIds.join('|'));
   if (alreadyExists) return;
@@ -288,6 +306,8 @@ function maybeCreateRevisionBatch() {
     id: `revision-${Date.now()}`,
     label: finalBatch ? 'Final Revision Test' : `Revision Test ${number}`,
     questionIds: batchIds,
+    part: question.part,
+    group: selectedGroup,
     createdAt: new Date().toISOString()
   });
   saveState();
@@ -298,7 +318,7 @@ function markStudied(question, selected = null) {
   if (!state.completed.includes(question.id)) {
     state.completed.push(question.id);
     state.studiedOrder.push(question.id);
-    maybeCreateRevisionBatch();
+    maybeCreateRevisionBatch(question);
   }
   if (selected && selected !== question.answer) {
     state.incorrectAnswers[question.id] = { selected, answer: question.answer };
@@ -316,9 +336,11 @@ function renderTop() {
   const [kicker, title] = titles[view];
   document.querySelector('#section-kicker').textContent = kicker;
   document.querySelector('#page-title').textContent = title;
-  const progress = questions.length ? (state.completed.length / questions.length) * 100 : 0;
+  const progressQuestions = view === 'learn' && selectedPart ? learningQuestions() : questions;
+  const progressCompleted = view === 'learn' && selectedPart ? progressQuestions.filter((q) => state.completed.includes(q.id)).length : state.completed.length;
+  const progress = progressQuestions.length ? (progressCompleted / progressQuestions.length) * 100 : 0;
   document.querySelector('#top-progress-bar').style.width = `${progress}%`;
-  document.querySelector('#top-progress-label').textContent = `${state.completed.length} / ${questions.length} studied`;
+  document.querySelector('#top-progress-label').textContent = `${progressCompleted} / ${progressQuestions.length} studied`;
   document.querySelector('#revision-count').textContent = state.revisionTests.length;
   document.querySelectorAll('.nav-item').forEach((item) => item.classList.toggle('active', item.dataset.view === view));
 }
@@ -406,12 +428,21 @@ function renderQuestionCard(question, isRevision = false) {
 }
 
 function renderLearn() {
+  if (!selectedPart) {
+    const parts = [...new Set(questions.map((q) => q.part))];
+    return `<div class="section-row" style="margin-top:0"><div><h2>Choose a collection</h2><p class="section-note">Learn one part at a time. Your completed questions and revision tests stay separated by part.</p></div><span class="badge">${questions.length} TOTAL</span></div><section class="module-grid part-picker">${parts.map((part, index) => { const partQuestions = questions.filter((q) => q.part === part); const done = partQuestions.filter((q) => state.completed.includes(q.id)).length; return `<button class="card module-card part-choice" data-action="choose-part" data-part="${escapeHtml(part)}"><div class="module-num">0${index + 1} / ${escapeHtml(part.toUpperCase())}</div><h3>Study ${escapeHtml(part)}</h3><p>${done} of ${partQuestions.length} completed · ${partQuestions.length - done} remaining.</p><div class="progress-track"><span style="width:${Math.round((done / partQuestions.length) * 100)}%"></span></div><span class="btn btn-primary">Choose ${escapeHtml(part)} →</span></button>`; }).join('')}</section>`;
+  }
+  if (selectedGroup === null) {
+    const groupOptions = ['Zama', 'Abdulkarim', 'all'];
+    return `<div class="section-row" style="margin-top:0"><div><h2>${escapeHtml(selectedPart)}: choose a question set</h2><p class="section-note">Choose Zama, Abdulkarim, or both for this part.</p></div><span class="badge">${questions.filter((q) => q.part === selectedPart).length} IN PART</span></div><section class="module-grid part-picker">${groupOptions.map((group, index) => { const label = group === 'all' ? 'Both' : group; const pool = questions.filter((q) => q.part === selectedPart && (group === 'all' || q.group === group)); const done = pool.filter((q) => state.completed.includes(q.id)).length; return `<button class="card module-card part-choice" data-action="choose-group" data-group="${group}"><div class="module-num">0${index + 1} / ${escapeHtml(label.toUpperCase())}</div><h3>Study ${escapeHtml(label)}</h3><p>${done} of ${pool.length} completed · ${pool.length - done} remaining.</p><div class="progress-track"><span style="width:${Math.round((done / pool.length) * 100)}%"></span></div><span class="btn btn-primary">Choose ${escapeHtml(label)} →</span></button>`; }).join('')}</section><button class="btn btn-ghost" data-action="change-part">← Choose another part</button>`;
+  }
   const question = currentQuestion();
   const position = learnIndex + 1;
+  const pool = learningQuestions();
   return `
     <div class="learn-layout">
       <div>
-        <div class="section-row" style="margin-top:0"><div><h2>Question ${position} <span class="section-note">of ${questions.length}</span></h2><p class="section-note">${state.completed.includes(question.id) ? 'Already studied — use this pass to retrieve it again.' : 'New to your study log.'}</p></div><span class="badge">${escapeHtml(question.group)} · ${escapeHtml(question.kind)}</span></div>
+        <div class="section-row" style="margin-top:0"><div><h2>${escapeHtml(selectedPart)} · ${escapeHtml(selectedGroup === 'all' ? 'Both' : selectedGroup)} · Question ${position} <span class="section-note">of ${pool.length}</span></h2><p class="section-note">${state.completed.includes(question.id) ? 'Already studied — use this pass to retrieve it again.' : 'New to your study log.'}</p></div><div class="button-row" style="margin-top:0"><button class="btn btn-ghost" data-action="change-group">Change set</button><button class="btn btn-ghost" data-action="change-part">Change part</button><span class="badge">${escapeHtml(question.group)} · ${escapeHtml(question.kind)}</span></div></div>
         ${renderQuestionCard(question)}
       </div>
       <aside class="teaching-rail">
@@ -447,7 +478,8 @@ function renderRevision() {
   return `<div class="section-row" style="margin-top:0"><div><h2>Revision shelf</h2><p class="section-note">Each test is a saved block of exact question IDs from your study log.</p></div><span class="badge">${state.revisionTests.length} TEST${state.revisionTests.length === 1 ? '' : 'S'}</span></div>${state.revisionTests.map((test) => {
     const attempts = state.revisionAttempts[test.id] || [];
     const latest = attempts.at(-1);
-    return `<article class="card revision-card"><div class="revision-head"><div><h3>${escapeHtml(test.label)}</h3><p>${test.questionIds.length} exact questions · ${latest ? `Latest score ${latest.score}/${latest.total}` : 'Not attempted yet'}</p></div><div class="button-row" style="margin-top:0"><span class="badge">${test.questionIds.length}/10${test.questionIds.length < 10 ? ' FINAL' : ''}</span><button class="btn btn-primary" data-action="start-revision" data-id="${test.id}">${latest ? 'Retry' : 'Start Test'} →</button></div></div></article>`;
+    const scope = test.part ? `${test.part} · ${test.group === 'all' ? 'Both' : test.group}` : 'Saved study block';
+    return `<article class="card revision-card"><div class="revision-head"><div><h3>${escapeHtml(test.label)}</h3><p>${escapeHtml(scope)} · ${test.questionIds.length} exact questions · ${latest ? `Latest score ${latest.score}/${latest.total}` : 'Not attempted yet'}</p></div><div class="button-row" style="margin-top:0"><span class="badge">${test.questionIds.length}/10${test.questionIds.length < 10 ? ' FINAL' : ''}</span><button class="btn btn-primary" data-action="start-revision" data-id="${test.id}">${latest ? 'Retry' : 'Start Test'} →</button></div></div></article>`;
   }).join('')}`;
 }
 
@@ -496,7 +528,7 @@ function handleShowAnswer() {
 }
 
 function handleNextQuestion() {
-  learnIndex = (learnIndex + 1) % questions.length;
+  learnIndex = (learnIndex + 1) % learningQuestions().length;
   learnSession = { selected: null, submitted: false, revealed: false };
   state.currentIndex = learnIndex;
   saveState();
@@ -546,7 +578,11 @@ document.addEventListener('click', (event) => {
   const action = event.target.closest('[data-action]');
   if (!action) return;
   const name = action.dataset.action;
-  if (name === 'continue-learning') { learnIndex = nextIncompleteIndex(); learnSession = { selected: null, submitted: false, revealed: false }; setView('learn'); }
+  if (name === 'continue-learning') { selectedPart = null; selectedGroup = 'all'; learnSession = { selected: null, submitted: false, revealed: false }; setView('learn'); }
+  if (name === 'choose-part') choosePart(action.dataset.part);
+  if (name === 'choose-group') { selectedGroup = action.dataset.group; learnIndex = nextIncompleteIndex(selectedPart); learnSession = { selected: null, submitted: false, revealed: false }; setView('learn'); }
+  if (name === 'change-group') { selectedGroup = null; learnSession = { selected: null, submitted: false, revealed: false }; setView('learn'); }
+  if (name === 'change-part') { selectedPart = null; selectedGroup = 'all'; learnSession = { selected: null, submitted: false, revealed: false }; setView('learn'); }
   if (name === 'toggle-bookmark') toggleBookmark(action.dataset.id);
   if (name === 'submit-answer') handleSubmitAnswer();
   if (name === 'show-answer') handleShowAnswer();
@@ -557,7 +593,7 @@ document.addEventListener('click', (event) => {
   if (name === 'back-to-revision') { activeRevision = null; setView('revision'); }
   if (name === 'open-question') {
     const index = questions.findIndex((q) => q.id === action.dataset.id);
-    if (index >= 0) { learnIndex = index; learnSession = { selected: null, submitted: false, revealed: false }; setView('learn'); }
+    if (index >= 0) { selectedPart = questions[index].part; selectedGroup = questions[index].group; learnIndex = learningQuestions().findIndex((q) => q.id === action.dataset.id); learnSession = { selected: null, submitted: false, revealed: false }; setView('learn'); }
   }
 });
 
